@@ -1,4 +1,4 @@
-package project._semester.hasseris.Tutor_Administration_Platform;
+package Tutor_Administration_Platform;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
