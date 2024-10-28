@@ -1,0 +1,62 @@
+# Java Spring with Gradle
+.gradle/
+build/
+out/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+.env
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Eclipse
+.settings/
+.project
+.classpath
+bin/
+
+# Visual Studio Code
+.vscode/
+*.sublime-workspace
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage/
+**/build/
+**/dist/
+
+# Docker files
+*.log
+docker-compose.override.yml
+.docker/
+*.tar
+*.img
+*.bin
+
+# Local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+.cache/
+
+# Gradle wrapper files
+gradle-wrapper.jar
+gradle-wrapper.properties
