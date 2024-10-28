@@ -15,4 +15,4 @@ Backend: localhost:8080
 
 5. Both frontend and backend can now be started from the docker desktop application now, or by using the command in the terminal
 
-6. programmet bruger java 17 btw
+6. programmet bruger java 17 btw så husk at downloade det
