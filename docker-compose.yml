@@ -1,8 +1,7 @@
-version: '3'
 services:
   backend:
     build:
-      context: ./spring_backend
+      context: ./backend
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
@@ -11,7 +10,7 @@ services:
 
   frontend:
     build:
-      context: ./react_frontend
+      context: ./frontend
       dockerfile: Dockerfile
     ports:
       - "3000:80"
