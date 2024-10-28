@@ -1,0 +1,14 @@
+How to get docker to work:
+
+1. First start by installing docker desktop application(this need to be open when running docker command in the terminal) 
+Site for download: https://www.docker.com/products/docker-desktop/ (you can just use github to login in to docker)
+
+2. idk if this is needed but i guess maybe its good practice so we gonna build the frontend and backend just do this step if an error come along i guess else go to step 3
+backend: run "cd backend" in the terminal within the idea after that run "./gradlew build", run cd ..\ to get out in the project directory and then you ready to build frontend
+frontend: run "cd frontend" in the terminal within the idea after that run "npm run build", run cd ..\ to get out in the project directory
+
+3. now we ready to use docker to run the frontend and backend simultaneously to so this we use the "docker-compose up --build", and this will start them both, I guess this command might be smart enough to build them too but doing the other commands cant hurt i guess
+
+4. localhosts
+frontend: localhost:3000
+backend: localhost:8080
