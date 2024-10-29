@@ -4,7 +4,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:3000"  # Adjust the port as necessary
+      - "3000:3000"
     depends_on:
       - backend
     networks:
@@ -13,7 +13,7 @@ services:
   backend:
     build: ./backend
     ports:
-      - "8080:8080"  # Adjust as necessary
+      - "8080:8080"
     environment:
       - DB_HOST=mysql
       - DB_PORT=3306
@@ -29,16 +29,28 @@ services:
     image: mysql:latest
     container_name: my-local-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: student_database
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: your_password
+      MYSQL_DATABASE: your_database
+      MYSQL_USER: your_user
+      MYSQL_PASSWORD: your_password
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
     networks:
       - app-network
+
+  backup:
+    image: mysql:latest
+    container_name: mysql-backup
+    volumes:
+      - ./database:/database
+      - ./backups:/backup
+    entrypoint: >
+      /bin/sh -c "chmod +x /database/backup.sh &&
+                  crontab -l | { cat; echo '0 * * * * /database/backup.sh'; } | crontab - &&
+                  crond -f"
 
 networks:
   app-network:
@@ -46,5 +58,3 @@ networks:
 
 volumes:
   mysql_data:
-
-
