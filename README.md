@@ -12,6 +12,7 @@ Site for download: https://www.docker.com/products/docker-desktop/ (you can just
 5. Localhosts
 Frontend: localhost:3000
 Backend: localhost:8080
+mySQL: localhost:3306
 
 6. All container can now be started from the docker desktop application now, or by using the command in the terminal. There are a order they need to be start up in else things might not go so well, but docker will do that for you, if you press the button that starts them all. Next will be a few commands you can use with docker to make your life a bit easier
 
