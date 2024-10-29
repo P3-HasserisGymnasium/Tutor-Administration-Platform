@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   frontend:
+    container_name: frontend
     build: ./frontend
     ports:
       - "3000:3000"
@@ -11,6 +12,7 @@ services:
       - app-network
 
   backend:
+    container_name: backend
     build: ./backend
     ports:
       - "8080:8080"
@@ -27,7 +29,7 @@ services:
 
   mysql:
     image: mysql:latest
-    container_name: my-local-mysql
+    container_name: mysql-database
     environment:
       MYSQL_ROOT_PASSWORD: your_password
       MYSQL_DATABASE: your_database
