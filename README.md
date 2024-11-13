@@ -3,7 +3,7 @@ How to get docker to work:
 1. First start by installing docker desktop application(this need to be open when running docker command in the terminal) 
 Site for download: https://www.docker.com/products/docker-desktop/ (you can just use github to login in to docker)
 
-2. Programmet bruger java 17 btw så husk at downloade det
+2. Programmet uses Java 17 so remember to download it
 
 3. Make sure you are in the correct folder in the terminal, you need to be in the root directory to run the next command
 
