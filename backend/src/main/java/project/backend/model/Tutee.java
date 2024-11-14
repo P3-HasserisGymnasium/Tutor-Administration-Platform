@@ -1,4 +1,4 @@
-package project.backend;
+package project.backend.model;
 
 import java.util.LinkedList;
 import java.util.List;

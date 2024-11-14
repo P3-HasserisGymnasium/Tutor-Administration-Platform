@@ -1,4 +1,4 @@
-package project.backend;
+package project.backend.model;
 
 public abstract class Role {
     
