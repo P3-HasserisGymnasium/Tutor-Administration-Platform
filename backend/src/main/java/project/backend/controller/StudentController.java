@@ -1,5 +1,5 @@
 package project.backend.controller;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.*;
 
 import project.backend.model.Student;
@@ -11,7 +11,6 @@ public class StudentController {
 
     private final StudentService studentService;
 
-    @Autowired
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
@@ -29,10 +28,5 @@ public class StudentController {
     @DeleteMapping("/{id}")
     public void deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);
-    }
-
-    @PostMapping("/{studentId}/assignSchedule/{scheduleId}")
-    public Student assignSchedule(@PathVariable Long studentId, @PathVariable Long scheduleId) {
-        return studentService.assignScheduleToStudent(studentId, scheduleId);
     }
 }

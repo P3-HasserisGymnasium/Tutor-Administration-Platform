@@ -8,4 +8,9 @@ public class Collaboration {
     Tutor tutor;
 
     List<Meeting> meetings = new LinkedList<>();
+
+    public Collaboration(Tutee tutee, Tutor tutor) {
+        this.tutee = tutee;
+        this.tutor = tutor;        
+    }
 }
