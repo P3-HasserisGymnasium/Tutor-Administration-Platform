@@ -7,22 +7,16 @@ import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-
 import static project.backend.utilities.JWTUtil.extractClaims;
 import static project.backend.utilities.JWTUtil.isTokenExpired;
-// import project.backend.service.UserService; // Import the UserService class to fetch the user information
 
 public class JWTAuthenticationFilter implements Filter {
-
-
-    // private UserService userService; // Inject the UserService class to fetch the user information
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -35,12 +29,21 @@ public class JWTAuthenticationFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        String authorizationHeader = httpRequest.getHeader("Authorization");
+        // Retrieve JWT from cookies
+        String jwt = null;
+        Cookie[] cookies = httpRequest.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("JWT".equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                    break;
+                }
+            }
+        }
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String jwt = authorizationHeader.substring(7);
+        // If JWT is found, validate it
+        if (jwt != null) {
             Claims claims = extractClaims(jwt);
-
             if (claims != null && !isTokenExpired(jwt)) {
                 // Set the user information in the request attribute
                 // String user_id = claims.getSubject();
@@ -59,10 +62,11 @@ public class JWTAuthenticationFilter implements Filter {
                 return;
             }
         } else {
-            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization header missing or invalid");
+            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization cookie missing or invalid");
             return;
         }
 
+        // Continue processing the request
         chain.doFilter(request, response);
     }
 
