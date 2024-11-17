@@ -4,7 +4,7 @@ import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persist
 
 // Create an Axios instance
 const apiClient = axios.create({
-    baseURL: 'http://localhost:8080/api',
+    baseURL: 'http://localhost:8080',
     withCredentials: true, // Ensure credentials (cookies) are sent with requests
 });
 

@@ -11,7 +11,7 @@ type PostType = {
 };
 
 const getPosts = useQuery({
-    queryKey: ['createPost'],
+    queryKey: ['getPosts'],
     queryFn: async () => {
         const { data } = await apiClient.get<PostType[]>(`/api/post_service`);
         return data;
