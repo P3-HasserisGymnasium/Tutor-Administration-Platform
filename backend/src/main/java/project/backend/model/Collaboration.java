@@ -1,4 +1,4 @@
-package project.backend;
+package project.backend.model;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -8,4 +8,9 @@ public class Collaboration {
     Tutor tutor;
 
     List<Meeting> meetings = new LinkedList<>();
+
+    public Collaboration(Tutee tutee, Tutor tutor) {
+        this.tutee = tutee;
+        this.tutor = tutor;        
+    }
 }

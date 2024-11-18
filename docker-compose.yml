@@ -19,9 +19,9 @@ services:
         environment:
             - DB_HOST=mysql
             - DB_PORT=3306
-            - DB_NAME=your_database
-            - DB_USER=your_user
-            - DB_PASSWORD=your_password
+            - DB_NAME=mysql-database
+            - DB_USER=user
+            - DB_PASSWORD=password
         depends_on:
             - mysql
         networks:
