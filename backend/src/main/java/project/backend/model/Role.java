@@ -24,6 +24,9 @@ public abstract class Role {
     Date startDate;
 
     @OneToMany(mappedBy = "role")
+    List<Notification> notifications = new LinkedList<>();
+
+    @OneToMany(mappedBy = "role")
     List<Collaboration> collaborations = new LinkedList<>();
 
     public Role() {}
@@ -38,6 +41,14 @@ public abstract class Role {
 
     public void setStartDate(Date date) {
         this.startDate = date;
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
     }
 
     public List<Collaboration> getCollaborations() {

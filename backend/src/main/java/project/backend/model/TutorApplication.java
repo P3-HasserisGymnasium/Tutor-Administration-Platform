@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
 @Entity
-public class TutoringSubjectRequest {
+public class TutorApplication {
 
     @Column(name = "subject")
     SubjectEnum subject;
@@ -15,7 +15,7 @@ public class TutoringSubjectRequest {
     @Column(name = "rejection_reason")
     String rejectionReason;
 
-    public TutoringSubjectRequest() {}
+    public TutorApplication() {}
 
     public SubjectEnum getSubject() {
         return subject;
