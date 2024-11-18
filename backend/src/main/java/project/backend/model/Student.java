@@ -1,34 +1,68 @@
 package project.backend.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 @Entity
 public class Student extends User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "registration_date")
+    String registrationDate;
 
-    Role role;
+    @Column(name = "year_group")
+    YearGroupEnum yearGroup;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "contact_info")
+    StudentContactInfo contactInfo;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(name = "roles")
+    List<Role> roles = new LinkedList<>();
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
+    @Column(name = "languages")
+    List<LanguageEnum> languages = new LinkedList<>();
 
     public Student() {}
+
+    public String getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(String registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public YearGroupEnum getYearGroup() {
+        return yearGroup;
+    }
+
+    public void setYearGroup(YearGroupEnum yearGroup) {
+        this.yearGroup = yearGroup;
+    }
+
+    public StudentContactInfo getContactInfo() {
+        return contactInfo;
+    }
+
+    public void setContactInfo(StudentContactInfo contactInfo) {
+        this.contactInfo = contactInfo;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public List<LanguageEnum> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<LanguageEnum> languages) {
+        this.languages = languages;
+    }
 }
