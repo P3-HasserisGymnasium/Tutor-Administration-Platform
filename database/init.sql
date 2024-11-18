@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS `students` (
     `id` CHAR(36) PRIMARY KEY,
     `contact_info` JSON NOT NULL,
     `registration_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `user_id` CHAR(36) NOT NULL,
     `year_group` ENUM('PRE-IB', 'IB1', 'IB2') NOT NULL,
     `languages` ENUM('DANISH', 'ENGLISH') NOT NULL
 );
@@ -27,14 +26,23 @@ CREATE TABLE IF NOT EXISTS `roles` (
 
 CREATE TABLE IF NOT EXISTS `tutees` (
     `id` CHAR(36) PRIMARY KEY,
-    `role_id` CHAR(36) NOT NULL
+    -- Make id in tutees a foreign key referencing roles.id
+    CONSTRAINT `fk_tutees_roles` FOREIGN KEY (`id`) REFERENCES `roles` (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `tutors` (
     `id` CHAR(36) PRIMARY KEY,
-    `role_id` CHAR(36) NOT NULL,
     `tutoring_subjects` ENUM('MATH', 'PHYSICS', 'CHEMISTRY', 'BIOLOGY', 'HISTORY', 'GEOGRAPHY', 'ECONOMICS', 'BUSINESS', 'ENGLISH', 'DANISH', 'SPANISH', 'FRENCH', 'GERMAN', 'ITAL') NOT NULL,
-    `profile_description` LONGTEXT NULL
+    `profile_description` LONGTEXT NULL,
+    -- Make id in tutors a foreign key referencing roles.id
+    CONSTRAINT `fk_tutors_roles` FOREIGN KEY (`id`) REFERENCES `roles` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `tutor_applications` (
+    `id` CHAR(36) PRIMARY KEY,
+    `subject` ENUM('MATH', 'PHYSICS', 'CHEMISTRY', 'BIOLOGY', 'HISTORY', 'GEOGRAPHY', 'ECONOMICS', 'BUSINESS', 'ENGLISH', 'DANISH', 'SPANISH', 'FRENCH', 'GERMAN', 'ITAL') NOT NULL,
+    `application_text` LONGTEXT NOT NULL,
+    `rejection_reason` LONGTEXT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `collaborations` (
@@ -89,17 +97,12 @@ CREATE TABLE IF NOT EXISTS `free_time_slots` (
 );
 
 
+-- Foreign key constraints
 ALTER TABLE `feedbacks`
     ADD CONSTRAINT `feedbacks_tutor_id_foreign` FOREIGN KEY (`tutor_id`) REFERENCES `tutors` (`id`);
 
 ALTER TABLE `feedbacks`
     ADD CONSTRAINT `feedbacks_tutee_id_foreign` FOREIGN KEY (`tutee_id`) REFERENCES `tutees` (`id`);
-
-ALTER TABLE `tutees`
-    ADD CONSTRAINT `tutees_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`);
-
-ALTER TABLE `tutors`
-    ADD CONSTRAINT `tutors_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`);
 
 ALTER TABLE `collaborations`
     ADD CONSTRAINT `collaborations_tutee_id_foreign` FOREIGN KEY (`tutee_id`) REFERENCES `tutees` (`id`);
@@ -114,13 +117,13 @@ ALTER TABLE `posts`
     ADD CONSTRAINT `posts_tutee_id_foreign` FOREIGN KEY (`tutee_id`) REFERENCES `tutees` (`id`);
 
 ALTER TABLE `students`
-    ADD CONSTRAINT `students_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+    ADD CONSTRAINT `students_id_foreign` FOREIGN KEY (`id`) REFERENCES `users` (`id`);
 
 ALTER TABLE `roles`
     ADD CONSTRAINT `roles_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`);
 
 ALTER TABLE `administrators`
-    ADD CONSTRAINT `administrators_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+    ADD CONSTRAINT `administrators_id_foreign` FOREIGN KEY (`id`) REFERENCES `users` (`id`);
 
 ALTER TABLE `free_time_slots`
     ADD CONSTRAINT `free_time_slots_tutor_id_foreign` FOREIGN KEY (`tutor_id`) REFERENCES `tutors` (`id`);
