@@ -18,9 +18,25 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("mysql:mysql-connector-java:8.0.33")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter")
+
+	// For bcrypt password hashing
+    implementation("org.springframework.boot:spring-boot-starter-security")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+	// For JWT
+	implementation("io.jsonwebtoken:jjwt:0.9.1") 
+    implementation("jakarta.servlet:jakarta.servlet-api:6.0.0")
+
 }
 
 tasks.withType<Test> {

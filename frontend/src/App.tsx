@@ -1,6 +1,6 @@
 import './App.css'
 import { Routes, Route } from "react-router-dom"
-import Homepage from './components/Homepage'
+import TwoBoxLayout from './components/TwoBoxLayout'
 import { Box, Typography } from '@mui/material';
 import HeadText from './components/HeadText';
 import { useLocation } from 'react-router-dom';
@@ -11,19 +11,28 @@ const locationNameMap = new Map<string, string>([
   ["/test/anotherTest", "test"]
 ]);
 
-
 export default function App() {
   return (
-    <Box sx={{ height: "100vh", width: "100vw", backgroundColor: "secondary.main" }}>
-
-      <HeadText DisplayText={getDisplayText()} />
-
+    <Box sx={{ height: "100vh", width: "100vw" }}>
+      <Box sx={{ height: "10%", width: "100%", display: "flex", justifyContent: "left", alignItems: "center", backgroundColor: "secondary.main" }}>
+        <HeadText DisplayText={getDisplayText()} />
+        <Box sx={{ margin: 1, width: "calc(20% - 16px)", height: "calc(100% - 16px)", display: "flex", justifyContent: "right", alignItems: "center" }}>
+          <Typography variant="h3"> ICON </Typography>
+        </Box>
+      </Box>
       <Box sx={{ height: "90%", width: "100%" }}>
         <Routes>
-          <Route path="/" element={<Homepage />} />
+          <Route path="/" element={<TwoBoxLayout>
+            <Typography>
+              Ting
+            </Typography>
+            <Typography>
+              Ting2
+            </Typography>
+          </TwoBoxLayout>} />
         </Routes>
       </Box>
-    </Box>
+    </Box >
   );
 }
 
@@ -38,7 +47,7 @@ function getDisplayText(): string {
   // Handle path not found
   const match = regex.exec(location);
   if (match != null) {
-    return match[1]; //Use last capture group
+    return match[1];
   }
 
   // Regex couldn't fix
