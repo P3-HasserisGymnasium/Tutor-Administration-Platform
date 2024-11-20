@@ -1,41 +1,55 @@
 package project.backend.model;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    private String username;
+
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
+
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
+
+    @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
     // Constructors, getters, and setters
     public User() {}
 
-    public User(String username, String passwordHash) {
-        this.username = username;
+    public User(String email, String passwordHash) {
+        this.email = email;
         this.passwordHash = passwordHash;
     }
 
     public Long getId() {
         return id;
     }
-
-    public void setId(Long id) {
-        this.id = id;
+    
+    public String getFullName() {
+        return fullName;
     }
 
-    public String getUsername() {
-        return username;
+    public void setFullName(String name) {
+        this.fullName = name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String username) {
+        this.email = username;
     }
 
     public String getPasswordHash() {
