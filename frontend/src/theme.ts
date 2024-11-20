@@ -15,9 +15,6 @@ const theme = createTheme(
                 main: '#D51B21',
             },
         },
-        typography: {
-            fontFamily: 'Open Sans',
-        },
         breakpoints: {
             values: {
                 xs: 0,
