@@ -26,8 +26,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
 
 CREATE TABLE IF NOT EXISTS `tutees` (
     `id` CHAR(36) PRIMARY KEY,
-    -- Make id in tutees a foreign key referencing roles.id
-    CONSTRAINT `fk_tutees_roles` FOREIGN KEY (`id`) REFERENCES `roles` (`id`)
+    `role_id` CHAR(36) NOT NULL,
 );
 
 CREATE TABLE IF NOT EXISTS `tutors` (
@@ -96,6 +95,21 @@ CREATE TABLE IF NOT EXISTS `free_time_slots` (
     `tutor_id` CHAR(36) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS `notifications` (
+	`id` CHAR(36) PRIMARY KEY,
+    `title` VARCHAR(255) NOT NULL,
+    `body` VARCHAR(255) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS `notifications_view` (
+    `id` CHAR(36) PRIMARY KEY,
+    `notification_id` CHAR(36) NOT NULL,
+    `receiver_id` CHAR(36) NOT NULL,
+    `is_read` BOOLEAN NOT NULL DEFAULT FALSE
+    `is_deleted` BOOLEAN NOT NULL DEFAULT FALSE
+);
+
 
 -- Foreign key constraints
 ALTER TABLE `feedbacks`
@@ -127,3 +141,9 @@ ALTER TABLE `administrators`
 
 ALTER TABLE `free_time_slots`
     ADD CONSTRAINT `free_time_slots_tutor_id_foreign` FOREIGN KEY (`tutor_id`) REFERENCES `tutors` (`id`);
+
+ALTER TABLE `tutees`
+    ADD CONSTRAINT `tutees_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`);
+
+ALTER TABLE `notifications_view`
+    ADD CONSTRAINT `notifications_view_notification_id_foreign` FOREIGN KEY (`notification_id`) REFERENCES `notifications` (`id`);
