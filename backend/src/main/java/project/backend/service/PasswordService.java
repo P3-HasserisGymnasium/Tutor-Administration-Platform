@@ -6,13 +6,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PasswordService {
-    private final BCryptPasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+    private static final BCryptPasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
    
-    public String encodePassword(String rawPassword) {
+    public static String encodePassword(String rawPassword) {
         return PASSWORD_ENCODER.encode(rawPassword);
     }
 
-    public boolean matches(String rawPassword, String encodedPassword) {
+    public static boolean matches(String rawPassword, String encodedPassword) {
         return PASSWORD_ENCODER.matches(rawPassword, encodedPassword);
     }
 }
