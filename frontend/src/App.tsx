@@ -1,9 +1,12 @@
 import './App.css'
 import { Routes, Route } from "react-router-dom"
-import TwoBoxLayout from './components/TwoBoxLayout'
 import { Box, Typography } from '@mui/material';
 import HeadText from './components/HeadText';
 import { useLocation } from 'react-router-dom';
+import EvenBoxLayout from './components/EvenBoxLayout';
+import LongShortOnShortBoxLayout from './components/LongShortOnShortBoxLayout';
+import LongShortBoxLayout from './components/LongShortBoxLayout';
+import ShortOnShortLongBoxLayout from './components/ShortOnShortLongBoxLayout';
 
 // IMPORTANT: Remember to add to this when adding a new page route
 const locationNameMap = new Map<string, string>([
@@ -22,14 +25,30 @@ export default function App() {
       </Box>
       <Box sx={{ height: "90%", width: "100%" }}>
         <Routes>
-          <Route path="/" element={<TwoBoxLayout>
+          <Route path="/" element={<ShortOnShortLongBoxLayout>
             <Typography>
               Ting
             </Typography>
             <Typography>
               Ting2
             </Typography>
-          </TwoBoxLayout>} />
+            <Typography>
+              Ting3
+            </Typography>
+          </ShortOnShortLongBoxLayout>} />
+        </Routes>
+        <Routes>
+          <Route path="/test" element={<LongShortBoxLayout>
+            <Typography>
+              Ting
+            </Typography>
+            <Typography>
+              Ting2
+            </Typography>
+            <Typography>
+              Ting3
+            </Typography>
+          </LongShortBoxLayout>} />
         </Routes>
       </Box>
     </Box >

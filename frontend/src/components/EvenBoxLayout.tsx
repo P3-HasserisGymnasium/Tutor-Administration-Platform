@@ -3,8 +3,7 @@ import '../index.css'
 import { Children } from 'react'
 
 
-export default function TwoBoxLayout({ children }: { children: React.ReactNode }) {
-
+export default function EvenBoxLayout({ children }: { children: React.ReactNode }) {
   return (
     <Box sx={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }} >
       {Children.map(children, child => (
