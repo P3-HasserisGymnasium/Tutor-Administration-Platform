@@ -3,10 +3,11 @@ import { Routes, Route } from "react-router-dom"
 import { Box, Typography } from '@mui/material';
 import HeadText from './components/HeadText';
 import { useLocation } from 'react-router-dom';
-import EvenBoxLayout from './components/EvenBoxLayout';
-import LongShortOnShortBoxLayout from './components/LongShortOnShortBoxLayout';
 import LongShortBoxLayout from './components/LongShortBoxLayout';
 import ShortOnShortLongBoxLayout from './components/ShortOnShortLongBoxLayout';
+import MediumShortOnShortBoxLayout from './components/MediumShortOnShortBoxLayout';
+import ShortOnShortMediumBoxLayout from './components/ShortOnShortMediumBoxLayout';
+import ShortOnShortShortOnShortBoxLayout from './components/ShortOnShortShortOnShortBoxLayout';
 
 // IMPORTANT: Remember to add to this when adding a new page route
 const locationNameMap = new Map<string, string>([
@@ -25,7 +26,7 @@ export default function App() {
       </Box>
       <Box sx={{ height: "90%", width: "100%" }}>
         <Routes>
-          <Route path="/" element={<ShortOnShortLongBoxLayout>
+          <Route path="/" element={<ShortOnShortShortOnShortBoxLayout>
             <Typography>
               Ting
             </Typography>
@@ -35,7 +36,10 @@ export default function App() {
             <Typography>
               Ting3
             </Typography>
-          </ShortOnShortLongBoxLayout>} />
+            <Typography>
+              Ting4
+            </Typography>
+          </ShortOnShortShortOnShortBoxLayout>} />
         </Routes>
         <Routes>
           <Route path="/test" element={<LongShortBoxLayout>
