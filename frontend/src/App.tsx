@@ -23,5 +23,3 @@ export default function App() {
     </Box>
   );
 }
-
-export default App;
