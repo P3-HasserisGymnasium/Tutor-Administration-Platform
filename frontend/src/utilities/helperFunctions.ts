@@ -7,28 +7,27 @@ const locationNameMap = new Map<string, string>([
     ["/test/anotherTest", "test"],
   ]); */
 
-export function generateHeadingFromLocation(): string {
-    const location = useLocation().pathname;
-    switch (location) {
-        case "/":
-            return "Homepage";
-        case "/tutee":
-            return "Tutee Dashboard";
-        case "/tutor":
-            return "Tutor Dashboard";
-        case "/tutee/create_post":
-            return "Create Post";
-        case "/tutee/tutor_list":
-            return "Tutor List";
-        case "/tutee/profile":
-            return "Profile";
-        case "/tutor/profile":
-            return "Profile";
-        default:
-            return "";
-    }
+export function useHeading(): string {
+	const location = useLocation().pathname;
+	switch (location) {
+		case "/":
+			return "Homepage";
+		case "/tutee":
+			return "Tutee Dashboard";
+		case "/tutor":
+			return "Tutor Dashboard";
+		case "/tutee/create_post":
+			return "Create Post";
+		case "/tutee/tutor_list":
+			return "Tutor List";
+		case "/tutee/profile":
+			return "Profile";
+		case "/tutor/profile":
+			return "Profile";
+		default:
+			return "";
+	}
 }
-
 
 /* 
 export function getDisplayText(): string {
