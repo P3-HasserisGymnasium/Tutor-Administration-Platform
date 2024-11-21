@@ -25,7 +25,7 @@ public class JWTUtil {
                   .compact();
       }
   
-      @SuppressWarnings("deprecation")
+    @SuppressWarnings("deprecation")
     public static Claims extractClaims(String token) {
           return Jwts.parser()
                   .setSigningKey(SECRET_KEY)
