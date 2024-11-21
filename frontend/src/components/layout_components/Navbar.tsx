@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { useHeading } from "utilities/helperFunctions";
 import HeadText from "components/layout_components/HeadText";
 
-export default function EvenBoxLayout() {
+export default function Navbar() {
 	return (
 		<Box
 			sx={{

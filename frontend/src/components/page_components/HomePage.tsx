@@ -1,12 +1,11 @@
-import ShortLongBoxLayout from "../layout_components/ShortLongBoxLayout";
+import MediumShortOnShortBoxLayout from "components/layout_components/MediumShortOnShortBoxLayout"
 
-const HomePage = () => {
-  return (
-    <ShortLongBoxLayout>
-      <div>Home Page</div>
-      <div>Home Page</div>
-    </ShortLongBoxLayout>
-  );
+export default function HomePage() {
+	return (
+		<MediumShortOnShortBoxLayout>
+			<div>Put calendar / Meeting overview here</div>
+			<div>Put tutee notifications here</div>
+			<div>Put tutor notifications here</div>
+		</MediumShortOnShortBoxLayout>
+	);
 };
-
-export default HomePage;
