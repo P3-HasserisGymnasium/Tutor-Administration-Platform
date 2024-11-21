@@ -41,7 +41,7 @@ export default function MiniPost({postData}:MiniPostProp) {
                     color: "#333", // Dark gray for text
                 }}
             >
-                {postData?.duration}
+                {postData?.duration ? postData.duration : "No duration"}
             </Typography>
             </Box>
         </Box>
