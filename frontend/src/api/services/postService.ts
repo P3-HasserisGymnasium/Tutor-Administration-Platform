@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
-import { apiClient } from "../api-client";
+import { apiClient } from "../apiClient";
 
 type PostType = {
 	id: number;
@@ -73,9 +73,9 @@ export const usePostService = () => {
 	});
 
 	return {
-		getPosts,
 		createPost,
 		deletePost,
 		editPost,
+		getPosts,
 	};
 };
