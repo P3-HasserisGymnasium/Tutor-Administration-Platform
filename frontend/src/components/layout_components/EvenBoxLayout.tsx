@@ -22,7 +22,7 @@ export default function EvenBoxLayout({
           elevation={3}
           sx={{
             margin: 1,
-            width: "calc(50% - 8px)",
+            width: "calc(100% - 8px)",
             height: "calc(100% - 16px)",
           }}
         >
