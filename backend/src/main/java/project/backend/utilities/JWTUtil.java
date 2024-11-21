@@ -12,7 +12,8 @@ public class JWTUtil {
 
       private static final long EXPIRATION_TIME = 1000 * 60 * 60;
   
-      public static String generateToken(String user_id) {
+    @SuppressWarnings("deprecation")
+    public static String generateToken(String user_id) {
           Date now = new Date();
           Date expiration = new Date(now.getTime() + EXPIRATION_TIME);
   
@@ -24,7 +25,8 @@ public class JWTUtil {
                   .compact();
       }
   
-      public static Claims extractClaims(String token) {
+      @SuppressWarnings("deprecation")
+    public static Claims extractClaims(String token) {
           return Jwts.parser()
                   .setSigningKey(SECRET_KEY)
                   .parseClaimsJws(token)
