@@ -1,22 +1,22 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
-import { apiClient } from "../apiClient";
+import { apiClient } from "../api-client";
 import { PostType, Subject } from "~/types/enums";
 
 type Collaboration = {
-	end_date?: Date,
-	tutee_id: number,
-	start_date?: Date,
-	tutor_id: number,
-	state: CollaborationState,
-	subject: Subject
-}
+	end_date?: Date;
+	tutee_id: number;
+	start_date?: Date;
+	tutor_id: number;
+	state: CollaborationState;
+	subject: Subject;
+};
 
 type Feedback = {
-	id: number,
-	feedback: string
-}
+	id: number;
+	feedback: string;
+};
 
 enum CollaborationState {
 	PENDING,
@@ -24,11 +24,10 @@ enum CollaborationState {
 	WAITING_FOR_TUTEE,
 	ACCEPTED,
 	REJECTED,
-	TERMINATED
+	TERMINATED,
 }
 
 export const useCollaborationService = () => {
-
 	//Admin requests a collaboration
 	const submitCollaborationSuggestion = useMutation({
 		mutationKey: ["submitCollaborationSuggestion"],
@@ -171,6 +170,6 @@ export const useCollaborationService = () => {
 		requestCollaboration,
 		terminateCollaboration,
 		submitFeedback,
-		getCollaborations
+		getCollaborations,
 	};
 };

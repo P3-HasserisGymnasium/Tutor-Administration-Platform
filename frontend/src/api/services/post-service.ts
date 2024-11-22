@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
-import { apiClient } from "../apiClient";
+import { apiClient } from "../api-client";
 import { Subject } from "~/types/enums";
 
 export type PostType = {

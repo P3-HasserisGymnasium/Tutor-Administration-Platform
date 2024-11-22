@@ -1,21 +1,20 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
-import { apiClient } from "../apiClient";
+import { apiClient } from "../api-client";
 import { MeetingState } from "~/types/enums";
 
 type MeetingType = {
-	id: number,
-	rejection_reason?: string,
-	end_date: Date,
-	collaboration_id: number,
-	meeting_description?: string,
-	state: MeetingState,
-	start_date: Date
-}
+	id: number;
+	rejection_reason?: string;
+	end_date: Date;
+	collaboration_id: number;
+	meeting_description?: string;
+	state: MeetingState;
+	start_date: Date;
+};
 
 export const useMeetingService = () => {
-
 	const requestMeeting = useMutation({
 		mutationKey: ["requestMeeting"],
 		mutationFn: async (meeting: MeetingType) => {
@@ -89,6 +88,6 @@ export const useMeetingService = () => {
 		cancelMeeting,
 		acceptMeeting,
 		rejectMeeting,
-		getMeetings
+		getMeetings,
 	};
 };

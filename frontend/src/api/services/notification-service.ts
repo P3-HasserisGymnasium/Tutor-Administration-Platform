@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "../apiClient";
+import { apiClient } from "../api-client";
 
 type NotificationType = {
 	//TODO: Implement me
-}
+};
 
 export const useNotificationService = () => {
-
 	const getNotifications = useQuery({
 		queryKey: ["getNotifications"],
 		queryFn: async () => {
@@ -20,6 +19,6 @@ export const useNotificationService = () => {
 	});
 
 	return {
-		getNotifications
+		getNotifications,
 	};
 };
