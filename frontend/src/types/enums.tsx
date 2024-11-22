@@ -85,3 +85,10 @@ export enum MeetingState {
     "REJECTED",
     "TERMINATED"
 }
+
+export enum NotificationContext {
+    "TutorApplication",
+    "Feedback",
+    "Collaboration",
+    "Meeting"
+}

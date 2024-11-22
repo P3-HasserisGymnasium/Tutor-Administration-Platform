@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../apiClient";
+import { NotificationContext } from "~/types/enums";
 
 type NotificationType = {
-	//TODO: Implement me
+	notificationContext: NotificationContext,
+	participants: number // As ID's
 }
 
 export const useNotificationService = () => {
