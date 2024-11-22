@@ -35,14 +35,14 @@ export enum Subject {
 }
 
 // interface for subject styling
-interface subjectStyling{
+interface subjectStyling {
     background: string; //defining background color
     color: string; // defining text color
 
 }
 
 // Mapping colors to subject
-export const SubjectColors: Record<Subject,subjectStyling> = {
+export const SubjectColors: Record<Subject, subjectStyling> = {
     [Subject.MUSIC]: { background: "#b2c9e0", color: "white" },
     [Subject.MATH]: { background: "#ffcccb", color: "white" },
     [Subject.ESS]: { background: "#c1e1c5", color: "white" },
@@ -57,4 +57,38 @@ export const SubjectColors: Record<Subject,subjectStyling> = {
     [Subject.PSYCHOLOGY]: { background: "#dda0dd", color: "white" },
     [Subject.ECON]: { background: "#add8e6", color: "white" },
     [Subject.SS]: { background: "#f0e68c", color: "white" },
+}
+
+export type Timeslots = Date[][];
+
+export type PostType = {
+    id: number;
+    title: string;
+    body: string;
+};
+
+export enum YearGroup {
+    "PRE-IB",
+    "IB1",
+    "IB2",
+}
+
+export enum Language {
+    "PRE-IB",
+    "IB1",
+    "IB2",
+}
+
+export enum MeetingState {
+    "PENDING",
+    "ACCEPTED",
+    "REJECTED",
+    "TERMINATED"
+}
+
+export enum NotificationContext {
+    "TutorApplication",
+    "Feedback",
+    "Collaboration",
+    "Meeting"
 }
