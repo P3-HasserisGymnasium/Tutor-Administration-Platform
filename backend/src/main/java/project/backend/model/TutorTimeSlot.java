@@ -1,21 +1,28 @@
 package project.backend.model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
 public class TutorTimeSlot {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @ManyToOne
     Tutor tutor;
 
     @Column(name = "start")
-    Date startTime;
+    Timestamp startTimestamp;
 
     @Column(name = "end")
-    Date endTime;
+    Timestamp endTimestamp;
 
     public TutorTimeSlot() {}
 
@@ -27,19 +34,19 @@ public class TutorTimeSlot {
         this.tutor = tutor;
     }
 
-    public Date getStartTime() {
-        return startTime;
+    public Timestamp getStartTimestamp() {
+        return startTimestamp;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+    public void setStartTimestamp(Timestamp startTimestamp) {
+        this.startTimestamp = startTimestamp;
     }
 
-    public Date getEndTime() {
-        return endTime;
+    public Timestamp getEndTimestamp() {
+        return endTimestamp;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setEndTimestamp(Timestamp endTimestamp) {
+        this.endTimestamp = endTimestamp;
     }
 }

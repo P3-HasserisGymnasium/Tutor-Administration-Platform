@@ -8,6 +8,6 @@ public enum SubjectEnum {
     BIOLOGY,
     CHEMISTRY,
     PHYSICS,
-    SPANISH,
+    SPANISH;
     
 }

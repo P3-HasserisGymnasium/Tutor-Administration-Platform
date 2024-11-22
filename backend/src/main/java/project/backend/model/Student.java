@@ -1,37 +1,49 @@
 package project.backend.model;
 
+import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Student extends User {
 
     @Column(name = "registration_date")
-    String registrationDate;
+    Timestamp registrationTimestamp;
 
     @Column(name = "year_group")
+    @Enumerated(EnumType.STRING)
     YearGroupEnum yearGroup;
 
-    @Column(name = "contact_info")
+    @Embedded
     StudentContactInfo contactInfo;
 
-    @Column(name = "roles")
-    List<Role> roles = new LinkedList<>();
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
+    Tutee tutee;
 
-    @Column(name = "languages")
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
+    Tutor tutor;
+
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
     List<LanguageEnum> languages = new LinkedList<>();
 
     public Student() {}
 
-    public String getRegistrationDate() {
-        return registrationDate;
+    public Timestamp getRegistrationTimestamp() {
+        return registrationTimestamp;
     }
 
-    public void setRegistrationDate(String registrationDate) {
-        this.registrationDate = registrationDate;
+    public void setRegistrationTimestamp(Timestamp registrationTimestamp) {
+        this.registrationTimestamp = registrationTimestamp;
     }
 
     public YearGroupEnum getYearGroup() {
@@ -50,12 +62,20 @@ public class Student extends User {
         this.contactInfo = contactInfo;
     }
 
-    public List<Role> getRoles() {
-        return roles;
+    public Tutee getTutee() {
+        return tutee;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setTutee(Tutee tutee) {
+        this.tutee = tutee;
+    }
+
+    public Tutor getTutor() {
+        return tutor;
+    }
+
+    public void setTutorId(Tutor tutor) {
+        this.tutor = tutor;
     }
 
     public List<LanguageEnum> getLanguages() {

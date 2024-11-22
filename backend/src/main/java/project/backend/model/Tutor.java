@@ -4,8 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Tutor extends Role {
@@ -13,14 +18,22 @@ public class Tutor extends Role {
     @Column(name = "profile_description")
     String profileDescription;
 
-    @Column(name = "tutoring_subjects")
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
     List<SubjectEnum> tutoringSubjects = new LinkedList<>();
 
-    @Column(name = "feedbacks")
+    @OneToMany(mappedBy = "tutor")
     List<Feedback> feedbacks = new LinkedList<>();
 
     @OneToMany(mappedBy = "tutor")
     List<TutorTimeSlot> freeTimeSlots = new LinkedList<>();
+
+    @OneToMany(mappedBy = "tutor")
+    List<Collaboration> collaborations = new LinkedList<>();
+
+    @OneToOne
+    @JoinColumn(name = "student_id")
+    Student student;
 
     public Tutor() {}
 
@@ -54,5 +67,21 @@ public class Tutor extends Role {
 
     public void setFreeTimeSlots(List<TutorTimeSlot> freeTimeSlots) {
         this.freeTimeSlots = freeTimeSlots;
+    }
+
+    public List<Collaboration> getCollaborations() {
+        return collaborations;
+    }
+
+    public void setCollaborations(List<Collaboration> collaborations) {
+        this.collaborations = collaborations;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 }
