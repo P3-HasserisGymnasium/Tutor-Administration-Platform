@@ -1,12 +1,17 @@
+import { duration } from './../../../node_modules/@mui/material/styles/createTransitions.d';
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../apiClient";
+import { Subject } from "~/types/enums";
 
-type PostType = {
+export type PostType = {
 	id: number;
 	title: string;
-	body: string;
+	description: string;
+	subject: Subject;
+	duration: string;
+	state: string;
 };
 
 export const usePostService = () => {
