@@ -4,12 +4,17 @@ import { daDK } from "@mui/material/locale"
 const theme = createTheme(
     {
         palette: {
-            // type: "light",
             primary: {
-                main: 'rgb(0,120,109)',
+                main: '#041758',
+                light: '#FFFFFF',
+                dark: '#6A79AA',
+                contrastText: ''
             },
             secondary: {
-                main: '#FFA137',
+                main: '#FFA552',
+                light: '#FFFFFF',
+                dark: '#1E212B',
+                contrastText: ''
             },
             error: {
                 main: '#D51B21',
