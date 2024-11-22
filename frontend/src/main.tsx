@@ -7,11 +7,11 @@ import { ThemeProvider } from "@mui/material";
 import theme from "./theme.ts";
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </BrowserRouter>
-  </StrictMode>
+	<StrictMode>
+		<BrowserRouter>
+			<ThemeProvider theme={theme}>
+				<App />
+			</ThemeProvider>
+		</BrowserRouter>
+	</StrictMode>
 );
