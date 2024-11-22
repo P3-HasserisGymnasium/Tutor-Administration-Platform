@@ -1,22 +1,4 @@
 // Enum for subjects
-<<<<<<< HEAD
-export enum Subject {
-    MUSIC = "Music",
-    MATH = "Math",
-    ESCIENCE = "EScience",
-    ENGLISH = "English",
-    DANISH = "Danish",
-    TYSK = "Tysk",
-    FRENCH = "French",
-    BIOLOGY = "Biology",
-    CHEMISTRY = "Chemistry",
-};
-
-// Enum for subject colors
-export const SubjectColor = {
-    [Subject.MUSIC]: { backgroundColor: "#b2c9e0", color: "white" },
-    [Subject.MATH]: { backgroundColor: "#ffcccb", color: "white" },
-=======
 /*export const Subjects = {
     MUSIC: "Music",
     MATH: "Math",
@@ -53,14 +35,14 @@ export enum Subject {
 }
 
 // interface for subject styling
-interface subjectStyling{
+interface subjectStyling {
     background: string; //defining background color
     color: string; // defining text color
 
 }
 
 // Mapping colors to subject
-export const SubjectColors: Record<Subject,subjectStyling> = {
+export const SubjectColors: Record<Subject, subjectStyling> = {
     [Subject.MUSIC]: { background: "#b2c9e0", color: "white" },
     [Subject.MATH]: { background: "#ffcccb", color: "white" },
     [Subject.ESS]: { background: "#c1e1c5", color: "white" },
@@ -75,7 +57,6 @@ export const SubjectColors: Record<Subject,subjectStyling> = {
     [Subject.PSYCHOLOGY]: { background: "#dda0dd", color: "white" },
     [Subject.ECON]: { background: "#add8e6", color: "white" },
     [Subject.SS]: { background: "#f0e68c", color: "white" },
->>>>>>> refs/remotes/origin/main
 }
 
 export type Timeslots = Date[][];

@@ -1,4 +1,3 @@
-import { duration } from './../../../node_modules/@mui/material/styles/createTransitions.d';
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
