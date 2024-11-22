@@ -1,11 +1,11 @@
 import MediumShortOnShortBoxLayout from "components/layout_components/MediumShortOnShortBoxLayout"
 
-export default function HomePage() {
+export default function CollaborationPage() {
 	return (
 		<MediumShortOnShortBoxLayout>
-			<div>Put calendar / Meeting overview here</div>
-			<div>Put tutee notifications here</div>
-			<div>Put tutor notifications here</div>
+			<div>Put scedule here</div>
+			<div>Put tutor communication here</div>
+			<div>Put meetings here</div>
 		</MediumShortOnShortBoxLayout>
 	);
 };
