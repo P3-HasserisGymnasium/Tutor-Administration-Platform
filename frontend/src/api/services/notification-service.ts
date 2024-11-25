@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "../apiClient";
+import { apiClient } from "../api-client";
 import { NotificationContext } from "~/types/enums";
 
 type NotificationType = {

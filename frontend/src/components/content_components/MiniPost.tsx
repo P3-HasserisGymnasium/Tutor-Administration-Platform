@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import SubjectChip from "./SubjectChip";
 import { Subject } from "~/types/enums";
-import { PostType } from "~/api/api-queries/post-queries";
+import { PostType } from "~/api/services/post-service";
 
 type MiniPostProp = {
     postData: PostType

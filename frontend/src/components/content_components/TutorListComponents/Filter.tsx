@@ -1,11 +1,11 @@
 import { Box, Typography } from "@mui/material";
 import SubjectChip from "../SubjectChip";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Subject, Day, YearGroup } from "src/types/enums";
+//import { useForm } from "react-hook-form";
+//import { zodResolver } from "@hookform/resolvers/zod";
+//import { z } from "zod";
+import { Subject/*, Day, YearGroup*/ } from "src/types/enums";
 
-const tutorListFilterSchema = z.object({
+/*const tutorListFilterSchema = z.object({
 	subjects: z.array(z.enum(Object.values(Subject) as [string, ...string[]])),
 	time_availability: z.array(
 		z.object({
@@ -20,10 +20,10 @@ const tutorListFilterSchema = z.object({
 	),
 	year_group: z.enum(Object.values(YearGroup) as [string, ...string[]]),
 	languages: z.array(z.string()),
-});
+});*/
 
 export default function Filter() {
-	const filterMethods = useForm({
+	/*const filterMethods = useForm({
 		resolver: zodResolver(tutorListFilterSchema),
 	});
 
@@ -31,7 +31,7 @@ export default function Filter() {
 
 	const onSubmit = (data: any) => {
 		console.log(data);
-	};
+	};*/
 
 	return (
 		<Box
