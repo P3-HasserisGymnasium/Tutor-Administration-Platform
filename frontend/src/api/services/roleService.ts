@@ -3,10 +3,11 @@ import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
 import { Language, Subject, YearGroup } from "~/types/enums";
+import { tutorListFilterType } from "~/types/types";
 
 // tutee/tutor:role_id -> role:student_id -> student:id
 
-type Profile = {
+export type Profile = {
 	full_name: string,
 	year_group: YearGroup,
 	languages: Language[],
@@ -63,17 +64,21 @@ export const useRoleService = () => {
 		placeholderData: [],
 	});
 
-	// Assuming student id array gets returned
-	const getTutors = useQuery({
-		queryKey: ["getTutors"],
-		queryFn: async () => {
-			const { data } = await apiClient.get<number[]>(
-				`/api/role_service`
+	// tutor information gets returned
+	const getTutors = useMutation({
+		mutationKey: ["getTutors"],
+		mutationFn: async (filters: tutorListFilterType) => {
+			const { data } = await apiClient.post<Profile[]>(
+				`/api/role_service`, filters
 			);
 			return data;
 		},
-		refetchOnWindowFocus: false,
-		placeholderData: [],
+		onError: (e: AxiosError<{ detail: string }>) => {
+			toast.error(e?.response?.data?.detail);
+		},
+		onSuccess: () => {
+			//
+		},
 	});
 
 	const getProfile = useQuery({

@@ -30,8 +30,9 @@ export enum Subject {
 	PE = "PE",
 	VA = "Visual Art",
 	PSYCHOLOGY = "Psychology",
-	ECON = "ECONOMY",
-	SS = "SOCIAL STUDIES",
+	ECON = "Economy",
+	SS = "Social Studies",
+	PHYSICS = "Physics",
 }
 
 export enum YearGroup {
@@ -40,33 +41,36 @@ export enum YearGroup {
 	IB2 = "IB2",
 }
 
+export enum Language {
+	DANISH = "Danish",
+	ENGLISH = "English",
+}
+
 // interface for subject styling
 interface subjectStyling {
 	background: string; //defining background color
 	color: string; // defining text color
 }
 
-export const Day = {
-	MONDAY: "Monday",
-	TUESDAY: "Tuesday",
-	WEDNESDAY: "Wednesday",
-	THURSDAY: "Thursday",
-	FRIDAY: "Friday",
-	SATURDAY: "Saturday",
-	SUNDAY: "Sunday",
-} as const;
-
-export type Day = (typeof Day)[keyof typeof Day];
+export enum Day{
+	MONDAY = "Monday",
+	TUESDAY = "Tuesday",
+	WEDNESDAY = "Wednesday",
+	THURSDAY = "Thursday",
+	FRIDAY = "Friday",
+	SATURDAY = "Saturday",
+	SUNDAY = "Sunday",
+}
 
 export type TimeSlot = {
 	start_time: string;
 	end_time: string;
 };
 
-export type TimeAvailability = {
-	day: Day;
+export type TimeAvailabilityType = {
+	day: string;
 	time: TimeSlot[];
-}[];
+};
 
 // Mapping colors to subject
 export const SubjectColors: Record<Subject, subjectStyling> = {
@@ -84,37 +88,7 @@ export const SubjectColors: Record<Subject, subjectStyling> = {
 	[Subject.PSYCHOLOGY]: { background: "#dda0dd", color: "white" },
 	[Subject.ECON]: { background: "#add8e6", color: "white" },
 	[Subject.SS]: { background: "#f0e68c", color: "white" },
+	[Subject.PHYSICS]: { background: "#ff6347", color: "white" },
 };
 
-// interface for subject styling
-interface subjectStyling {
-    background: string; //defining background color
-    color: string; // defining text color
 
-}
-
-export enum Language {
-    "PRE-IB",
-    "IB1",
-    "IB2",
-};
-
-export enum MeetingState {
-    "PENDING",
-    "ACCEPTED",
-    "REJECTED",
-    "TERMINATED"
-};
-
-export enum NotificationContext {
-    "TutorApplication",
-    "Feedback",
-    "Collaboration",
-    "Meeting"
-};
-
-export type PostType = {
-    id: number;
-    title: string;
-    body: string;
-};

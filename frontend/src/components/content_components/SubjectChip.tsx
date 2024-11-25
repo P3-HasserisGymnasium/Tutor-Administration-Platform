@@ -20,6 +20,7 @@ export default function SubjectChip({Subject}: SubjectChipProps){
             fontSize: "12px", // Set the font size
             //display: "flex",
             alignSelf: "flex-start", // Align chip to the left
+            margin: "2px" // Add margin around the chip
             }}/>
     )
 
