@@ -1,24 +1,20 @@
-import {useState} from "react";
 import TutorCard from "./TutorCard";
-import {Box, Typography,Stack} from "@mui/material";
-import {Language, Subject, YearGroup} from "~/types/enums.ts";
-import {Profile} from "api/services/roleService.ts";
-
-
+import { Box, Typography, Stack } from "@mui/material";
+import { Language, Subject, YearGroup } from "~/types/data_types";
+import { ProfileType } from "~/types/entity_types";
 
 export default function TutorList() {
-    const darkbBlue = "#041758";
- // const [tutors, setTutors] = useState<Tutor[]>([]);
-  const [loading, setLoading] = useState(true);
+  const darkbBlue = "#041758";
+  // const [tutors, setTutors] = useState<Tutor[]>([]);
 
-  const Profile:Profile = {
+  const profile: ProfileType = {
     full_name: "Lukas Saltenis",
-    year_group: YearGroup.PREIB,
-    languages: [Language.DANISH, Language.ENGLISH],
-    subjects: [Subject.MATH,Subject.PHYSICS],
-    description: "I am a tutor"
-  }
-/*
+    year_group: YearGroup.Enum.PREIB,
+    languages: [Language.Enum.DANISH, Language.Enum.ENGLISH],
+    subjects: [Subject.Enum.MATH, Subject.Enum.PHYSICS],
+    description: "I am a tutor",
+  };
+  /*
   useEffect(() => {
     const fetchTutors = async () => {
       const response = await fetch("http://localhost:5000/tutors");
@@ -35,22 +31,31 @@ export default function TutorList() {
   }
 */
   return (
-    <Box sx={{
-      padding: "20px",
-    }}>
-      <Typography variant="h1" sx={{
-        fontSize: "30px",
-        color: darkbBlue,
-        fontWeight: "inter",
-      }}>List of Tutors</Typography>
+    <Box
+      sx={{
+        padding: "20px",
+      }}
+    >
+      <Typography
+        variant="h1"
+        sx={{
+          fontSize: "30px",
+          color: darkbBlue,
+          fontWeight: "inter",
+        }}
+      >
+        List of Tutors
+      </Typography>
 
-      <Stack spacing={1} sx={{
-        overflowY:"auto"}}>
-        <TutorCard profile={Profile}/>
-        <TutorCard profile={Profile}/>
-
+      <Stack
+        spacing={1}
+        sx={{
+          overflowY: "auto",
+        }}
+      >
+        <TutorCard key={1} profile={profile} />
+        <TutorCard key={2} profile={profile} />
       </Stack>
-
     </Box>
   );
 }

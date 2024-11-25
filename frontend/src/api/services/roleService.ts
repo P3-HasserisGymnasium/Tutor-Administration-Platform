@@ -2,18 +2,12 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { Language, Subject, YearGroup } from "~/types/enums";
-import { tutorListFilterType } from "~/types/types";
+import { tutorListFilterType } from '~/types/data_types';
+import { ProfileType } from "~/types/entity_types";
 
 // tutee/tutor:role_id -> role:student_id -> student:id
 
-export type Profile = {
-	full_name: string,
-	year_group: YearGroup,
-	languages: Language[],
-	subjects: Subject[],
-	description?: string
-}
+
 
 export const useRoleService = () => {
 
@@ -68,7 +62,7 @@ export const useRoleService = () => {
 	const getTutors = useMutation({
 		mutationKey: ["getTutors"],
 		mutationFn: async (filters: tutorListFilterType) => {
-			const { data } = await apiClient.post<Profile[]>(
+			const { data } = await apiClient.post<ProfileType[]>(
 				`/api/role_service`, filters
 			);
 			return data;
@@ -84,7 +78,7 @@ export const useRoleService = () => {
 	const getProfile = useQuery({
 		queryKey: ["getProfile"],
 		queryFn: async () => {
-			const { data } = await apiClient.get<Profile>(
+			const { data } = await apiClient.get<ProfileType>(
 				`/api/role_service`
 			);
 			return data;
@@ -94,8 +88,8 @@ export const useRoleService = () => {
 
 	const editProfile = useMutation({
 		mutationKey: ["editProfile"],
-		mutationFn: async (profile: Profile) => {
-			const { data } = await apiClient.post<Profile>(
+		mutationFn: async (profile: ProfileType) => {
+			const { data } = await apiClient.post<ProfileType>(
 				"/api/role_service",
 				profile
 			);

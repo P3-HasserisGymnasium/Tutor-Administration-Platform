@@ -2,17 +2,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { MeetingState } from "~/types/enums";
+import { MeetingType } from "~/types/entity_types";
 
-type MeetingType = {
-	id: number;
-	rejection_reason?: string;
-	end_date: Date;
-	collaboration_id: number;
-	meeting_description?: string;
-	state: MeetingState;
-	start_date: Date;
-};
 
 export const useMeetingService = () => {
 	const requestMeeting = useMutation({

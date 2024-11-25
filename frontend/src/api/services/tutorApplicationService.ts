@@ -2,11 +2,11 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { Subject } from "~/types/enums";
+import { SubjectType } from "~/types/data_types";
 
 type TutorApplication = {
 	id?: number,
-	subject: Subject,
+	subject: SubjectType,
 	application_text: string,
 	rejection_reason?: string
 }
