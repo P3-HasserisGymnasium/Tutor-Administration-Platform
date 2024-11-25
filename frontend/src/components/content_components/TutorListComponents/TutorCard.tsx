@@ -18,6 +18,8 @@ export default function TutorCard({ profile }: { profile: ProfileType }) {
     color: "white",
   };
 
+  console.log("profile", profile);
+
   return (
     <Box
       sx={{

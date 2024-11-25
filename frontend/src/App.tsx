@@ -14,34 +14,49 @@ import TutorProfilePage from "components/page_components/tutor/TutorProfilePage"
 import RequestAdminPage from "components/page_components/tutee/RequestAdminPage";
 import PostsListPage from "components/page_components/tutor/PostsListPage";
 import CollaborationPage from "components/page_components/CollaborationPage";
+import { useBreakpoints } from "./utilities/helperFunctions";
 
 export default function App() {
-	return (
-		<Box sx={{ height: "100vh", width: "100vw" }}>
-			<Navbar />
-			<Box sx={{ height: "90%", width: "100%" }}>
-				<Routes>
-					{/* Root */}
-					<Route path="/" element={<HomePage />} />
+  const widthRightOffset = useBreakpoints().hasScrollbar ? "16px" : "0px";
+  return (
+    <Box
+      sx={{
+        height: useBreakpoints().isMobile ? "auto" : "100vh",
+        width: useBreakpoints().isMobile
+          ? `calc(100vw - ${widthRightOffset})`
+          : "100vw",
+      }}
+    >
+      <Navbar />
+      <Box sx={{ height: "90%", width: "100%" }}>
+        <Routes>
+          {/* Root */}
+          <Route path="/" element={<HomePage />} />
 
-					{/* Tutor */}
-					<Route path="/tutor" element={<TutorPage />} />
-					<Route path="/tutor/profile" element={<TutorProfilePage />} />
-					<Route path="/tutor/notifications" element={<TutorNotificationsPage />} />
-					<Route path="/tutor/posts-list" element={<PostsListPage />} />
+          {/* Tutor */}
+          <Route path="/tutor" element={<TutorPage />} />
+          <Route path="/tutor/profile" element={<TutorProfilePage />} />
+          <Route
+            path="/tutor/notifications"
+            element={<TutorNotificationsPage />}
+          />
+          <Route path="/tutor/posts-list" element={<PostsListPage />} />
 
-					{/* Tutee */}
-					<Route path="/tutee" element={<TuteePage />} />
-					<Route path="/tutee/profile" element={<TuteeProfilePage />} />
-					<Route path="/tutee/notifications" element={<TuteeNotificationsPage />} />
-					<Route path="/tutee/create-post" element={<CreatePostPage />} />
-					<Route path="/tutee/request-admin" element={<RequestAdminPage />} />
-					<Route path="/tutee/tutor-list" element={<TutorListPage />} />
+          {/* Tutee */}
+          <Route path="/tutee" element={<TuteePage />} />
+          <Route path="/tutee/profile" element={<TuteeProfilePage />} />
+          <Route
+            path="/tutee/notifications"
+            element={<TuteeNotificationsPage />}
+          />
+          <Route path="/tutee/create-post" element={<CreatePostPage />} />
+          <Route path="/tutee/request-admin" element={<RequestAdminPage />} />
+          <Route path="/tutee/tutor-list" element={<TutorListPage />} />
 
-					{/* Other */}
-					<Route path="/collaboration" element={<CollaborationPage />} />
-				</Routes>
-			</Box>
-		</Box>
-	);
+          {/* Other */}
+          <Route path="/collaboration" element={<CollaborationPage />} />
+        </Routes>
+      </Box>
+    </Box>
+  );
 }
