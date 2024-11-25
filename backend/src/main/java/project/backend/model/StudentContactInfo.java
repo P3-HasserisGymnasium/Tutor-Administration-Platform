@@ -2,6 +2,9 @@ package project.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public class StudentContactInfo {
     
     @JsonProperty("phone_number")

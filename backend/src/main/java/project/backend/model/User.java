@@ -10,7 +10,7 @@ import jakarta.persistence.InheritanceType;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class User {
+public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,13 +24,7 @@ public class User {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    // Constructors, getters, and setters
     public User() {}
-
-    public User(String email, String passwordHash) {
-        this.email = email;
-        this.passwordHash = passwordHash;
-    }
 
     public Long getId() {
         return id;
