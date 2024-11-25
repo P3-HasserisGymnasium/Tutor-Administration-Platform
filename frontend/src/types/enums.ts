@@ -85,3 +85,36 @@ export const SubjectColors: Record<Subject, subjectStyling> = {
 	[Subject.ECON]: { background: "#add8e6", color: "white" },
 	[Subject.SS]: { background: "#f0e68c", color: "white" },
 };
+
+// interface for subject styling
+interface subjectStyling {
+    background: string; //defining background color
+    color: string; // defining text color
+
+}
+
+export enum Language {
+    "PRE-IB",
+    "IB1",
+    "IB2",
+};
+
+export enum MeetingState {
+    "PENDING",
+    "ACCEPTED",
+    "REJECTED",
+    "TERMINATED"
+};
+
+export enum NotificationContext {
+    "TutorApplication",
+    "Feedback",
+    "Collaboration",
+    "Meeting"
+};
+
+export type PostType = {
+    id: number;
+    title: string;
+    body: string;
+};

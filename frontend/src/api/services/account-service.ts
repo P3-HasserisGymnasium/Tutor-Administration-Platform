@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { YearGroup, Language, Subject, Timeslots } from "~/types/enums";
+import { YearGroup, Language, Subject, TimeSlot } from "~/types/enums";
 
 type AccountRegisterType = {
 	// Requried
@@ -15,7 +15,7 @@ type AccountRegisterType = {
 	languages?: Language[];
 	tutoring_subjects?: Subject[];
 	tutor_profile_description?: string;
-	tutor_timeslots?: Timeslots;
+	tutor_timeslots?: TimeSlot[];
 };
 
 export const useAccountService = () => {

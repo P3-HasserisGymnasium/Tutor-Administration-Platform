@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
-import { apiClient } from "../apiClient";
+import { apiClient } from "../api-client";
 import { Language, Subject, YearGroup } from "~/types/enums";
 
 // tutee/tutor:role_id -> role:student_id -> student:id
