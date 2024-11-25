@@ -13,6 +13,7 @@ public class TutorApplication {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "subject")
@@ -25,6 +26,10 @@ public class TutorApplication {
     String rejectionReason;
 
     public TutorApplication() {}
+
+    public Long getId() {
+        return id;
+    }
 
     public SubjectEnum getSubject() {
         return subject;
