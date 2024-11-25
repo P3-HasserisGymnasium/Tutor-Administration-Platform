@@ -2,16 +2,9 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { Subject } from "~/types/enums";
+import { PostType } from "~/types/entity_types";
 
-export type PostType = {
-	id: number;
-	title: string;
-	description: string;
-	subject: Subject;
-	duration: string;
-	state: string;
-};
+
 
 export const usePostService = () => {
 	const getPosts = useQuery({

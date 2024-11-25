@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../api-client";
-import { NotificationContext } from "~/types/enums";
+import { NotificationContextType } from "~/types/data_types";
+
 
 type NotificationType = {
-	notificationContext: NotificationContext;
+	notificationContext: NotificationContextType;
 	participants: number; // As ID's
 };
 

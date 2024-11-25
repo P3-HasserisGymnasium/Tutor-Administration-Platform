@@ -2,37 +2,17 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { PostType, Subject } from "~/types/enums";
+import { PostType, CollaborationType, Feedback } from "~/types/entity_types";
 
-type Collaboration = {
-	end_date?: Date;
-	tutee_id: number;
-	start_date?: Date;
-	tutor_id: number;
-	state: CollaborationState;
-	subject: Subject;
-};
 
-type Feedback = {
-	id: number;
-	feedback: string;
-};
 
-enum CollaborationState {
-	PENDING,
-	WAITING_FOR_TUTOR,
-	WAITING_FOR_TUTEE,
-	ACCEPTED,
-	REJECTED,
-	TERMINATED,
-}
 
 export const useCollaborationService = () => {
 	//Admin requests a collaboration
 	const submitCollaborationSuggestion = useMutation({
 		mutationKey: ["submitCollaborationSuggestion"],
-		mutationFn: async (collaboration: Collaboration) => {
-			const { data } = await apiClient.post<Collaboration>(
+		mutationFn: async (collaboration: CollaborationType) => {
+			const { data } = await apiClient.post<CollaborationType>(
 				"/api/collaboration_service",
 				collaboration
 			);
@@ -101,8 +81,8 @@ export const useCollaborationService = () => {
 	//Tutor or tutee wants a collab
 	const requestCollaboration = useMutation({
 		mutationKey: ["requestCollaboration"],
-		mutationFn: async (collaboration: Collaboration) => {
-			const { data } = await apiClient.post<Collaboration>(
+		mutationFn: async (collaboration: CollaborationType) => {
+			const { data } = await apiClient.post<CollaborationType>(
 				"/api/collaboration_service",
 				collaboration
 			);
@@ -153,7 +133,7 @@ export const useCollaborationService = () => {
 	const getCollaborations = useQuery({
 		queryKey: ["getCollaborations"],
 		queryFn: async () => {
-			const { data } = await apiClient.get<Collaboration[]>(
+			const { data } = await apiClient.get<CollaborationType[]>(
 				`/api/post_service`
 			);
 			return data;

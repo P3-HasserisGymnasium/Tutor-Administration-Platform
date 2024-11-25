@@ -21,7 +21,7 @@ export default function ShortLongBoxLayout({
 				elevation={3}
 				sx={{
 					margin: 1,
-					width: "calc(25% - 8px)",
+					width: 1/3,
 					height: "calc(100% - 16px)",
 				}}
 			>
@@ -31,7 +31,7 @@ export default function ShortLongBoxLayout({
 				elevation={3}
 				sx={{
 					margin: 1,
-					width: "calc(75% - 8px)",
+					width: 2/3,
 					height: "calc(100% - 16px)",
 				}}
 			>
