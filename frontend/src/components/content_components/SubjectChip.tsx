@@ -8,7 +8,6 @@ type SubjectChipProps = {
 // Enum for subject colors
 export default function SubjectChip({Subject}: SubjectChipProps){
 
-    console.log("subject", Subject)
     const style = SubjectColors[Subject]
 
     return (
