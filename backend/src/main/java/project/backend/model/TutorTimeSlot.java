@@ -14,6 +14,7 @@ public class TutorTimeSlot {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
     @ManyToOne
     Tutor tutor;
@@ -25,6 +26,10 @@ public class TutorTimeSlot {
     Timestamp endTimestamp;
 
     public TutorTimeSlot() {}
+
+    public Long getId() {
+        return id;
+    }
 
     public Tutor getTutor() {
         return tutor;

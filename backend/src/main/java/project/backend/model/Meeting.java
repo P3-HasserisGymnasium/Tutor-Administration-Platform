@@ -11,11 +11,16 @@ public class Meeting {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
     @ManyToOne
     Collaboration collaboration;
 
     public Meeting() {}
+
+    public Long getId() {
+        return id;
+    }
 
     public Collaboration getCollaboration() {
         return collaboration;
