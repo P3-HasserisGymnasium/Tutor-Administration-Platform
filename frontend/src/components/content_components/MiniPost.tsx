@@ -36,7 +36,7 @@ export default function MiniPost({ postData }: MiniPostProp) {
       </Typography>
 
       <Box>
-        <SubjectChip Subject={Subject.Enum.MATH} />
+        <SubjectChip Subject={Subject.Enum.Math} />
 
         <Typography
           sx={{

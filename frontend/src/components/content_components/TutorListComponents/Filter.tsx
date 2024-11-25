@@ -6,7 +6,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { FormProvider, useForm, Controller } from "react-hook-form";
+import { FormProvider, useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Subject } from "~/types/data_types";
 import SetTimeAvailability from "~/components/content_components/TutorListComponents/SetTimeAvailability";
@@ -19,15 +19,25 @@ import {
 export default function Filter() {
   const filterMethods = useForm<tutorListFilterType>({
     resolver: zodResolver(zodTutorListFilterSchema),
+    defaultValues: {
+      subjects: [],
+      time_availability: [],
+    },
   });
 
-  const { getValues, control, setValue } = filterMethods;
+  const { getValues, control } = filterMethods;
 
   const allValues = getValues();
 
   const filter = (values: tutorListFilterType) => {
     console.log(values);
   };
+
+  const keepWatch = useWatch({
+    control,
+  });
+
+  console.log(keepWatch);
 
   const darkBlue = "#041758";
   return (
@@ -52,12 +62,12 @@ export default function Filter() {
         <Controller
           name="subjects"
           control={control}
-          render={({}) => (
+          render={({ field }) => (
             <Autocomplete
               multiple
-              options={Object.values(Subject)}
+              options={Object.values(Subject.enum)}
               onChange={(_, newValue) => {
-                setValue("subjects", newValue);
+                field.onChange(newValue);
               }}
               filterSelectedOptions
               renderInput={(params) => (

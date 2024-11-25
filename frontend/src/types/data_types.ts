@@ -2,33 +2,33 @@ import { z } from "zod";
 
 // Defining zod schemas for forms
 export const zodSubject = z.enum([
-	"MUSIC",
-	"MATH",
-	"ESS",
-	"ENGLISH",
-	"DANISH",
-	"GERMAN",
-	"FRENCH",
-	"BIOLOGY",
-	"CHEMISTRY",
-	"PE",
-	"VA",
-	"PSYCHOLOGY",
-	"ECON",
-	"SS",
-	"PHYSICS",
+	"Music",
+	"Math",
+	"Ess",
+	"English",
+	"Danish",
+	"German",
+	"French",
+	"Biology",
+	"Chemistry",
+	"Pe",
+	"Va",
+	"Psychology",
+	"Econ",
+	"Ss",
+	"Physics",
 ] as const);
 export const zodDay = z.enum([
-	"MONDAY",
-	"TUESDAY",
-	"WEDNESDAY",
-	"THURSDAY",
-	"FRIDAY",
-	"SATURDAY",
-	"SUNDAY",
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thursday",
+	"Friday",
+	"Saturday",
+	"Sunday",
 ] as const);
-export const zodLanguage = z.enum(["DANISH", "ENGLISH"] as const);
-export const zodYearGroup = z.enum(["PREIB", "IB1", "IB2"] as const);
+export const zodLanguage = z.enum(["Danish", "English"] as const);
+export const zodYearGroup = z.enum(["PRE-IB", "IB-1", "IB-2"] as const);
 export const zodTimeSlotSchema = z.object({
 	start_time: z.string(),
 	end_time: z.string(),
@@ -49,10 +49,10 @@ export const zodTimeAvailabilitySchema = z.object({
 	time: z.array(zodTimeSlotSchema),
 });
 export const zodMeetingState = z.enum([
-	"PENDING",
-	"ACCEPTED",
-	"REJECTED",
-	"TERMINATED",
+	"Pending",
+	"Accepted",
+	"Rejected",
+	"Terminated",
 ] as const);
 export const zodNotificationContext = z.enum([
 	"TutorApplication",
@@ -61,16 +61,14 @@ export const zodNotificationContext = z.enum([
 	"Meeting",
 ] as const);
 export const zodCollaborationState = z.enum([
-	"PENDING",
-	"WAITING_FOR_TUTOR",
-	"WAITING_FOR_TUTEE",
-	"ACCEPTED",
-	"REJECTED",
-	"TERMINATED",
+	"Pending",
+	"WaitingForTutor",
+	"WaitingForTutee",
+	"Accepted",
+	"Rejected",
+	"Terminated",
 ] as const);
 export const zodUUID = z.string().uuid();
-
-
 
 // interface for subject styling
 interface subjectStyling {
@@ -101,20 +99,19 @@ export type UUIDType = z.infer<typeof zodUUID>;
 
 // Mapping colors to subject
 export const SubjectColors: Record<SubjectType, subjectStyling> = {
-	[Subject.Enum.MUSIC]: { background: "#b2c9e0", color: "white" },
-	[Subject.Enum.MATH]: { background: "#ffcccb", color: "white" },
-	[Subject.Enum.ESS]: { background: "#c1e1c5", color: "white" },
-	[Subject.Enum.ENGLISH]: { background: "#ffd700", color: "white" },
-	[Subject.Enum.DANISH]: { background: "#FF4141", color: "white" },
-	[Subject.Enum.GERMAN]: { background: "#87EB8E", color: "white" },
-	[Subject.Enum.FRENCH]: { background: "#1B76FF", color: "white" },
-	[Subject.Enum.BIOLOGY]: { background: "#98fb98", color: "white" },
-	[Subject.Enum.CHEMISTRY]: { background: "#dcdcdc", color: "white" },
-	[Subject.Enum.PE]: { background: "#ffa07a", color: "white" },
-	[Subject.Enum.VA]: { background: "#ffdead", color: "white" },
-	[Subject.Enum.PSYCHOLOGY]: { background: "#dda0dd", color: "white" },
-	[Subject.Enum.ECON]: { background: "#add8e6", color: "white" },
-	[Subject.Enum.SS]: { background: "#f0e68c", color: "white" },
-	[Subject.Enum.PHYSICS]: { background: "#ff6347", color: "white" },
+	[Subject.Enum.Music]: { background: "#b2c9e0", color: "white" },
+	[Subject.Enum.Math]: { background: "#ffcccb", color: "white" },
+	[Subject.Enum.Ess]: { background: "#c1e1c5", color: "white" },
+	[Subject.Enum.English]: { background: "#ffd700", color: "white" },
+	[Subject.Enum.Danish]: { background: "#FF4141", color: "white" },
+	[Subject.Enum.German]: { background: "#87EB8E", color: "white" },
+	[Subject.Enum.French]: { background: "#1B76FF", color: "white" },
+	[Subject.Enum.Biology]: { background: "#98fb98", color: "white" },
+	[Subject.Enum.Chemistry]: { background: "#dcdcdc", color: "white" },
+	[Subject.Enum.Pe]: { background: "#ffa07a", color: "white" },
+	[Subject.Enum.Va]: { background: "#ffdead", color: "white" },
+	[Subject.Enum.Psychology]: { background: "#dda0dd", color: "white" },
+	[Subject.Enum.Econ]: { background: "#add8e6", color: "white" },
+	[Subject.Enum.Ss]: { background: "#f0e68c", color: "white" },
+	[Subject.Enum.Physics]: { background: "#ff6347", color: "white" },
 };
-

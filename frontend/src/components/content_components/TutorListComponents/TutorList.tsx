@@ -9,9 +9,9 @@ export default function TutorList() {
 
   const profile: ProfileType = {
     full_name: "Lukas Saltenis",
-    year_group: YearGroup.Enum.PREIB,
-    languages: [Language.Enum.DANISH, Language.Enum.ENGLISH],
-    subjects: [Subject.Enum.MATH, Subject.Enum.PHYSICS],
+    year_group: YearGroup.Enum["PRE-IB"],
+    languages: [Language.Enum.Danish, Language.Enum.English],
+    subjects: [Subject.Enum.Math, Subject.Enum.Physics],
     description: "I am a tutor",
   };
   /*
