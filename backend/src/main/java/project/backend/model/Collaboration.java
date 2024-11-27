@@ -1,14 +1,25 @@
 package project.backend.model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
+@Entity
 public class Collaboration {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+    
     @ManyToOne
     Tutee tutee;
 
@@ -22,21 +33,25 @@ public class Collaboration {
     SubjectEnum subject;
 
     @Column(name = "start_date", nullable = true)
-    Date startDate;
+    Timestamp startTimestamp;
 
     @Column(name = "end_date", nullable = true)
-    Date endDate;
+    Timestamp endTimestamp;
 
     @Column(name = "termination_reason", nullable = true)
     String terminationReason;
 
-    @Column(name = "request_post_id", nullable = true)
+    @OneToOne
     Post post;
 
     @OneToMany(mappedBy = "collaboration")
     List<Meeting> meetings = new LinkedList<>();
 
     public Collaboration() {}
+
+    public Long getId() {
+        return id;
+    }
 
     public Tutee getTutee() {
         return tutee;
@@ -70,20 +85,20 @@ public class Collaboration {
         this.subject = subject;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Timestamp getStartTimestamp() {
+        return startTimestamp;
     }
 
-    public void setStartDate(Date date) {
-        this.startDate = date;
+    public void setStartTimestamp(Timestamp date) {
+        this.startTimestamp = date;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public Timestamp getEndTimestamp() {
+        return endTimestamp;
     }
 
-    public void setEndDate(Date date) {
-        this.endDate = date;
+    public void setEndTimestamp(Timestamp date) {
+        this.endTimestamp = date;
     }
 
     public String getTerminationReason() {
@@ -94,11 +109,11 @@ public class Collaboration {
         this.terminationReason = reason;
     }
 
-    public Post getPost() {
+    public Post getPostId() {
         return post;
     }
 
-    public void setPost(Post post) {
+    public void setPostId(Post post) {
         this.post = post;
     }
 

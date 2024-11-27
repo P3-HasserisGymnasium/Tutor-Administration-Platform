@@ -1,13 +1,20 @@
 package project.backend.model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Post {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
     @ManyToOne
     Tutee tutee;
@@ -25,12 +32,16 @@ public class Post {
     int duration;
 
     @Column(name = "creation_date")
-    Date creationDate;
+    Timestamp creationTimestamp;
 
     @Column(name = "state")
     PostState state;
 
     public Post(){}
+
+    public Long getId() {
+        return id;
+    }
 
     public Tutee getTutee() {
         return tutee;
@@ -72,12 +83,12 @@ public class Post {
         this.duration = duration;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
+    public Timestamp getCreationTimestamp() {
+        return creationTimestamp;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+    public void setCreationTimestamp(Timestamp creationTimestamp) {
+        this.creationTimestamp = creationTimestamp;
     }
 
     public PostState getState() {
