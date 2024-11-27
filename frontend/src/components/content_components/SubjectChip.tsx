@@ -1,5 +1,6 @@
 import { Chip } from "@mui/material";
-import { SubjectType, SubjectColors } from "~/types/data_types";
+import { SubjectType } from "~/types/data_types";
+import { SubjectColors } from "~/types/theme";
 
 type SubjectChipProps = {
 	Subject: SubjectType;
