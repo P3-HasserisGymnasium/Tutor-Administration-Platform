@@ -14,7 +14,7 @@ export const useAccountService = () => {
 			mutationKey: ["registerAccount"],
 			mutationFn: async (account: AccountRegisterType) => {
 				const { data } = await apiClient.post<AccountRegisterResponseType>(
-					"/api/account_service",
+					"/api/students",
 					account
 				);
 				return data;

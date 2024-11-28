@@ -1,5 +1,4 @@
-import { createContext, useState } from "react";
-import { Language, LanguageType, Role, RoleType, SubjectType, TimeSlotType, YearGroup, YearGroupType } from "~/types/data_types";
+import { useState } from "react";
 import PrimaryRegisterPage from "./PrimaryRegisterPage";
 import { AccountRegisterType, zodAccountRegisterSchema } from "~/types/entity_types";
 import { zodResolver } from "@hookform/resolvers/zod";

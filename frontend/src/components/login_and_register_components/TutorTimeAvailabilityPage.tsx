@@ -1,5 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { Form } from "react-router-dom";
+import { Box, Button, Typography } from "@mui/material";
 import TutorlyLogoBlue from "src/assets/TutorlyLogoBlue.svg"
 
 interface TutorTimeAvailabilityProps {
@@ -17,7 +16,7 @@ const TutorTimeAvailabilityProps: React.FC<TutorTimeAvailabilityProps> = ({ setP
                     </Typography>
                     <Box sx={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end" }}>
                         <Button onClick={() => setPage("primaryRegister")} sx={{ margin: 1, color: "primary.main", backgroundColor: "primary.light" }} variant="contained">Go back</Button>
-                        <Button type="submit" sx={{ margin: 1, color: "primary.light" }} variant="contained" >Continue</Button>
+                        <Button /*onClick={ }*/ type="submit" sx={{ margin: 1, color: "primary.light" }} variant="contained" >Continue</Button>
                     </Box>
 
                 </Box>

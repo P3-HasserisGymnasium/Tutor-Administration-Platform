@@ -1,8 +1,6 @@
-import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
-import { useEffect } from "react";
-import { Controller, get, SubmitHandler, useFormContext } from "react-hook-form";
+import { Box, Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from "@mui/material";
+import { Controller, useFormContext } from "react-hook-form";
 import { useNavigate, useSubmit } from "react-router-dom";
-import { toast } from "react-toastify";
 import TutorlyLogoBlue from "src/assets/TutorlyLogoBlue.svg"
 import { useAccountService } from "~/api/services/account-service";
 import { Language, Role, RoleType, YearGroup } from "~/types/data_types";
@@ -35,11 +33,11 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
         }
         else if (isTutee) {
             registerMutation.mutate(values, {
-                onSuccess: (data) => {
+                onSuccess: (/*data*/) => {
                     useSubmit();
                     navigate("/start");
                 },
-                onError: (error) => {
+                onError: (/*error*/) => {
                     // Måske giv en fejl besked?
                 }
             })
