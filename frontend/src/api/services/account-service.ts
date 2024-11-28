@@ -9,28 +9,30 @@ import { useNavigate } from "react-router-dom"
 export const useAccountService = () => {
 	const navigate = useNavigate();
 
-	const registerAccount = useMutation({
-		mutationKey: ["registerAccount"],
-		mutationFn: async (account: AccountRegisterType) => {
-			const { data } = await apiClient.post<AccountRegisterResponseType>(
-				"/api/account_service",
-				account
-			);
-			return data;
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
-		},
-		onSuccess: (data) => {
-			navigate("/start");
-			if (data.tutee) {
-				toast.success("Your account has been created and you can log in as a tutee!")
-			}
-			if (data.tutor) {
-				toast.info("When an administrator accepts your tutor application, you will be granted access to the system as a tutor")
-			}
-		},
-	});
+	const registerAccount = () => {
+		return useMutation({
+			mutationKey: ["registerAccount"],
+			mutationFn: async (account: AccountRegisterType) => {
+				const { data } = await apiClient.post<AccountRegisterResponseType>(
+					"/api/account_service",
+					account
+				);
+				return data;
+			},
+			onError: (e: AxiosError<{ detail: string }>) => {
+				toast.error(e?.response?.data?.detail);
+			},
+			onSuccess: (data) => {
+				navigate("/start");
+				if (data.tutee) {
+					toast.success("Your account has been created and you can log in as a tutee!")
+				}
+				if (data.tutor) {
+					toast.info("When an administrator accepts your tutor application, you will be granted access to the system as a tutor")
+				}
+			},
+		});
+	}
 
 	const removeAccount = useMutation({
 		mutationKey: ["removeAccount"],

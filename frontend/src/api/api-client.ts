@@ -6,11 +6,17 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
 const apiClient = axios.create({
 	baseURL: "http://localhost:8080",
 	withCredentials: true, // Ensure credentials (cookies) are sent with requests
+
 });
 
 // Intercept the response to handle token expiration
 apiClient.interceptors.response.use(
 	function (response) {
+
+		response.headers['Access-Control-Allow-Origin'] = '*';
+		response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
+		response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
+
 		return response;
 	},
 	function (error) {

@@ -10,9 +10,10 @@ public class FilterConfig {
 
     @Bean
     public FilterRegistrationBean<JWTAuthenticationFilter> jwtFilter() {
-        FilterRegistrationBean<JWTAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new JWTAuthenticationFilter());
-        registrationBean.addUrlPatterns("/api/*");
-        return registrationBean;
+        FilterRegistrationBean<JWTAuthenticationFilter> jwtBean = new FilterRegistrationBean<>();
+        jwtBean.setFilter(new JWTAuthenticationFilter());
+        jwtBean.addUrlPatterns("/api/*");
+        jwtBean.setOrder(2); // Set order to determine execution sequence; higher number = lower priority
+        return jwtBean;
     }
 }

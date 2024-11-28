@@ -1,6 +1,6 @@
 import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
 import { useEffect } from "react";
-import { Controller, get, useFormContext } from "react-hook-form";
+import { Controller, get, SubmitHandler, useFormContext } from "react-hook-form";
 import { useNavigate, useSubmit } from "react-router-dom";
 import { toast } from "react-toastify";
 import TutorlyLogoBlue from "src/assets/TutorlyLogoBlue.svg"
@@ -13,14 +13,16 @@ interface PrimaryRegisterPageProps {
 }
 
 const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) => {
-    const formMethods = useFormContext();
-    const { getValues, trigger, register, control, handleSubmit, formState: {
+    const formMethods = useFormContext<AccountRegisterType>();
+
+    const registerMutation = useAccountService().registerAccount();
+    const { getValues, register, control, handleSubmit, formState: {
         errors
     }, setError } = formMethods;
 
     const navigate = useNavigate();
 
-    const verifyRoles = () => {
+    const verifyRoles = (values: AccountRegisterType) => {
 
         const roles: RoleType[] = getValues("roles");
         console.log(roles)
@@ -32,11 +34,16 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
             setPage("tutorTimeAvailability");
         }
         else if (isTutee) {
-            useAccountService().registerAccount(getValues().registerData);
-            useSubmit();
-            navigate("/start");
+            registerMutation.mutate(values, {
+                onSuccess: (data) => {
+                    useSubmit();
+                    navigate("/start");
+                },
+                onError: (error) => {
+                    // Måske giv en fejl besked?
+                }
+            })
         }
-
     }
 
     const verifyPassword = () => {
@@ -72,7 +79,6 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
                         <Controller
                             name="year_group"
                             control={control}
-                            defaultValue={[]} // Ensures the initial value is an empty array
                             render={({ field }) => (
                                 <FormControl sx={{ width: "100%" }}>
                                     <InputLabel>Year group</InputLabel>
