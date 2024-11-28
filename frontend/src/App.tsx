@@ -1,6 +1,6 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, ThemeProvider } from "@mui/material";
 import Navbar from "components/layout_components/Navbar";
 import HomePage from "components/page_components/HomePage";
 import TutorPage from "components/page_components/tutor/TutorPage";
@@ -15,9 +15,16 @@ import RequestAdminPage from "components/page_components/tutee/RequestAdminPage"
 import PostsListPage from "components/page_components/tutor/PostsListPage";
 import CollaborationPage from "components/page_components/CollaborationPage";
 import { useBreakpoints } from "./utilities/helperFunctions";
+import { useLocation } from "react-router-dom";
+import tuteeTheme from "./themes/tuteeTheme";
+import tutorTheme from "./themes/tutorTheme";
 
 export default function App() {
+  const location = useLocation();
+  const currentTheme = location.pathname.startsWith("/tutee") ? tuteeTheme : tutorTheme;
+  console.log(currentTheme);
   const widthRightOffset = useBreakpoints().hasScrollbar ? "16px" : "0px";
+
   return (
     <Box
       sx={{
@@ -27,7 +34,10 @@ export default function App() {
           : "100vw",
       }}
     >
-      <Navbar />
+      <ThemeProvider theme={currentTheme}>
+        <Navbar />
+      </ThemeProvider>
+
       <Box sx={{ height: "90%", width: "100%" }}>
         <Routes>
           {/* Root */}
