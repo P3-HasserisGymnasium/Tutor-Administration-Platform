@@ -59,3 +59,7 @@ temp/
 
 # Gradle wrapper files
 gradle-wrapper.jar
+
+application.properties
+
+docker-compose.yml

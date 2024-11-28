@@ -37,8 +37,8 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5") // Core JWT API
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5") // Default implementation
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.5") // Jackson support for JSON
-	implementation("io.jsonwebtoken:jjwt:0.9.1") 
     implementation("jakarta.servlet:jakarta.servlet-api:6.0.0")
+
 
 }
 
