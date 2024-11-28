@@ -7,6 +7,7 @@ import {
 	MeetingState,
 	CollaborationState,
 	zodUUID,
+	zodRole
 } from "./data_types";
 
 export const zodPostSchema = z.object({
@@ -51,15 +52,65 @@ export const zodFeedbackSchema = z.object({
 });
 
 export const zodAccountRegisterSchema = z.object({
-	full_name: z.string(),
-	email: z.string(),
-	password: z.string(),
-	year_group: YearGroup.optional(),
-	languages: z.array(Language).optional(),
-	tutoring_subjects: z.array(Subject).optional(),
-	tutor_profile_description: z.string().optional(),
-	tutor_timeslots: z.array(TimeSlot).optional(),
+	full_name: z
+		.string({
+			required_error: "You must provide a name", // Required field error
+		})
+		.min(1, "You must provide a full name"), // Minimum length validation
+
+	email: z
+		.string({
+			required_error: "You must provide an email", // Required field error
+		})
+		.email("You must provide a valid email address"), // Email format validation
+
+	password: z
+		.string({
+			required_error: "You must provide a password", // Required field error
+		})
+		.min(6, "Password must be at least 6 characters long"), // Minimum length validation
+
+	confirm_password: z
+		.string({
+			required_error: "You must confirm your password", // Required field error
+		})
+		.min(6, "Password confirmation must match the password"), // Minimum length validation
+	// Password match check should be handled elsewhere (e.g., in `refine`)
+
+	year_group: YearGroup.optional(), // Optional field, no required error
+
+	languages: z
+		.array(Language, {
+			required_error: "You must select at least one language", // Required array error
+		})
+		.min(1, "You must select at least one language") // Minimum array length validation
+		.optional(), // Optional field, validation applies if provided
+
+	roles: z
+		.array(zodRole, {
+			required_error: "You must select at least one role", // Required array error
+		})
+		.min(1, "You must select at least one role"), // Minimum array length validation
+
+	tutor_subjects: z
+		.array(Subject, {
+			required_error: "You must select at least one subject", // Optional field validation
+		})
+		.optional(), // Optional field
+
+	tutor_profile_description: z
+		.string({
+			required_error: "You must provide a description", // Optional field validation
+		})
+		.optional(), // Optional field
+
+	tutor_timeslots: z
+		.array(TimeSlot, {
+			required_error: "You must select at least one timeslot", // Optional field validation
+		})
+		.optional(), // Optional field
 });
+
 
 export type PostType = z.infer<typeof zodPostSchema>;
 export type ProfileType = z.infer<typeof zodProfileSchema>;
