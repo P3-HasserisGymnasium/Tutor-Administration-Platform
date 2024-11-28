@@ -1,5 +1,7 @@
 package project.backend.controller;
 
+import java.util.Optional;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,16 +24,21 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
-        throw new UnsupportedOperationException("Method not implemented");
+        Optional<User> optinalUser = userService.getUserById(id);
+        if (optinalUser.isPresent()) {
+            return optinalUser.get();
+        } else {
+            throw new RuntimeException("User with id (" + id.toString() + ") not found");
+        }
     }
 
     @PostMapping("/")
     public User createUser(User user) {
-        throw new UnsupportedOperationException("Method not implemented");
+        return userService.saveUser(user);
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
-        throw new UnsupportedOperationException("Method not implemented");
+        userService.deleteUserById(id);
     }
 }
