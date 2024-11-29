@@ -1,5 +1,6 @@
 package project.backend.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import project.backend.model.TutorTimeSlot;
 import project.backend.service.TutorTimeSlotService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/tutorTimeSlot")
 public class TutorTimeSlotController {
@@ -23,16 +25,17 @@ public class TutorTimeSlotController {
 
     @GetMapping("/{id}")
     public TutorTimeSlot getTutorTimeSlot(@PathVariable Long id) {
-        throw new UnsupportedOperationException("Method not implemented");
+        return tutorTimeSlotService.getTutorTimeSlotById(id)
+            .orElse(null);
     }
 
     @PostMapping("/")
     public TutorTimeSlot createTutorTimeSlot(@RequestBody TutorTimeSlot tutorTimeSlot) {
-        throw new UnsupportedOperationException("Method not implemented");
+        return tutorTimeSlotService.saveTutorTimeSlot(tutorTimeSlot);
     }
 
     @DeleteMapping("/{id}")
     public void deleteTutorTimeSlot(@PathVariable Long id) {
-        throw new UnsupportedOperationException("Method not implemented");
+        tutorTimeSlotService.deleteTutorTimeSlotById(id);
     }
 }

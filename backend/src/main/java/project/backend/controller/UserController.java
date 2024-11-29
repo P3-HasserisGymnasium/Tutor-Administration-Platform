@@ -1,7 +1,6 @@
 package project.backend.controller;
 
-import java.util.Optional;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import project.backend.model.User;
 import project.backend.service.UserService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -25,12 +25,8 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
-        Optional<User> optinalUser = userService.getUserById(id);
-        if (optinalUser.isPresent()) {
-            return optinalUser.get();
-        } else {
-            throw new RuntimeException("User with id (" + id.toString() + ") not found");
-        }
+        return userService.getUserById(id)
+            .orElse(null);
     }
 
     @PostMapping("/")

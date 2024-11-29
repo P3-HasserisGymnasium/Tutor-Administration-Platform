@@ -1,5 +1,6 @@
 package project.backend.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import project.backend.model.Feedback;
 import project.backend.service.FeedbackService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/feedback")
 public class FeedbackController {
@@ -23,16 +25,17 @@ public class FeedbackController {
 
     @GetMapping("/{id}")
     public Feedback getFeedback(@PathVariable Long id) {
-        throw new UnsupportedOperationException("Method not implemented");
+        return feedbackService.getFeedbackById(id)
+            .orElse(null);
     }
 
     @PostMapping("/")
     public Feedback creatFeedback(@RequestBody Feedback administrator){
-        throw new UnsupportedOperationException("Method not implemented");
+        return feedbackService.saveFeedback(administrator);
     }
 
     @DeleteMapping("/{id}")
     public void deleteFeedback(@PathVariable Long id) {
-        throw new UnsupportedOperationException("Method not implemented");
+        feedbackService.deleteFeedbackById(id);
     }
 }

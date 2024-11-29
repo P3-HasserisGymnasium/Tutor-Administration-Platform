@@ -1,5 +1,6 @@
 package project.backend.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import project.backend.model.Meeting;
 import project.backend.service.MeetingService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/meeting")
 public class MeetingController {
@@ -23,16 +25,17 @@ public class MeetingController {
 
     @GetMapping("/{id}")
     public Meeting getMeeting(@PathVariable Long id) {
-        throw new UnsupportedOperationException("Method not implemented");
+        return meetingService.getMeetingById(id)
+            .orElse(null);
     }
 
     @PostMapping("/")
     public Meeting createMeeting(@RequestBody Meeting meeting) {
-        throw new UnsupportedOperationException("Method not implemented");
+        return meetingService.saveMeeting(meeting);
     }
 
     @DeleteMapping("/{id}")
     public void deleteMeeting(@PathVariable Long id) {
-        throw new UnsupportedOperationException("Method not implemented");
+        meetingService.deleteMeetingById(id);
     }
 }

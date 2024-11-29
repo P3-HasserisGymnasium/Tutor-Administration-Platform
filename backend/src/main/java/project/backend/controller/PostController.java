@@ -1,5 +1,6 @@
 package project.backend.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import project.backend.model.Post;
 import project.backend.service.PostService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/post")
 public class PostController {
@@ -23,16 +25,17 @@ public class PostController {
 
     @GetMapping("/{id}")
     public Post getPost(@PathVariable Long id) {
-        throw new UnsupportedOperationException("Method not implemented");
+        return postService.getPostById(id)
+            .orElse(null);
     }
 
     @PostMapping("/")
     public Post createPost(@RequestBody Post post) {
-        throw new UnsupportedOperationException("Method not implemented");
+        return postService.savePost(post);
     }
 
     @DeleteMapping("/{id}")
     public void deletePost(@PathVariable Long id) {
-        throw new UnsupportedOperationException("Method not implemented");
+        postService.deletePostById(id);
     }
 }
