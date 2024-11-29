@@ -29,7 +29,7 @@ export const zodDay = z.enum([
 ] as const);
 export const zodLanguage = z.enum(["Danish", "English"] as const);
 export const zodRole = z.enum(["Tutor", "Tutee"] as const);
-export const zodYearGroup = z.enum(["PRE-IB", "IB-1", "IB-2"] as const);
+export const zodYearGroup = z.enum(["PRE_IB", "IB_1", "IB_2"] as const);
 export const zodTimeSlotSchema = z.object({
 	start_time: z.string(),
 	end_time: z.string(),
