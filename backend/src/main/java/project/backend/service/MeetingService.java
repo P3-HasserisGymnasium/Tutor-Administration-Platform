@@ -2,6 +2,7 @@ package project.backend.service;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import project.backend.model.Meeting;
@@ -10,6 +11,7 @@ import project.backend.repository.MeetingRepository;
 @Service
 public class MeetingService {
     
+    @Autowired
     final MeetingRepository meetingRepository;
 
     public MeetingService(MeetingRepository meetingRepository) {

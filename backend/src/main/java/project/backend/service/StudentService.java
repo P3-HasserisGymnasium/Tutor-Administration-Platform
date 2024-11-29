@@ -2,6 +2,7 @@ package project.backend.service;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import project.backend.model.Student;
@@ -10,6 +11,7 @@ import project.backend.repository.StudentRepository;
 @Service
 public class StudentService {
 
+    @Autowired
     private final StudentRepository studentRepository;
 
     // Constructor-based dependency injection

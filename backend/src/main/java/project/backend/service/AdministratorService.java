@@ -2,6 +2,7 @@ package project.backend.service;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import project.backend.model.Administrator;
@@ -10,6 +11,7 @@ import project.backend.repository.AdministratorRepository;
 @Service
 public class AdministratorService {
     
+    @Autowired
     final AdministratorRepository administratorRepository;
 
     public AdministratorService(AdministratorRepository administratorRepository) {
