@@ -1,14 +1,7 @@
-import {
-  Autocomplete,
-  Box,
-  Button,
-  TextField,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { FormProvider, useForm, Controller, useWatch } from "react-hook-form";
+import {Autocomplete, Box, Button, TextField, Stack, Typography, Checkbox, FormControlLabel} from "@mui/material";
+import { FormProvider, useForm, Controller, useWatch, ControllerRenderProps } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Subject } from "~/types/data_types";
+import { Language, LanguageType, Subject, YearGroup } from "~/types/data_types";
 import SetTimeAvailability from "~/components/content_components/TutorListComponents/SetTimeAvailability";
 import TimeAvailability from "components/content_components/TimeAvailability.tsx";
 import {
@@ -24,6 +17,8 @@ export default function Filter() {
     defaultValues: {
       subjects: [],
       time_availability: [],
+      year_group: [],
+      languages: [Language.Enum.English, Language.Enum.Danish], 
     },
   });
 
@@ -48,6 +43,7 @@ export default function Filter() {
         spacing={1}
         sx={{
           padding: "1em",
+          height: "95%",
         }}
       >
         <Typography variant="h2">Filters</Typography>
@@ -81,7 +77,29 @@ export default function Filter() {
           )}
         />
 
-        <SetTimeAvailability />
+
+        <Controller
+          name="year_group"
+          control={control}
+          render={({ field }) => (
+            <Autocomplete
+              multiple
+              options={Object.values(YearGroup.enum)}
+              onChange={(_, newValue) => {
+                field.onChange(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Year Group"
+                  placeholder="Select year group"
+                />  
+              )}
+            />
+          )}
+        />
+        <SetTimeAvailability /> 
 
         {allValues.time_availability.length!=0 && (
           <Box
@@ -89,6 +107,8 @@ export default function Filter() {
               border: "1px solid" + theme.customColors.headingTextColor,
               display: "flex",
               displayDirection: "row",
+              overflowX: "auto",
+              borderRadius: "0.5em",
             }}
           >
             {allValues.time_availability.map((timeAvailability, i) => (
@@ -97,9 +117,50 @@ export default function Filter() {
           </Box>
         )}
 
-        <Button onClick={filterMethods.handleSubmit(filter)}>Filter</Button>
-      
+        <Typography variant="h4">Language</Typography>
+        
+        <Box sx={{display:"flex", flexDirection:"column", alignItems:"flex-start"}}>
+        <Controller
+          name="languages"
+          control={control}
+          render={({ field }) => (
+            <>
+             <CustomCheckBox field={field} label={Language.Enum.Danish}/>
+             <CustomCheckBox field={field} label={Language.Enum.English}/>
+            </>
+          )}
+        />
+        </Box>
+        
+        <Box sx={{ flexGrow: 1 }}></Box>  
+        
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button sx={{width:"100%"}} onClick={filterMethods.handleSubmit(filter)}>Filter</Button>
+        </Box>
+              
       </Stack>
     </FormProvider>
+  );
+}
+
+type CustomCheckBoxProps = {
+  field: ControllerRenderProps<tutorListFilterType,"languages">
+  label: LanguageType
+}
+
+function CustomCheckBox({field,label}: CustomCheckBoxProps) {
+  return (
+    <FormControlLabel
+      control={<Checkbox
+        checked={field.value.includes(label)}
+        onChange={(e) => {const updatedLanguages = e.target.checked
+          ? [...field.value, label]
+          : field.value.filter((lang) => lang !== label);
+        field.onChange(updatedLanguages)}
+      }
+      />}
+      label={label}
+      labelPlacement="start"
+    />
   );
 }

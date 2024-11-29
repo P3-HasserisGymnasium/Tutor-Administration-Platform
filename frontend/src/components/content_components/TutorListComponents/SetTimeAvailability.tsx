@@ -12,7 +12,6 @@ import { DesktopTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimeAvailabilityType } from "~/types/data_types";
 import { useState } from "react";
-import { darkBlue } from "~/consts";
 import { useTheme, Theme } from "@mui/material/styles";
 
 export default function SetTimeAvailability() {
@@ -35,15 +34,33 @@ export default function SetTimeAvailability() {
           },
         ],
       };
-      const previousValue = getValues("time_availability");
-      if (previousValue) {
-        setValue("time_availability", [...previousValue, newTimeAvailability]);
+      const selectedTimeAvailabilities:TimeAvailabilityType[] = getValues("time_availability");
+      if (selectedTimeAvailabilities) {
+        const sameDayTimeAvailability = selectedTimeAvailabilities.find((value: TimeAvailabilityType) => value.day === selectedDay);
+        if(sameDayTimeAvailability){ 
+          const sameTimeSlot = sameDayTimeAvailability?.time.find((value) => value.start_time === newTimeAvailability.time[0].start_time && value.end_time === newTimeAvailability.time[0].end_time);
+          if(!sameTimeSlot){
+            sameDayTimeAvailability.time.push(newTimeAvailability.time[0]);
+            setValue("time_availability", selectedTimeAvailabilities);
+            console.error("New TimeSlot added");
+            return;
+          }
+          console.error("Same time slot already exists");
+        } else {
+          setValue("time_availability", [...selectedTimeAvailabilities, newTimeAvailability]);
+        }
       } else {
         setValue("time_availability", [newTimeAvailability]);
       }
     } else {
       console.error("Day not selected");
     }
+  };
+  const timePickerStyle = {
+    '& .MuiInputBase-root': {
+      height: '2em',          // Control the height of the input field
+      fontSize: '1rem',    // Adjust font size   
+    },
   };
 
   return (
@@ -65,7 +82,7 @@ export default function SetTimeAvailability() {
         >
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Autocomplete
-              sx={{ paddingBottom: "2em" }}
+              sx={{ paddingBottom: "1em" }}
               disablePortal
               onChange={(_, newValue) =>
                 setSelectedDay(newValue as DayType | null)
@@ -75,24 +92,6 @@ export default function SetTimeAvailability() {
                 <TextField
                   {...params}
                   label="Select day"
-                  sx={{
-                    "& .MuiInputLabel-root": {
-                      // Set the label color
-                      color: darkBlue,
-                      "&.Mui-focused": {
-                        color: darkBlue, // Focused label color
-                      },
-                    },
-
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: darkBlue,
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: darkBlue, // Focused color
-                      },
-                    },
-                  }}
                 />
               )}
             />
@@ -104,6 +103,7 @@ export default function SetTimeAvailability() {
                 onChange={(newValue: Dayjs | null) => {
                   if (newValue) setStartTime(newValue);
                 }}
+                sx={timePickerStyle}
               />
               <DesktopTimePicker
                 label="Until"
@@ -112,14 +112,18 @@ export default function SetTimeAvailability() {
                 onChange={(newValue: Dayjs | null) => {
                   if (newValue) setEndTime(newValue);
                 }}
+                sx={timePickerStyle}
               />
             </Box>
           </Box>
-          {selectedDay && (
-            <Button sx={{ height: "50%" }} onClick={handleAdd}>
-              Add
-            </Button>
-          )}
+          <Box sx={{alignContent:"center"}}>
+            {selectedDay && (
+              <Button sx={{  margin:"1em"}} onClick={handleAdd}>
+                Add
+              </Button>
+            )}
+          </Box>
+          
         </Box>
       </Box>
     </LocalizationProvider>

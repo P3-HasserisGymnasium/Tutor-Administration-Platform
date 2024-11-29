@@ -42,7 +42,7 @@ export const zodTutorListFilterSchema = z.object({
 			time: z.array(zodTimeSlotSchema),
 		})
 	),
-	year_group: zodYearGroup,
+	year_group: z.array(zodYearGroup),
 	languages: z.array(zodLanguage),
 });
 export const zodTimeAvailabilitySchema = z.object({
