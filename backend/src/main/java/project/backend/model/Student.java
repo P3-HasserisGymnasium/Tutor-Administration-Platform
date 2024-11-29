@@ -36,7 +36,8 @@ public class Student extends User {
     @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
     Tutor tutor;
 
-    public Student() {}
+    public Student() {
+    }
 
     public Timestamp getRegistrationTimestamp() {
         return registrationTimestamp;
