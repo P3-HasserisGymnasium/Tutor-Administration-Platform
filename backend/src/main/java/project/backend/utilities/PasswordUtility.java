@@ -1,11 +1,9 @@
-package project.backend.service;
+package project.backend.utilities;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 
 
-@Service
-public class PasswordService {
+public class PasswordUtility {
     private static final BCryptPasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
    
     public static String encodePassword(String rawPassword) {

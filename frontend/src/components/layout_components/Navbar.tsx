@@ -1,8 +1,12 @@
 import { Box, Typography } from "@mui/material";
 import { useHeading } from "utilities/helperFunctions";
 import HeadText from "components/layout_components/HeadText";
+import { useTheme } from "@mui/system";
+
 
 export default function Navbar() {
+  const theme = useTheme();
+  console.log(theme);
   return (
     <Box
       sx={{
@@ -11,7 +15,7 @@ export default function Navbar() {
         display: "flex",
         justifyContent: "left",
         alignItems: "center",
-        backgroundColor: "secondary.main",
+        backgroundColor: theme.palette.primary.main,
       }}
     >
       <HeadText DisplayText={useHeading()} />

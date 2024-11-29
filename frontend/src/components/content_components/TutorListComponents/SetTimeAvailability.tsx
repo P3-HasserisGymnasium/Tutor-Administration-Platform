@@ -13,13 +13,14 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimeAvailabilityType } from "~/types/data_types";
 import { useState } from "react";
 import { darkBlue } from "~/consts";
+import { useTheme, Theme } from "@mui/material/styles";
 
 export default function SetTimeAvailability() {
   const [selectedDay, setSelectedDay] = useState<DayType | null>(null);
   const [startTime, setStartTime] = useState<Dayjs>(dayjs("2022-04-17T00:00"));
   const [endTime, setEndTime] = useState<Dayjs>(dayjs("2022-04-17T00:00"));
   const { setValue, getValues } = useFormContext();
-
+  const theme = useTheme<Theme>();
   // watch state
   // const watchTimeAvailability = watch("time_availability");
 
@@ -48,10 +49,10 @@ export default function SetTimeAvailability() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box>
-        <Typography
+        <Typography variant="h4"
           sx={{
-            color: darkBlue,
-            paddingBottom: "10px",
+            color: theme.customColors.headingTextColor,
+            paddingBottom: "0.5em",
           }}
         >
           Time Availability
@@ -96,7 +97,7 @@ export default function SetTimeAvailability() {
               )}
             />
             <Box sx={{ display: "flex", flexDirection: "row" }}>
-              <DesktopTimePicker
+              <DesktopTimePicker 
                 label="From"
                 ampm={false}
                 defaultValue={dayjs("2022-04-17T00:00")}

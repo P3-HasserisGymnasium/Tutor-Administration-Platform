@@ -4,18 +4,14 @@ import "./index.css";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
-import theme from "./theme.ts";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "./api/api-client.ts";
+import baseTheme from "./themes/baseTheme.ts";
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<BrowserRouter>
-			<QueryClientProvider client={queryClient} >
-				<ThemeProvider theme={theme}>
-					<App />
-				</ThemeProvider>
-			</QueryClientProvider>
+			<ThemeProvider theme={baseTheme}>
+				<App />
+			</ThemeProvider>
 		</BrowserRouter>
 	</StrictMode>
 );

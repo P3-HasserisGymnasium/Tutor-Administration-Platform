@@ -3,54 +3,43 @@ import { Avatar, Box, Button, Typography } from "@mui/material";
 import avatarDemo from "./avatarDemo.png";
 import SubjectChip from "components/content_components/SubjectChip.tsx";
 import { SubjectType } from "~/types/data_types";
+import CustomButton from "../CustomButton";
+import { useTheme } from "@mui/system";
+import { Theme } from "@mui/material/styles";
 
 export default function TutorCard({ profile }: { profile: ProfileType }) {
-  const darkBlue = "#041758";
-
-  const buttonStyle = {
-    backgroundColor: "#4CAF50",
-    textDecoration: "none",
-    display: "inlineBlock",
-    fontSize: "16px",
-    margin: "4px 2px",
-    cursor: "pointer",
-    borderRadius: "15px",
-    color: "white",
-  };
-
-  console.log("profile", profile);
+  const theme = useTheme<Theme>();
 
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "row",
-        backgroundColor: "rgba(251, 193, 135, 0.5)",
-        border: "1px solid #041758",
-        padding: "20px",
-        borderRadius: "5px",
-        height: "",
+        backgroundColor: theme.customColors.collaborationBackgroundColor,
+        border: "1px solid "+ theme.customColors.headingTextColor,
+        padding: "1em",
+        borderRadius: "0.5em",
       }}
     >
       <Avatar
         sx={{
           borderRadius: "50%",
-          marginRight: "20px",
-          width: "80px",
-          height: "80px",
+          marginRight: "1em",
+          width: "4em",
+          height: "4em",
         }}
         src={avatarDemo}
         alt={profile.full_name}
       />
       <Box
         sx={{
-          marginRight: "20px",
+          marginRight: "1em",
         }}
       >
-        <Typography variant="h5" sx={{ color: darkBlue }}>
+        <Typography variant="h3">
           {profile.full_name}
         </Typography>
-        <Typography variant="h6" sx={{ color: darkBlue }}>
+        <Typography variant="h4">
           {profile.year_group}
         </Typography>
         {profile.subjects.map((subject: SubjectType, id: number) => (
@@ -66,12 +55,12 @@ export default function TutorCard({ profile }: { profile: ProfileType }) {
           justifyContent: "center",
         }}
       >
-        <Button variant="contained" sx={buttonStyle}>
+        <Button variant="contained" sx={{marginBottom:"0.5em"}}>
           View profile
         </Button>
-        <Button variant="contained" sx={buttonStyle}>
+        <CustomButton customType="success">
           Request collaboration
-        </Button>
+        </CustomButton>
       </Box>
     </Box>
   );

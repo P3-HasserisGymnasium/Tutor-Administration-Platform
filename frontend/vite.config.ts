@@ -2,21 +2,15 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import path from 'path';
-import svgr from "vite-plugin-svgr";
 
 const root = resolve(__dirname, './src');
 console.log("dirname", __dirname);
 console.log("root", root);
 export default defineConfig({
-  plugins: [react(), svgr()],
+  plugins: [react()],
   server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8080/',
-        changeOrigin: true,
-        secure: false,
-      },
-    }
+    port: 3000,
+    open: true,
   },
   resolve: {
     alias: {
