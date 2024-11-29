@@ -46,8 +46,8 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
 
     const verifyPassword = () => {
         const values = getValues()
-        if (values.password !== values.confirm_password) {
-            setError("confirm_password", {
+        if (values.password !== values.confirmPassword) {
+            setError("confirmPassword", {
                 message: "Passwords do not match."
             })
             return;
@@ -64,18 +64,18 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
                     </Typography>
 
 
-                    <TextField {...register("full_name")} sx={{ marginTop: 8, width: "100%" }} id="full_name" label="Enter full name" variant="outlined" error={Boolean(errors.full_name)} helperText={errors.full_name?.message as string || ""} />
+                    <TextField {...register("fullName")} sx={{ marginTop: 8, width: "100%" }} id="full_name" label="Enter full name" variant="outlined" error={Boolean(errors.fullName)} helperText={errors.fullName?.message as string || ""} />
                     <TextField {...register("email", { required: true })} sx={{ marginTop: 1, width: "100%" }} id="email" label="Enter email" variant="outlined" error={Boolean(errors.email)} helperText={errors.email?.message as string || ""} />
                     <TextField {...register("password")} sx={{ marginTop: 1, width: "100%" }} id="password" label="Enter password" variant="outlined" error={Boolean(errors.password)} helperText={errors.password?.message as string || ""} />
-                    <TextField  {...register("confirm_password", {
+                    <TextField  {...register("confirmPassword", {
                         onBlur() {
                             verifyPassword()
                         },
-                    })} sx={{ marginTop: 1, width: "100%" }} id="confirm_password" label="Confirm password" variant="outlined" error={Boolean(errors.confirm_password)} helperText={errors.confirm_password?.message as string || ""} />
+                    })} sx={{ marginTop: 1, width: "100%" }} id="confirm_password" label="Confirm password" variant="outlined" error={Boolean(errors.confirmPassword)} helperText={errors.confirmPassword?.message as string || ""} />
 
                     <Box sx={{ gap: 1, marginTop: 2, width: "100%", display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-start" }}>
                         <Controller
-                            name="year_group"
+                            name="yearGroup"
                             control={control}
                             render={({ field }) => (
                                 <FormControl sx={{ width: "100%" }}>
@@ -86,7 +86,7 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
                                         value={field.value || []} // Ensure it reads the current value correctly
                                         onChange={(e) => field.onChange(e.target.value)} // Properly handle value updates
                                         input={<OutlinedInput label="Year group" />}
-                                        error={Boolean(errors.year_group)}
+                                        error={Boolean(errors.yearGroup)}
                                     >
                                         {YearGroup.options.map((group) => (
                                             <MenuItem
@@ -97,7 +97,7 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
                                             </MenuItem>
                                         ))}
                                     </Select>
-                                    {errors.year_group && (
+                                    {errors.yearGroup && (
                                         <Typography sx={{
                                             color: "#D51B21",
                                             fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif', // Corrected the font-family value
@@ -111,7 +111,7 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
                                             marginRight: "14px",
                                             marginBottom: 0
 
-                                        }} >{errors.year_group?.message as string || ""}</Typography>
+                                        }} >{errors.yearGroup?.message as string || ""}</Typography>
                                     )}
                                 </FormControl>)} />
                         <Controller

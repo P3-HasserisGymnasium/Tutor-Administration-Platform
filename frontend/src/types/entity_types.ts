@@ -52,7 +52,7 @@ export const zodFeedbackSchema = z.object({
 });
 
 export const zodAccountRegisterSchema = z.object({
-	full_name: z
+	fullName: z
 		.string({
 			required_error: "You must provide a name", // Required field error
 		})
@@ -70,14 +70,14 @@ export const zodAccountRegisterSchema = z.object({
 		})
 		.min(6, "Password must be at least 6 characters long"), // Minimum length validation
 
-	confirm_password: z
+	confirmPassword: z
 		.string({
 			required_error: "You must confirm your password", // Required field error
 		})
 		.min(6, "Password confirmation must match the password"), // Minimum length validation
 	// Password match check should be handled elsewhere (e.g., in `refine`)
 
-	year_group: YearGroup.optional(), // Optional field, no required error
+	yearGroup: YearGroup.optional(), // Optional field, no required error
 
 	languages: z
 		.array(Language, {
@@ -92,19 +92,19 @@ export const zodAccountRegisterSchema = z.object({
 		})
 		.min(1, "You must select at least one role"), // Minimum array length validation
 
-	tutor_subjects: z
+	tutorSubjects: z
 		.array(Subject, {
 			required_error: "You must select at least one subject", // Optional field validation
 		})
 		.optional(), // Optional field
 
-	tutor_profile_description: z
+	tutorProfileDescription: z
 		.string({
 			required_error: "You must provide a description", // Optional field validation
 		})
 		.optional(), // Optional field
 
-	tutor_timeslots: z
+	tutorTimeslots: z
 		.array(TimeSlot, {
 			required_error: "You must select at least one timeslot", // Optional field validation
 		})
