@@ -26,7 +26,7 @@ public class StudentController {
     @GetMapping("/{id}")
     public Student getStudent(@PathVariable Long id) {
         return studentService.getStudentById(id)
-            .orElse(null);
+                .orElse(null);
     }
 
     @PostMapping("/")
