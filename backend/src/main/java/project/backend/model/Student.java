@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 
 @Entity
 public class Student extends User {
@@ -26,15 +27,14 @@ public class Student extends User {
     @Embedded
     StudentContactInfo contactInfo;
 
+    @Transient
+    List<RoleEnum> roles = new LinkedList<>();
+
     @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
     Tutee tutee;
 
     @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
     Tutor tutor;
-
-    @ElementCollection
-    @Enumerated(EnumType.STRING)
-    List<LanguageEnum> languages = new LinkedList<>();
 
     public Student() {}
 
@@ -76,13 +76,5 @@ public class Student extends User {
 
     public void setTutorId(Tutor tutor) {
         this.tutor = tutor;
-    }
-
-    public List<LanguageEnum> getLanguages() {
-        return languages;
-    }
-
-    public void setLanguages(List<LanguageEnum> languages) {
-        this.languages = languages;
     }
 }

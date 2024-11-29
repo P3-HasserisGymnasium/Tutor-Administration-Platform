@@ -1,12 +1,17 @@
 package project.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Transient;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -21,8 +26,16 @@ public abstract class User {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @Transient
+    private String plainPassword;
+
     @Column(name = "password_hash", nullable = false)
+    @JsonIgnore
     private String passwordHash;
+
+    @Column(name = "language")
+    @Enumerated(EnumType.STRING)
+    private Language language;
 
     public User() {}
 
