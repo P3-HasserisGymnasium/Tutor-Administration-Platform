@@ -19,7 +19,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-     @Bean
+    @Bean
     public CorsRegistry corsRegistry() {
         CorsRegistry registry = new CorsRegistry();
         registry.addMapping("/**")  // Apply to all endpoints
@@ -27,7 +27,6 @@ public class SecurityConfig {
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true); // Allow credentials (cookies, tokens)
-        
         return registry;
     }
 
