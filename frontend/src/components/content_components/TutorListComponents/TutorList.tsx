@@ -4,7 +4,6 @@ import { Language, Subject, YearGroup } from "~/types/data_types";
 import { ProfileType } from "~/types/entity_types";
 
 export default function TutorList() {
-  const darkbBlue = "#041758";
   // const [tutors, setTutors] = useState<Tutor[]>([]);
 
   const profile: ProfileType = {
@@ -12,7 +11,7 @@ export default function TutorList() {
     year_group: YearGroup.Enum["PRE-IB"],
     languages: [Language.Enum.Danish, Language.Enum.English],
     subjects: [Subject.Enum.Math, Subject.Enum.Physics],
-    description: "I am a tutor",
+    description: "I am a tutor :)",
   };
   /*
   useEffect(() => {
@@ -33,17 +32,10 @@ export default function TutorList() {
   return (
     <Box
       sx={{
-        padding: "20px",
+        padding: "1em",
       }}
     >
-      <Typography
-        variant="h1"
-        sx={{
-          fontSize: "30px",
-          color: darkbBlue,
-          fontWeight: "inter",
-        }}
-      >
+      <Typography variant="h2">
         List of Tutors
       </Typography>
 
@@ -51,6 +43,7 @@ export default function TutorList() {
         spacing={1}
         sx={{
           overflowY: "auto",
+          marginTop: "0.5em",
         }}
       >
         <TutorCard key={1} profile={profile} />

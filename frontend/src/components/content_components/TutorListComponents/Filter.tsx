@@ -15,6 +15,8 @@ import {
   zodTutorListFilterSchema,
   tutorListFilterType,
 } from "../../../types/data_types";
+import { useTheme,Theme } from "@mui/material/styles";
+import SubjectChip from "../SubjectChip";
 
 export default function Filter() {
   const filterMethods = useForm<tutorListFilterType>({
@@ -39,25 +41,16 @@ export default function Filter() {
 
   console.log(keepWatch);
 
-  const darkBlue = "#041758";
+  const theme = useTheme<Theme>();
   return (
     <FormProvider {...filterMethods}>
       <Stack
         spacing={1}
         sx={{
-          padding: "20px",
+          padding: "1em",
         }}
       >
-        <Typography
-          variant="h1"
-          sx={{
-            fontSize: "30px",
-            color: darkBlue,
-            fontWeight: "inter",
-          }}
-        >
-          Filters
-        </Typography>
+        <Typography variant="h2">Filters</Typography>
 
         <Controller
           name="subjects"
@@ -70,28 +63,18 @@ export default function Filter() {
                 field.onChange(newValue);
               }}
               filterSelectedOptions
+              renderTags={(value) => 
+                value.map((option, index) => (
+                  <SubjectChip key={index} Subject={option} />
+                ))
+              }
               renderInput={(params) => (
                 <TextField
                   {...params}
                   variant="outlined"
                   label="Subjects"
                   placeholder="Select subject"
-                  sx={{
-                    "& .MuiInputLabel-root": {
-                      color: darkBlue,
-                      "&.Mui-focused": {
-                        color: darkBlue,
-                      },
-                    },
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: darkBlue,
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: darkBlue,
-                      },
-                    },
-                  }}
+                  
                 />
               )}
             />
@@ -100,10 +83,10 @@ export default function Filter() {
 
         <SetTimeAvailability />
 
-        {allValues.time_availability && (
+        {allValues.time_availability.length!=0 && (
           <Box
             sx={{
-              border: "1px solid" + darkBlue,
+              border: "1px solid" + theme.customColors.headingTextColor,
               display: "flex",
               displayDirection: "row",
             }}
@@ -115,6 +98,7 @@ export default function Filter() {
         )}
 
         <Button onClick={filterMethods.handleSubmit(filter)}>Filter</Button>
+      
       </Stack>
     </FormProvider>
   );
