@@ -65,6 +65,13 @@ const tuteeTheme = createTheme(baseTheme, {
                 },
             }
         },
+        MuiFormControlLabel:{
+            styleOverrides:{
+                root:{
+                    color: colors.headingTextColor,
+                }
+            }
+        }
        
     }
 })
