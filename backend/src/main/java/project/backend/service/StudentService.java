@@ -18,9 +18,8 @@ public class StudentService {
     }
 
     // Fetch a student by ID
-    public Student getStudentById(Long id) {
-        Optional<Student> student = studentRepository.findById(id);
-        return student.orElse(null);
+    public Optional<Student> getStudentById(Long id) {
+        return studentRepository.findById(id);
     }
 
     // Create or update a student

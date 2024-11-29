@@ -1,5 +1,7 @@
 package project.backend.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +23,8 @@ public class NotificationService {
         return notificationRepository.save(notification);
     }
 
-    public Notification getNotificationById(Long id) {
-        return notificationRepository.findById(id).orElse(null);
+    public Optional<Notification> getNotificationById(Long id) {
+        return notificationRepository.findById(id);
     }
 
     public void deleteNotification(Long id) {
