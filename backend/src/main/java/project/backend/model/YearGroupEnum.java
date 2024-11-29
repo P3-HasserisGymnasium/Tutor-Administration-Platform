@@ -2,8 +2,8 @@ package project.backend.model;
 
 public enum YearGroupEnum {
     PRE_IB("PRE-IB"),
-    IB1("IB1"),
-    IB2("IB2");
+    IB_1("IB-1"),
+    IB_2("IB-2");
 
     private final String displayName;
 
