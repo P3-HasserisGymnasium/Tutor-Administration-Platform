@@ -14,15 +14,11 @@ import TutorProfilePage from "components/page_components/tutor/TutorProfilePage"
 import RequestAdminPage from "components/page_components/tutee/RequestAdminPage";
 import PostsListPage from "components/page_components/tutor/PostsListPage";
 import CollaborationPage from "components/page_components/CollaborationPage";
-import { useBreakpoints } from "./utilities/helperFunctions";
-import { useLocation } from "react-router-dom";
-import tuteeTheme from "./themes/tuteeTheme";
-import tutorTheme from "./themes/tutorTheme";
+import { getCurrentTheme, useBreakpoints } from "./utilities/helperFunctions";
+import TutorApplicationPage from "./components/page_components/TutorApplicationPage";
+
 
 export default function App() {
-  const location = useLocation();
-  const currentTheme = location.pathname.startsWith("/tutee") ? tuteeTheme : tutorTheme;
-  console.log(currentTheme);
   const widthRightOffset = useBreakpoints().hasScrollbar ? "16px" : "0px";
 
   return (
@@ -34,8 +30,8 @@ export default function App() {
           : "100vw",
       }}
     >
-      <ThemeProvider theme={currentTheme}>
-        <Navbar />
+      <ThemeProvider theme={getCurrentTheme()}>
+        <Navbar/>
       </ThemeProvider>
 
       <Box sx={{ height: "90%", width: "100%" }}>
@@ -51,6 +47,7 @@ export default function App() {
             element={<TutorNotificationsPage />}
           />
           <Route path="/tutor/posts-list" element={<PostsListPage />} />
+          <Route path="/tutor/tutor-application" element={<TutorApplicationPage/>} />
 
           {/* Tutee */}
           <Route path="/tutee" element={<TuteePage />} />
@@ -62,9 +59,11 @@ export default function App() {
           <Route path="/tutee/create-post" element={<CreatePostPage />} />
           <Route path="/tutee/request-admin" element={<RequestAdminPage />} />
           <Route path="/tutee/tutor-list" element={<TutorListPage />} />
+          <Route path="/tutee/tutor-application" element={<TutorApplicationPage/>} />
 
           {/* Other */}
           <Route path="/collaboration" element={<CollaborationPage />} />
+         
         </Routes>
       </Box>
     </Box>

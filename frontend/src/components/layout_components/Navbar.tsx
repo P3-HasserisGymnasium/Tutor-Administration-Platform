@@ -6,7 +6,6 @@ import { useTheme } from "@mui/system";
 
 export default function Navbar() {
   const theme = useTheme();
-  console.log(theme);
   return (
     <Box
       sx={{

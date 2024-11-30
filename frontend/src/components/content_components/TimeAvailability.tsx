@@ -15,6 +15,7 @@ export default function TimeAvailability({timeAvailability}: TimeAvailabilityPro
   const deleteButtonStyle = { height: '1.4em', width: '1.4em', minWidth: '1em', top: '-0.5em', right: '-0.5em', position: 'absolute'}
   
   const deleteTimeAvailability = () => {
+    console.log("Deleting time availability");
     const currentTimeAvailabilities = getValues("time_availability");
     if(currentTimeAvailabilities){
       setValue("time_availability", currentTimeAvailabilities.filter((value: TimeAvailabilityType) => value !== timeAvailability))
