@@ -5,4 +5,6 @@ public enum PostState {
     OPEN,
     CLOSED,
     DELETED,
+    PENDING,
+    ACTIVE,
 }
