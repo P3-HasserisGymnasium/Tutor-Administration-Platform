@@ -6,27 +6,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import project.backend.model.User;
-import project.backend.repository.UserRepository;
+import project.backend.repository.AccountRepository;
 
 @Service
-public class UserService {
+public class AccountService {
     
     @Autowired
-    final UserRepository userRepository;
+    final AccountRepository accountRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public AccountService(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
     }
 
     public Optional<User> getUserById(Long id){
-        return userRepository.findById(id);
+        return accountRepository.findById(id);
     }
 
     public User saveUser(User user) {
-        return userRepository.save(user);
+        return accountRepository.save(user);
     }
 
     public void deleteUserById(Long id) {
-        userRepository.deleteById(id);
+        accountRepository.deleteById(id);
     }
 }
