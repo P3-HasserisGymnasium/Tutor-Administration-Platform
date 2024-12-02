@@ -25,38 +25,42 @@ export default function SetTimeAvailability() {
   // const watchTimeAvailability = watch("time_availability");
   
   const handleAdd = () => {
-    if (selectedDay) {
-      const newTimeAvailability: TimeAvailabilityType = {
-        day: selectedDay,
-        time: [
-          {
-            start_time: startTime.format("HH:mm"),
-            end_time: endTime.format("HH:mm"),
-          },
-        ],
-      };
-      const selectedTimeAvailabilities:TimeAvailabilityType[] = getValues("time_availability");
-      if (selectedTimeAvailabilities) {
-        const sameDayTimeAvailability = selectedTimeAvailabilities.find((value: TimeAvailabilityType) => value.day === selectedDay);
-        if(sameDayTimeAvailability){ 
-          const sameTimeSlot = sameDayTimeAvailability?.time.find((value) => value.start_time === newTimeAvailability.time[0].start_time && value.end_time === newTimeAvailability.time[0].end_time);
-          if(!sameTimeSlot){
-            sameDayTimeAvailability.time.push(newTimeAvailability.time[0]);
-            setValue("time_availability", selectedTimeAvailabilities);
-            console.error("New TimeSlot added");
-            return;
-          }
-          console.error("Same time slot already exists");
-        } else {
-          setValue("time_availability", [...selectedTimeAvailabilities, newTimeAvailability]);
-        }
-      } else {
-        setValue("time_availability", [newTimeAvailability]);
-      }
-    } else {
+
+    if (!selectedDay) {
       console.error("Day not selected");
+      return;
     }
-  };
+
+    const newTimeAvailability: TimeAvailabilityType = {
+      day: selectedDay,
+      time: [
+        {
+          start_time: startTime.format("HH:mm"),
+          end_time: endTime.format("HH:mm"),
+        },
+      ],
+    };
+
+    const existingTimeAvailabilities:TimeAvailabilityType[] = getValues("time_availability");
+    if (!existingTimeAvailabilities) {
+        setValue("time_availability", [newTimeAvailability]);
+        return;
+    }
+    
+    const existingSameDayTimeAvailability = existingTimeAvailabilities.find((value: TimeAvailabilityType) => value.day === selectedDay);
+    if(!existingSameDayTimeAvailability){
+      setValue("time_availability", [...existingTimeAvailabilities, newTimeAvailability]);
+      return;
+    }
+
+    const equivalentTimeSlot = existingSameDayTimeAvailability?.time.find((timeslot) => timeslot.start_time === newTimeAvailability.time[0].start_time && timeslot.end_time === newTimeAvailability.time[0].end_time);
+    if (!equivalentTimeSlot) {
+      setValue("time_availability", [...existingTimeAvailabilities, newTimeAvailability.time[0]]);
+      return;
+    }
+
+  }
+    
   const timePickerStyle = {
     '& .MuiInputBase-root': {
       height: '2em',          // Control the height of the input field
