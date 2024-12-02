@@ -78,7 +78,7 @@ public class TuteeService {
 
     }
 
-    public void selectTutor(){
+    public void requestTutor(){
 
     }
 
@@ -89,5 +89,6 @@ public class TuteeService {
     public void rejectCollaboration(){
 
     }
+    
 
 }
