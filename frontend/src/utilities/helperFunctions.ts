@@ -1,6 +1,10 @@
 import { useMediaQuery } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Theme } from "@mui/material/styles";
+import baseTheme from "~/themes/baseTheme";
+import tuteeTheme from "~/themes/tuteeTheme";
+import tutorTheme from "~/themes/tutorTheme";
 
 /**
  * 
@@ -23,8 +27,22 @@ export function useHeading(): string {
 			return "Profile";
 		case "/tutor/profile":
 			return "Profile";
+		case "/tutor/tutor-application": case "/tutee/tutor-application":
+			return "Tutor Application";
 		default:
 			return "";
+	}
+}
+
+export function useCurrentTheme(): Theme {
+	const firstPathPart = location.pathname.split("/").filter(Boolean)[0];
+	switch (firstPathPart) {
+		case "tutee":
+			return tuteeTheme;
+		case "tutor":
+			return tutorTheme;
+		default:
+			return baseTheme;
 	}
 }
 

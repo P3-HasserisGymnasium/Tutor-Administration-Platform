@@ -13,6 +13,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimeAvailabilityType } from "~/types/data_types";
 import { useState } from "react";
 import { useTheme, Theme } from "@mui/material/styles";
+import TimeAvailability from "./TimeAvailability";
 
 export default function SetTimeAvailability() {
   const [selectedDay, setSelectedDay] = useState<DayType | null>(null);
@@ -22,7 +23,7 @@ export default function SetTimeAvailability() {
   const theme = useTheme<Theme>();
   // watch state
   // const watchTimeAvailability = watch("time_availability");
-
+  
   const handleAdd = () => {
     if (selectedDay) {
       const newTimeAvailability: TimeAvailabilityType = {
@@ -123,9 +124,35 @@ export default function SetTimeAvailability() {
               </Button>
             )}
           </Box>
-          
         </Box>
+        <SelectedTimeAvailabilities timeAvailabilities={getValues().time_availability} borderColor={theme.customColors.headingTextColor} />
       </Box>
     </LocalizationProvider>
   );
+}
+
+
+function SelectedTimeAvailabilities({timeAvailabilities, borderColor}:{timeAvailabilities:TimeAvailabilityType[], borderColor:string}) {
+  return (
+    <>
+    {timeAvailabilities.length!=0 && (
+      <Box
+        sx={{
+          border: "1px solid" + borderColor,
+          display: "flex",
+          flexDirection: "row",
+          overflowX: "auto",
+          overflowY: "auto",
+          borderRadius: "0.5em",
+          marginTop: "1em",
+          maxHeight: "6em",
+        }}
+      >
+        {timeAvailabilities.map((timeAvailability, i) => (
+          <TimeAvailability key={i} timeAvailability={timeAvailability} />
+        ))}
+      </Box>
+    )}
+    </>
+  )
 }
