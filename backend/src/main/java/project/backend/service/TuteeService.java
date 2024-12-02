@@ -51,44 +51,4 @@ public class TuteeService {
         postService.editPost(postId, editedPost);
     }
 
-    public Tutee editProfile(Long tuteeId, YearGroupEnum yearGroup, StudentContactInfo contactInfo){
-        Optional<Tutee> tuteeOpt = tuteeRepository.findById(tuteeId);
-
-        if(!tuteeOpt.isPresent()){
-            throw new IllegalArgumentException("Tutee not found by ID" + tuteeId);
-        }
-
-        Tutee tutee = tuteeOpt.get();
-        Student student = tutee.getStudent();
-
-        if(student == null){
-            throw new IllegalArgumentException("Tutee is not associated with a student");
-        }
-
-        // update student fields
-        student.setYearGroup(yearGroup);
-        student.setContactInfo(contactInfo);
-
-        return  saveTutee(tutee);
-    }
-
-
-    // center implemention in the respective classes 
-    public void requestAdmin(){
-
-    }
-
-    public void requestTutor(){
-
-    }
-
-    public void acceptCollaboration(){
-
-    }
-
-    public void rejectCollaboration(){
-
-    }
-    
-
 }
