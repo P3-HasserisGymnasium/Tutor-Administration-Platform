@@ -15,7 +15,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Transient;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -29,13 +28,6 @@ public abstract class User {
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
-
-    @Transient
-    private String password;
-
-    @Transient
-    private String confirmPassword;
-
 
     @Column(name = "password_hash", nullable = false)
     @JsonIgnore
@@ -74,5 +66,13 @@ public abstract class User {
 
     public void setPasswordHash(String password) {
         this.passwordHash = password;
+    }
+
+    public List<Language> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<Language> languages) {
+        this.languages = languages;
     }
 }

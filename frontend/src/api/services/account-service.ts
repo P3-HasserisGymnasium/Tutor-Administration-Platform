@@ -8,13 +8,13 @@ import { useNavigate } from "react-router-dom"
 
 export const useAccountService = () => {
 	const navigate = useNavigate();
-
 	const registerAccount = () => {
 		return useMutation({
 			mutationKey: ["registerAccount"],
 			mutationFn: async (account: AccountRegisterType) => {
+				console.log(account);
 				const { data } = await apiClient.post<AccountRegisterResponseType>(
-					"/api/student/",
+					"/api/account/",
 					account
 				);
 				return data;
@@ -37,7 +37,7 @@ export const useAccountService = () => {
 	const removeAccount = useMutation({
 		mutationKey: ["removeAccount"],
 		mutationFn: async (accountId: number) => {
-			await apiClient.delete(`/api/account_service/${accountId}`);
+			await apiClient.delete(`/api/account/${accountId}`);
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
 			toast.error(e?.response?.data?.detail);

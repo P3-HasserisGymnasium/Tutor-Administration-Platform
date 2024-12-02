@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import project.backend.controller_bodies.AccountRegisterBody;
 import project.backend.model.User;
 import project.backend.service.AccountService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/account")
 public class AccountController {
 
     final AccountService accountService;
@@ -30,8 +31,17 @@ public class AccountController {
     }
 
     @PostMapping("/")
-    public User createUser(@RequestBody User user) {
-        return accountService.saveUser(user);
+    public User createUser(@RequestBody AccountRegisterBody body) {
+
+        System.out.println(body);
+        System.out.flush();
+
+        boolean passwordsMatch = body.password.equals(body.confirmationPassword);
+        if (passwordsMatch == false) {
+            throw new IllegalArgumentException("Passwords do not match (" + body.password + ") != (" + body.confirmationPassword + ")");
+        }
+
+        return accountService.saveNewUser(body);
     }
 
     @DeleteMapping("/{id}")
