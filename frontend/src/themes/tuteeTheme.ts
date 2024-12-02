@@ -72,8 +72,38 @@ const tuteeTheme = createTheme(baseTheme, {
                     color: colors.headingTextColor,
                 }
             }
-        }
-       
+        },
+        MuiTextField: {
+            defaultProps: {
+              variant: "outlined",
+            },
+        },
+        MuiOutlinedInput: {
+            styleOverrides: {
+              root: {
+                "& fieldset": {
+                  borderColor: colors.headingTextColor,
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: colors.headingTextColor,
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: colors.headingTextColor, 
+                },
+              },
+            },
+        },
+        MuiInputLabel: {
+            styleOverrides: {
+              root: {
+                color: colors.headingTextColor, // Default label color
+                "&.Mui-focused": {
+                  color: colors.headingTextColor, // Label color when focused
+                },
+              },
+            },
+        },
+    
     }
 })
 

@@ -1,4 +1,4 @@
-import { Box, Button, Typography, TextField } from "@mui/material";
+import { Box, Button, Typography, TextField, useMediaQuery } from "@mui/material";
 import { TutorApplicationType, zodTutorApplicationSchema } from "~/types/data_types";
 import { useForm , FormProvider, useWatch} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,36 +15,51 @@ export default function TutorApplication() {
         },
       });
 
-    const {control} = filterMethods;
+    const {control, getValues, setValue, register} = filterMethods;
     const keepWatch = useWatch({
         control,
       });
     
     console.log(keepWatch);
+    
+    const isMd = useMediaQuery((theme) => theme.breakpoints.down('md'));
+    const isLg = useMediaQuery((theme) => theme.breakpoints.down('lg'));
+    const getMaxRows = () => {
+        if (isMd) {
+          return 8;
+        } else if (isLg) {
+          return 14;
+        } else {
+          return 20;
+        }
+      };
+
+    const handleSend = () => {
+        console.log(getValues());
+    };
+
     return (
         <FormProvider {...filterMethods}>
-            <Box sx={{display:"flex", flexDirection:"column", padding:"1em", height:"95%"}}>
+            <Box sx={{display:"flex", flexDirection:"column", height:"95%", padding:"1em"}}>
                 <Typography variant="h2" sx={{marginBottom:"1em"}}>Your application</Typography>
                 
                 <Box sx={{display: "flex", flexDirection: "row", border: "1px solid" + "black", borderRadius:"0.5em"}}>
-                    <Box sx={{display: "flex", flexDirection: "column", width: "50%", gap:"1em"}}>
-                        <Typography variant="h3">Subjects</Typography>
+                    <Box sx={{display: "flex", flexDirection: "column", width: "50%", gap:"1em", paddingRight:"1em"}}>
+                        <Typography variant="h4">Subjects</Typography>
                         <SetSubject/>
-                
-                        <Typography variant="h3">Time Availability</Typography>
+    
                         <SetTimeAvailability />
                     </Box>
-                    <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", width: "50%"}}>
+                    <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", width: "50%", paddingLeft:"1em"}}>
                         <Typography variant="h3">Write your application below:</Typography>
                         <Box sx={{display: "flex", 
                                 flexGrow: 1, // Allows this box to expand to match the height of the left column
                                 width: "100%",}}>
                             <TextField
-                                label="Application"
                                 multiline
-                                rows={5}
                                 fullWidth
-                                variant="outlined"
+                                maxRows={getMaxRows()}
+                                {...register("application")}
                                 slotProps={{
                                     input: {
                                         style: {
@@ -58,16 +73,17 @@ export default function TutorApplication() {
                                     marginTop: "1em",
                                     backgroundColor: "#f9f9f9",
                                     borderRadius: "4px",
-                                    flexGrow: 1, // Allows the TextField to fill the height of the parent Box
+                                    overflowY: 'auto',
                                 }}/>
                         </Box>
                     </Box>
                 </Box>
                 <Box sx={{ flexGrow: 1 }}></Box>  
                 <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems:"center", marginTop: "1em"}}>
-                    <Button variant="contained">Send Application</Button>
+                    {getValues("subjects").length > 0 && (<Button variant="contained" onClick={handleSend}>Send Application</Button>)}
                 </Box>
             </Box>
         </FormProvider>
     )
 }
+

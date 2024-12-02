@@ -6,13 +6,13 @@ import { useTheme, Theme } from "@mui/material/styles";
 import SubjectIcon from "./SubjectIcon";
 import CustomButton from "./CustomButton";
 
-export default function SetSubject() {
+export default function SetSubject(){
     const { setValue, getValues } = useFormContext();
     const borderColor = useTheme<Theme>().customColors.boxBorderColor;
     return (
-        <Box sx={{display:"flex", flexDirection:"column", width:"100%", gap:"1em"}}>
+        <Box sx={{display:"flex", flexDirection:"row", width:"100%", gap:"1em", alignItems:"center"}}>
             <SelectSubject/>
-            {getValues("subjects").length > 0 && (<Box sx={{display:"flex", flexDirection:"row",border: "1px solid" + borderColor, borderRadius:"0.5em", width:"fit-content",}}>
+            {getValues("subjects").length > 0 && (<Box sx={{display:"flex", flexDirection:"row", border: "1px solid" + borderColor, borderRadius:"0.5em", width:"fit-content", height:"fit-content", overflowX: "auto", whiteSpace: "nowrap"}}>
                 {getValues("subjects").map((subject:SubjectType) => {
                 return <SubjectCard subject={subject}/>;})
                 }
@@ -63,7 +63,7 @@ function SelectSubject() {
 
     return (
         <Box sx={{display:"flex", flexDirection:"column", border: "1px solid" + borderColor, borderRadius:"0.5em", padding:"0.5em", gap:"1em", width:"40%"}}>
-            <Typography variant="h3" align="center">New subject</Typography>
+            <Typography variant="h4" align="center">New subject</Typography>
             <Autocomplete
               disablePortal
               onChange={(_, newValue) =>
