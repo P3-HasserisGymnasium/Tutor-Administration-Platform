@@ -46,7 +46,6 @@ export default function TimeAvailability({timeAvailability}: TimeAvailabilityPro
         </Typography>))
       }
 
-      
     </Box>
   );
 }

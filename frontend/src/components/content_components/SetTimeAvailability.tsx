@@ -140,10 +140,12 @@ function SelectedTimeAvailabilities({timeAvailabilities, borderColor}:{timeAvail
         sx={{
           border: "1px solid" + borderColor,
           display: "flex",
-          displayDirection: "row",
+          flexDirection: "row",
           overflowX: "auto",
+          overflowY: "auto",
           borderRadius: "0.5em",
           marginTop: "1em",
+          maxHeight: "6em",
         }}
       >
         {timeAvailabilities.map((timeAvailability, i) => (

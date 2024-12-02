@@ -22,6 +22,7 @@ const tutorTheme = createTheme(baseTheme, {
         collaborationBackgroundColor: colors.collaborationBackgroundColor,
         postBackGroundColor: colors.postBackGroundColor,
         headingTextColor: colors.headingTextColor,
+        boxBorderColor: colors.headingTextColor,
     },
     components:{
         MuiTypography:{
