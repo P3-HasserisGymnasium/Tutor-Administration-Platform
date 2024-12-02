@@ -6,4 +6,5 @@ import project.backend.model.User;
 
 public interface AccountRepository extends JpaRepository<User, Long> {
     // Custom queries for users
+    
 }
