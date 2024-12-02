@@ -7,7 +7,7 @@ import SubjectIcon from "./SubjectIcon";
 import CustomButton from "./CustomButton";
 
 export default function SetSubject(){
-    const { setValue, getValues } = useFormContext();
+    const { getValues } = useFormContext();
     const borderColor = useTheme<Theme>().customColors.boxBorderColor;
     return (
         <Box sx={{display:"flex", flexDirection:"row", width:"100%", gap:"1em", alignItems:"center"}}>

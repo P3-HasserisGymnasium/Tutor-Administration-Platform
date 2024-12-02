@@ -15,7 +15,7 @@ export default function TutorApplication() {
         },
       });
 
-    const {control, getValues, setValue, register} = filterMethods;
+    const {control, getValues, register} = filterMethods;
     const keepWatch = useWatch({
         control,
       });
