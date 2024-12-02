@@ -1,10 +1,4 @@
-import {
-  Autocomplete,
-  Box,
-  Button,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Autocomplete, Box, Button, TextField, Typography } from "@mui/material";
 import { DayType, Day } from "~/types/data_types";
 import { useFormContext } from "react-hook-form";
 import dayjs, { Dayjs } from "dayjs";
@@ -23,9 +17,8 @@ export default function SetTimeAvailability() {
   const theme = useTheme<Theme>();
   // watch state
   // const watchTimeAvailability = watch("time_availability");
-  
-  const handleAdd = () => {
 
+  const handleAdd = () => {
     if (!selectedDay) {
       console.error("Day not selected");
       return;
@@ -41,37 +34,23 @@ export default function SetTimeAvailability() {
       ],
     };
 
-    const existingTimeAvailabilities:TimeAvailabilityType[] = getValues("time_availability");
-    if (!existingTimeAvailabilities) {
-        setValue("time_availability", [newTimeAvailability]);
-        return;
-    }
-    
-    const existingSameDayTimeAvailability = existingTimeAvailabilities.find((value: TimeAvailabilityType) => value.day === selectedDay);
-    if(!existingSameDayTimeAvailability){
-      setValue("time_availability", [...existingTimeAvailabilities, newTimeAvailability]);
-      return;
-    }
+    const existingTimeAvailabilities: TimeAvailabilityType[] = getValues("time_availability");
+    const validTimeAvailabilities = obtainValidTimeAvailabilities(existingTimeAvailabilities, newTimeAvailability);
+    setValue("time_availability", validTimeAvailabilities);
+  };
 
-    const equivalentTimeSlot = existingSameDayTimeAvailability?.time.find((timeslot) => timeslot.start_time === newTimeAvailability.time[0].start_time && timeslot.end_time === newTimeAvailability.time[0].end_time);
-    if (!equivalentTimeSlot) {
-      setValue("time_availability", [...existingTimeAvailabilities, newTimeAvailability.time[0]]);
-      return;
-    }
-
-  }
-    
   const timePickerStyle = {
-    '& .MuiInputBase-root': {
-      height: '2em',          // Control the height of the input field
-      fontSize: '1rem',    // Adjust font size   
+    "& .MuiInputBase-root": {
+      height: "2em", // Control the height of the input field
+      fontSize: "1rem", // Adjust font size
     },
   };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box>
-        <Typography variant="h4"
+        <Typography
+          variant="h4"
           sx={{
             color: theme.customColors.headingTextColor,
             paddingBottom: "0.5em",
@@ -89,19 +68,12 @@ export default function SetTimeAvailability() {
             <Autocomplete
               sx={{ paddingBottom: "1em" }}
               disablePortal
-              onChange={(_, newValue) =>
-                setSelectedDay(newValue as DayType | null)
-              }
+              onChange={(_, newValue) => setSelectedDay(newValue as DayType | null)}
               options={Day.options}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Select day"
-                />
-              )}
+              renderInput={(params) => <TextField {...params} label="Select day" />}
             />
             <Box sx={{ display: "flex", flexDirection: "row" }}>
-              <DesktopTimePicker 
+              <DesktopTimePicker
                 label="From"
                 ampm={false}
                 defaultValue={dayjs("2022-04-17T00:00")}
@@ -121,42 +93,73 @@ export default function SetTimeAvailability() {
               />
             </Box>
           </Box>
-          <Box sx={{alignContent:"center"}}>
+          <Box sx={{ alignContent: "center" }}>
             {selectedDay && (
-              <Button sx={{  margin:"1em"}} onClick={handleAdd}>
+              <Button sx={{ margin: "1em" }} onClick={handleAdd}>
                 Add
               </Button>
             )}
           </Box>
         </Box>
-        <SelectedTimeAvailabilities timeAvailabilities={getValues().time_availability} borderColor={theme.customColors.headingTextColor} />
+        <SelectedTimeAvailabilities
+          timeAvailabilities={getValues().time_availability}
+          borderColor={theme.customColors.headingTextColor}
+        />
       </Box>
     </LocalizationProvider>
   );
 }
 
-
-function SelectedTimeAvailabilities({timeAvailabilities, borderColor}:{timeAvailabilities:TimeAvailabilityType[], borderColor:string}) {
+function SelectedTimeAvailabilities({
+  timeAvailabilities,
+  borderColor,
+}: {
+  timeAvailabilities: TimeAvailabilityType[];
+  borderColor: string;
+}) {
   return (
     <>
-    {timeAvailabilities.length!=0 && (
-      <Box
-        sx={{
-          border: "1px solid" + borderColor,
-          display: "flex",
-          flexDirection: "row",
-          overflowX: "auto",
-          overflowY: "auto",
-          borderRadius: "0.5em",
-          marginTop: "1em",
-          maxHeight: "6em",
-        }}
-      >
-        {timeAvailabilities.map((timeAvailability, i) => (
-          <TimeAvailability key={i} timeAvailability={timeAvailability} />
-        ))}
-      </Box>
-    )}
+      {timeAvailabilities.length != 0 && (
+        <Box
+          sx={{
+            border: "1px solid" + borderColor,
+            display: "flex",
+            flexDirection: "row",
+            overflowX: "auto",
+            overflowY: "auto",
+            borderRadius: "0.5em",
+            marginTop: "1em",
+            maxHeight: "6em",
+          }}
+        >
+          {timeAvailabilities.map((timeAvailability, i) => (
+            <TimeAvailability key={i} timeAvailability={timeAvailability} />
+          ))}
+        </Box>
+      )}
     </>
-  )
+  );
+}
+
+function obtainValidTimeAvailabilities(
+  existingTimeAvailabilities: TimeAvailabilityType[],
+  newTimeAvailability: TimeAvailabilityType
+): TimeAvailabilityType[] {
+  if (!existingTimeAvailabilities) return [newTimeAvailability];
+
+  const existingSameDayTimeAvailability = existingTimeAvailabilities.find(
+    (time: TimeAvailabilityType) => time.day === newTimeAvailability.day
+  );
+  if (!existingSameDayTimeAvailability) return [...existingTimeAvailabilities, newTimeAvailability];
+
+  const equivalentTimeSlot = existingSameDayTimeAvailability?.time.find(
+    (timeslot) =>
+      timeslot.start_time === newTimeAvailability.time[0].start_time &&
+      timeslot.end_time === newTimeAvailability.time[0].end_time
+  );
+
+  if (equivalentTimeSlot) return existingTimeAvailabilities;
+
+  existingSameDayTimeAvailability.time.push(newTimeAvailability.time[0]);
+  return [...existingTimeAvailabilities];
 }
