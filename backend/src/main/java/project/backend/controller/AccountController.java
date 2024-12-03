@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,10 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import project.backend.controller_bodies.AccountLoginBody;
 import project.backend.controller_bodies.AccountRegisterBody;
 import project.backend.exceptions.EmailAlreadyExistsException;
-import project.backend.controller_bodies.AccountLoginBody;
 import project.backend.exceptions.PasswordMismatchException;
+import project.backend.exceptions.UserNotFoundException;
 import project.backend.model.User;
 import project.backend.service.AccountService;
 
@@ -54,7 +54,13 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody AccountLoginBody body) {
-        return accountService.checkPassword(body.email, body.password).orElse(null);
+    public ResponseEntity<?> login(@RequestBody AccountLoginBody body) {
+        try {
+            User user = accountService.getUserIfCorrectPassword(body);
+            return ResponseEntity.ok(user);
+        }
+        catch (UserNotFoundException | PasswordMismatchException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
 }

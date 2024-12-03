@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -36,9 +35,9 @@ public abstract class User {
     @JsonIgnore
     private String passwordHash;
 
-    @ElementCollection
+    @Column(name = "languages")
+    @ElementCollection(targetClass = Language.class)
     @CollectionTable(name = "user_languages", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "language")
     @Enumerated(EnumType.STRING)
     private List<Language> languages = new LinkedList<>();
 

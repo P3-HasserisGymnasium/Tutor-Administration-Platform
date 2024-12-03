@@ -5,9 +5,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import project.backend.controller_bodies.AccountLoginBody;
 import project.backend.controller_bodies.AccountRegisterBody;
 import project.backend.exceptions.EmailAlreadyExistsException;
 import project.backend.exceptions.PasswordMismatchException;
+import project.backend.exceptions.UserNotFoundException;
 import project.backend.model.RoleEnum;
 import project.backend.model.Student;
 import project.backend.model.Tutee;
@@ -100,13 +102,17 @@ public class AccountService {
         accountRepository.deleteById(id);
     }
 
-    public Optional<User> checkPassword(String email, String password) {
+    public User getUserIfCorrectPassword(AccountLoginBody body) {
 
-        User user = accountRepository.findByEmail(email);
-        if (user != null && PasswordUtility.matches(password, user.getPasswordHash())) {
-            return Optional.of(user);
+        User user = accountRepository.findByEmail(body.email);
+        if (user == null) {
+            throw new UserNotFoundException("Incorrect Password or Email");
         }
-        return Optional.empty();
+        if (PasswordUtility.matches(body.password, user.getPasswordHash()) == false) {
+            throw new PasswordMismatchException("Incorrect Password or Email");            
+        }
+
+        return user;
     }
 
 }
