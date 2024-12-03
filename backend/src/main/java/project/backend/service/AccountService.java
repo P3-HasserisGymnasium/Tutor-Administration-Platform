@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import project.backend.model.User;
 import project.backend.repository.AccountRepository;
-import project.backend.util.PasswordUtility;
+import project.backend.utilities.PasswordUtility;
 
 @Service
 public class AccountService {
