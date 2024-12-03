@@ -1,6 +1,5 @@
 import { Box, Button, Theme, Typography, useTheme } from "@mui/material";
 import TutorlyLogoBlue from "src/assets/TutorlyLogoBlue.svg"
-import SetTimeAvailability from "../content_components/SetTimeAvailability";
 
 interface TutorTimeAvailabilityProps {
     setPage: (page: "primaryRegister" | "tutorTimeAvailability" | "tutorApplication") => void

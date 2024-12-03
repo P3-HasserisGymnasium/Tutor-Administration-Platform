@@ -24,15 +24,9 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
-<<<<<<< HEAD:backend/src/main/java/project/backend/controller/StudentController.java
-    public Student getStudent(@PathVariable Long id) {
-        return studentService.getStudentById(id)
-                .orElse(null);
-=======
     public User getUser(@PathVariable Long id) {
         return accountService.getUserById(id)
-            .orElse(null);
->>>>>>> refs/remotes/origin/main:backend/src/main/java/project/backend/controller/AccountController.java
+                .orElse(null);
     }
 
     @PostMapping("/")
@@ -47,6 +41,6 @@ public class AccountController {
 
     @PostMapping("/login")
     public User login(@RequestBody User user) {
-        return accountService.checkPassword(user.getEmail("email"), user.getPassword("password"));
+        return accountService.checkPassword(user.getEmail(), user.getPasswordHash());
     }
 }

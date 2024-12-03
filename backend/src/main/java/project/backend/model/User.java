@@ -36,7 +36,6 @@ public abstract class User {
     @Transient
     private String confirmPassword;
 
-
     @Column(name = "password_hash", nullable = false)
     @JsonIgnore
     private String passwordHash;
@@ -46,12 +45,13 @@ public abstract class User {
     @ElementCollection
     private List<Language> languages = new LinkedList<>();
 
-    public User() {}
+    public User() {
+    }
 
     public Long getId() {
         return id;
     }
-    
+
     public String getFullName() {
         return fullName;
     }
@@ -80,8 +80,8 @@ public abstract class User {
         return language;
     }
 
-    public void setLanguage(Language language) {
-        this.language = language;
+    public void setLanguage(List<Language> languages) {
+        this.languages = languages;
     }
 
 }
