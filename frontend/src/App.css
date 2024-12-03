@@ -40,3 +40,7 @@ body {
 .read-the-docs {
 	color: #888;
 }
+
+.gradient {
+	background-color: linear-gradient(to top, #041758 25%, #0933BE 100%);
+}

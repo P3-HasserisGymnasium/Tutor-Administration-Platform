@@ -77,7 +77,11 @@ export const zodAccountRegisterSchema = z.object({
 		.min(6, "Password confirmation must match the password"), // Minimum length validation
 	// Password match check should be handled elsewhere (e.g., in `refine`)
 
-	yearGroup: YearGroup.optional(), // Optional field, no required error
+	yearGroup: z
+		.string({
+			required_error: "You must select a year group", // Optional field validation
+		}) // Optional field, no required error
+		.min(1, "You must select a year group"),
 
 	languages: z
 		.array(Language, {
