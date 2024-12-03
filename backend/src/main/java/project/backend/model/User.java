@@ -66,4 +66,13 @@ public abstract class User {
     public void setPasswordHash(String password) {
         this.passwordHash = password;
     }
+
+    public Language getLanguage(Language language) {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+
 }

@@ -29,6 +29,8 @@ export function useHeading(): string {
 			return "Profile";
 		case "/tutor/tutor-application": case "/tutee/tutor-application":
 			return "Tutor Application";
+		case "/tutor/posts-list":
+			return "List of Posts";
 		default:
 			return "";
 	}
