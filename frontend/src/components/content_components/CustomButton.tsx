@@ -4,7 +4,7 @@ import { styled } from '@mui/material';
 import { darken } from '@mui/system';
 
 interface CustomButtonProps extends ButtonProps{
-    customType?: "success" | "warning"
+    customType?: "success" | "warning" | "x";
 }
 
 const SucessButton = styled(Button)(({theme}) => ({
@@ -23,12 +23,25 @@ const WarningButton = styled(Button)(({theme}) => ({
     }
 }))
 
+const XButton = styled(WarningButton)(() => ({
+    height: '1.4em',
+    width: '1.4em', 
+    minWidth: '1em', 
+    top: '-0.5em', 
+    right: '-0.5em', 
+    position: 'absolute', 
+    whiteSpace: "nowrap"
+}))
+
+
 const CustomButton: React.FC<CustomButtonProps> = ({customType, ...props}) => {
     switch(customType){
         case "success":
             return <SucessButton {...props} />
         case "warning":
             return <WarningButton {...props} />
+        case "x":
+            return <XButton {...props} />
         default:
             return <Button {...props} />
     }
