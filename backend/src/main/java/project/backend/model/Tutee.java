@@ -3,6 +3,8 @@ package project.backend.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -20,6 +22,7 @@ public class Tutee extends Role {
 
     @OneToOne
     @JoinColumn(name = "student_id")
+    @JsonBackReference
     Student student;
 
     public Tutee() {}

@@ -66,9 +66,9 @@ public class RoleService {
     Student student = getStudentById(id);
 
 
-    if(role == RoleEnum.TUTEE && student.getTutee() != null){
+    if(role == RoleEnum.Tutee && student.getTutee() != null){
       return student.getTutee();
-    } else if(role == RoleEnum.TUTOR && student.getTutor() != null){
+    } else if(role == RoleEnum.Tutor && student.getTutor() != null){
       return student.getTutor();
     } else{
       throw new IllegalArgumentException("Invalid role specified.");
@@ -86,12 +86,12 @@ public class RoleService {
   public void removeRole(Long id, RoleEnum role){
     Student student = getStudentById(id);
 
-    if (role == RoleEnum.TUTEE && student.getTutee() != null){
+    if (role == RoleEnum.Tutee && student.getTutee() != null){
       student.setTutee(null);
       saveStudent(student);
 
-    }else if(role == RoleEnum.TUTOR && student.getTutor() != null){
-      student.setTutorId(null);
+    }else if(role == RoleEnum.Tutor && student.getTutor() != null){
+      student.setTutor(null);
       saveStudent(student);
 
     }else{

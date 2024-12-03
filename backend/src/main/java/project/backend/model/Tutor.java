@@ -3,6 +3,8 @@ package project.backend.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -36,6 +38,7 @@ public class Tutor extends Role {
 
     @OneToOne
     @JoinColumn(name = "student_id")
+    @JsonBackReference
     Student student;
 
     public Tutor() {}
