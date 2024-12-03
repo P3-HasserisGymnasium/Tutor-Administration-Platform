@@ -55,9 +55,4 @@ public class AccountService {
         deleteUserById(id);  
     }
 
-    public User checkPassword(String email, String password) {
-        this.unhashPassword = matches(password, user.getPasswordHash());
-        return accountRepository.findByEmailAndPassword(email, unhashPassword);
-    }
-
 }

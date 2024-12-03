@@ -9,11 +9,7 @@ public interface AccountRepository extends JpaRepository<User, Long> {
     // Custom queries for users
 
 
-    // Optional<User> findByEmail(String email);
-
-    User findByEmailAndPassword(String email, String password);
-
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     
 }
