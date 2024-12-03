@@ -37,4 +37,6 @@ public class AccountController {
     public void deleteUser(@PathVariable Long id) {
         accountService.removeAccount(id);
     }
+
+    
 }

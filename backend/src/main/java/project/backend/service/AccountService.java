@@ -34,6 +34,7 @@ public class AccountService {
         accountRepository.deleteById(id);
     }
 
+
     public User registerAccount(User user){
 
         String email = user.getEmail();     
@@ -52,6 +53,10 @@ public class AccountService {
     public void removeAccount(Long id) {
         User user = getUserById(id);  
         deleteUserById(id);  
+    }
+
+    public User checkPassword(String email, String password) {
+        return accountRepository.findByEmailAndPassword(email, password);
     }
 
 }
