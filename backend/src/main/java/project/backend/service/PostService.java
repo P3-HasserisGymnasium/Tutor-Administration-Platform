@@ -10,8 +10,8 @@ import project.backend.model.Post;
 import project.backend.model.PostState;
 
 import project.backend.model.Tutee;
+import project.backend.model.Student;
 import project.backend.repository.PostRepository;
-import project.backend.repository.TuteeRepository;
 
 @Service
 public class PostService {
@@ -20,11 +20,11 @@ public class PostService {
     final PostRepository postRepository;
 
     @Autowired
-    final TuteeRepository tuteeRepository; // Inject TuteeRepository
+    final RoleService roleService; 
 
-    public PostService(PostRepository postRepository, TuteeRepository tuteeRepository) {
+    public PostService(PostRepository postRepository, RoleService roleService) {
         this.postRepository = postRepository;
-        this.tuteeRepository = tuteeRepository;
+        this.roleService = roleService;
     }
 
     public Optional<Post> getPostById(Long id){
@@ -40,15 +40,11 @@ public class PostService {
         postRepository.deleteById(postId);
     }
 
-    public Post createPost(Post post, Long tuteeId){
+    public Post createPost(Post post, Long id){
         
-        Optional<Tutee> tuteeOpt = tuteeRepository.findById(tuteeId);
+        Student student = roleService.getStudentById(id);
 
-        if(!tuteeOpt.isPresent()){
-        throw new IllegalArgumentException("Tutee not found with ID: " + tuteeId);
-        }
-
-        Tutee tutee = tuteeOpt.get();
+        Tutee tutee = student.getTutee();
 
         post.setTutee(tutee);
         post.setCreationTimestamp(new Timestamp(System.currentTimeMillis()));
@@ -73,10 +69,6 @@ public class PostService {
 
         return savePost(existingPost);        
     }
-
-    
-
-
 }
 
 
