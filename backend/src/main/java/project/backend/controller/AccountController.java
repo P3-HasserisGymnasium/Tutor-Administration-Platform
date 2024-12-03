@@ -25,17 +25,16 @@ public class AccountController {
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
-        return accountService.getUserById(id)
-            .orElse(null);
+        return accountService.getUserById(id);
     }
 
     @PostMapping("/")
     public User createUser(@RequestBody User user) {
-        return accountService.saveUser(user);
+        return accountService.registerAccount(user);
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
-        accountService.deleteUserById(id);
+        accountService.removeAccount(id);
     }
 }

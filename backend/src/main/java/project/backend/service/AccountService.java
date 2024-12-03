@@ -26,6 +26,7 @@ public class AccountService {
     }
 
     public User saveUser(User user) {
+
         return accountRepository.save(user);
     }
 
@@ -33,21 +34,24 @@ public class AccountService {
         accountRepository.deleteById(id);
     }
 
-    public void registerAccount(Student student){
+    public User registerAccount(User user){
 
-        String email = student.getEmail();     
+        String email = user.getEmail();     
 
         if(accountRepository.findByEmail(email).isPresent()){
             throw new IllegalArgumentException("Email is already registered");
         }
 
+        Student student = (Student) user;
         student.setRegistrationTimestamp(new Timestamp(System.currentTimeMillis()));
 
-        saveUser(student);
+        return saveUser(user);
     }   
 
-    public void removeAccount(Long id){
-        User user = getUserById(id);
-        deleteUserById(id);
+
+    public void removeAccount(Long id) {
+        User user = getUserById(id);  
+        deleteUserById(id);  
     }
+
 }
