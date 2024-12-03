@@ -14,7 +14,7 @@ import TutorProfilePage from "components/page_components/tutor/TutorProfilePage"
 import RequestAdminPage from "components/page_components/tutee/RequestAdminPage";
 import PostsListPage from "components/page_components/tutor/PostsListPage";
 import CollaborationPage from "components/page_components/CollaborationPage";
-import { getCurrentTheme, useBreakpoints } from "./utilities/helperFunctions";
+import { useCurrentTheme, useBreakpoints } from "./utilities/helperFunctions";
 import TutorApplicationPage from "./components/page_components/TutorApplicationPage";
 
 
@@ -30,7 +30,7 @@ export default function App() {
           : "100vw",
       }}
     >
-      <ThemeProvider theme={getCurrentTheme()}>
+      <ThemeProvider theme={useCurrentTheme()}>
         <Navbar/>
       </ThemeProvider>
 

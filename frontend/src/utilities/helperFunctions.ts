@@ -34,7 +34,7 @@ export function useHeading(): string {
 	}
 }
 
-export function getCurrentTheme(): Theme {
+export function useCurrentTheme(): Theme {
 	const firstPathPart = location.pathname.split("/").filter(Boolean)[0];
 	switch (firstPathPart) {
 		case "tutee":
