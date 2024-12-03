@@ -33,7 +33,8 @@ public class Student extends User {
     @JsonManagedReference
     Tutor tutor;
 
-    public Student() {}
+    public Student() {
+    }
 
     public Timestamp getRegistrationTimestamp() {
         return registrationTimestamp;
