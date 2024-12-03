@@ -29,11 +29,9 @@ public class Student extends User {
     Tutee tutee;
 
     @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
     Tutor tutor;
 
-    public Student() {
-    }
+    public Student() {}
 
     public Timestamp getRegistrationTimestamp() {
         return registrationTimestamp;
