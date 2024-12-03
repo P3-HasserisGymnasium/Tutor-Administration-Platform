@@ -48,7 +48,7 @@ export default function TutorApplication() {
                         <Typography variant="h4">Subjects</Typography>
                         <SetSubject/>
     
-                        <SetTimeAvailability />
+                        <SetTimeAvailability/>
                     </Box>
                     <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", width: "50%", paddingLeft:"1em"}}>
                         <Typography variant="h3">Write your application below:</Typography>
