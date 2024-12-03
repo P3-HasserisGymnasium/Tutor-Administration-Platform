@@ -41,12 +41,13 @@ public abstract class User {
     @Enumerated(EnumType.STRING)
     private List<Language> languages = new LinkedList<>();
 
-    public User() {}
+    public User() {
+    }
 
     public Long getId() {
         return id;
     }
-    
+
     public String getFullName() {
         return fullName;
     }

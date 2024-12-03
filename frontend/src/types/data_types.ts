@@ -49,6 +49,16 @@ export const zodTimeAvailabilitySchema = z.object({
 	day: zodDay,
 	time: z.array(zodTimeSlotSchema),
 });
+export const zodTutorApplicationSchema = z.object({
+	subjects: z.array(zodSubject),
+	time_availability: z.array(
+		z.object({
+			day: zodDay,
+			time: z.array(zodTimeSlotSchema),
+		})
+	),
+	application: z.string(),
+});
 export const zodMeetingState = z.enum([
 	"Pending",
 	"Accepted",
@@ -87,6 +97,7 @@ export type TimeSlotType = z.infer<typeof zodTimeSlotSchema>;
 export type LanguageType = z.infer<typeof zodLanguage>;
 export type RoleType = z.infer<typeof zodRole>
 export type YearGroupType = z.infer<typeof zodYearGroup>;
+export type TutorApplicationType = z.infer<typeof zodTutorApplicationSchema>;
 export type MeetingStateType = z.infer<typeof zodMeetingState>;
 export type NotificationContextType = z.infer<typeof zodNotificationContext>;
 export type DayType = z.infer<typeof zodDay>;

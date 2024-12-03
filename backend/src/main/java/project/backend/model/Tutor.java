@@ -1,6 +1,6 @@
 package project.backend.model;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CollectionTable;
@@ -23,16 +23,16 @@ public class Tutor extends Role {
     @CollectionTable(name = "tutor_subjects", joinColumns = @JoinColumn(name = "role_id"))
     @Column(name = "tutoring_subject")
     @Enumerated(EnumType.STRING)
-    List<SubjectEnum> tutoringSubjects = new LinkedList<>();
+    List<SubjectEnum> tutoringSubjects = new ArrayList<>();
 
     @OneToMany(mappedBy = "tutor")
-    List<Feedback> feedbacks = new LinkedList<>();
+    List<Feedback> feedbacks = new ArrayList<>();
 
     @OneToMany(mappedBy = "tutor")
-    List<TutorTimeSlot> freeTimeSlots = new LinkedList<>();
+    List<TutorTimeSlot> freeTimeSlots = new ArrayList<>();
 
     @OneToMany(mappedBy = "tutor")
-    List<Collaboration> collaborations = new LinkedList<>();
+    List<Collaboration> collaborations = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "student_id")

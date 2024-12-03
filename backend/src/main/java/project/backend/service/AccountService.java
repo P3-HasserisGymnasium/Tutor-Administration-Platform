@@ -19,7 +19,7 @@ import project.backend.utilities.PasswordUtility;
 
 @Service
 public class AccountService {
-    
+
     @Autowired
     final AccountRepository accountRepository;
 
@@ -39,7 +39,7 @@ public class AccountService {
         this.tuteeRepository = tuteeRepository;
     }
 
-    public Optional<User> getUserById(Long id){
+    public Optional<User> getUserById(Long id) {
         return accountRepository.findById(id);
     }
 
@@ -84,4 +84,14 @@ public class AccountService {
     public void deleteUserById(Long id) {
         accountRepository.deleteById(id);
     }
+
+    public Optional<User> checkPassword(String email, String password) {
+        
+        User user = accountRepository.findByEmail(email);
+        if (user != null && PasswordUtility.matches(password, user.getPasswordHash())) {
+            return Optional.of(user);
+        }
+        return Optional.empty();
+    }
+
 }

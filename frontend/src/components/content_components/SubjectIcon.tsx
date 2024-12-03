@@ -13,8 +13,10 @@ export default function SubjectIcon({ Subject }: SubjectIconProps) {
 	return (
 		<Box
 			sx={{
+				display: "flex",
+				flexDirection: "column",
+				alignItems: "center",
 				color: style.color,
-				width: "300px",
 			}}
 		>
 			{style.icon}

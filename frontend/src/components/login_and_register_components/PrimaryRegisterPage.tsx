@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from "@mui/material";
+import { Box, Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, TextField, Theme, Typography, useTheme } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 import { useNavigate, useSubmit } from "react-router-dom";
 import TutorlyLogoBlue from "src/assets/TutorlyLogoBlue.svg"
@@ -11,6 +11,7 @@ interface PrimaryRegisterPageProps {
 }
 
 const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) => {
+    const theme = useTheme<Theme>();
     const formMethods = useFormContext<AccountRegisterType>();
 
     const registerMutation = useAccountService().registerAccount();
@@ -57,7 +58,7 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
 
     return (
         <Box sx={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }} >
-            <Box sx={{ width: "50%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", backgroundColor: "primary.light" }} >
+            <Box sx={{ width: "50%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", backgroundColor: theme.customColors.postBackGroundColor }} >
                 <Box sx={{ width: "65%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                     <Typography variant="h1" color="primary.main">
                         <strong><strong>Register</strong></strong>
@@ -200,8 +201,8 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
                     />
 
                     <Box sx={{ marginTop: 2, width: "100%", display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end" }}>
-                        <Button onClick={() => navigate("/start")} sx={{ margin: 1, color: "primary.main", backgroundColor: "primary.light" }} variant="contained">Go back</Button>
-                        <Button onClick={handleSubmit(verifyRoles)} type="submit" sx={{ margin: 1, color: "primary.light" }} variant="contained" >Continue</Button>
+                        <Button onClick={() => navigate("/start")} sx={{ margin: 1, backgroundColor: theme.customColors.headingTextColor }} variant="contained">Go back</Button>
+                        <Button onClick={handleSubmit(verifyRoles)} type="submit" sx={{ margin: 1, backgroundColor: theme.palette.primary.main }} variant="contained" >Continue</Button>
                     </Box>
                 </Box>
             </Box>
