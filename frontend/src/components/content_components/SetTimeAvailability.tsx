@@ -8,6 +8,7 @@ import { TimeAvailabilityType } from "~/types/data_types";
 import { useState } from "react";
 import { useTheme, Theme } from "@mui/material/styles";
 import TimeAvailability from "./TimeAvailability";
+import { toast } from "react-toastify";
 
 export default function SetTimeAvailability() {
   const [selectedDay, setSelectedDay] = useState<DayType | null>(null);
@@ -20,7 +21,7 @@ export default function SetTimeAvailability() {
 
   const handleAdd = () => {
     if (!selectedDay) {
-      console.error("Day not selected");
+      toast.error("Please select a day");
       return;
     }
 
@@ -36,6 +37,12 @@ export default function SetTimeAvailability() {
 
     const existingTimeAvailabilities: TimeAvailabilityType[] = getValues("time_availability");
     const validTimeAvailabilities = obtainValidTimeAvailabilities(existingTimeAvailabilities, newTimeAvailability);
+
+    if (!validTimeAvailabilities) {
+      console.error("Invalid time availability");
+      toast.error("Invalid time availability");
+      return;
+    }
     setValue("time_availability", validTimeAvailabilities);
   };
 
@@ -144,7 +151,17 @@ function SelectedTimeAvailabilities({
 function obtainValidTimeAvailabilities(
   existingTimeAvailabilities: TimeAvailabilityType[],
   newTimeAvailability: TimeAvailabilityType
-): TimeAvailabilityType[] {
+): TimeAvailabilityType[] | undefined {
+  const startTime = newTimeAvailability.time[0].start_time.split(":");
+  const startTimeHourInteger = Number(startTime[0]);
+  const startTimeMinutesInteger = Number(startTime[1]);
+  const endTime = newTimeAvailability.time[0].end_time.split(":");
+  const endTimeHourInteger = Number(endTime[0]);
+  const endTimeMinutesInteger = Number(endTime[1]);
+
+  if (!(startTimeHourInteger <= endTimeHourInteger)) return;
+  if (!(startTimeMinutesInteger < endTimeMinutesInteger)) return;
+
   if (!existingTimeAvailabilities) return [newTimeAvailability];
 
   const existingSameDayTimeAvailability = existingTimeAvailabilities.find(
