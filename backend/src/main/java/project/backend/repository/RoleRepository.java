@@ -10,8 +10,6 @@ import project.backend.model.Student;
 public interface RoleRepository extends JpaRepository<Student, Long> {
     // Custom queries can be added here
 
-
-    // i dont know how query works....
     @Query("SELECT s FROM Student s WHERE s.tutee IS NOT NULL")
     List<Student> getTutees();
 
