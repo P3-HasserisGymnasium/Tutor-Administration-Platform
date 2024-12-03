@@ -1,11 +1,33 @@
-# Use an OpenJDK image with JDK 17 or later (modify if you're using another version)
+# Use an OpenJDK image with JDK 17 or later for building the application
+FROM openjdk:17-jdk-slim AS builder
+
+# Set the working directory for the build stage
+WORKDIR /app
+
+# Copy only the Gradle wrapper and build configuration files first (caches dependencies if unchanged)
+COPY gradlew gradlew.bat settings.gradle.kts build.gradle.kts /app/
+COPY gradle /app/gradle
+
+# Make the Gradle wrapper executable
+RUN chmod +x gradlew
+
+# Pre-download dependencies (this step is cached unless dependencies change)
+RUN ./gradlew dependencies --no-daemon
+
+# Copy the application source code
+COPY src /app/src
+
+# Build the application, skipping tests
+RUN ./gradlew build -x test --no-daemon
+
+# Use a new, lightweight image for running the application
 FROM openjdk:17-jdk-slim
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the built JAR file into the container
-COPY build/libs/*.jar app.jar
+# Copy the built JAR file from the build stage
+COPY --from=builder /app/build/libs/*.jar app.jar
 
 # Expose the Spring Boot port
 EXPOSE 8080

@@ -52,31 +52,33 @@ public class AccountService {
         
         String passwordHash = PasswordUtility.encodePassword(body.password);
         newStudent.setPasswordHash(passwordHash);
+
+        newStudent.setLanguages(body.languages);
+        newStudent.setYearGroup(body.yearGroup);
         
+        Student savedStudent = studentRepository.save(newStudent);
+
         // if tutor role is selected, create a new tutor object
         if (body.roles.contains(RoleEnum.Tutor)) {
             Tutor newTutor = new Tutor();
 
             newTutor.setTutoringSubjects(body.tutorSubjects);
-            newTutor.setStudent(newStudent);
+            newTutor.setStudent(savedStudent);
 
-            newStudent.setTutor(newTutor);
+            savedStudent.setTutor(newTutor);
             tutorRepository.save(newTutor);
         }
         // if tutee role is selected, create a new tutee object
         if (body.roles.contains(RoleEnum.Tutee)) {
             Tutee newTutee = new Tutee();
 
-            newTutee.setStudent(newStudent);
+            newTutee.setStudent(savedStudent);
 
-            newStudent.setTutee(newTutee);  
+            savedStudent.setTutee(newTutee);  
             tuteeRepository.save(newTutee);
         }
 
-        newStudent.setLanguages(body.languages);
-        newStudent.setYearGroup(body.yearGroup);
-
-        return studentRepository.save(newStudent);
+        return savedStudent;
     }
 
     public void deleteUserById(Long id) {

@@ -33,12 +33,9 @@ public class AccountController {
     @PostMapping("/")
     public User createUser(@RequestBody AccountRegisterBody body) {
 
-        System.out.println(body);
-        System.out.flush();
-
-        boolean passwordsMatch = body.password.equals(body.confirmationPassword);
+        boolean passwordsMatch = body.password.equals(body.confirmPassword);
         if (passwordsMatch == false) {
-            throw new IllegalArgumentException("Passwords do not match (" + body.password + ") != (" + body.confirmationPassword + ")");
+            throw new IllegalArgumentException("Passwords do not match (" + body.password + ") != (" + body.confirmPassword + ")");
         }
 
         return accountService.saveNewUser(body);

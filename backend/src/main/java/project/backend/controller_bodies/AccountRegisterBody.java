@@ -16,7 +16,7 @@ public class AccountRegisterBody {
     public String fullName;
     public String email;
     public String password;
-    public String confirmationPassword;
+    public String confirmPassword;
     public List<RoleEnum> roles = new LinkedList<>();
     public YearGroupEnum yearGroup;
     public List<Language> languages = new LinkedList<>();
