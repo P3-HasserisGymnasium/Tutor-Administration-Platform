@@ -2,13 +2,11 @@ import {Autocomplete, Box, Button, TextField, Stack, Typography, Checkbox, FormC
 import { FormProvider, useForm, Controller, useWatch, ControllerRenderProps } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Language, LanguageType, Subject, YearGroup } from "~/types/data_types";
-import SetTimeAvailability from "~/components/content_components/TutorListComponents/SetTimeAvailability";
-import TimeAvailability from "components/content_components/TimeAvailability.tsx";
+import SetTimeAvailability from "~/components/content_components/SetTimeAvailability";
 import {
   zodTutorListFilterSchema,
   tutorListFilterType,
 } from "../../../types/data_types";
-import { useTheme,Theme } from "@mui/material/styles";
 import SubjectChip from "../SubjectChip";
 
 export default function Filter() {
@@ -22,9 +20,7 @@ export default function Filter() {
     },
   });
 
-  const { getValues, control } = filterMethods;
-
-  const allValues = getValues();
+  const { control } = filterMethods;
 
   const filter = (values: tutorListFilterType) => {
     console.log(values);
@@ -36,7 +32,6 @@ export default function Filter() {
 
   console.log(keepWatch);
 
-  const theme = useTheme<Theme>();
   return (
     <FormProvider {...filterMethods}>
       <Stack
@@ -100,22 +95,6 @@ export default function Filter() {
           )}
         />
         <SetTimeAvailability /> 
-
-        {allValues.time_availability.length!=0 && (
-          <Box
-            sx={{
-              border: "1px solid" + theme.customColors.headingTextColor,
-              display: "flex",
-              displayDirection: "row",
-              overflowX: "auto",
-              borderRadius: "0.5em",
-            }}
-          >
-            {allValues.time_availability.map((timeAvailability, i) => (
-              <TimeAvailability key={i} timeAvailability={timeAvailability} />
-            ))}
-          </Box>
-        )}
 
         <Typography variant="h4">Language</Typography>
         

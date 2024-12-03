@@ -10,32 +10,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import project.backend.model.User;
-import project.backend.service.UserService;
+import project.backend.service.AccountService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class AccountController {
 
-    final UserService userService;
+    final AccountService accountService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
     }
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
-        return userService.getUserById(id)
+        return accountService.getUserById(id)
             .orElse(null);
     }
 
     @PostMapping("/")
     public User createUser(@RequestBody User user) {
-        return userService.saveUser(user);
+        return accountService.saveUser(user);
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
-        userService.deleteUserById(id);
+        accountService.deleteUserById(id);
+    }
+
+    @PostMapping("/login")
+    public User login(@RequestBody User user) {
+        return accountService.checkPassword(user.getEmail("email"), user.getPassword("password"));
     }
 }

@@ -7,6 +7,7 @@ declare module '@mui/material/styles' {
           collaborationBackgroundColor: string;
           postBackGroundColor: string;
           headingTextColor: string;
+          boxBorderColor: string;
           subjectColors: Record<SubjectType, {background:string}>;
         };
       }
@@ -17,6 +18,7 @@ declare module '@mui/material/styles' {
           collaborationBackgroundColor?: string;
           postBackGroundColor?: string;
           headingTextColor?: string;
+          boxBorderColor?: string;
           subjectColors?: Record<SubjectType, {background:string}>;
         };
       }
