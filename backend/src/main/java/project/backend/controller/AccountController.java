@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import project.backend.controller_bodies.AccountRegisterBody;
+import project.backend.controller_bodies.AccountLoginBody;
 import project.backend.model.User;
 import project.backend.service.AccountService;
 
@@ -47,7 +48,7 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody User user) {
-        return accountService.checkPassword(user.getEmail(), user.getPasswordHash()).orElse(null);
+    public User login(@RequestBody AccountLoginBody body) {
+        return accountService.checkPassword(body.email, body.password).orElse(null);
     }
 }
