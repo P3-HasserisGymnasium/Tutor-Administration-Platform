@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -15,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -33,9 +35,10 @@ public abstract class User {
     @JsonIgnore
     private String passwordHash;
 
+    @ElementCollection
+    @CollectionTable(name = "user_languages", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "language")
     @Enumerated(EnumType.STRING)
-    @ElementCollection
     private List<Language> languages = new LinkedList<>();
 
     public User() {}

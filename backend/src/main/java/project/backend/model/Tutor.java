@@ -3,6 +3,7 @@ package project.backend.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -19,6 +20,8 @@ public class Tutor extends Role {
     String profileDescription;
 
     @ElementCollection
+    @CollectionTable(name = "tutor_subjects", joinColumns = @JoinColumn(name = "role_id"))
+    @Column(name = "tutoring_subject")
     @Enumerated(EnumType.STRING)
     List<SubjectEnum> tutoringSubjects = new LinkedList<>();
 
