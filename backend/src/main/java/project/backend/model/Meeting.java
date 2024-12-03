@@ -95,7 +95,7 @@ public class Meeting {
         this.meetingDescription = meetingDescription;
     }
 
-    public void postPoneMeeting(Timestamp newStart, Timestamp newEnd) {
+    public void postponeMeeting(Timestamp newStart, Timestamp newEnd) {
         this.startTimestamp = newStart;
         this.endTimestamp = newEnd;
     }
