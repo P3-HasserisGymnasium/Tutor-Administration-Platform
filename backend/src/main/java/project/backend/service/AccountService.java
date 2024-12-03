@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import project.backend.model.User;
 import project.backend.model.Student;
 import project.backend.repository.AccountRepository;
+import project.backend.utilities.PasswordUtility;
 
 @Service
 public class AccountService {
@@ -18,6 +19,7 @@ public class AccountService {
 
     public AccountService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
+        this.passwordUtility = passwordUtility;
     }
 
     public User getUserById(Long id){
@@ -34,7 +36,6 @@ public class AccountService {
         accountRepository.deleteById(id);
     }
 
-
     public User registerAccount(User user){
 
         String email = user.getEmail();     
@@ -49,10 +50,16 @@ public class AccountService {
         return saveUser(user);
     }   
 
-
     public void removeAccount(Long id) {
         User user = getUserById(id);  
         deleteUserById(id);  
+
+    public User checkPassword(String email, String password) {
+        User user = accountRepository.findByEmail(email);
+        if (user != null && passwordUtility.matches(password, user.getPasswordHash())) {
+            return User;
+        }
+        return null;
     }
 
 }

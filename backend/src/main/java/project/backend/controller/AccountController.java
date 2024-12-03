@@ -37,5 +37,9 @@ public class AccountController {
     public void deleteUser(@PathVariable Long id) {
         accountService.removeAccount(id);
     }
-    
+
+    @PostMapping("/login")
+    public User login(@RequestBody User user) {
+        return accountService.checkPassword(user.getEmail("email"), user.getPassword("password"));
+    }
 }
