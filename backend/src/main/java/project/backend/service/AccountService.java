@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.AccountRegisterBody;
+import project.backend.exceptions.EmailAlreadyExistsException;
+import project.backend.exceptions.PasswordMismatchException;
 import project.backend.model.RoleEnum;
 import project.backend.model.Student;
 import project.backend.model.Tutee;
@@ -39,11 +41,24 @@ public class AccountService {
         this.tuteeRepository = tuteeRepository;
     }
 
+    public boolean emailExists(String email) {
+        return accountRepository.findByEmail(email) != null;
+    }
+
     public Optional<User> getUserById(Long id) {
         return accountRepository.findById(id);
     }
 
     public User saveNewUser(AccountRegisterBody body) {
+
+        if (emailExists(body.email)) {
+            throw new EmailAlreadyExistsException("Email Already Exists");
+        }
+
+        boolean passwordsMatch = body.password.equals(body.confirmPassword);
+        if (passwordsMatch == false) {
+            throw new PasswordMismatchException("Passwords do not match");
+        }
 
         Student newStudent = new Student();
 
@@ -86,7 +101,7 @@ public class AccountService {
     }
 
     public Optional<User> checkPassword(String email, String password) {
-        
+
         User user = accountRepository.findByEmail(email);
         if (user != null && PasswordUtility.matches(password, user.getPasswordHash())) {
             return Optional.of(user);

@@ -1,7 +1,10 @@
 package project.backend.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import project.backend.controller_bodies.AccountRegisterBody;
+import project.backend.exceptions.EmailAlreadyExistsException;
 import project.backend.controller_bodies.AccountLoginBody;
+import project.backend.exceptions.PasswordMismatchException;
 import project.backend.model.User;
 import project.backend.service.AccountService;
 
@@ -32,14 +37,15 @@ public class AccountController {
     }
 
     @PostMapping("/")
-    public User createUser(@RequestBody AccountRegisterBody body) {
-
-        boolean passwordsMatch = body.password.equals(body.confirmPassword);
-        if (passwordsMatch == false) {
-            throw new IllegalArgumentException("Passwords do not match (" + body.password + ") != (" + body.confirmPassword + ")");
+    public ResponseEntity<?> createUser(@RequestBody AccountRegisterBody body) {
+        
+        try {
+            User savedUser = accountService.saveNewUser(body);
+            return ResponseEntity.ok(savedUser);
         }
-
-        return accountService.saveNewUser(body);
+        catch (EmailAlreadyExistsException | PasswordMismatchException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
