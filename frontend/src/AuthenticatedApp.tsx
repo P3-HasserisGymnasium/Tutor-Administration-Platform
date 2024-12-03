@@ -1,6 +1,6 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, ThemeProvider } from "@mui/material";
 import Navbar from "components/layout_components/Navbar";
 import HomePage from "components/page_components/HomePage";
 import TutorPage from "components/page_components/tutor/TutorPage";
@@ -14,11 +14,25 @@ import TutorProfilePage from "components/page_components/tutor/TutorProfilePage"
 import RequestAdminPage from "components/page_components/tutee/RequestAdminPage";
 import PostsListPage from "components/page_components/tutor/PostsListPage";
 import CollaborationPage from "components/page_components/CollaborationPage";
+import { useBreakpoints, useCurrentTheme } from "./utilities/helperFunctions";
+import TutorApplicationPage from "./components/page_components/TutorApplicationPage";
 
 export default function App() {
+	const widthRightOffset = useBreakpoints().hasScrollbar ? "16px" : "0px";
+
 	return (
-		<Box sx={{ height: "100vh", width: "100vw" }}>
-			<Navbar />
+		<Box
+			sx={{
+				height: useBreakpoints().isMobile ? "auto" : "100vh",
+				width: useBreakpoints().isMobile
+					? `calc(100vw - ${widthRightOffset})`
+					: "100vw",
+			}}
+		>
+			<ThemeProvider theme={useCurrentTheme()}>
+				<Navbar />
+			</ThemeProvider>
+
 			<Box sx={{ height: "90%", width: "100%" }}>
 				<Routes>
 					{/* Root */}
@@ -27,16 +41,24 @@ export default function App() {
 					{/* Tutor */}
 					<Route path="/tutor" element={<TutorPage />} />
 					<Route path="/tutor/profile" element={<TutorProfilePage />} />
-					<Route path="/tutor/notifications" element={<TutorNotificationsPage />} />
+					<Route
+						path="/tutor/notifications"
+						element={<TutorNotificationsPage />}
+					/>
 					<Route path="/tutor/posts-list" element={<PostsListPage />} />
+					<Route path="/tutor/tutor-application" element={<TutorApplicationPage />} />
 
 					{/* Tutee */}
 					<Route path="/tutee" element={<TuteePage />} />
 					<Route path="/tutee/profile" element={<TuteeProfilePage />} />
-					<Route path="/tutee/notifications" element={<TuteeNotificationsPage />} />
+					<Route
+						path="/tutee/notifications"
+						element={<TuteeNotificationsPage />}
+					/>
 					<Route path="/tutee/create-post" element={<CreatePostPage />} />
 					<Route path="/tutee/request-admin" element={<RequestAdminPage />} />
 					<Route path="/tutee/tutor-list" element={<TutorListPage />} />
+					<Route path="/tutee/tutor-application" element={<TutorApplicationPage />} />
 
 					{/* Other */}
 					<Route path="/collaboration" element={<CollaborationPage />} />
