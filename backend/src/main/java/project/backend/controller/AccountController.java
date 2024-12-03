@@ -38,5 +38,9 @@ public class AccountController {
         accountService.removeAccount(id);
     }
 
+    @PostMapping("/login")
+    public User login(@RequestBody User user) {
+        return accountService.checkPassword(user.getEmail(), user.getPlainPassword());
+    }
     
 }

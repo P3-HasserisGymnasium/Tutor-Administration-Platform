@@ -56,7 +56,8 @@ public class AccountService {
     }
 
     public User checkPassword(String email, String password) {
-        return accountRepository.findByEmailAndPassword(email, password);
+        this.unhashPassword = matches(password, user.getPasswordHash());
+        return accountRepository.findByEmailAndPassword(email, unhashPassword);
     }
 
 }
