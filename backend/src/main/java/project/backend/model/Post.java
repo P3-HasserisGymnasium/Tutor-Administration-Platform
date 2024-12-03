@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 
 @Entity
 public class Post {
@@ -19,6 +21,7 @@ public class Post {
     @ManyToOne
     Tutee tutee;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "subject")
     SubjectEnum subject;
 
@@ -33,7 +36,8 @@ public class Post {
 
     @Column(name = "creation_date")
     Timestamp creationTimestamp;
-
+    
+    @Enumerated(EnumType.STRING)
     @Column(name = "state")
     PostState state;
 
@@ -41,6 +45,10 @@ public class Post {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Tutee getTutee() {
