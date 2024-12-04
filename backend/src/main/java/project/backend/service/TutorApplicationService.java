@@ -1,7 +1,6 @@
 package project.backend.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,17 +54,21 @@ public class TutorApplicationService {
         tutorApplication.setState(TutorApplicationState.ACCEPTED);
         Student student = tutorApplication.getStudent();
 
-        if(student.getTutor() != null){
-            throw new IllegalStateException("Student is already a tutor");
+        Tutor tutor = student.getTutor();
+        if(tutor != null){
+            List<SubjectEnum> existingTutoringSubjects = tutor.getTutoringSubjects();
+            existingTutoringSubjects.add(tutorApplication.getSubject());
+            tutor.setTutoringSubjects(existingTutoringSubjects);
+            
+        } else {
+            tutor = new Tutor();
+            tutor.setStudent(student);
+            tutor.setTutoringSubjects(List.of(tutorApplication.getSubject()));
+            student.setTutorId(tutor);
         }
-
-        Tutor tutor = new Tutor();
-        tutor.setStudent(student);
-        student.setTutorId(tutor);
 
         saveTutorApplication(tutorApplication);
         roleService.saveStudent(student); 
-
     }
 
     public void rejectTutorApplication(Long id, String rejectionReason){
