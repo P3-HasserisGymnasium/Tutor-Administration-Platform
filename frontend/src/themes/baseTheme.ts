@@ -57,7 +57,7 @@ const baseTheme = createTheme({
         },
     },
     typography: {
-        fontFamily: 'Inter',
+        fontFamily: "Open Sans",
         h1: {
             fontSize: '2rem',
             fontWeight: 700,

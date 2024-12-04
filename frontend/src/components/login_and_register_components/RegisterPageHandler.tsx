@@ -10,7 +10,12 @@ export default function RegisterPageHandler() {
     const [page, setPage] = useState<"primaryRegister" | "tutorTimeAvailability" | "tutorApplication">("primaryRegister");
 
     const registerFormMethods = useForm<AccountRegisterType>({
-        resolver: zodResolver(zodAccountRegisterSchema)
+        resolver: zodResolver(zodAccountRegisterSchema),
+        defaultValues: {
+            subjects: [],
+            time_availability: [],
+            tutorProfileDescription: "",
+        },
     })
 
     return (
