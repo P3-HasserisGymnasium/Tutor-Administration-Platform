@@ -7,7 +7,8 @@ import {
 	MeetingState,
 	CollaborationState,
 	zodUUID,
-	zodRole
+	zodRole,
+	zodDay
 } from "./data_types";
 
 export const zodPostSchema = z.object({
@@ -108,10 +109,12 @@ export const zodAccountRegisterSchema = z.object({
 		})
 		.optional(), // Optional field
 
-	time_availability: z
-		.array(TimeSlot, {
-			required_error: "You must select at least one timeslot", // Optional field validation
+	time_availability: z.array(
+		z.object({
+			day: zodDay,
+			time: z.array(TimeSlot),
 		})
+	)
 		.optional(), // Optional field
 });
 

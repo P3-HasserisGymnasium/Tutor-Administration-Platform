@@ -28,10 +28,10 @@ const unauthenticatedAppTheme = createTheme(baseTheme, {
         MuiTypography: {
             styleOverrides: {
                 root: {
-                    '&.MuiTypography-h2, &.MuiTypography-h3, &.MuiTypography-h4, &.MuiTypography-h5, &.MuiTypography-h6': {
+                    '&.MuiTypography-h2, &.MuiTypography-h3, &.MuiTypography-h5, &.MuiTypography-h6': {
                         color: "#FFFFFF"
                     },
-                    '&.MuiTypography-h1': {
+                    '&.MuiTypography-h1, &.MuiTypography-h4': {
                         color: colors.headingTextColor,
                     },
                 },
