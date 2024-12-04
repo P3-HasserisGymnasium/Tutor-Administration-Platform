@@ -34,9 +34,7 @@ export default function TutorApplication() {
         }
     };
 
-    const handleSend = () => {
-        console.log(getValues());
-    };
+	console.log(keepWatch);
 
     return (
         <FormProvider {...filterMethods}>
@@ -88,4 +86,5 @@ export default function TutorApplication() {
         </FormProvider>
     )
 }
+
 

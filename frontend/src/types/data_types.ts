@@ -45,30 +45,28 @@ export const zodTutorListFilterSchema = z.object({
 	year_group: z.array(zodYearGroup),
 	languages: z.array(zodLanguage),
 });
+
 export const zodTimeAvailabilitySchema = z.object({
 	day: zodDay,
 	time: z.array(zodTimeSlotSchema),
 });
+
 export const zodTutorApplicationSchema = z.object({
 	subjects: z.array(zodSubject),
-	time_availability: z.array(
-		z.object({
-			day: zodDay,
-			time: z.array(zodTimeSlotSchema),
-		})
-	),
+	time_availability: z.array(zodTimeAvailabilitySchema),
 	application: z.string(),
 });
 export const zodPostListFilterSchema = z.object({
 	duration: z.array(z.number()),
-	time_availability: z.array(
-		z.object({
-			day: zodDay,
-			time: z.array(zodTimeSlotSchema),
-		})
-	),
 	subjects: z.array(zodSubject),
 });
+export const zodPostCreationSchema = z.object({
+	title: z.string(),
+	description: z.string(),
+	subject: zodSubject,
+	duration: z.union([z.array(z.number()), z.undefined()]),
+});
+
 export const zodMeetingState = z.enum([
 	"Pending",
 	"Accepted",
@@ -109,6 +107,7 @@ export type LanguageType = z.infer<typeof zodLanguage>;
 export type RoleType = z.infer<typeof zodRole>
 export type YearGroupType = z.infer<typeof zodYearGroup>;
 export type TutorApplicationType = z.infer<typeof zodTutorApplicationSchema>;
+export type PostCreationType = z.infer<typeof zodPostCreationSchema>;
 export type MeetingStateType = z.infer<typeof zodMeetingState>;
 export type NotificationContextType = z.infer<typeof zodNotificationContext>;
 export type DayType = z.infer<typeof zodDay>;
