@@ -30,7 +30,7 @@ public class PostService {
     public PostService(PostRepository postRepository, RoleService roleService, TuteeRepository tuteeRepository) {
         this.postRepository = postRepository;
         this.roleService = roleService;
-        this.tutteRepository = tuteeRepository;
+        this.tuteeRepository = tuteeRepository;
     }
 
     public Optional<Post> getPostById(Long id){
@@ -45,7 +45,7 @@ public class PostService {
     public void deletePostById(Long postId) {
         postRepository.deleteById(postId);
     }
-
+/*
     public Post createPost(Post post, Long id){
         
         Student student = roleService.getStudentById(id);
@@ -75,7 +75,7 @@ public class PostService {
 
         return savePost(existingPost);        
     }
-
+*/
     public Post createPost(Post post, Long tuteeId){
         
         Optional<Tutee> tuteeOpt = tuteeRepository.findById(tuteeId);
