@@ -5,12 +5,12 @@ import PostCreationInfo from "~/components/content_components/PostCreationCompon
 import tuteeTheme from "~/themes/tuteeTheme";
 
 export default function CreatePostPage() {
-    return (
-        <ThemeProvider theme={tuteeTheme}>
-            <EvenBoxLayout>
-                <PostCreation/>
-                <PostCreationInfo/>
-            </EvenBoxLayout>            
-        </ThemeProvider>
-    );
-};
+	return (
+		<ThemeProvider theme={tuteeTheme}>
+			<EvenBoxLayout>
+				<PostCreation />
+				<PostCreationInfo />
+			</EvenBoxLayout>
+		</ThemeProvider>
+	);
+}
