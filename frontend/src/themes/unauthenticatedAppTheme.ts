@@ -99,7 +99,7 @@ const unauthenticatedAppTheme = createTheme(baseTheme, {
         },
     },
     typography: {
-        fontFamily: 'Inter',
+        fontFamily: 'Open Sans',
         h1: {
             fontSize: '4rem',
             fontWeight: 700,

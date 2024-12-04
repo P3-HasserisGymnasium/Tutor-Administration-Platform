@@ -96,7 +96,7 @@ export const zodAccountRegisterSchema = z.object({
 		})
 		.min(1, "You must select at least one role"), // Minimum array length validation
 
-	tutorSubjects: z
+	subjects: z
 		.array(Subject, {
 			required_error: "You must select at least one subject", // Optional field validation
 		})
@@ -108,7 +108,7 @@ export const zodAccountRegisterSchema = z.object({
 		})
 		.optional(), // Optional field
 
-	tutorTimeslots: z
+	time_availability: z
 		.array(TimeSlot, {
 			required_error: "You must select at least one timeslot", // Optional field validation
 		})

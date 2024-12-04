@@ -1,4 +1,3 @@
-import "./App.css";
 //import AuthenticatedApp from "./AuthenticatedApp";
 import UnauthenticatedApp from "./UnauthenticatedApp";
 
