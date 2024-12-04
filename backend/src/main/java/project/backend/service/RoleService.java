@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import project.backend.repository.RoleRepository;
-
+import project.backend.repository.StudentRepository;
 import project.backend.model.RoleEnum;
 import project.backend.model.Tutee;
 import project.backend.model.Student;
@@ -18,24 +18,28 @@ public class RoleService {
   @Autowired
   final RoleRepository roleRepository;
 
-  public RoleService(RoleRepository roleRepository) {
+  @Autowired
+  final StudentRepository studentRepository;
+
+  public RoleService(RoleRepository roleRepository, StudentRepository studentRepository) {
     this.roleRepository = roleRepository;
+    this.studentRepository = studentRepository;
   }
 
   public List<Student> getTutees() {
-    return roleRepository.getTutees();
+    return studentRepository.getTutees();
   }
 
   public List<Student> getTutors() {
-    return roleRepository.getTutors();
+    return studentRepository.getTutors();
   }
 
   public Student saveStudent(Student student) {
-    return roleRepository.save(student);
+    return studentRepository.save(student);
   }
 
   public Student getStudentById(Long id) {
-    Optional<Student> studentOpt = roleRepository.findById(id);
+    Optional<Student> studentOpt = studentRepository.findById(id);
 
     if (!studentOpt.isPresent()) {
       throw new IllegalArgumentException("Student not found wiht ID: " + id);
@@ -55,7 +59,7 @@ public class RoleService {
     Tutee tutee = new Tutee();
     tutee.setStudent(student);
     student.setTutee(tutee);
-    roleRepository.save(student);
+    studentRepository.save(student);
 
   }
 
