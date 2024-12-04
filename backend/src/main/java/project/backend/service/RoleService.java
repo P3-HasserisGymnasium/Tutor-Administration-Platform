@@ -10,6 +10,7 @@ import project.backend.repository.RoleRepository;
 
 import project.backend.model.RoleEnum;
 import project.backend.model.Tutee;
+import project.backend.model.Tutor;
 import project.backend.model.Student;
 
 @Service
@@ -42,6 +43,23 @@ public class RoleService {
     }
 
     return studentOpt.get();
+  }
+
+  public RoleEnum[] getRolesByUserId(Long id) {
+    Student student = getStudentById(id);
+    Tutor tutor = student.getTutor();
+    Tutee tutee = student.getTutee();
+
+    if (tutor != null && tutee != null) {
+      return new RoleEnum[] { RoleEnum.Tutor, RoleEnum.Tutee };
+    } else if (tutor != null) {
+      return new RoleEnum[] { RoleEnum.Tutor };
+    } else if (tutee != null) {
+      return new RoleEnum[] { RoleEnum.Tutee };
+    } else {
+      return new RoleEnum[] {};
+    }
+
   }
 
   public void assignTuteeRole(Long id) {

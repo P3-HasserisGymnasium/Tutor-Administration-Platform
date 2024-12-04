@@ -128,6 +128,23 @@ export const zodUserStateSchema = z.object({
 	tutoring_subjects: z.array(Subject).nullable(),
 });
 
+export const zodLoginSuccessDataType = z.object({
+	token: z.string(),
+	id: zodUUID.nullable(),
+	name: z.string().nullable(),
+	role: z.array(zodRole).nullable(),
+	email: z.string().email().nullable(),
+	year_group: YearGroup.nullable(),
+	tutoring_subjects: z.array(Subject).nullable(),
+});
+
+export const zodLoginSchema = z.object({
+	email: z.string().email(),
+	password: z.string(),
+});
+
+export type LoginSuccessDataType = z.infer<typeof zodLoginSuccessDataType>;
+export type LoginType = z.infer<typeof zodLoginSchema>;
 export type UserState = z.infer<typeof zodUserStateSchema>;
 export type PostType = z.infer<typeof zodPostSchema>;
 export type ProfileType = z.infer<typeof zodProfileSchema>;
