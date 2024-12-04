@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import project.backend.controller_bodies.AccountLoginBody;
-import project.backend.controller_bodies.AccountRegisterBody;
+import project.backend.controller_bodies.account_controller.AccountLoginBody;
+import project.backend.controller_bodies.account_controller.AccountRegisterBody;
 import project.backend.exceptions.EmailAlreadyExistsException;
 import project.backend.exceptions.PasswordMismatchException;
 import project.backend.exceptions.UserNotFoundException;

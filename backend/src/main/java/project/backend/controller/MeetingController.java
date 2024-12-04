@@ -29,11 +29,13 @@ public class MeetingController {
             .orElse(null);
     }
 
+    /*
     @PostMapping("/")
     public Meeting createMeeting(@RequestBody Meeting meeting) {
         return meetingService.saveMeeting(meeting);
     }
-
+    */
+    
     @DeleteMapping("/{id}")
     public void deleteMeeting(@PathVariable Long id) {
         meetingService.deleteMeetingById(id);

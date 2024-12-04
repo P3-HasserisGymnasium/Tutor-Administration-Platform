@@ -5,8 +5,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import project.backend.controller_bodies.AccountLoginBody;
-import project.backend.controller_bodies.AccountRegisterBody;
+import project.backend.controller_bodies.account_controller.AccountLoginBody;
+import project.backend.controller_bodies.account_controller.AccountRegisterBody;
 import project.backend.exceptions.EmailAlreadyExistsException;
 import project.backend.exceptions.PasswordMismatchException;
 import project.backend.exceptions.UserNotFoundException;
