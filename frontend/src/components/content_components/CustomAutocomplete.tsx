@@ -6,18 +6,21 @@ import SubjectChip from './SubjectChip';
 import TextField from '@mui/material/TextField';
 import { SubjectType } from '~/types/data_types';
 import { YearGroup } from '~/types/data_types';
+import { SxProps, Theme } from '@mui/system';
 
 
 interface CustomAutocompleteProps {
     variant: "subject"| "yearGroup";
+    multiple?: boolean;
+    sx?: SxProps<Theme>;
 }
 
-const CustomAutocomplete: React.FC<CustomAutocompleteProps> = ({variant}) => {
+const CustomAutocomplete: React.FC<CustomAutocompleteProps> = ({variant, multiple, sx}) => {
     switch(variant){
         case "subject":
-            return <SubjectAutocomplete/>
+            return <SubjectAutocomplete multiple={multiple} sx={sx}/>
         case "yearGroup":
-            return <YearGroupAutocomplete/>
+            return <YearGroupAutocomplete multiple={multiple} sx={sx}/>
         default:
             return null;
     }
@@ -25,40 +28,44 @@ const CustomAutocomplete: React.FC<CustomAutocompleteProps> = ({variant}) => {
 
 export default CustomAutocomplete;
 
-function SubjectAutocomplete() {
+function SubjectAutocomplete({multiple, sx}:{multiple?: boolean, sx?: SxProps<Theme>}) {
     const {control} = useFormContext();
     return(
         <Controller
-            name="subjects"
+            name={multiple?"subjects":"subject"}
             control={control}
             render={({ field }) => (
             <Autocomplete
-                multiple
+                multiple={multiple}
                 options={Object.values(Subject.enum)}
                 onChange={(_, newValue) => {
                 field.onChange(newValue);
                 }}
                 filterSelectedOptions
-                renderTags={(value) => 
-                value.map((option, index) => (
-                    <SubjectChip key={index} Subject={option as SubjectType} />
-                ))
-                }
+                {...(multiple && {
+                    renderTags: (value) =>
+                        Array.isArray(value) &&
+                        value.map((option, index) => (
+                            <SubjectChip key={index} Subject={option as SubjectType} />
+                        )),
+                  })
+                } // Conditionally adding renderTags only if multiple is true
                 renderInput={(params) => (
                 <TextField
                     {...params}
                     variant="outlined"
-                    label="Subjects"
+                    label={multiple?"Subjects":"Subject"}
                     placeholder="Select subject"
                 />
                 )}
+                sx={sx}
             />
             )}
         />
     )
 }
 
-function YearGroupAutocomplete() {
+function YearGroupAutocomplete({multiple, sx}:{multiple?: boolean, sx?: SxProps<Theme>}) {
     const {control} = useFormContext();
     return(
         <Controller
@@ -66,7 +73,7 @@ function YearGroupAutocomplete() {
             control={control}
             render={({ field }) => (
                 <Autocomplete
-                multiple
+                multiple={multiple}
                 options={Object.values(YearGroup.enum)}
                 onChange={(_, newValue) => {
                     field.onChange(newValue);
@@ -79,6 +86,7 @@ function YearGroupAutocomplete() {
                     placeholder="Select year group"
                     />  
                 )}
+                sx={sx}
                 />
             )}
         />

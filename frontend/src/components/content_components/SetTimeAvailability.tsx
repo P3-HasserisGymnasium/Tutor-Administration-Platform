@@ -46,7 +46,7 @@ export default function SetTimeAvailability() {
     },
   };
 
-  return (
+  return(
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box>
         <Typography

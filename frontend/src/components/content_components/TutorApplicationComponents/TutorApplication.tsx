@@ -22,6 +22,11 @@ export default function TutorApplication() {
     
     console.log(keepWatch);
     
+
+    const handleSend = () => {
+        console.log(getValues());
+    };
+
     const isMd = useMediaQuery((theme) => theme.breakpoints.down('md'));
     const isLg = useMediaQuery((theme) => theme.breakpoints.down('lg'));
     const getMaxRows = () => {
@@ -33,10 +38,6 @@ export default function TutorApplication() {
           return 20;
         }
       };
-
-    const handleSend = () => {
-        console.log(getValues());
-    };
 
     return (
         <FormProvider {...filterMethods}>
@@ -80,7 +81,7 @@ export default function TutorApplication() {
                 </Box>
                 <Box sx={{ flexGrow: 1 }}></Box>  
                 <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems:"center", marginTop: "1em"}}>
-                    {getValues("subjects").length > 0 && (<Button variant="contained" onClick={handleSend}>Send Application</Button>)}
+                    <Button variant="contained" onClick={handleSend} disabled={getValues("subjects").length == 0}>Send Application</Button>
                 </Box>
             </Box>
         </FormProvider>

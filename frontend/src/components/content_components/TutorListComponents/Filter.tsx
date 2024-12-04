@@ -36,8 +36,8 @@ export default function Filter() {
     <FormProvider {...filterMethods}>
       <Stack spacing={1} sx={{padding: "1em", height: "95%",}}>
         <Typography variant="h2">Filters</Typography>
-        <CustomAutocomplete variant="subject" />
-        <CustomAutocomplete variant="yearGroup" />
+        <CustomAutocomplete variant="subject" multiple={true}/>
+        <CustomAutocomplete variant="yearGroup" multiple={true}/>
         <SetTimeAvailability /> 
 
         <Typography variant="h4">Language</Typography>

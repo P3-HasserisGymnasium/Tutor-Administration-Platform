@@ -27,7 +27,7 @@ export default function EvenBoxLayout({
         elevation={3}
         sx={{
           margin: 1,
-          width: useVariableWidth(1 / 3),
+          width: useVariableWidth(1/2),
           height: useVariableHeight("calc(100% - 16px)"),
         }}
       >
@@ -37,7 +37,7 @@ export default function EvenBoxLayout({
         elevation={3}
         sx={{
           margin: 1,
-          width: useVariableWidth(2 / 3),
+          width: useVariableWidth(1/2),
           height: useVariableHeight("calc(100% - 16px)"),
         }}
       >

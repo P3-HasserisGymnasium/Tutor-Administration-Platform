@@ -9,7 +9,7 @@ export default function SetDuration(){
     const max = 12; 
     return (
         <Box>
-            <Typography variant="h4">Expected duration</Typography>
+            <Typography variant="h3">Expected duration</Typography>
                 <Box sx={{padding:"0.8em", paddingBottom:"0em"}}>
                     <Slider
                         value={sliderValue}
