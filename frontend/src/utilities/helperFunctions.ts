@@ -6,6 +6,7 @@ import baseTheme from "~/themes/baseTheme";
 import tuteeTheme from "~/themes/tuteeTheme";
 import tutorTheme from "~/themes/tutorTheme";
 
+
 /**
  * 
  * @returns {string} the heading of the current page based on the pathname.
@@ -37,7 +38,7 @@ export function useHeading(): string {
 }
 
 export function useCurrentTheme(): Theme {
-	const firstPathPart = location.pathname.split("/").filter(Boolean)[0];
+	const [firstPathPart] = useLocation().pathname.split("/").filter(Boolean);
 	switch (firstPathPart) {
 		case "tutee":
 			return tuteeTheme;
