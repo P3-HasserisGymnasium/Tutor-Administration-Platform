@@ -7,6 +7,7 @@ const colors = {
   headingTextColor: '#041758',
   collaborationBackgroundColor: '#27A1F980',
   postBackGroundColor: '#27A1F980',
+  firstHeadingTextColor: '#FFFFFF',
   buttonColor: '#041758',
 }
 
@@ -32,7 +33,7 @@ const tutorTheme = createTheme(baseTheme, {
             color: colors.headingTextColor,
           },
           '&.MuiTypography-h1': {
-            color: '#FFFFFF'
+            color: colors.firstHeadingTextColor
           },
         },
       },

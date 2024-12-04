@@ -32,8 +32,7 @@ public class AccountController {
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
-        return accountService.getUserById(id)
-            .orElse(null);
+        return accountService.getUserById(id).orElse(null);
     }
 
     @PostMapping("/")

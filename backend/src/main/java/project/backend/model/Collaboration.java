@@ -1,19 +1,20 @@
 package project.backend.model;
 
 import java.sql.Timestamp;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 
 @Entity
 public class Collaboration {
@@ -30,9 +31,11 @@ public class Collaboration {
     @JoinColumn(name = "tutor_id")
     Tutor tutor;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "state")
     CollaborationState state;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "subject")
     SubjectEnum subject;
 
@@ -45,16 +48,17 @@ public class Collaboration {
     @Column(name = "termination_reason", nullable = true)
     String terminationReason;
 
-    @OneToOne
-    Post post;
-
     @OneToMany(mappedBy = "collaboration", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Meeting> meetings = new LinkedList<>();
+    List<Meeting> meetings = new ArrayList<>();
 
     public Collaboration() {}
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Tutee getTutee() {
@@ -113,14 +117,6 @@ public class Collaboration {
         this.terminationReason = reason;
     }
 
-    public Post getPostId() {
-        return post;
-    }
-
-    public void setPostId(Post post) {
-        this.post = post;
-    }
-
     public List<Meeting> getMeetings() {
         return meetings;
     }
@@ -128,4 +124,5 @@ public class Collaboration {
     public void setMeetings(List<Meeting> meetings) {
         this.meetings = meetings;
     }
+
 }

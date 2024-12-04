@@ -46,9 +46,9 @@ export default function TutorApplication() {
                 <Box sx={{ display: "flex", flexDirection: "row", border: "1px solid" + "black", borderRadius: "0.5em" }}>
                     <Box sx={{ display: "flex", flexDirection: "column", width: "50%", gap: "1em", paddingRight: "1em" }}>
                         <Typography variant="h4">Subjects</Typography>
-                        <SetSubject />
-
-                        <SetTimeAvailability />
+                        <SetSubject/>
+    
+                        <SetTimeAvailability/>
                     </Box>
                     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "50%", paddingLeft: "1em" }}>
                         <Typography variant="h3">Write your application below:</Typography>

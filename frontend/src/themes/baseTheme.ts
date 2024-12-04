@@ -28,6 +28,7 @@ const baseTheme = createTheme({
         collaborationBackgroundColor: '#000000',
         postBackGroundColor: '#000000',
         headingTextColor: '#000000',
+        firstHeadingTextColor: '#000000',
         boxBorderColor: '#000000',
         subjectColors: {
             [Subject.Enum.Music]: { background: "#b2c9e0" },

@@ -12,15 +12,25 @@ interface TimeAvailabilityProps {
 export default function TimeAvailability({ timeAvailability }: TimeAvailabilityProps) {
   const theme = useTheme<Theme>();
   const { setValue, getValues } = useFormContext();
-  const deleteButtonStyle = { height: '1.4em', width: '1.4em', minWidth: '1em', top: '-0.5em', right: '-0.5em', position: 'absolute' }
+  const deleteButtonStyle = {
+    height: "1.4em",
+    width: "1.4em",
+    minWidth: "1em",
+    top: "-0.5em",
+    right: "-0.5em",
+    position: "absolute",
+  };
 
   const deleteTimeAvailability = () => {
     console.log("Deleting time availability");
     const currentTimeAvailabilities = getValues("time_availability");
     if (currentTimeAvailabilities) {
-      setValue("time_availability", currentTimeAvailabilities.filter((value: TimeAvailabilityType) => value !== timeAvailability))
+      setValue(
+        "time_availability",
+        currentTimeAvailabilities.filter((value: TimeAvailabilityType) => value !== timeAvailability)
+      );
     }
-  }
+  };
 
   return (
     <Box
@@ -33,19 +43,25 @@ export default function TimeAvailability({ timeAvailability }: TimeAvailabilityP
         padding: "0.2em",
         margin: "0.5em",
         position: "relative",
-        textAlign: 'center',
-        height: 'fit-content'
+        textAlign: "center",
+        height: "fit-content",
       }}
     >
-      <CustomButton customType="warning" sx={deleteButtonStyle} onClick={deleteTimeAvailability}>X</CustomButton>
+      <CustomButton customType="warning" sx={deleteButtonStyle} onClick={deleteTimeAvailability}>
+        X
+      </CustomButton>
 
       <Typography variant="h4">{timeAvailability?.day}</Typography>
       {timeAvailability.time.map((timeSlot, index) => (
-        <Typography variant="body1" id={String(index)} sx={{ color: theme.customColors.headingTextColor }}>
+        <Typography
+          key={`${timeSlot.start_time}-${index}`}
+          variant="body1"
+          id={String(index)}
+          sx={{ color: theme.customColors.headingTextColor }}
+        >
           {timeSlot.start_time}-{timeSlot.end_time}
-        </Typography>))
-      }
-
+        </Typography>
+      ))}
     </Box>
   );
 }

@@ -25,8 +25,7 @@ public class TutorApplicationController {
 
     @GetMapping("/{id}")
     public TutorApplication getTutorApplication(@PathVariable Long id) {
-        return tutorApplicationService.getTutorApplicationById(id)
-            .orElse(null);
+        return tutorApplicationService.getTutorApplicationById(id);
     }
 
     @PostMapping("/")

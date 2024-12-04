@@ -1,13 +1,13 @@
-import {Autocomplete, Box, Button, TextField, Stack, Typography, Checkbox, FormControlLabel} from "@mui/material";
+import {Box, Button, Stack, Typography, Checkbox, FormControlLabel} from "@mui/material";
 import { FormProvider, useForm, Controller, useWatch, ControllerRenderProps } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Language, LanguageType, Subject, YearGroup } from "~/types/data_types";
+import { Language, LanguageType} from "~/types/data_types";
 import SetTimeAvailability from "~/components/content_components/SetTimeAvailability";
 import {
   zodTutorListFilterSchema,
   tutorListFilterType,
 } from "../../../types/data_types";
-import SubjectChip from "../SubjectChip";
+import CustomAutocomplete from "../CustomAutocomplete";
 
 export default function Filter() {
   const filterMethods = useForm<tutorListFilterType>({
@@ -34,81 +34,25 @@ export default function Filter() {
 
   return (
     <FormProvider {...filterMethods}>
-      <Stack
-        spacing={1}
-        sx={{
-          padding: "1em",
-          height: "95%",
-        }}
-      >
+      <Stack spacing={1} sx={{padding: "1em", height: "95%",}}>
         <Typography variant="h2">Filters</Typography>
-
-        <Controller
-          name="subjects"
-          control={control}
-          render={({ field }) => (
-            <Autocomplete
-              multiple
-              options={Object.values(Subject.enum)}
-              onChange={(_, newValue) => {
-                field.onChange(newValue);
-              }}
-              filterSelectedOptions
-              renderTags={(value) => 
-                value.map((option, index) => (
-                  <SubjectChip key={index} Subject={option} />
-                ))
-              }
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  label="Subjects"
-                  placeholder="Select subject"
-                  
-                />
-              )}
-            />
-          )}
-        />
-
-
-        <Controller
-          name="year_group"
-          control={control}
-          render={({ field }) => (
-            <Autocomplete
-              multiple
-              options={Object.values(YearGroup.enum)}
-              onChange={(_, newValue) => {
-                field.onChange(newValue);
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  label="Year Group"
-                  placeholder="Select year group"
-                />  
-              )}
-            />
-          )}
-        />
+        <CustomAutocomplete variant="subject" />
+        <CustomAutocomplete variant="yearGroup" />
         <SetTimeAvailability /> 
 
         <Typography variant="h4">Language</Typography>
         
         <Box sx={{display:"flex", flexDirection:"column", alignItems:"flex-start"}}>
-        <Controller
-          name="languages"
-          control={control}
-          render={({ field }) => (
-            <>
-             <CustomCheckBox field={field} label={Language.Enum.Danish}/>
-             <CustomCheckBox field={field} label={Language.Enum.English}/>
-            </>
-          )}
-        />
+          <Controller
+            name="languages"
+            control={control}
+            render={({ field }) => (
+              <>
+              <CustomCheckBox field={field} label={Language.Enum.Danish}/>
+              <CustomCheckBox field={field} label={Language.Enum.English}/>
+              </>
+            )}
+          />
         </Box>
         
         <Box sx={{ flexGrow: 1 }}></Box>  
