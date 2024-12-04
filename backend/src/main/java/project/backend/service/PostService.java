@@ -38,7 +38,7 @@ public class PostService {
     }
 
     public Post savePost(Post post) {
-        post.setState(PostState.ACTIVE);
+        post.setState(PostState.VISIBLE);
         return postRepository.save(post);
     }
 

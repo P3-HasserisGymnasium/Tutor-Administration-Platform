@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<User, Long> {
     // Custom queries for users
 
+
     Optional<User> findByEmail(String email);
 
     Optional<User> findByEmailAndPassword(String email, String password);
