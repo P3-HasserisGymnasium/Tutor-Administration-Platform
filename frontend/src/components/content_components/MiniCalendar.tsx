@@ -1,18 +1,19 @@
-import React, { useEffect } from "react";
+// import React, { useEffect } from "react";
 import FullCalendar from "@fullcalendar/react"; // Correct capitalization
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Box, Paper, Typography } from "@mui/material";
-import { useMeetingService } from "~/api/services/meeting-service";
+// import { useMeetingService } from "~/api/services/meeting-service";
 
+/*
 interface MeetingType {
     id: number;
     title: string; // Name of the meeting
     start: string; // ISO format start time
     end?: string; // ISO format end time (optional)
   }
-
+*/
 export default function MiniCalendar(){
 
     /*const {getMeetings} = useMeetingService();
