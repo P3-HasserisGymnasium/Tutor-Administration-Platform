@@ -24,6 +24,7 @@ const tutorTheme = createTheme(baseTheme, {
     postBackGroundColor: colors.postBackGroundColor,
     headingTextColor: colors.headingTextColor,
     boxBorderColor: colors.headingTextColor,
+    arrowColor: colors.firstHeadingTextColor,
   },
   components: {
     MuiTypography: {
