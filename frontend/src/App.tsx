@@ -24,14 +24,14 @@ export default function App() {
   return (
     <Box
       sx={{
-        height: useBreakpoints().isMobile ? "auto" : "99vh",
+        height: useBreakpoints().isMobile ? "auto" : "100vh",
         width: useBreakpoints().isMobile ? `calc(100vw - ${widthRightOffset})` : "100vw",
       }}
     >
       <ThemeProvider theme={theme}>
         <Navbar />
 
-        <Box sx={{ height: "90%", width: "100%" }}>
+        <Box sx={{ height: "88vh", width: "100%" }}>
           <Routes>
             {/* Root */}
             <Route path="/" element={<HomePage />} />
