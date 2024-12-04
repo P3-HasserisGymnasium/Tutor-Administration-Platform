@@ -3,6 +3,10 @@ package project.backend.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -19,6 +23,8 @@ public class Tutor extends Role {
     String profileDescription;
 
     @ElementCollection
+    @CollectionTable(name = "tutor_subjects", joinColumns = @JoinColumn(name = "role_id"))
+    @Column(name = "tutoring_subject")
     @Enumerated(EnumType.STRING)
     List<SubjectEnum> tutoringSubjects = new ArrayList<>();
 
@@ -31,8 +37,8 @@ public class Tutor extends Role {
     @OneToMany(mappedBy = "tutor")
     List<Collaboration> collaborations = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name = "student_id")
+    @OneToOne(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     Student student;
 
     public Tutor() {}

@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -35,6 +36,7 @@ public class Meeting {
     String meetingDescription;
 
     @ManyToOne
+    @JoinColumn(name = "collaboration_id")
     Collaboration collaboration;
 
     public Meeting() {}

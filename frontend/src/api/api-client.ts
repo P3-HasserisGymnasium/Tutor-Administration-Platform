@@ -11,17 +11,14 @@ const apiClient = axios.create({
 // Intercept the response to handle token expiration
 apiClient.interceptors.response.use(
 	function (response) {
+
+		response.headers['Access-Control-Allow-Origin'] = '*';
+		response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
+		response.headers['Access-Control-Allow-Headers'] = 'Content-Type: application/json, Accept: application/json, Authorization';
+
 		return response;
 	},
-	function (error) {
-		if (error?.response?.status === 401) {
-			// If the token is expired or invalid, log the user out
-			// Handle logout by removing cookies or redirecting to login page
-			// Example: window.location.href = "/login";
-		}
-		return Promise.reject(error);
-	}
-);
+)
 
 // Create a new query client
 const queryClient = new QueryClient({

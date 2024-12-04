@@ -1,4 +1,4 @@
-version: "3.8"
+
 
 services:
     frontend:
@@ -24,7 +24,6 @@ services:
             - DB_PASSWORD=password
         depends_on:
             - mysql
-        command: /bin/sh -c "sleep 30 && java -jar /app/backend.jar"
         networks:
             - app-network
 

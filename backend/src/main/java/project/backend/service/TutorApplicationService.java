@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import project.backend.model.TutorApplication;
-import project.backend.model.TutorApplicationState;
-import project.backend.model.Tutor;
 import project.backend.model.Student;
 import project.backend.model.SubjectEnum;
+import project.backend.model.Tutor;
+import project.backend.model.TutorApplication;
+import project.backend.model.TutorApplicationState;
 import project.backend.repository.TutorApplicationRepository;
 
 @Service
@@ -64,7 +64,7 @@ public class TutorApplicationService {
             tutor = new Tutor();
             tutor.setStudent(student);
             tutor.setTutoringSubjects(List.of(tutorApplication.getSubject()));
-            student.setTutorId(tutor);
+            student.setTutor(tutor);
         }
 
         saveTutorApplication(tutorApplication);
