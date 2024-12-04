@@ -1,7 +1,12 @@
 package project.backend.model;
 
 public enum CollaborationState {
-    OPEN,
-    CLOSED,
-    DELETED,
+    PENDING,
+    ACCEPTED,
+    REJECTED,
+    WAITING_FOR_ADMIN,
+    WAITING_FOR_TUTOR,
+    WAITING_FOR_TUTEE,
+    TERMINATED,
+    ESTABLISHED
 }

@@ -10,6 +10,7 @@ import project.backend.repository.RoleRepository;
 
 import project.backend.model.RoleEnum;
 import project.backend.model.Tutee;
+import project.backend.model.Tutor;
 import project.backend.model.Student;
 
 
@@ -34,7 +35,29 @@ public class RoleService {
 
   public Student saveStudent(Student student) {
     return roleRepository.save(student);
-}
+  }
+
+  public Tutee getTuteeById(Long id){
+    Student student = getStudentById(id);
+
+    Tutee tutee = student.getTutee();
+    if(tutee == null){
+        throw new IllegalArgumentException("This student is not assigned a Tutee");
+    }
+
+    return tutee;
+  }
+
+  public Tutor getTutorById(Long id){
+    Student student = getStudentById(id);
+
+    Tutor tutor = student.getTutor();
+    if(tutor == null){
+      throw new IllegalArgumentException("This student is not assigned as Tutor");
+    }
+
+    return tutor;
+  }
 
   public Student getStudentById(Long id) {
     Optional<Student> studentOpt = roleRepository.findById(id);
