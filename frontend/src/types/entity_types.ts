@@ -8,7 +8,7 @@ import {
 	CollaborationState,
 	zodUUID,
 	zodRole,
-	zodDay
+	zodDay,
 } from "./data_types";
 
 export const zodPostSchema = z.object({
@@ -109,16 +109,26 @@ export const zodAccountRegisterSchema = z.object({
 		})
 		.optional(), // Optional field
 
-	time_availability: z.array(
-		z.object({
-			day: zodDay,
-			time: z.array(TimeSlot),
-		})
-	)
+	time_availability: z
+		.array(
+			z.object({
+				day: zodDay,
+				time: z.array(TimeSlot),
+			})
+		)
 		.optional(), // Optional field
 });
 
+export const zodUserStateSchema = z.object({
+	id: zodUUID.nullable(),
+	name: z.string().nullable(),
+	role: z.array(zodRole).nullable(),
+	email: z.string().email().nullable(),
+	year_group: YearGroup.nullable(),
+	tutoring_subjects: z.array(Subject).nullable(),
+});
 
+export type UserState = z.infer<typeof zodUserStateSchema>;
 export type PostType = z.infer<typeof zodPostSchema>;
 export type ProfileType = z.infer<typeof zodProfileSchema>;
 export type MeetingType = z.infer<typeof zodMeetingSchema>;
