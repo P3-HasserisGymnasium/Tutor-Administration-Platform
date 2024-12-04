@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import project.backend.controller_bodies.AccountControllerBodies.AccountLoginBody;
-import project.backend.controller_bodies.AccountControllerBodies.AccountRegisterBody;
+import project.backend.controller_bodies.account_controller.AccountLoginBody;
+import project.backend.controller_bodies.account_controller.AccountRegisterBody;
 import project.backend.model.User;
 import project.backend.service.AccountService;
 
