@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import project.backend.controller_bodies.account_controller.AccountLoginBody;
+import project.backend.controller_bodies.account_controller.AccountRegisterBody;
 import project.backend.model.User;
 import project.backend.service.AccountService;
 
@@ -25,22 +27,21 @@ public class AccountController {
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
-        return accountService.getUserById(id)
-            .orElse(null);
+        return accountService.getUserById(id);
     }
 
     @PostMapping("/")
     public User createUser(@RequestBody User user) {
-        return accountService.saveUser(user);
+        return accountService.registerAccount(user);
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
-        accountService.deleteUserById(id);
+        accountService.removeAccount(id);
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody User user) {
-        return accountService.checkPassword(user.getEmail("email"), user.getPassword("password"));
+    public User login(@RequestBody AccountLoginBody body) {
+        return accountService.checkPassword(body.email, body.password).orElse(null);
     }
 }

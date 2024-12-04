@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 import { daDK } from "@mui/material/locale";
-import {Subject} from "../types/data_types";
+import { Subject } from "../types/data_types";
 
 const colors = {
     buttonTextColor: '#FFFFFF',
@@ -23,28 +23,29 @@ const baseTheme = createTheme({
             contrastText: colors.buttonTextColor,
         },
     },
-    customColors:{
+    customColors: {
         buttonColor: colors.buttonTextColor,
         collaborationBackgroundColor: '#000000',
         postBackGroundColor: '#000000',
         headingTextColor: '#000000',
         boxBorderColor: '#000000',
+        arrowColor: '#000000',  
         subjectColors: {
-            [Subject.Enum.Music]: { background: "#b2c9e0"},
-            [Subject.Enum.Math]: { background: "#ffcccb"},
-            [Subject.Enum.Ess]: { background: "#c1e1c5"},
-            [Subject.Enum.English]: { background: "#ffd700"},
-            [Subject.Enum.Danish]: { background: "#FF4141"},
-            [Subject.Enum.German]: { background: "#87EB8E"},
-            [Subject.Enum.French]: { background: "#1B76FF"},
-            [Subject.Enum.Biology]: { background: "#98fb98"},
-            [Subject.Enum.Chemistry]: { background: "#dcdcdc"},
-            [Subject.Enum.Pe]: { background: "#ffa07a"},
-            [Subject.Enum.Va]: { background: "#ffdead"},
-            [Subject.Enum.Psychology]: { background: "#dda0dd"},
-            [Subject.Enum.Econ]: { background: "#add8e6"},
-            [Subject.Enum.Ss]: { background: "#f0e68c"},
-            [Subject.Enum.Physics]: { background: "#ff6347"},
+            [Subject.Enum.Music]: { background: "#b2c9e0" },
+            [Subject.Enum.Math]: { background: "#ffcccb" },
+            [Subject.Enum.Ess]: { background: "#c1e1c5" },
+            [Subject.Enum.English]: { background: "#ffd700" },
+            [Subject.Enum.Danish]: { background: "#FF4141" },
+            [Subject.Enum.German]: { background: "#87EB8E" },
+            [Subject.Enum.French]: { background: "#1B76FF" },
+            [Subject.Enum.Biology]: { background: "#98fb98" },
+            [Subject.Enum.Chemistry]: { background: "#dcdcdc" },
+            [Subject.Enum.Pe]: { background: "#ffa07a" },
+            [Subject.Enum.Va]: { background: "#ffdead" },
+            [Subject.Enum.Psychology]: { background: "#dda0dd" },
+            [Subject.Enum.Econ]: { background: "#add8e6" },
+            [Subject.Enum.Ss]: { background: "#f0e68c" },
+            [Subject.Enum.Physics]: { background: "#ff6347" },
         }
     },
     breakpoints: {
@@ -58,30 +59,30 @@ const baseTheme = createTheme({
     },
     typography: {
         fontFamily: 'Inter',
-        h1:{
+        h1: {
             fontSize: '2rem',
             fontWeight: 700,
         },
-        h2:{
+        h2: {
             fontSize: '1.5rem',
             fontWeight: 700,
         },
-        h3:{
+        h3: {
             fontSize: '1.25rem',
             fontWeight: 500,
         },
-        h4:{
+        h4: {
             fontSize: '1rem',
             fontWeight: 400,
         },
-        body1:{
+        body1: {
             fontSize: '1rem',
             fontWeight: 300,
         },
     },
     components: {
-        MuiAutocomplete:{
-            defaultProps:{
+        MuiAutocomplete: {
+            defaultProps: {
                 size: 'small',
             }
         },
@@ -118,9 +119,9 @@ const baseTheme = createTheme({
         },*/
 
     },
-    },
+},
     daDK,
-    
+
 );
 
 export default baseTheme;

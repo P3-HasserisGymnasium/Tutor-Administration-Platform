@@ -35,12 +35,16 @@ public class Feedback {
     Timestamp submissionTimestamp;
     
     @Column(name = "subject")
-    SubjectEnum relevantSubject;
+    SubjectEnum subject;
 
     public Feedback() {}
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Tutee getTuteeId() {
@@ -91,11 +95,11 @@ public class Feedback {
         this.submissionTimestamp = submissionTimestamp;
     }
 
-    public SubjectEnum getRelevantSubject() {
-        return relevantSubject;
+    public SubjectEnum getSubject() {
+        return subject;
     }
 
-    public void setRelevantSubject(SubjectEnum relevantSubject) {
-        this.relevantSubject = relevantSubject;
+    public void setSubject(SubjectEnum subject) {
+        this.subject = subject;
     }
 }
