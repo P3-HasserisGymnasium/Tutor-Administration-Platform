@@ -1,4 +1,4 @@
-package project.backend.controller_bodies;
+package project.backend.controller_bodies.account_controller;
 
 import java.util.LinkedList;
 import java.util.List;

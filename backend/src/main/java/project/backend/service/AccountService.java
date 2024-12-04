@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import project.backend.controller_bodies.AccountRegisterBody;
+import project.backend.controller_bodies.account_controller.AccountRegisterBody;
 import project.backend.model.RoleEnum;
 import project.backend.model.Student;
 import project.backend.model.Tutee;
