@@ -1,16 +1,15 @@
 package project.backend.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import project.backend.model.TutorApplication;
-import project.backend.model.TutorApplicationState;
-import project.backend.model.Tutor;
 import project.backend.model.Student;
 import project.backend.model.SubjectEnum;
+import project.backend.model.Tutor;
+import project.backend.model.TutorApplication;
+import project.backend.model.TutorApplicationState;
 import project.backend.repository.TutorApplicationRepository;
 
 @Service
@@ -61,7 +60,7 @@ public class TutorApplicationService {
 
         Tutor tutor = new Tutor();
         tutor.setStudent(student);
-        student.setTutorId(tutor);
+        student.setTutor(tutor);
 
         saveTutorApplication(tutorApplication);
         roleService.saveStudent(student); 

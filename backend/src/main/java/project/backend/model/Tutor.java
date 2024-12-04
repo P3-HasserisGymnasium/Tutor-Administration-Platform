@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -36,8 +37,7 @@ public class Tutor extends Role {
     @OneToMany(mappedBy = "tutor")
     List<Collaboration> collaborations = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name = "student_id")
+    @OneToOne(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     Student student;
 

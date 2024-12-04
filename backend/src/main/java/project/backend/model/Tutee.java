@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
@@ -20,8 +19,7 @@ public class Tutee extends Role {
     @OneToMany(mappedBy = "tutee", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Collaboration> collaborations = new LinkedList<>();
 
-    @OneToOne
-    @JoinColumn(name = "student_id")
+    @OneToOne(mappedBy = "tutee", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     Student student;
 

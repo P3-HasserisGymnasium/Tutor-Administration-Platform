@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -25,11 +24,11 @@ public class Student extends User {
     @Embedded
     StudentContactInfo contactInfo;
 
-    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
     @JsonManagedReference
     Tutee tutee;
 
-    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
     @JsonManagedReference
     Tutor tutor;
 
