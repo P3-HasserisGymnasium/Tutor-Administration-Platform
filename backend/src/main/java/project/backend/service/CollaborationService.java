@@ -289,6 +289,7 @@ public class CollaborationService {
         notificationBody.state = NotificationState.UNREAD;
     
         notificationService.createNotification(notificationBody);
+        
     }
 
 }
