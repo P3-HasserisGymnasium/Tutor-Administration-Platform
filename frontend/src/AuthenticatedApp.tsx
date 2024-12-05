@@ -7,7 +7,8 @@ import TuteePage from "components/page_components/tutee/TuteePage";
 import CreatePostPage from "components/page_components/tutee/CreatePostPage";
 import TutorListPage from "components/page_components/tutee/TutorListPage";
 import TuteeNotificationsPage from "components/page_components/tutee/TuteeNotificationsPage";
-import TuteeProfilePage from "components/page_components/tutee/TuteeProfilePage";
+import TuteeProfilePage from "./components/page_components/tutee/TuteeProfilePage";
+import TutorProfilePage from "./components/page_components/tutor/TutorProfilePage";
 import RequestAdminPage from "components/page_components/tutee/RequestAdminPage";
 import PostsListPage from "components/page_components/tutor/PostsListPage";
 import { useBreakpoints } from "./utilities/helperFunctions";
@@ -48,7 +49,7 @@ export default function AuthenticatedApp() {
               <Route path="/tutor/*" element={<Forbidden />} />
               <Route path="/tutee/*">
                 <Route path="" element={<TuteePage />} />
-                <Route path="profile" element={<TuteeProfilePage />} />
+                <Route path="profile" element={<TuteeProfilePage/>} />
                 <Route path="notifications" element={<TuteeNotificationsPage />} />
                 <Route path="create-post" element={<CreatePostPage />} />
                 <Route path="request-admin" element={<RequestAdminPage />} />
@@ -67,6 +68,7 @@ export default function AuthenticatedApp() {
                 <Route path="" element={<TutorPage />} />
                 <Route path="posts-list" element={<PostsListPage />} />
                 <Route path="tutor-application" element={<TutorApplicationPage />} />
+                <Route path="profile" element={<TutorProfilePage />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </>

@@ -12,6 +12,7 @@ export default function EvenBoxLayout({
 }: {
 	children: React.ReactNode;
 }) {
+	const numberOfChildren = Children.count(children);
 	return (
 		<Box
 			sx={{
@@ -23,26 +24,22 @@ export default function EvenBoxLayout({
 				alignItems: "center",
 			}}
 		>
-			<Paper
-				elevation={3}
-				sx={{
-					margin: 1,
-					width: useVariableWidth(1 / 2),
-					height: useVariableHeight("calc(100% - 16px)"),
-				}}
-			>
-				{Children.toArray(children)[0]}
-			</Paper>
-			<Paper
-				elevation={3}
-				sx={{
-					margin: 1,
-					width: useVariableWidth(1 / 2),
-					height: useVariableHeight("calc(100% - 16px)"),
-				}}
-			>
-				{Children.toArray(children)[1]}
-			</Paper>
+			{Children.toArray(children).map((child) => (<Section child={child} numberOfChildren={numberOfChildren}/>))}
 		</Box>
 	);
+}
+
+function Section({ child, numberOfChildren }: { child: React.ReactNode, numberOfChildren: number }) {
+	return(
+		<Paper
+			elevation={3}
+			sx={{
+				margin: 1,
+				width: useVariableWidth(1 / numberOfChildren),
+				height: useVariableHeight("calc(100% - 16px)"),
+			}}
+		>
+			{child}
+		</Paper>
+	)
 }
