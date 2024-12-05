@@ -1,5 +1,7 @@
 package project.backend.controller;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,7 @@ import project.backend.service.NotificationService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/notifications")
+@RequestMapping("/notification")
 public class NotificationController {
 
     private final NotificationService notificationService;
@@ -28,6 +30,21 @@ public class NotificationController {
     public Notification getNotification(@PathVariable Long id) {
         return notificationService.getNotificationById(id)
             .orElse(null);
+    }
+
+    @GetMapping("/all")
+    public List<Notification> getNotifications() {
+        return notificationService.getAllNotifications();
+    }
+
+    @GetMapping("/sentTo/{id}")
+    public List<Notification> getNotificationsSentToUserId(@PathVariable Long id) {
+        return notificationService.getAllNotificationsSentToUserId(id);
+    }
+
+    @GetMapping("/sentBy/{id}")
+    public List<Notification> getNotificationsSentByUserId(@PathVariable Long id) {
+        return notificationService.getAllNotificationsSentByUserId(id);
     }
 
     @PostMapping("/")
