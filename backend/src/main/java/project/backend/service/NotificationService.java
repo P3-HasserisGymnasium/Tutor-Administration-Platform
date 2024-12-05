@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import project.backend.controller_bodies.notification_controller.NotificationCreateBody;
 import project.backend.model.Notification;
 import project.backend.repository.NotificationRepository;
 
@@ -20,7 +21,21 @@ public class NotificationService {
         this.notificationRepository = notificationRepository;
     }
 
-    public Notification saveNotification(Notification notification) {
+    public Notification createNotification(NotificationCreateBody body) {
+
+        Notification notification = new Notification();
+
+        notification.setSenderId(body.sender_id);
+        notification.setSenderType(body.sender_type);
+
+        notification.setReceiverId(body.receiver_id);
+        notification.setReceiverType(body.receiver_type);
+
+        notification.setContextId(body.context_id);
+        notification.setContextType(body.context_type);
+
+        notification.setState(body.state);
+
         return notificationRepository.save(notification);
     }
 

@@ -36,13 +36,6 @@ public class Notification {
     @Column(name = "context_type")
     EntityType contextType;
 
-    @Column(name = "title")
-    String title;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type")    
-    NotificationType type;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
     NotificationState state;
@@ -100,23 +93,7 @@ public class Notification {
     public void setContextType(EntityType type) {
         this.contextType = type;
     }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public NotificationType getType() {
-        return type;
-    }
-
-    public void setType(NotificationType type) {
-        this.type = type;
-    }
-
+    
     public NotificationState getState() {
         return state;
     }

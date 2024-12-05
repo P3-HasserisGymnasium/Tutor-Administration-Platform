@@ -9,6 +9,8 @@ import {
 	zodUUID,
 	zodRole,
 	zodDay,
+	NotificationContext,
+	NotificationParticipant,
 } from "./data_types";
 
 export const zodPostSchema = z.object({
@@ -50,6 +52,16 @@ export const zodCollaborationSchema = z.object({
 export const zodFeedbackSchema = z.object({
 	id: zodUUID,
 	feedback: z.string(),
+});
+
+export const zodNotificationSchema = z.object({
+	id: zodUUID.nullable(),
+	sender_id: zodUUID,
+	sender_type: NotificationParticipant,
+	receiver_id: zodUUID,
+	receiver_type: NotificationParticipant,
+	context_id: zodUUID,
+	context_type: NotificationContext,
 });
 
 export const zodAccountRegisterSchema = z.object({
