@@ -28,7 +28,8 @@ export const zodDay = z.enum([
 	"Sunday",
 ] as const);
 export const zodLanguage = z.enum(["Danish", "English"] as const);
-export const zodYearGroup = z.enum(["PRE-IB", "IB-1", "IB-2"] as const);
+export const zodRole = z.enum(["Tutor", "Tutee"] as const);
+export const zodYearGroup = z.enum(["PRE_IB", "IB_1", "IB_2"] as const);
 export const zodTimeSlotSchema = z.object({
 	start_time: z.string(),
 	end_time: z.string(),
@@ -44,30 +45,28 @@ export const zodTutorListFilterSchema = z.object({
 	year_group: z.array(zodYearGroup),
 	languages: z.array(zodLanguage),
 });
+
 export const zodTimeAvailabilitySchema = z.object({
 	day: zodDay,
 	time: z.array(zodTimeSlotSchema),
 });
+
 export const zodTutorApplicationSchema = z.object({
 	subjects: z.array(zodSubject),
-	time_availability: z.array(
-		z.object({
-			day: zodDay,
-			time: z.array(zodTimeSlotSchema),
-		})
-	),
+	time_availability: z.array(zodTimeAvailabilitySchema),
 	application: z.string(),
 });
 export const zodPostListFilterSchema = z.object({
 	duration: z.array(z.number()),
-	time_availability: z.array(
-		z.object({
-			day: zodDay,
-			time: z.array(zodTimeSlotSchema),
-		})
-	),
 	subjects: z.array(zodSubject),
 });
+export const zodPostCreationSchema = z.object({
+	title: z.string(),
+	description: z.string(),
+	subject: zodSubject,
+	duration: z.union([z.array(z.number()), z.undefined()]),
+});
+
 export const zodMeetingState = z.enum([
 	"Pending",
 	"Accepted",
@@ -99,16 +98,23 @@ export const MeetingState = zodMeetingState;
 export const NotificationContext = zodNotificationContext;
 export const CollaborationState = zodCollaborationState;
 export const TimeSlot = zodTimeSlotSchema;
+export const Role = zodRole;
 export type tutorListFilterType = z.infer<typeof zodTutorListFilterSchema>;
 export type TimeAvailabilityType = z.infer<typeof zodTimeAvailabilitySchema>;
 export type PostListFilterType = z.infer<typeof zodPostListFilterSchema>;
 export type TimeSlotType = z.infer<typeof zodTimeSlotSchema>;
 export type LanguageType = z.infer<typeof zodLanguage>;
+export type RoleType = z.infer<typeof zodRole>
 export type YearGroupType = z.infer<typeof zodYearGroup>;
 export type TutorApplicationType = z.infer<typeof zodTutorApplicationSchema>;
+export type PostCreationType = z.infer<typeof zodPostCreationSchema>;
 export type MeetingStateType = z.infer<typeof zodMeetingState>;
 export type NotificationContextType = z.infer<typeof zodNotificationContext>;
 export type DayType = z.infer<typeof zodDay>;
 export type SubjectType = z.infer<typeof zodSubject>;
 export type CollaborationStateType = z.infer<typeof zodCollaborationState>;
 export type UUIDType = z.infer<typeof zodUUID>;
+export type AccountRegisterResponseType = {
+	tutor: boolean,
+	tutee: boolean,
+}

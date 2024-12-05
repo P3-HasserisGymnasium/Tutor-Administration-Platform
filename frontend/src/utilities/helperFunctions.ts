@@ -6,8 +6,9 @@ import baseTheme from "~/themes/baseTheme";
 import tuteeTheme from "~/themes/tuteeTheme";
 import tutorTheme from "~/themes/tutorTheme";
 
+
 /**
- * 
+ *
  * @returns {string} the heading of the current page based on the pathname.
  */
 export function useHeading(): string {
@@ -27,7 +28,8 @@ export function useHeading(): string {
 			return "Profile";
 		case "/tutor/profile":
 			return "Profile";
-		case "/tutor/tutor-application": case "/tutee/tutor-application":
+		case "/tutor/tutor-application":
+		case "/tutee/tutor-application":
 			return "Tutor Application";
 		case "/tutor/posts-list":
 			return "List of Posts";
@@ -37,7 +39,7 @@ export function useHeading(): string {
 }
 
 export function useCurrentTheme(): Theme {
-	const firstPathPart = location.pathname.split("/").filter(Boolean)[0];
+	const [firstPathPart] = useLocation().pathname.split("/").filter(Boolean);
 	switch (firstPathPart) {
 		case "tutee":
 			return tuteeTheme;
@@ -50,10 +52,14 @@ export function useCurrentTheme(): Theme {
 
 /**
  * Custom hook to determine whether or not the screen is mobile or laptop.
- * 
+ *
  * @returns {Object} a boolean value for a given condition
  */
-export const useBreakpoints = (): { isMobile: boolean; isLaptop: boolean; hasScrollbar: boolean } => {
+export const useBreakpoints = (): {
+	isMobile: boolean;
+	isLaptop: boolean;
+	hasScrollbar: boolean;
+} => {
 	const isMobile = useMediaQuery("(max-width:664px)"); // 664 because of scrollbar appearance
 	const isLaptop = useMediaQuery("(max-width:1920px)");
 	const [hasScrollbar, setHasScrollbar] = useState(false);
@@ -61,29 +67,27 @@ export const useBreakpoints = (): { isMobile: boolean; isLaptop: boolean; hasScr
 	// if the client height is less than the inner height, then the scrollbar is visible, otherwise it is not.
 	const checkScrollbar = () => {
 		const innerHeightPixels = window.innerHeight;
-		const documentElementClientHeightPixels = document.documentElement.clientHeight;
+		const documentElementClientHeightPixels =
+			document.documentElement.clientHeight;
 		setHasScrollbar(innerHeightPixels > documentElementClientHeightPixels);
 	};
 	useEffect(() => {
-
 		checkScrollbar();
 		window.addEventListener("resize", checkScrollbar);
 		return () => window.removeEventListener("resize", checkScrollbar);
 	}, []);
 
 	return { isMobile, isLaptop, hasScrollbar };
-}
-
+};
 
 /**
  * Custom hook to determine the ideal width of a layout component based on whether or not the screen is mobile.
- * 
+ *
  * @param {string | number} value - The fallback value in case the screen is not mobile.
- * 
+ *
  * @returns {string} either returns "100%" if the screen is mobile or the value passed in if the screen is not mobile, leading to a responsive width.
  */
 export const useVariableWidth = (value: string | number) => {
-
 	if (useBreakpoints().isMobile) {
 		return "100%";
 	}
@@ -91,16 +95,14 @@ export const useVariableWidth = (value: string | number) => {
 	if (typeof value === "number") {
 		return `${(value * 100).toFixed(2)}%`;
 	}
-
 };
 
 /**
  * Custom hook to determine the wrap property of a layout component based on whether or not the screen is mobile.
- * 
+ *
  * @returns {string} either returns "wrap" if the screen is mobile or "nowrap" if the screen is not mobile.
  */
 export const useWrap = () => {
-
 	if (useBreakpoints().isMobile) {
 		return "wrap";
 	} else {
@@ -110,9 +112,9 @@ export const useWrap = () => {
 
 /**
  * Custom hook to determine the ideal height of a layout component based on whether or not the screen is mobile.
- * 
+ *
  * @param {string | number} value - The fallback value in case the screen is not mobile.
- * 
+ *
  * @returns {string} either returns "auto" if the screen is mobile or the value passed in if the screen is not mobile, leading to a responsive height.
  */
 export const useVariableHeight = (value?: string | number) => {

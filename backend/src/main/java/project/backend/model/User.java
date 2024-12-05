@@ -1,8 +1,13 @@
 package project.backend.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,7 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Transient;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -26,23 +31,23 @@ public abstract class User {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Transient
-    private String plainPassword;
-
     @Column(name = "password_hash", nullable = false)
     @JsonIgnore
     private String passwordHash;
 
-    @Column(name = "language")
+    @Column(name = "languages")
+    @ElementCollection(targetClass = Language.class)
+    @CollectionTable(name = "user_languages", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    private Language language;
+    private List<Language> languages = new LinkedList<>();
 
-    public User() {}
+    public User() {
+    }
 
     public Long getId() {
         return id;
     }
-    
+
     public String getFullName() {
         return fullName;
     }
@@ -67,12 +72,11 @@ public abstract class User {
         this.passwordHash = password;
     }
 
-    public Language getLanguage(Language language) {
-        return language;
+    public List<Language> getLanguages() {
+        return languages;
     }
 
-    public void setLanguage(Language language) {
-        this.language = language;
+    public void setLanguages(List<Language> languages) {
+        this.languages = languages;
     }
-
 }

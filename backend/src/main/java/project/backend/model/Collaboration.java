@@ -4,15 +4,17 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.EnumType;
 
 @Entity
 public class Collaboration {
@@ -20,6 +22,14 @@ public class Collaboration {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    
+    @ManyToOne
+    @JoinColumn(name = "tutee_id")
+    Tutee tutee;
+
+    @ManyToOne
+    @JoinColumn(name = "tutor_id")
+    Tutor tutor;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
