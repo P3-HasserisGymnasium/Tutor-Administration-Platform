@@ -7,8 +7,8 @@ import {
 	MeetingState,
 	CollaborationState,
 	zodUUID,
-	zodRole,
-	zodDay,
+	Role,
+	Day,
 	NotificationContext,
 	NotificationParticipant,
 } from "./data_types";
@@ -104,7 +104,7 @@ export const zodAccountRegisterSchema = z.object({
 		.optional(), // Optional field, validation applies if provided
 
 	roles: z
-		.array(zodRole, {
+		.array(Role, {
 			required_error: "You must select at least one role", // Required array error
 		})
 		.min(1, "You must select at least one role"), // Minimum array length validation
@@ -124,7 +124,7 @@ export const zodAccountRegisterSchema = z.object({
 	time_availability: z
 		.array(
 			z.object({
-				day: zodDay,
+				day: Day,
 				time: z.array(TimeSlot),
 			})
 		)
@@ -134,7 +134,7 @@ export const zodAccountRegisterSchema = z.object({
 export const zodUserStateSchema = z.object({
 	id: zodUUID.nullable(),
 	name: z.string().nullable(),
-	role: z.array(zodRole).nullable(),
+	role: z.array(Role).nullable(),
 	email: z.string().email().nullable(),
 	year_group: YearGroup.nullable(),
 	tutoring_subjects: z.array(Subject).nullable(),
@@ -144,7 +144,7 @@ export const zodLoginSuccessDataType = z.object({
 	token: z.string(),
 	id: zodUUID.nullable(),
 	name: z.string().nullable(),
-	role: z.array(zodRole).nullable(),
+	role: z.array(Role).nullable(),
 	email: z.string().email().nullable(),
 	year_group: YearGroup.nullable(),
 	tutoring_subjects: z.array(Subject).nullable(),
