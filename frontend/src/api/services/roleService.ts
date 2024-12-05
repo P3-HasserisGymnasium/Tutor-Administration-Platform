@@ -2,7 +2,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { tutorListFilterType } from '~/types/data_types';
+import { RoleType, tutorListFilterType } from '~/types/data_types';
 import { ProfileType } from "~/types/entity_types";
 
 // tutee/tutor:role_id -> role:student_id -> student:id
@@ -75,16 +75,15 @@ export const useRoleService = () => {
 		},
 	});
 
-	const getProfile = useQuery({
-		queryKey: ["getProfile"],
-		queryFn: async () => {
-			const { data } = await apiClient.get<ProfileType>(
-				`/api/role_service`
-			);
-			return data;
-		},
-		refetchOnWindowFocus: false,
-	});
+	const getProfile = useMutation({
+			mutationKey: ["getProfile"],
+			mutationFn: async ({id, role}:{id:string|null, role:RoleType|null}) => {
+				const { data } = await apiClient.get<ProfileType>(
+					`/api/role/${id}/${role}`,
+				);
+				return data;
+			},
+	}); 
 
 	const editProfile = useMutation({
 		mutationKey: ["editProfile"],
