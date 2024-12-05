@@ -36,13 +36,6 @@ public class Notification {
     @Column(name = "context_type")
     EntityType contextType;
 
-    @Column(name = "title")
-    String title;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type")    
-    NotificationType type;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
     NotificationState state;

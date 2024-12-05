@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import project.backend.controller_bodies.notification_controller.NotificationCreateBody;
 import project.backend.model.Notification;
 import project.backend.service.NotificationService;
 
@@ -48,8 +49,8 @@ public class NotificationController {
     }
 
     @PostMapping("/")
-    public Notification createNotification(@RequestBody Notification notification) {
-        return notificationService.saveNotification(notification);
+    public Notification createNotification(@RequestBody NotificationCreateBody notification) {
+        return notificationService.createNotification(notification);
     }
 
     @DeleteMapping("/{id}")
