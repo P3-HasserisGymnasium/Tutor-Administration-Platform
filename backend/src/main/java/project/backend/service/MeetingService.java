@@ -1,6 +1,7 @@
 package project.backend.service;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,16 @@ public class MeetingService {
         return meetingRepository.findById(id);
     }
 
-    public Optional<Meeting[]> getMeetingsById(Long id) {
-        return meetingRepository.findMeetingsById(id);
+    public List<Meeting> getMeetingsByCollaborationId(Long collaborationId) {
+        return meetingRepository.findMeetingsByCollaborationId(collaborationId);
     }
 
-    public Meeting requestMeeting(Meeting meetingParam) { // needs other input eventually, ask thomas for params
-        Meeting meeting = new Meeting(); // needs params to be set but w/e for now
+    public Meeting saveMeeting(Meeting meeting) {
+        return meetingRepository.save(meeting);
+    }
+
+    public Meeting requestMeeting(Meeting meetingParam) { //TODO: needs other input eventually, ask thomas for params
+        Meeting meeting = new Meeting(); //TODO: needs params to be set but w/e for now
         meeting.setMeetingState(MeetingEnum.PENDING);
         return meetingRepository.save(meeting);
     }
