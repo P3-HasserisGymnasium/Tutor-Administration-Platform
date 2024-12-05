@@ -121,6 +121,7 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
             id="password"
             label="Enter password"
             variant="outlined"
+            type="password"
             error={Boolean(errors.password)}
             helperText={(errors.password?.message as string) || ""}
           />
@@ -134,10 +135,10 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
             id="confirm_password"
             label="Confirm password"
             variant="outlined"
+            type="password"
             error={Boolean(errors.confirmPassword)}
             helperText={(errors.confirmPassword?.message as string) || ""}
           />
-
           <Box
             sx={{
               gap: 1,

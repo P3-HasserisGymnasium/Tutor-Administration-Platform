@@ -1,5 +1,7 @@
 package project.backend.controller;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import project.backend.controller_bodies.collaboration_bodies.CollaborationCreateBody;
 import project.backend.model.Collaboration;
 import project.backend.service.CollaborationService;
 
@@ -28,9 +31,24 @@ public class CollaborationController {
         return collaborationService.getCollaborationById(id);
     }
 
+    @GetMapping("/with_tutor/{id}")
+    public List<Collaboration> getCollaborationWithTutor(@PathVariable Long id) {
+        return collaborationService.getCollaborationsWithTutor(id);
+    }
+
+    @GetMapping("/with_tutee/{id}")
+    public List<Collaboration> getCollaborationWithTutee(@PathVariable Long id) {
+        return collaborationService.getCollaborationsWithTutee(id);
+    }
+
+    @GetMapping("/all")
+    public List<Collaboration> getAllCollaborations() {
+        return collaborationService.getAllCollaborations();
+    }
+
     @PostMapping("/")
-    public Collaboration createCollaboration(@RequestBody Collaboration collaboration) {
-        return collaborationService.saveCollaboration(collaboration);
+    public Collaboration createCollaboration(@RequestBody CollaborationCreateBody body) {
+        return collaborationService.createCollaboration(body);
     }
 
     @DeleteMapping("/{id}")
