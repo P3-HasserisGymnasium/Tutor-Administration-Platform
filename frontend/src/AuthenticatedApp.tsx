@@ -22,13 +22,12 @@ export default function AuthenticatedApp() {
   const { isMobile, hasScrollbar } = useBreakpoints();
   const widthRightOffset = hasScrollbar ? "16px" : "0px";
 
-  const { userState } = useAuth();
+  const { userState, isAuthenticated } = useAuth();
 
   const isTutee = userState.role?.includes(Role.Enum.Tutee);
   const isTutor = userState.role?.includes(Role.Enum.Tutor);
-  console.log("isTutee", isTutee);
-  console.log("isTutor", isTutor);
-  console.log("userState", userState);
+
+  console.log("isAuthenticated is equal to: ", isAuthenticated);
   return (
     <Box
       sx={{
@@ -40,12 +39,15 @@ export default function AuthenticatedApp() {
       <Box sx={{ height: "88vh", width: "100%" }}>
         <Routes>
           {/* Common routes */}
-          <Route path="/" element=
-            {
-              isTutee && isTutor && <HomePage />
-              || isTutee && !isTutor && <Navigate to="/tutee" />
-              || !isTutee && isTutor && <Navigate to="/tutor" />
-            } />
+          <Route
+            path="/"
+            element={
+              (isTutee && isTutor && <HomePage />) ||
+              (isTutee && !isTutor && <Navigate to="/tutee" />) ||
+              (!isTutee && isTutor && <Navigate to="/tutor" />)
+            }
+          />
+          <Route path="/login" element={<HomePage />} />
 
           {/* Tutee routes */}
           {isTutee ? (
@@ -78,6 +80,7 @@ export default function AuthenticatedApp() {
           ) : null}
 
           {/* Catch-all for invalid roles */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Box>
     </Box>
