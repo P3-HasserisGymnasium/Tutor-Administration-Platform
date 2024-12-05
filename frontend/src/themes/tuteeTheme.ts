@@ -26,6 +26,7 @@ const tuteeTheme = createTheme(baseTheme, {
     postBackGroundColor: colors.postBackGroundColor,
     headingTextColor: colors.headingTextColor,
     boxBorderColor: colors.headingTextColor,
+    arrowColor: colors.headingTextColor,
   },
   components: {
     MuiTypography: {

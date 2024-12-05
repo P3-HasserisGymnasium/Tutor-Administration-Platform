@@ -3,13 +3,11 @@ import { useHeading } from "utilities/helperFunctions";
 import { useTheme } from "@mui/system";
 import SpeedDialMenu from "./SpeedDialMenu";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Theme } from "@mui/material/styles";
 export default function Navbar() {
   const navigate = useNavigate();
   const theme = useTheme<Theme>();
-  const arrowColor =
-    useLocation().pathname.split("/").filter(Boolean)[0] == "tutee" ? theme.customColors.headingTextColor : "white"; // because someone is weird with themes
 
   return (
     <Box
@@ -45,7 +43,7 @@ export default function Navbar() {
           }}
           disableRipple
         >
-          <ArrowBackIcon sx={{ color: arrowColor, fontSize: 35 }} />
+          <ArrowBackIcon sx={{ color: theme.customColors.arrowColor, fontSize: 35 }} />
         </Button>
         <Typography variant="h1"> {useHeading()} </Typography>
       </Box>

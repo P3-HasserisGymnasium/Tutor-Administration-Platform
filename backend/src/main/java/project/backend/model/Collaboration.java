@@ -6,13 +6,14 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.EnumType;
 
 @Entity
 public class Collaboration {
@@ -20,6 +21,14 @@ public class Collaboration {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    
+    @ManyToOne
+    @JoinColumn(name = "tutee_id")
+    Tutee tutee;
+
+    @ManyToOne
+    @JoinColumn(name = "tutor_id")
+    Tutor tutor;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
@@ -37,12 +46,18 @@ public class Collaboration {
 
     @Column(name = "termination_reason", nullable = true)
     String terminationReason;
-    
-    @ManyToOne
-    Tutee tutee;
 
-    @ManyToOne
-    Tutor tutor;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tuteeState")
+    CollaborationState tuteeState;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tutorState")
+    CollaborationState tutorState; 
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "adminState")
+    CollaborationState adminState;
 
     @OneToMany(mappedBy = "collaboration")
     List<Meeting> meetings = new ArrayList<>();
@@ -119,6 +134,30 @@ public class Collaboration {
 
     public void setMeetings(List<Meeting> meetings) {
         this.meetings = meetings;
+    }
+
+    public void setTutorState(CollaborationState tutorState){
+        this.tutorState =  tutorState;
+    }
+
+    public CollaborationState getTutorState(){
+        return tutorState;
+    }
+
+    public void setTuteeState(CollaborationState tuteeState){
+        this.tuteeState = tuteeState;
+    }
+
+    public CollaborationState getTuteeState(){
+        return tuteeState;
+    }
+
+    public void setAdminState(CollaborationState adminState){
+        this.adminState = adminState;
+    }
+
+    public CollaborationState getAdminState(){
+        return adminState;
     }
 
 }
