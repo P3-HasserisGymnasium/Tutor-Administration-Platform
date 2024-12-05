@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.notification_controller.NotificationCreateBody;
 import project.backend.model.Notification;
+import project.backend.model.NotificationState;
 import project.backend.repository.NotificationRepository;
 
 
@@ -59,6 +60,12 @@ public class NotificationService {
         notificationRepository.deleteById(id);
     }
 
+    public void changeNotificationState(Long notificationId, NotificationState newState) {
+    Notification notification = notificationRepository.findById(notificationId)
+        .orElseThrow(() -> new IllegalArgumentException("Notification with ID " + notificationId + " not found"));
 
-    // create change state
+    notification.setState(newState);
+
+    notificationRepository.save(notification);
+}
 }

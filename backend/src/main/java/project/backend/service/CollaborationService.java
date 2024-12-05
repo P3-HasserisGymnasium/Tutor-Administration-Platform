@@ -116,54 +116,7 @@ public class CollaborationService {
         collaborationRepository.save(collaboration);  
     }
 
-    private void notifyTutee(Long senderId, Long receiverId, Long collaborationId) {
-        NotificationCreateBody notificationBody = new NotificationCreateBody();
-        notificationBody.sender_id = senderId;
-        notificationBody.sender_type = EntityType.TUTOR; 
-        notificationBody.receiver_id = receiverId;
-        notificationBody.receiver_type = EntityType.TUTEE; 
-        notificationBody.context_id = collaborationId;
-        notificationBody.context_type = EntityType.COLLABORATION;
-        notificationBody.state = NotificationState.UNREAD;
-    
-        notificationService.createNotification(notificationBody);
-    }
-
-    private void notifyTutor(Long senderId, Long receiverId, Long collaborationId) {
-        NotificationCreateBody notificationBody = new NotificationCreateBody();
-        notificationBody.sender_id = senderId;
-        notificationBody.sender_type = EntityType.TUTEE;
-        notificationBody.receiver_id = receiverId;
-        notificationBody.receiver_type = EntityType.TUTOR; 
-        notificationBody.context_id = collaborationId;
-        notificationBody.context_type = EntityType.COLLABORATION;
-        notificationBody.state = NotificationState.UNREAD;
-    
-        notificationService.createNotification(notificationBody);
-    }
-
-
-    private void notifyAdmin(Long senderId, EntityType senderType, Long contextId, EntityType contextType) {
-        NotificationCreateBody notificationBody = new NotificationCreateBody();
-
-        Administrator admin = administratorRepository.findFirstBy().orElseThrow(() -> new IllegalStateException("Administrator not found"));
-
-        notificationBody.sender_id = senderId;
-        notificationBody.sender_type = senderType;
-        notificationBody.receiver_id = admin.getId();
-        notificationBody.receiver_type = EntityType.TUTOR; 
-        notificationBody.context_id =  contextId;
-        notificationBody.context_type = contextType;
-        notificationBody.state = NotificationState.UNREAD;
-    
-        notificationService.createNotification(notificationBody);
-    }
-
-    
-
-
-
-
+   
     public void acceptCollaboration(Long collaborationId, RoleEnum role){
 
         Collaboration collaboration = getCollaborationById(collaborationId);
@@ -292,6 +245,50 @@ public class CollaborationService {
 
         tutor.getFeedbacks().add(feedback); 
         notifyAdmin(tuteeId, EntityType.TUTEE, feedback.getId(), EntityType.FEEDBACK);
+    }
+
+
+    private void notifyTutee(Long senderId, Long receiverId, Long collaborationId) {
+        NotificationCreateBody notificationBody = new NotificationCreateBody();
+        notificationBody.sender_id = senderId;
+        notificationBody.sender_type = EntityType.TUTOR; 
+        notificationBody.receiver_id = receiverId;
+        notificationBody.receiver_type = EntityType.TUTEE; 
+        notificationBody.context_id = collaborationId;
+        notificationBody.context_type = EntityType.COLLABORATION;
+        notificationBody.state = NotificationState.UNREAD;
+    
+        notificationService.createNotification(notificationBody);
+    }
+
+    private void notifyTutor(Long senderId, Long receiverId, Long collaborationId) {
+        NotificationCreateBody notificationBody = new NotificationCreateBody();
+        notificationBody.sender_id = senderId;
+        notificationBody.sender_type = EntityType.TUTEE;
+        notificationBody.receiver_id = receiverId;
+        notificationBody.receiver_type = EntityType.TUTOR; 
+        notificationBody.context_id = collaborationId;
+        notificationBody.context_type = EntityType.COLLABORATION;
+        notificationBody.state = NotificationState.UNREAD;
+    
+        notificationService.createNotification(notificationBody);
+    }
+
+
+    private void notifyAdmin(Long senderId, EntityType senderType, Long contextId, EntityType contextType) {
+        NotificationCreateBody notificationBody = new NotificationCreateBody();
+
+        Administrator admin = administratorRepository.findFirstBy().orElseThrow(() -> new IllegalStateException("Administrator not found"));
+
+        notificationBody.sender_id = senderId;
+        notificationBody.sender_type = senderType;
+        notificationBody.receiver_id = admin.getId();
+        notificationBody.receiver_type = EntityType.ADMIN; 
+        notificationBody.context_id =  contextId;
+        notificationBody.context_type = contextType;
+        notificationBody.state = NotificationState.UNREAD;
+    
+        notificationService.createNotification(notificationBody);
     }
 
 }
