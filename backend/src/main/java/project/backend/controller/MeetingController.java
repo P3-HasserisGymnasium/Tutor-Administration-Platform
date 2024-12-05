@@ -27,6 +27,12 @@ public class MeetingController {
             .orElse(null);
     }
 
+    @GetMapping("/{id}")
+    public Meeting[] getMeetings(@PathVariable Long id) {
+        return meetingService.getMeetingsById(id)
+            .orElse(null);
+    }
+
     /*
     @PostMapping("/")
     public Meeting createMeeting(@RequestBody Meeting meeting) {

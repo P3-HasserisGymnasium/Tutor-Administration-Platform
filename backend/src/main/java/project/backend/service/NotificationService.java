@@ -1,5 +1,6 @@
 package project.backend.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,18 @@ public class NotificationService {
 
     public Notification saveNotification(Notification notification) {
         return notificationRepository.save(notification);
+    }
+
+    public List<Notification> getAllNotifications() {
+        return notificationRepository.findAll();
+    }
+
+    public List<Notification> getAllNotificationsSentToUserId(Long userId) {
+        return notificationRepository.findAllSentToUserId(userId);
+    }
+
+    public List<Notification> getAllNotificationsSentByUserId(Long userId) {
+        return notificationRepository.findAllSentByUserId(userId);
     }
 
     public Optional<Notification> getNotificationById(Long id) {
