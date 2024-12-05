@@ -19,7 +19,7 @@ export default function App() {
   const { isAuthenticated } = useAuth();
   console.log("isAuthenticated", isAuthenticated);
 
-
+/*
   if (!isAuthenticated) {
     return (
       <ThemeProvider theme={unauthenticatedAppTheme}>
@@ -31,7 +31,7 @@ export default function App() {
       </ThemeProvider>
     );
   }
-
+*/
   return (
     <ThemeProvider theme={theme}>
       <Suspense fallback={<Loading />}>

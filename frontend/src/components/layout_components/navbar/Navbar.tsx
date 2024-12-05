@@ -47,7 +47,7 @@ export default function Navbar() {
         </Button>
         <Typography variant="h1"> {useHeading()} </Typography>
       </Box>
-      <SpeedDialMenu />
+      <SpeedDialMenu/>
     </Box>
   );
 }

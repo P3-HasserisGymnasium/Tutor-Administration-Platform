@@ -12,6 +12,7 @@ export default function TutorProfile() {
         if (userState.id) {
             profileMutation.mutate({ id: userState.id, role: Role.options[0] }, {
                 onSuccess: (data) => {
+                    const profile = data;
                     console.log("received data", data);
                 },
                 onError: (e) => {

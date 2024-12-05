@@ -28,7 +28,7 @@ export default function TutorCard({ profile }: { profile: ProfileType }) {
           width: "4em",
           height: "4em",
         }}
-        src={avatarDemo}
+        {...stringAvatar(profile.full_name)}
         alt={profile.full_name}
       />
       <Box
