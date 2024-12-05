@@ -40,6 +40,7 @@ export default function AuthenticatedApp() {
         <Routes>
           {/* Common routes */}
           <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<HomePage />} />
 
           {/* Tutee routes */}
           {isTutee ? (
