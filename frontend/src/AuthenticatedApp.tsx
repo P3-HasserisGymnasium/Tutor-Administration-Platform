@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { Box } from "@mui/material";
 import HomePage from "components/page_components/HomePage";
 import TutorPage from "components/page_components/tutor/TutorPage";
@@ -40,7 +40,12 @@ export default function AuthenticatedApp() {
       <Box sx={{ height: "88vh", width: "100%" }}>
         <Routes>
           {/* Common routes */}
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element=
+            {
+              isTutee && isTutor && <HomePage />
+              || isTutee && !isTutor && <Navigate to="/tutee" />
+              || !isTutee && isTutor && <Navigate to="/tutor" />
+            } />
 
           {/* Tutee routes */}
           {isTutee ? (
