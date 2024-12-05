@@ -2,7 +2,7 @@ import { MeetingObjectType } from "~/types/entity_types";
 import { useMeetingService } from "~/api/services/meeting-service";
 import React from "react";
 import { Box, Typography, Paper, CircularProgress } from "@mui/material";
-import useAuth from "./api/authentication"
+import { useAuth } from "~/api/authentication/useAuth";
 
 export default function MeetingList(){
 
@@ -14,9 +14,17 @@ export default function MeetingList(){
   console.log(meetings)
   const {userState} = useAuth();
 
+  const currentUser = userState;
+
+
   // Filter accepted meetings based on the "state"
-  const acceptedMeetings = meetings?.filter((meeting) => meeting.meeting_info.state === "Accepted") || [];
-  console.log(meetings)
+  const userMeetings = Array.isArray(meetings)
+  ? meetings.filter(
+      (meeting) =>
+        meeting.meeting_info.state === "Accepted" &&
+        (meeting.tutor_id === currentUser.id || meeting.tutee_id === currentUser.id)
+    )
+  : [];  console.log(meetings)
 
 
     return (
@@ -27,8 +35,8 @@ export default function MeetingList(){
             </Box>
           ) : error ? (
             <Typography color="error">Failed to load meetings.</Typography>
-          ) : acceptedMeetings.length > 0 ? (
-            acceptedMeetings.map((meeting) => (
+          ) : userMeetings.length > 0 ? (
+            userMeetings.map((meeting) => (
               <Box
                 key={meeting.meeting_info.id}
                 sx={{
