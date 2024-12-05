@@ -85,10 +85,10 @@ public class CollaborationService {
         Collaboration collaboration = getCollaborationById(collaborationId);
 
         switch(role){
-            case TUTEE:
+            case Tutee:
                 collaboration.setTuteeState(CollaborationState.ACCEPTED);
                 break;
-            case TUTOR:
+            case Tutor:
                 collaboration.setTutorState(CollaborationState.ACCEPTED);
                 break;
             default:
@@ -114,11 +114,11 @@ public class CollaborationService {
             // notify tutor 
             // notify tutee
             collaboration.setState(CollaborationState.REJECTED);
-        } else if (role == RoleEnum.TUTEE){
+        } else if (role == RoleEnum.Tutee){
             collaboration.setTuteeState(CollaborationState.REJECTED);
             collaboration.setState(CollaborationState.REJECTED);
             // notify tutor
-        } else if (role == RoleEnum.TUTOR){
+        } else if (role == RoleEnum.Tutor){
             collaboration.setTutorState(CollaborationState.REJECTED);
             collaboration.setState(CollaborationState.REJECTED);
             // notify tutee
@@ -138,7 +138,7 @@ public class CollaborationService {
         collaboration.setState(CollaborationState.PENDING);
 
         switch(collabRequester){
-            case TUTEE:
+            case Tutee:
                 Tutee tutee = roleService.getTuteeById(tuteeId);
                 collaboration.setTuteeState(CollaborationState.ACCEPTED);
                 collaboration.setTutee(tutee);
@@ -146,7 +146,7 @@ public class CollaborationService {
                 collaboration.setTutorState(CollaborationState.WAITING_FOR_TUTOR);
                 // notify tutor
                 break;
-            case TUTOR:
+            case Tutor:
                 Tutor tutor = roleService.getTutorById(tutorId);
                 collaboration.setTuteeState(CollaborationState.ACCEPTED);
                 collaboration.setTutor(tutor);
