@@ -25,8 +25,7 @@ public class CollaborationController {
 
     @GetMapping("/{id}")
     public Collaboration getCollaboration(@PathVariable Long id) {
-        return collaborationService.getCollaborationById(id)
-            .orElse(null);
+        return collaborationService.getCollaborationById(id);
     }
 
     @PostMapping("/")

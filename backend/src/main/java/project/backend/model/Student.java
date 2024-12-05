@@ -1,18 +1,15 @@
 package project.backend.model;
 
 import java.sql.Timestamp;
-import java.util.LinkedList;
-import java.util.List;
 
-import jakarta.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Transient;
 
 @Entity
 public class Student extends User {
@@ -27,16 +24,16 @@ public class Student extends User {
     @Embedded
     StudentContactInfo contactInfo;
 
-    @Transient
-    List<RoleEnum> roles = new LinkedList<>();
-
-    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
+    @OneToOne
+    @JsonManagedReference
     Tutee tutee;
 
-    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
+    @OneToOne
+    @JsonManagedReference
     Tutor tutor;
 
-    public Student() {}
+    public Student() {
+    }
 
     public Timestamp getRegistrationTimestamp() {
         return registrationTimestamp;
@@ -74,7 +71,7 @@ public class Student extends User {
         return tutor;
     }
 
-    public void setTutorId(Tutor tutor) {
+    public void setTutor(Tutor tutor) {
         this.tutor = tutor;
     }
 }

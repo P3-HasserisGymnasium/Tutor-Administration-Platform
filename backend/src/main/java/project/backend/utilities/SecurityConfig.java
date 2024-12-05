@@ -10,24 +10,24 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 @Configuration
 public class SecurityConfig {
 
-    @Bean 
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(withDefaults()) // Enable CORS
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for testing purposes (optional)
-            .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll()); // Allow all requests for now
+                .cors(withDefaults()) // Enable CORS
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for testing purposes (optional)
+                .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll()); // Allow all requests for now
         return http.build();
     }
 
     @Bean
     public CorsRegistry corsRegistry() {
         CorsRegistry registry = new CorsRegistry();
-        registry.addMapping("/**")  // Apply to all endpoints
+        registry.addMapping("/**") // Apply to all endpoints
                 .allowedOrigins("http://localhost:3000") // Specific origin (replace with your frontend URL)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true); // Allow credentials (cookies, tokens)
+
         return registry;
     }
-
 }

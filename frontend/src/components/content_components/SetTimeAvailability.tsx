@@ -178,22 +178,28 @@ function obtainValidTimeAvailabilities(
 	const endTimeHourInteger = Number(endTime[0]);
 	const endTimeMinutesInteger = Number(endTime[1]);
 
-	if (!(startTimeHourInteger <= endTimeHourInteger)) return;
-	if (!(startTimeMinutesInteger < endTimeMinutesInteger)) return;
+  console.log("startTimeHourInteger", startTimeHourInteger);
+  console.log("inminutes", startTimeMinutesInteger);
+  console.log("endtimehours", endTimeHourInteger);
+  console.log("inminutes", endTimeMinutesInteger);
 
+
+
+  if (!(startTimeHourInteger < endTimeHourInteger)) {
+    if (!(startTimeMinutesInteger < endTimeMinutesInteger)) return;
+
+  }
 	if (!existingTimeAvailabilities) return [newTimeAvailability];
 
-	const existingSameDayTimeAvailability = existingTimeAvailabilities.find(
-		(time: TimeAvailabilityType) => time.day === newTimeAvailability.day
-	);
-	if (!existingSameDayTimeAvailability)
-		return [...existingTimeAvailabilities, newTimeAvailability];
-
-	const equivalentTimeSlot = existingSameDayTimeAvailability?.time.find(
-		(timeslot) =>
-			timeslot.start_time === newTimeAvailability.time[0].start_time &&
-			timeslot.end_time === newTimeAvailability.time[0].end_time
-	);
+  const existingSameDayTimeAvailability = existingTimeAvailabilities.find(
+    (time: TimeAvailabilityType) => time.day === newTimeAvailability.day
+  );
+  if (!existingSameDayTimeAvailability) return [...existingTimeAvailabilities, newTimeAvailability];
+  const equivalentTimeSlot = existingSameDayTimeAvailability?.time.find(
+    (timeslot) =>
+      timeslot.start_time === newTimeAvailability.time[0].start_time &&
+      timeslot.end_time === newTimeAvailability.time[0].end_time
+  );
 
 	if (equivalentTimeSlot) return existingTimeAvailabilities;
 

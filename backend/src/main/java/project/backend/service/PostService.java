@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import project.backend.model.Post;
 import project.backend.model.PostState;
 import project.backend.model.Tutee;
-import project.backend.model.Student;
 
 import project.backend.repository.PostRepository;
 import project.backend.repository.TuteeRepository;
