@@ -1,11 +1,84 @@
 import MediumShortOnShortBoxLayout from "components/layout_components/MediumShortOnShortBoxLayout";
+import React, { useState } from "react";
+import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip, Paper} from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
+import tutorTheme from "~/themes/tutorTheme";
+import MiniCollab from "../content_components/MiniCollab";
+import MeetingsList from "../content_components/MeetingList";
+
+
 
 export default function HomePage() {
+  const [view, setView] = React.useState('meeting');
+
+  
+  const handleViewChange = (newView: React.SetStateAction<string>) => {
+    setView(newView);
+  };
+
+
   return (
     <MediumShortOnShortBoxLayout>
-      <div>Put calendsar / Meeting overview here</div>
-      <div>Put tutee notifications here</div>
-      <div>Put tutor notifications here</div>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          border: "1px solid #ddd", // Adjust the border color as needed
+          borderRadius: "8px",
+          overflow: "hidden",
+          p: 2,
+          position: "relative"
+          
+        }}
+      >
+        {/* Header with Title and Buttons */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 17 }}>
+          <Typography variant="h6">
+            {view === 'calendar' ? "Calendar" : "Meeting List"}
+          </Typography>
+
+          {/* Button group for toggling between calendar and meeting */}
+          <ButtonGroup variant="outlined" aria-label="outlined primary button group">
+            <Button sx ={{ color: 'white',
+            backgroundColor: view === 'meeting' ? '#6A79AA' : '#041758',
+            '&:hover': {
+              backgroundColor: view === 'meeting' ? 'lightblue' : 'rgba(0, 0, 255, 0.1)',}
+              }} 
+              onClick={() => handleViewChange('calendar')}>Show Calendar
+            </Button>
+
+            <Button
+            sx ={{ color: 'white',
+              backgroundColor: view === 'calendar' ? '#6A79AA' : '#041758',
+              '&:hover': {
+                backgroundColor: view === 'calendar' ? 'lightblue' : 'rgba(0, 0, 255, 0.1)',}
+              }}
+             onClick={() => handleViewChange('meeting')}>Show Meetings</Button>
+          </ButtonGroup>
+        
+          <Tooltip title="More information" arrow>
+          <IconButton
+            sx={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              alignItems: "right",
+            }}
+            aria-label="info"
+          >
+            <InfoIcon />
+          </IconButton>
+        </Tooltip>
+        </Box>
+        <Box sx={{position: "flex",alignContent: "center" , alignItems: "center",}}>
+        { view === 'calendar' ? (
+            <MiniCollab subject={"Music"} collaborator={""} avatar={""} /> 
+          ) : (
+            <MeetingsList /> 
+          )}
+        </Box>
+      </Box>
+
     </MediumShortOnShortBoxLayout>
   );
 }

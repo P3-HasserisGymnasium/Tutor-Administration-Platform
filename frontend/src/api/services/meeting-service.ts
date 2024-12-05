@@ -2,14 +2,14 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { MeetingType } from "~/types/entity_types";
+import { MeetingObjectType } from "~/types/entity_types";
 
 
 export const useMeetingService = () => {
 	const requestMeeting = useMutation({
 		mutationKey: ["requestMeeting"],
-		mutationFn: async (meeting: MeetingType) => {
-			const { data } = await apiClient.post<MeetingType>(
+		mutationFn: async (meeting: MeetingObjectType) => {
+			const { data } = await apiClient.post<MeetingObjectType>(
 				"/api/meeting_service",
 				meeting
 			);
@@ -65,7 +65,7 @@ export const useMeetingService = () => {
 	const getMeetings = useQuery({
 		queryKey: ["getMeetings"],
 		queryFn: async () => {
-			const { data } = await apiClient.get<MeetingType[]>(
+			const { data } = await apiClient.get<MeetingObjectType[]>(
 				`/api/meeting_service`
 			);
 			return data;

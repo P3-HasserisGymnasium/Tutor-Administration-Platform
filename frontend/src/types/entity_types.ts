@@ -36,6 +36,14 @@ export const zodMeetingSchema = z.object({
 	start_date: z.date(),
 });
 
+export const zodMeetingObject = z.object({
+	meeting_info: zodMeetingSchema,
+	tutor_name: z.string(),
+	tutee_name: z.string(),
+	tutor_id: z.string(),
+	tutee_id: z.string(),
+})
+
 export const zodCollaborationSchema = z.object({
 	end_date: z.date().optional(),
 	tutee_id: zodUUID,
@@ -64,6 +72,7 @@ export const zodAccountRegisterSchema = z.object({
 export type PostType = z.infer<typeof zodPostSchema>;
 export type ProfileType = z.infer<typeof zodProfileSchema>;
 export type MeetingType = z.infer<typeof zodMeetingSchema>;
+export type MeetingObjectType = z.infer<typeof zodMeetingObject>;
 export type CollaborationType = z.infer<typeof zodCollaborationSchema>;
 export type Feedback = z.infer<typeof zodFeedbackSchema>;
 export type AccountRegisterType = z.infer<typeof zodAccountRegisterSchema>;
