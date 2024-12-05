@@ -1,8 +1,8 @@
 import MediumShortOnShortBoxLayout from "components/layout_components/MediumShortOnShortBoxLayout";
-import React, { useState } from "react";
-import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip, Paper} from "@mui/material";
+import React, {  } from "react";
+import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip} from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-import tutorTheme from "~/themes/tutorTheme";
+// import tutorTheme from "~/themes/tutorTheme";
 import MiniCollab from "../content_components/MiniCollab";
 import MeetingsList from "../content_components/MeetingList";
 
