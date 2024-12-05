@@ -10,6 +10,7 @@ import project.backend.repository.RoleRepository;
 import project.backend.repository.StudentRepository;
 import project.backend.model.RoleEnum;
 import project.backend.model.Tutee;
+import project.backend.model.Tutor;
 import project.backend.model.Student;
 
 @Service
@@ -36,6 +37,28 @@ public class RoleService {
 
   public Student saveStudent(Student student) {
     return studentRepository.save(student);
+  }
+
+  public Tutee getTuteeById(Long id){
+    Student student = getStudentById(id);
+
+    Tutee tutee = student.getTutee();
+    if(tutee == null){
+        throw new IllegalArgumentException("This student is not assigned a Tutee");
+    }
+
+    return tutee;
+  }
+
+  public Tutor getTutorById(Long id){
+    Student student = getStudentById(id);
+
+    Tutor tutor = student.getTutor();
+    if(tutor == null){
+      throw new IllegalArgumentException("This student is not assigned as Tutor");
+    }
+
+    return tutor;
   }
 
   public Student getStudentById(Long id) {
@@ -67,9 +90,9 @@ public class RoleService {
     Student student = getStudentById(id);
 
 
-    if(role == RoleEnum.Tutee && student.getTutee() != null){
+    if(role == RoleEnum.TUTEE && student.getTutee() != null){
       return student.getTutee();
-    } else if(role == RoleEnum.Tutor && student.getTutor() != null){
+    } else if(role == RoleEnum.TUTOR && student.getTutor() != null){
       return student.getTutor();
     } else {
       throw new IllegalArgumentException("Invalid role specified.");
@@ -85,11 +108,11 @@ public class RoleService {
   public void removeRole(Long id, RoleEnum role) {
     Student student = getStudentById(id);
 
-    if (role == RoleEnum.Tutee && student.getTutee() != null){
+    if (role == RoleEnum.TUTEE && student.getTutee() != null){
       student.setTutee(null);
       saveStudent(student);
 
-    }else if(role == RoleEnum.Tutor && student.getTutor() != null){
+    }else if(role == RoleEnum.TUTOR && student.getTutor() != null){
       student.setTutor(null);
       saveStudent(student);
 

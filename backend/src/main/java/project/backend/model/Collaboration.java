@@ -48,7 +48,19 @@ public class Collaboration {
     @Column(name = "termination_reason", nullable = true)
     String terminationReason;
 
-    @OneToMany(mappedBy = "collaboration", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tuteeState")
+    CollaborationState tuteeState;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tutorState")
+    CollaborationState tutorState; 
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "adminState")
+    CollaborationState adminState;
+
+    @OneToMany(mappedBy = "collaboration")
     List<Meeting> meetings = new ArrayList<>();
 
     public Collaboration() {}
@@ -123,6 +135,30 @@ public class Collaboration {
 
     public void setMeetings(List<Meeting> meetings) {
         this.meetings = meetings;
+    }
+
+    public void setTutorState(CollaborationState tutorState){
+        this.tutorState =  tutorState;
+    }
+
+    public CollaborationState getTutorState(){
+        return tutorState;
+    }
+
+    public void setTuteeState(CollaborationState tuteeState){
+        this.tuteeState = tuteeState;
+    }
+
+    public CollaborationState getTuteeState(){
+        return tuteeState;
+    }
+
+    public void setAdminState(CollaborationState adminState){
+        this.adminState = adminState;
+    }
+
+    public CollaborationState getAdminState(){
+        return adminState;
     }
 
 }
