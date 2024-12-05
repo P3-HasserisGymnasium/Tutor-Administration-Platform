@@ -5,6 +5,7 @@ import { Theme } from "@mui/material/styles";
 import baseTheme from "~/themes/baseTheme";
 import tuteeTheme from "~/themes/tuteeTheme";
 import tutorTheme from "~/themes/tutorTheme";
+import unauthenticatedAppTheme from "~/themes/unauthenticatedAppTheme";
 
 
 /**
@@ -46,6 +47,10 @@ export function useCurrentTheme(): Theme {
 			return tuteeTheme;
 		case "tutor":
 			return tutorTheme;
+		case "login":
+			return unauthenticatedAppTheme;
+		case "register":
+			return unauthenticatedAppTheme;
 		default:
 			return baseTheme;
 	}
