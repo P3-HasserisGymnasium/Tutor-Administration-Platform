@@ -47,12 +47,6 @@ public class Collaboration {
 
     @Column(name = "termination_reason", nullable = true)
     String terminationReason;
-    
-    @ManyToOne
-    Tutee tutee;
-
-    @ManyToOne
-    Tutor tutor;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tuteeState")

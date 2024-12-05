@@ -76,7 +76,7 @@ public class AccountService {
         Student savedStudent = studentRepository.save(newStudent);
 
         // if tutor role is selected, create a new tutor object
-        if (body.roles.contains(RoleEnum.Tutor)) {
+        if (body.roles.contains(RoleEnum.TUTOR)) {
             Tutor newTutor = new Tutor();
 
             newTutor.setTutoringSubjects(body.tutorSubjects);
@@ -86,7 +86,7 @@ public class AccountService {
             tutorRepository.save(newTutor);
         }
         // if tutee role is selected, create a new tutee object
-        if (body.roles.contains(RoleEnum.Tutee)) {
+        if (body.roles.contains(RoleEnum.TUTEE)) {
             Tutee newTutee = new Tutee();
 
             newTutee.setStudent(savedStudent);
