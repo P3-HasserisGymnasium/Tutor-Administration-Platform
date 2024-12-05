@@ -25,8 +25,7 @@ public class NotificationController {
 
     @GetMapping("/{id}")
     public Notification getNotification(@PathVariable Long id) {
-        return notificationService.getNotificationById(id)
-            .orElse(null);
+        return notificationService.getNotificationById(id);
     }
 
     @PostMapping("/")

@@ -130,7 +130,7 @@ public class CollaborationService {
     }
 
     
-    // request specififc tutor or tutor request tutee through a post
+ 
     public void requestCollaboration(Long tuteeId, Long tutorId, RoleEnum collabRequester, SubjectEnum subject){
 
         Collaboration collaboration = new Collaboration();
