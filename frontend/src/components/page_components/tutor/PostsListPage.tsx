@@ -5,12 +5,12 @@ import PostFilter from "~/components/content_components/PostListComponents/PostF
 import PostList from "~/components/content_components/PostListComponents/PostList";
 
 export default function PostsListPage() {
-	return (
-		<ThemeProvider theme={tutorTheme}>
-			<ShortLongBoxLayout>
-				<PostFilter />
-				<PostList />
-			</ShortLongBoxLayout>
-		</ThemeProvider>
-	);
+  return (
+    <ThemeProvider theme={tutorTheme}>
+      <ShortLongBoxLayout>
+        <PostFilter />
+        <PostList />
+      </ShortLongBoxLayout>
+    </ThemeProvider>
+  );
 }

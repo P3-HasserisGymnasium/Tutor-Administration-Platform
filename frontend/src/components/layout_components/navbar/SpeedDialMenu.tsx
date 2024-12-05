@@ -6,8 +6,10 @@ import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "~/api/authentication/useAuth";
 
 export default function SpeedDialMenu() {
+  const { logout } = useAuth();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -26,7 +28,7 @@ export default function SpeedDialMenu() {
       name: `Go to ${rolePrefix == "/tutee" ? "Tutor page" : "Tutee page"}`,
       route: rolePrefix == "/tutee" ? "/tutor" : "/tutee",
     },
-    { icon: <LogoutIcon />, name: "Log out", route: "/" },
+    { icon: <LogoutIcon />, name: "Log out", route: "/", logout: true },
   ];
 
   return (
@@ -91,6 +93,11 @@ export default function SpeedDialMenu() {
             tooltipTitle={action.name}
             tooltipOpen
             onClick={() => {
+              if (action.logout) {
+                logout();
+                navigate("/login");
+                return;
+              }
               navigate(action.route);
               handleClose();
             }}
