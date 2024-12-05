@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import project.backend.model.EntityType;
 import project.backend.model.Notification;
 import project.backend.model.NotificationState;
-import project.backend.model.NotificationType;
 
 @SpringBootTest
 class NotificationSetupTest {
@@ -39,14 +38,6 @@ class NotificationSetupTest {
         // Test setting and getting contextType
         notification.setContextType(EntityType.POST);
         assertEquals(EntityType.POST, notification.getContextType());
-
-        // Test setting and getting title
-        notification.setTitle("New Notification");
-        assertEquals("New Notification", notification.getTitle());
-
-        // Test setting and getting type
-        notification.setType(NotificationType.ALERT);
-        assertEquals(NotificationType.ALERT, notification.getType());
 
         // Test setting and getting state
         notification.setState(NotificationState.UNREAD);

@@ -79,6 +79,11 @@ export const zodNotificationContext = z.enum([
 	"Collaboration",
 	"Meeting",
 ] as const);
+export const zodNotificationParticipant = z.enum([
+	"Tutor", 
+	"Tutee",
+	"Admin",
+] as const);
 export const zodCollaborationState = z.enum([
 	"Pending",
 	"WaitingForTutor",
@@ -97,6 +102,7 @@ export const Day = zodDay;
 export const Subject = zodSubject;
 export const MeetingState = zodMeetingState;
 export const NotificationContext = zodNotificationContext;
+export const NotificationParticipant = zodNotificationParticipant;
 export const CollaborationState = zodCollaborationState;
 export const TimeSlot = zodTimeSlotSchema;
 export const Role = zodRole;
@@ -111,6 +117,7 @@ export type TutorApplicationType = z.infer<typeof zodTutorApplicationSchema>;
 export type PostCreationType = z.infer<typeof zodPostCreationSchema>;
 export type MeetingStateType = z.infer<typeof zodMeetingState>;
 export type NotificationContextType = z.infer<typeof zodNotificationContext>;
+export type NotificationParticipantType = z.infer<typeof zodNotificationParticipant>;
 export type DayType = z.infer<typeof zodDay>;
 export type SubjectType = z.infer<typeof zodSubject>;
 export type CollaborationStateType = z.infer<typeof zodCollaborationState>;
