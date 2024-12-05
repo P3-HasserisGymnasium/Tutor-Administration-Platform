@@ -9,6 +9,7 @@ public enum EntityType {
     MEETING,
     POST,
     NOTIFICATION,
+    FEEDBACK,
     TUTEE,
     TUTOR;
 }

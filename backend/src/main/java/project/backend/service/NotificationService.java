@@ -58,4 +58,7 @@ public class NotificationService {
     public void deleteNotification(Long id) {
         notificationRepository.deleteById(id);
     }
+
+
+    // create change state
 }
