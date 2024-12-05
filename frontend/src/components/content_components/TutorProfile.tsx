@@ -1,18 +1,17 @@
 import {Box, Button }from "@mui/material";
 import { useAuth } from "~/api/authentication/useAuth";
 import { useRoleService } from "~/api/services/roleService";
-import { Role } from "~/types/data_types";
 import { useEffect } from "react";
 
 export default function TutorProfile() {
     const {userState} = useAuth();
-    const profileMutation = useRoleService().getProfile;
+    const profileMutation = useRoleService().getTutorProfile;
 
     useEffect(() => {
         if (userState.id) {
-            profileMutation.mutate({ id: userState.id, role: Role.options[0] }, {
+            profileMutation.mutate(userState.id, {
                 onSuccess: (data) => {
-                    const profile = data;
+                    //const profile = data;
                     console.log("received data", data);
                 },
                 onError: (e) => {

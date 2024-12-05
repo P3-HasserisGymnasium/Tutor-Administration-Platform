@@ -1,6 +1,6 @@
 import { ProfileType } from "~/types/entity_types";
 import { Avatar, Box, Button, Typography } from "@mui/material";
-import avatarDemo from "./avatarDemo.png";
+//import avatarDemo from "./avatarDemo.png";
 import SubjectChip from "components/content_components/SubjectChip.tsx";
 import { SubjectType } from "~/types/data_types";
 import CustomButton from "../CustomButton";
@@ -28,7 +28,7 @@ export default function TutorCard({ profile }: { profile: ProfileType }) {
           width: "4em",
           height: "4em",
         }}
-        {...stringAvatar(profile.full_name)}
+        //{...stringAvatar(profile.full_name)}
         alt={profile.full_name}
       />
       <Box

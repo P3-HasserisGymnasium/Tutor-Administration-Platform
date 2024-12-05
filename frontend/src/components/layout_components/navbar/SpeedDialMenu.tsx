@@ -1,4 +1,4 @@
-import { Backdrop, SpeedDial, SpeedDialAction, Avatar, Box } from "@mui/material";
+import { Backdrop, SpeedDial, SpeedDialAction, Box } from "@mui/material";
 import { useState } from "react";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
@@ -7,9 +7,10 @@ import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "~/api/authentication/useAuth";
+import InitialsAvatar from "~/components/content_components/InitialsAvatar";
 
 export default function SpeedDialMenu() {
-  const { logout } = useAuth();
+  const { logout, userState } = useAuth();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -61,8 +62,8 @@ export default function SpeedDialMenu() {
           },
         }}
         FabProps={{ size: "large" }}
-        icon={<Avatar variant="circular">P3</Avatar>}
-        openIcon={<Avatar variant="circular">P3</Avatar>}
+        icon={<InitialsAvatar fullName={userState.name} />}
+        openIcon={<InitialsAvatar fullName={userState.name} />}
         direction="down"
         hidden={false}
         onClose={handleClose}
