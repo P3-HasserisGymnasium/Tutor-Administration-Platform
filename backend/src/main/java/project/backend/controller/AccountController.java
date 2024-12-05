@@ -1,5 +1,7 @@
 package project.backend.controller;
 
+import static project.backend.utilities.JWTUtil.generateToken;
+
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -70,7 +72,7 @@ public class AccountController {
         if (user instanceof Student) {
             
             AccountLoginSuccessBody responseBody = new AccountLoginSuccessBody();
-            responseBody.token = "781263987163921632136123gd1267dg12768gdasgdasdasgdasuhdg2176dg";
+            responseBody.token = generateToken(user.getId().toString());
             responseBody.id = user.getId();
             responseBody.name = user.getFullName();
             responseBody.email = user.getEmail();
