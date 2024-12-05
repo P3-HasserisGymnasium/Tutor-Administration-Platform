@@ -3,8 +3,8 @@ import React, {  } from "react";
 import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip} from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 // import tutorTheme from "~/themes/tutorTheme";
-import MiniCollab from "../content_components/MiniCollab";
 import MeetingsList from "../content_components/MeetingList";
+import MiniCalendar from "../content_components/MiniCalendar";
 
 
 
@@ -23,7 +23,7 @@ export default function HomePage() {
         sx={{
           display: "flex",
           flexDirection: "column",
-          border: "1px solid #ddd", // Adjust the border color as needed
+          border: "1px solid #white", 
           borderRadius: "8px",
           overflow: "hidden",
           p: 2,
@@ -70,9 +70,9 @@ export default function HomePage() {
           </IconButton>
         </Tooltip>
         </Box>
-        <Box sx={{position: "flex",alignContent: "center" , alignItems: "center",}}>
+        <Box sx={{position: "flex",alignContent: "center" , alignItems: "center", width:"100%", height: "100%", border: "white 1px"}}>
         { view === 'calendar' ? (
-            <MiniCollab subject={"Music"} collaborator={""} avatar={""} /> 
+            <MiniCalendar /> 
           ) : (
             <MeetingsList /> 
           )}

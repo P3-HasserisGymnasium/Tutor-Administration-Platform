@@ -6,8 +6,6 @@ import { useAuth } from "~/api/authentication/useAuth";
 
 export default function MeetingList(){
 
-  //  const [selectedTab, setSelectedTab] = React.useState(0);
-
   // Fetch meetings from the API
   const { getMeetings } = useMeetingService();
   const { data: meetings, isLoading, error } = getMeetings;

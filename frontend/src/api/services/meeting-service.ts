@@ -66,7 +66,7 @@ export const useMeetingService = () => {
 		queryKey: ["getMeetings"],
 		queryFn: async () => {
 			const { data } = await apiClient.get<MeetingObjectType[]>(
-				`/api/meeting_service`
+				`/api/meeting`
 			);
 			return data;
 		},
