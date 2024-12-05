@@ -57,8 +57,14 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        accountService.deleteUserById(id);
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        try{
+            accountService.deleteUserById(id);
+            return ResponseEntity.ok("User deleted successfully");
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/login")
@@ -67,7 +73,7 @@ public class AccountController {
         User user = accountService.getUserIfCorrectPassword(body);
 
         // Check the type of user to return the appropriate response
-        if (user instanceof Student) {
+        if (user instanceof Student student) {
             
             AccountLoginSuccessBody responseBody = new AccountLoginSuccessBody();
             responseBody.token = "781263987163921632136123gd1267dg12768gdasgdasdasgdasuhdg2176dg";
@@ -76,9 +82,9 @@ public class AccountController {
             responseBody.email = user.getEmail();
             RoleEnum[] roles = roleService.getRolesByUserId(user.getId());
             responseBody.role = List.of(roles);
-            responseBody.year_group = ((Student) user).getYearGroup();
+            responseBody.year_group = student.getYearGroup();
             if (responseBody.role.contains(RoleEnum.Tutor)) {
-                Tutor tutor = ((Student)user).getTutor();
+                Tutor tutor = student.getTutor();
                 responseBody.tutoring_subjects = tutor.getTutoringSubjects();
                 return ResponseEntity.ok(responseBody);
             }

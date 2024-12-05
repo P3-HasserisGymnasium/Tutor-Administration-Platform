@@ -2,6 +2,7 @@ package project.backend.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,32 +28,68 @@ public class CollaborationController {
     }
 
     @GetMapping("/{id}")
-    public Collaboration getCollaboration(@PathVariable Long id) {
-        return collaborationService.getCollaborationById(id);
+    public ResponseEntity<?> getCollaboration(@PathVariable Long id) {
+        try {
+            Collaboration response = collaborationService.getCollaborationById(id);
+            return ResponseEntity.ok(response);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/with_tutor/{id}")
-    public List<Collaboration> getCollaborationWithTutor(@PathVariable Long id) {
-        return collaborationService.getCollaborationsWithTutor(id);
+    public ResponseEntity<?> getCollaborationWithTutor(@PathVariable Long id) {
+        try {
+            List<Collaboration> response = collaborationService.getCollaborationsWithTutor(id);
+            return ResponseEntity.ok(response);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/with_tutee/{id}")
-    public List<Collaboration> getCollaborationWithTutee(@PathVariable Long id) {
-        return collaborationService.getCollaborationsWithTutee(id);
+    public ResponseEntity<?> getCollaborationWithTutee(@PathVariable Long id) {
+        try {
+            List<Collaboration> response = collaborationService.getCollaborationsWithTutee(id);
+            return ResponseEntity.ok(response);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/all")
-    public List<Collaboration> getAllCollaborations() {
-        return collaborationService.getAllCollaborations();
+    public ResponseEntity<?> getAllCollaborations() {
+        try {
+            List<Collaboration> response = collaborationService.getAllCollaborations();
+            return ResponseEntity.ok(response);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/")
-    public Collaboration createCollaboration(@RequestBody CollaborationCreateBody body) {
-        return collaborationService.createCollaboration(body);
+    public ResponseEntity<?> createCollaboration(@RequestBody CollaborationCreateBody body) {
+        try {
+            Collaboration response = collaborationService.createCollaboration(body);
+            return ResponseEntity.ok(response);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCollaboration(@PathVariable Long id) {
-        collaborationService.deleteCollaborationById(id);
+    public ResponseEntity<?> deleteCollaboration(@PathVariable Long id) {
+        try {
+            collaborationService.deleteCollaborationById(id);
+            return ResponseEntity.ok("Collaboration deleted successfully");
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
