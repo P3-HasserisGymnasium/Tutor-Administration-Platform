@@ -1,12 +1,12 @@
-import { MeetingObjectType } from "~/types/entity_types";
+//import { MeetingObjectType } from "~/types/entity_types";
 import { useMeetingService } from "~/api/services/meeting-service";
-import React from "react";
+//import React from "react";
 import { Box, Typography, Paper, CircularProgress } from "@mui/material";
 import { useAuth } from "~/api/authentication/useAuth";
 
 export default function MeetingList(){
 
-    const [selectedTab, setSelectedTab] = React.useState(0);
+  //  const [selectedTab, setSelectedTab] = React.useState(0);
 
   // Fetch meetings from the API
   const { getMeetings } = useMeetingService();
