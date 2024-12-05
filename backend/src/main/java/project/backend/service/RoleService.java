@@ -103,6 +103,7 @@ public class RoleService {
 
     }
 
+    @Deprecated
     public Object getProfile(Long id, RoleEnum role) {
         Student student = getStudentById(id);
 
