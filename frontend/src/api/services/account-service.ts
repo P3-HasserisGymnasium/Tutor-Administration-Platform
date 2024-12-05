@@ -64,7 +64,7 @@ export const useAccountService = () => {
 				return data;
 			},
 			onError: (e: AxiosError<{ detail: string }>) => {
-				toast.error(e?.response?.data?.detail);
+				toast.error("Login failed" + (e?.response?.data?.detail == undefined ? "" : (": " + e?.response?.data?.detail)));
 			},
 			onSuccess: () => {
 				toast.success("You have been logged in");
