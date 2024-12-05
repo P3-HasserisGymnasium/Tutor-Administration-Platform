@@ -27,8 +27,6 @@ public class NotificationRepositoryTest {
         notification.setReceiverType(EntityType.STUDENT);
         notification.setContextId(3L);
         notification.setContextType(EntityType.COLLABORATION);
-        notification.setTitle("Test Notification");
-        notification.setType(NotificationType.ALERT);
         notification.setState(NotificationState.UNREAD);
 
         // Save the Notification
@@ -39,6 +37,5 @@ public class NotificationRepositoryTest {
         Notification retrievedNotification = notificationRepository.findById(savedNotification.getId()).orElse(null);
         assertThat(retrievedNotification).isNotNull();
         assertThat(retrievedNotification.getSenderId()).isEqualTo(1L);
-        assertThat(retrievedNotification.getTitle()).isEqualTo("Test Notification");
     }
 }
