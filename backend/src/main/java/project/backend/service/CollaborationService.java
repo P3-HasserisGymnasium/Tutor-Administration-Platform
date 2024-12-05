@@ -1,20 +1,20 @@
 package project.backend.service;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import project.backend.model.CollaborationState;
-import project.backend.model.SubjectEnum;
-import project.backend.model.RoleEnum;
-
+import project.backend.controller_bodies.collaboration_bodies.CollaborationCreateBody;
 import project.backend.model.Collaboration;
+import project.backend.model.CollaborationState;
+import project.backend.model.Feedback;
+import project.backend.model.RoleEnum;
+import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.model.Tutor;
-import project.backend.model.Feedback;
-
 import project.backend.repository.CollaborationRepository;
 
 
@@ -43,7 +43,32 @@ public class CollaborationService {
         return collaboratOpt.orElseThrow(() -> new IllegalArgumentException("Collaboratio with id" + id + "not found"));
     }
 
-    public Collaboration saveCollaboration(Collaboration collaboration) {
+    public List<Collaboration> getCollaborationsWithTutor(Long tutorId){
+        return collaborationRepository.findCollaborationsWithTutorId(tutorId);
+    }
+
+    public List<Collaboration> getCollaborationsWithTutee(Long tuteeId){
+        return collaborationRepository.findCollaborationsWithTuteeId(tuteeId);
+    }
+
+    public List<Collaboration> getAllCollaborations(){
+        return collaborationRepository.findAll();
+    }
+
+    public Collaboration createCollaboration(CollaborationCreateBody body) {
+
+        Collaboration collaboration = new Collaboration();
+
+        collaboration.setStartTimestamp(body.start_date);
+        collaboration.setEndTimestamp(body.end_date);
+
+        collaboration.setTutor(roleService.getTutorById(body.tutor_id));
+        collaboration.setTutee(roleService.getTuteeById(body.tutee_id));
+
+        collaboration.setState(body.state);
+
+        collaboration.setSubject(body.subject);
+
         return collaborationRepository.save(collaboration);
     }
 
@@ -58,7 +83,7 @@ public class CollaborationService {
         collaboration.setTutee(tutee);
         collaboration.setState(CollaborationState.PENDING);
 
-        saveCollaboration(collaboration);
+        collaborationRepository.save(collaboration);
     }
 
 
@@ -75,7 +100,7 @@ public class CollaborationService {
 
         // notify tutee
         // notify tutor
-        saveCollaboration(collaboration);
+        collaborationRepository.save(collaboration);
         
     }
 
@@ -103,7 +128,7 @@ public class CollaborationService {
             // notify admin
         }
 
-        saveCollaboration(collaboration);
+        collaborationRepository.save(collaboration);
     }
 
     public void rejectCollaboration(Long collaborationId, RoleEnum role){
@@ -138,27 +163,24 @@ public class CollaborationService {
         collaboration.setState(CollaborationState.PENDING);
 
         switch(collabRequester){
-            case Tutee:
+            case Tutee -> {
                 Tutee tutee = roleService.getTuteeById(tuteeId);
                 collaboration.setTuteeState(CollaborationState.ACCEPTED);
                 collaboration.setTutee(tutee);
-
                 collaboration.setTutorState(CollaborationState.WAITING_FOR_TUTOR);
-                // notify tutor
-                break;
-            case Tutor:
+                //TODO: notify tutor
+            }
+            case Tutor -> {
                 Tutor tutor = roleService.getTutorById(tutorId);
                 collaboration.setTuteeState(CollaborationState.ACCEPTED);
                 collaboration.setTutor(tutor);
-
                 collaboration.setTuteeState(CollaborationState.WAITING_FOR_TUTEE);
-                // notify tutor
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid role specified.");
+                //TODO: notify tutor
+            }
+            default -> throw new IllegalArgumentException("Invalid role specified.");
         }
 
-        saveCollaboration(collaboration);
+        collaborationRepository.save(collaboration);
         // notify admin 
     }
 
@@ -176,7 +198,7 @@ public class CollaborationService {
         collaboration.setEndTimestamp(new Timestamp(System.currentTimeMillis()));
         collaboration.setTerminationReason(terminationReason);
 
-        saveCollaboration(collaboration);
+        collaborationRepository.save(collaboration);
     }
 
     public void establishCollaboration(Long collaborationId){
@@ -191,7 +213,7 @@ public class CollaborationService {
         
         collaboration.setState(CollaborationState.ESTABLISHED);
         collaboration.setStartTimestamp(new Timestamp(System.currentTimeMillis()));
-        saveCollaboration(collaboration);
+        collaborationRepository.save(collaboration);
     }
 
     public void submitFeedback(Long collaborationId, Long tuteeId, Feedback feedback){
