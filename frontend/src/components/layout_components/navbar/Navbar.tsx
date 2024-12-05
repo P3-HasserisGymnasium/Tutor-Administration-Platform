@@ -5,9 +5,11 @@ import SpeedDialMenu from "./SpeedDialMenu";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import { Theme } from "@mui/material/styles";
+import { useAuth } from "~/api/authentication/useAuth";
 export default function Navbar() {
   const navigate = useNavigate();
   const theme = useTheme<Theme>();
+  const { userState } = useAuth();
 
   return (
     <Box
@@ -22,7 +24,7 @@ export default function Navbar() {
     >
       <Box
         sx={{
-          width: "calc(80% - 16px)",
+          flexGrow: 1,
           height: "calc(100% - 16px)",
           display: "flex",
           justifyContent: "left",
@@ -43,10 +45,15 @@ export default function Navbar() {
           }}
           disableRipple
         >
-          <ArrowBackIcon sx={{ color: theme.customColors.arrowColor, fontSize: 35 }} />
+          <ArrowBackIcon sx={{ color: theme.customColors.headingTextColor, fontSize: 35 }} />
         </Button>
-        <Typography variant="h1"> {useHeading()} </Typography>
+        <Typography color={theme.customColors.headingTextColor} variant="h1">
+          {useHeading()}
+        </Typography>
       </Box>
+      <Typography color={theme.customColors.headingTextColor} variant="h1">
+        {userState.name ? userState.name : ""}
+      </Typography>
       <SpeedDialMenu />
     </Box>
   );
