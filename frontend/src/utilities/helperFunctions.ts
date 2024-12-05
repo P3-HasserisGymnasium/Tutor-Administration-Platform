@@ -8,7 +8,6 @@ import tutorTheme from "~/themes/tutorTheme";
 
 
 /**
- *
  * @returns {string} the heading of the current page based on the pathname.
  */
 export function useHeading(): string {
@@ -26,6 +25,8 @@ export function useHeading(): string {
 			return "Tutor List";
 		case "/tutee/profile":
 			return "Profile";
+		case "/tutee/request-admin":
+			return "Request Administarator";
 		case "/tutor/profile":
 			return "Profile";
 		case "/tutor/tutor-application":
