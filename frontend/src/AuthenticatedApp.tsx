@@ -36,7 +36,7 @@ export default function AuthenticatedApp() {
       }}
     >
       <Navbar />
-      <Box sx={{ height: "88vh", width: "100%" }}>
+      <Box sx={{ height: "92vh", width: "100%" }}>
         <Routes>
           {/* Common routes */}
           <Route

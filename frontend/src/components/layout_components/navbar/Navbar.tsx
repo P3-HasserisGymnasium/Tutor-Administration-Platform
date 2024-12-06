@@ -10,11 +10,10 @@ export default function Navbar() {
   const navigate = useNavigate();
   const theme = useTheme<Theme>();
   const { userState } = useAuth();
-
   return (
     <Box
       sx={{
-        height: "5em",
+        height: "8vh",
         width: "100%",
         display: "flex",
         justifyContent: "left",
