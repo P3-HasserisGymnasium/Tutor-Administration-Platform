@@ -79,10 +79,10 @@ public class AccountService {
         if (body.roles.contains(RoleEnum.Tutor)) {
             Tutor newTutor = new Tutor();
 
-            newTutor.setTutoringSubjects(body.tutorSubjects);
+            newTutor.setTutoringSubjects(body.subjects);
             newTutor.setStudent(savedStudent);
             newTutor.setProfileDescription(body.tutorProfileDescription);
-            newTutor.setFreeTimeSlots(body.tutorTimeslots);
+            newTutor.setFreeTimeSlots(body.time_availability);
 
             savedStudent.setTutor(newTutor);
 

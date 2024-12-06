@@ -20,7 +20,7 @@ public class AccountRegisterBody {
     public List<RoleEnum> roles = new LinkedList<>();
     public YearGroupEnum yearGroup;
     public List<Language> languages = new LinkedList<>();
-    public List<SubjectEnum> tutorSubjects = new LinkedList<>();
+    public List<SubjectEnum> subjects = new LinkedList<>();
     public String tutorProfileDescription;
-    public List<TutorTimeSlot> tutorTimeslots = new LinkedList<>();
+    public List<TutorTimeSlot> time_availability = new LinkedList<>();
 }

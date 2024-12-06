@@ -1,14 +1,17 @@
 import { ProfileType } from "~/types/entity_types";
-import { Avatar, Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 //import avatarDemo from "./avatarDemo.png";
 import SubjectChip from "components/content_components/SubjectChip.tsx";
 import { SubjectType } from "~/types/data_types";
 import CustomButton from "../CustomButton";
 import { useTheme } from "@mui/system";
 import { Theme } from "@mui/material/styles";
+import InitialsAvatar from "../InitialsAvatar";
+import { useAuth } from "~/api/authentication/useAuth";
 
 export default function TutorCard({ profile }: { profile: ProfileType }) {
   const theme = useTheme<Theme>();
+  const { userState } = useAuth();
 
   return (
     <Box
@@ -21,16 +24,7 @@ export default function TutorCard({ profile }: { profile: ProfileType }) {
         borderRadius: "0.5em",
       }}
     >
-      <Avatar
-        sx={{
-          borderRadius: "50%",
-          marginRight: "1em",
-          width: "4em",
-          height: "4em",
-        }}
-        //{...stringAvatar(profile.full_name)}
-        alt={profile.full_name}
-      />
+      <InitialsAvatar fullName={userState.name}/>
       <Box
         sx={{
           marginRight: "1em",

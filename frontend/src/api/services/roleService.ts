@@ -2,12 +2,19 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { tutorListFilterType } from '~/types/data_types';
+import { SubjectType, tutorListFilterType, YearGroupType } from '~/types/data_types';
 import { ProfileType } from "~/types/entity_types";
 
 // tutee/tutor:role_id -> role:student_id -> student:id
 
-
+type tutorProfileType = {
+	contact_info: string | null,	
+	description: string | null,
+	full_name: string | null,
+	time_availability: null|string,
+	tutoring_subjects: SubjectType[]
+	yearGroup: YearGroupType
+}
 
 export const useRoleService = () => {
 
@@ -78,7 +85,7 @@ export const useRoleService = () => {
 	const getTutorProfile = useMutation({
 			mutationKey: ["getProfile"],
 			mutationFn: async (id:string|null) => {
-				const { data } = await apiClient.get<ProfileType>(
+				const { data } = await apiClient.get<tutorProfileType>(
 					`/api/role/tutor/${id}`,
 				);
 				return data;

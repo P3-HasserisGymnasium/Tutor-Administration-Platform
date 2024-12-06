@@ -19,7 +19,8 @@ export default function TutorProfile() {
                 }
             });
         }
-    }, [userState.id, profileMutation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userState.id]);
 
     return (
         <Box sx={{display:"flex", flexDirection:"row", justifyContent:"end"}}>
