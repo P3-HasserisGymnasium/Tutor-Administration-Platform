@@ -149,6 +149,7 @@ export const zodLoginSuccessDataType = z.object({
 	email: z.string().email().nullable(),
 	year_group: YearGroup.nullable(),
 	tutoring_subjects: z.array(Subject).nullable(),
+	is_administrator: z.boolean().nullable(),
 });
 
 export const zodLoginSchema = z.object({
