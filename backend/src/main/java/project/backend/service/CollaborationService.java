@@ -111,6 +111,7 @@ public class CollaborationService {
 
         Long tuteeId = collaboration.getTutee().getId();
 
+        // notify tutor and tutee of the collaboration suggestion
         notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId, EntityType.COLLABORATION);
         notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId, EntityType.COLLABORATION);
 
