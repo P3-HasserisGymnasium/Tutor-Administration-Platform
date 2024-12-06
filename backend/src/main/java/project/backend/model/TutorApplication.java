@@ -1,12 +1,17 @@
 package project.backend.model;
 
+import java.util.List;
+
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -19,9 +24,11 @@ public class TutorApplication {
     @ManyToOne
     private Student student; 
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "subject")
-    SubjectEnum subject;
+    @ElementCollection(targetClass = Language.class)
+    @CollectionTable(name = "tutor_subjects", joinColumns = @JoinColumn(name = "tutor_application_id"))
+    @Enumerated(EnumType.STRING)
+    List<SubjectEnum> subjects;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
@@ -49,12 +56,12 @@ public class TutorApplication {
         this.student = student;
     }
 
-    public SubjectEnum getSubject() {
-        return subject;
+    public List<SubjectEnum> getSubjects() {
+        return subjects;
     }
 
-    public void setSubject(SubjectEnum subject) {
-        this.subject = subject;
+    public void setSubjects(List<SubjectEnum> subjects) {
+        this.subjects = subjects;
     }
 
     public TutorApplicationState getState(){

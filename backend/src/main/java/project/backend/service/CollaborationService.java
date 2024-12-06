@@ -62,7 +62,7 @@ public class CollaborationService {
         collaboration.setStartTimestamp(body.start_date);
         collaboration.setEndTimestamp(body.end_date);
 
-        collaboration.setTutor(roleService.getTutorById(body.tutor_id));
+        collaboration.setTutor(roleService.getTutorByUserId(body.tutor_id));
         collaboration.setTutee(roleService.getTuteeById(body.tutee_id));
 
         collaboration.setState(body.state);
@@ -171,7 +171,7 @@ public class CollaborationService {
                 //TODO: notify tutor
             }
             case Tutor -> {
-                Tutor tutor = roleService.getTutorById(tutorId);
+                Tutor tutor = roleService.getTutorByUserId(tutorId);
                 collaboration.setTuteeState(CollaborationState.ACCEPTED);
                 collaboration.setTutor(tutor);
                 collaboration.setTuteeState(CollaborationState.WAITING_FOR_TUTEE);
