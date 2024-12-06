@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import project.backend.controller_bodies.tutor_application_controller.TutorApplicationCreateBody;
 import project.backend.model.TutorApplication;
+import project.backend.model.SubjectEnum;
 import project.backend.service.TutorApplicationService;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -44,5 +45,20 @@ public class TutorApplicationController {
     @DeleteMapping("/{id}")
     public void deleteTutorApplication(@PathVariable Long id) {
         tutorApplicationService.deleteTutorApplicationById(id);
+    }
+
+    @PostMapping("/accept-tutor-application/{id}")
+    public void acceptTutorApplication(@PathVariable Long id){
+        tutorApplicationService.acceptTutorApplication(id);
+    }
+
+    @PostMapping("/reject-tutor-application/{id}")
+    public void rejectTutorApplication(@PathVariable Long id, @RequestBody String rejectReason){
+        tutorApplicationService.rejectTutorApplication(id, rejectReason);
+    }
+
+    @PostMapping("/remove-subject/{id}")
+    public void removeSubject(@PathVariable Long id, @RequestBody SubjectEnum subject){
+        tutorApplicationService.removeTutoringSubject(id, subject);
     }
 }
