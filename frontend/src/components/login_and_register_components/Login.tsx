@@ -36,6 +36,7 @@ export default function Login() {
           year_group: data.year_group as UserState["year_group"],
           tutoring_subjects:
             data.tutoring_subjects?.map((subject) => Subject.Enum[subject as keyof typeof Subject.Enum]) || null,
+          is_administrator: data.is_administrator,
         };
         login(userState, data.token);
         navigate("/");

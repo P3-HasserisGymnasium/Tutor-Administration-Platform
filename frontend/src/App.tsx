@@ -17,8 +17,6 @@ const AuthenticatedApp = lazy(() => import("./AuthenticatedApp"));
 export default function App() {
   const theme = useCurrentTheme(); // must use hook to make sure the theme is updated, stateful
   const { isAuthenticated } = useAuth();
-  console.log("isAuthenticated", isAuthenticated);
-
 
   if (!isAuthenticated) {
     return (
@@ -31,7 +29,6 @@ export default function App() {
       </ThemeProvider>
     );
   }
-
   return (
     <ThemeProvider theme={theme}>
       <Suspense fallback={<Loading />}>

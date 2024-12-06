@@ -73,7 +73,7 @@ public class CollaborationService {
         collaboration.setStartTimestamp(body.start_date);
         collaboration.setEndTimestamp(body.end_date);
 
-        collaboration.setTutor(roleService.getTutorById(body.tutor_id));
+        collaboration.setTutor(roleService.getTutorByUserId(body.tutor_id));
         collaboration.setTutee(roleService.getTuteeById(body.tutee_id));
 
         collaboration.setState(body.state);
@@ -88,13 +88,15 @@ public class CollaborationService {
     }
 
     // request admin for help
-    public void requestCollaborationSuggestion(Long tutteeId, SubjectEnum subject){
-        Tutee tutee = roleService.getStudentById(tutteeId).getTutee();
-        Collaboration collaboration = new Collaboration();
-        collaboration.setTutee(tutee);
-        collaboration.setState(CollaborationState.PENDING);
+    public void requestCollaborationSuggestion(Long tuteeId, SubjectEnum subject){
+        Tutee tutee = roleService.getStudentById(tuteeId).getTutee();
 
-        collaborationRepository.save(collaboration);
+        CollaborationCreateBody createBody = new CollaborationCreateBody();
+        createBody.tutee_id = tuteeId;
+        createBody.state = CollaborationState.PENDING;
+        createBody.subject = subject;
+
+        createCollaboration(createBody);
     }
 
 
