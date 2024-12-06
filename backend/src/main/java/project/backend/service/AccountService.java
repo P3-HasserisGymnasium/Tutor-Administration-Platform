@@ -96,8 +96,8 @@ public class AccountService {
                     TutorTimeSlot newTimeSlot = new TutorTimeSlot();
                     newTimeSlot.setWeekDay(timeSlotBody.day);
 
-                    //newTimeSlot.setStartTimestamp(timeBody.start_time);
-                    //newTimeSlot.setEndTimestamp(timeBody.end_time);
+                    newTimeSlot.setStartTime(timeBody.start_time);
+                    newTimeSlot.setEndTime(timeBody.end_time);
                     
                     timeSlots.add(newTimeSlot);
                 }                

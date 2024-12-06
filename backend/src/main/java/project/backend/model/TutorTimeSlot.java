@@ -1,7 +1,5 @@
 package project.backend.model;
 
-import java.sql.Timestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,10 +21,10 @@ public class TutorTimeSlot {
     WeekDayEnum weekDay;
 
     @Column(name = "start")
-    Timestamp startTimestamp;
+    String startTime;
 
     @Column(name = "end")
-    Timestamp endTimestamp;
+    String endTime;
 
     public TutorTimeSlot() {}
 
@@ -50,19 +48,19 @@ public class TutorTimeSlot {
         this.weekDay = weekDay;
     }
 
-    public Timestamp getStartTimestamp() {
-        return startTimestamp;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setStartTimestamp(Timestamp startTimestamp) {
-        this.startTimestamp = startTimestamp;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public Timestamp getEndTimestamp() {
-        return endTimestamp;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public void setEndTimestamp(Timestamp endTimestamp) {
-        this.endTimestamp = endTimestamp;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }
