@@ -49,7 +49,7 @@ public class JWTAuthenticationFilter implements Filter {
                     case "Bearer":
                         jwt = cookie.getValue();
                         break;
-                    case "userState":
+                    case "user":
                         userID = cookie.getValue();
                         break;
                 }
