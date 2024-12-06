@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class JWTUtil {
 
-      private static final String SECRET_KEY = "your-secret-key";
+      private static final String SECRET_KEY = "SkCZtnQzTWLeJfp9sV63QBluMvMSYklgKLl9rHrHibWxiI5xrZ2hzQfcgXakTrirkwPkpw63hkMYTdaKHOA";
 
       private static final long EXPIRATION_TIME = 1000 * 60 * 60;
   

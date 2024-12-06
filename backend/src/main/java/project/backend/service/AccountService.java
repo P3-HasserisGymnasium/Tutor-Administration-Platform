@@ -4,12 +4,17 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
+import java.util.List;
+import static project.backend.utilities.JWTUtil.generateToken;
 
 import project.backend.controller_bodies.account_controller.AccountLoginBody;
+import project.backend.controller_bodies.account_controller.AccountLoginSuccessBody;
 import project.backend.controller_bodies.account_controller.AccountRegisterBody;
 import project.backend.exceptions.EmailAlreadyExistsException;
 import project.backend.exceptions.PasswordMismatchException;
 import project.backend.exceptions.UserNotFoundException;
+import project.backend.model.Administrator;
 import project.backend.model.RoleEnum;
 import project.backend.model.Student;
 import project.backend.model.Tutee;
@@ -36,11 +41,15 @@ public class AccountService {
     @Autowired
     final TuteeRepository tuteeRepository;
 
-    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository, TutorRepository tutorRepository, TuteeRepository tuteeRepository) {
+    @Autowired
+    final RoleService roleService;
+
+    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository, TutorRepository tutorRepository, TuteeRepository tuteeRepository, RoleService roleService) {
         this.accountRepository = accountRepository;
         this.studentRepository = studentRepository;
         this.tutorRepository = tutorRepository;
         this.tuteeRepository = tuteeRepository;
+        this.roleService = roleService;
     }
 
     public boolean emailExists(String email) {
@@ -53,29 +62,20 @@ public class AccountService {
 
     public User saveNewUser(AccountRegisterBody body) {
 
-        if (emailExists(body.email)) {
-            throw new EmailAlreadyExistsException("Email Already Exists");
-        }
+        if (emailExists(body.email)) throw new EmailAlreadyExistsException("Email Already Exists");
+        if (!body.password.equals(body.confirmPassword)) throw new PasswordMismatchException("Passwords do not match");
 
-        boolean passwordsMatch = body.password.equals(body.confirmPassword);
-        if (passwordsMatch == false) {
-            throw new PasswordMismatchException("Passwords do not match");
-        }
 
         Student newStudent = new Student();
-
+        String passwordHash = PasswordUtility.encodePassword(body.password);
         newStudent.setFullName(body.fullName);
         newStudent.setEmail(body.email);
-        
-        String passwordHash = PasswordUtility.encodePassword(body.password);
         newStudent.setPasswordHash(passwordHash);
-
         newStudent.setLanguages(body.languages);
         newStudent.setYearGroup(body.yearGroup);
         
         Student savedStudent = studentRepository.save(newStudent);
 
-        // if tutor role is selected, create a new tutor object
         if (body.roles.contains(RoleEnum.Tutor)) {
             Tutor newTutor = new Tutor();
 
@@ -85,7 +85,6 @@ public class AccountService {
             savedStudent.setTutor(newTutor);
             tutorRepository.save(newTutor);
         }
-        // if tutee role is selected, create a new tutee object
         if (body.roles.contains(RoleEnum.Tutee)) {
             Tutee newTutee = new Tutee();
 
@@ -102,6 +101,25 @@ public class AccountService {
         accountRepository.deleteById(id);
     }
 
+    public ResponseEntity<AccountLoginSuccessBody> handleStudentLogin(Student student) {
+        
+        AccountLoginSuccessBody responseBody = createStudentResponse(student);
+
+        if (responseBody.role.contains(RoleEnum.Tutor)) {
+            Tutor tutor = student.getTutor();
+            responseBody.tutoring_subjects = tutor.getTutoringSubjects();
+        }
+
+        return ResponseEntity.ok(responseBody);
+    }
+
+    public ResponseEntity<AccountLoginSuccessBody> handleAdminLogin(Administrator admin) {
+
+        AccountLoginSuccessBody responseBody = createAdminResponse(admin);
+        return ResponseEntity.ok(responseBody);
+        
+    }
+
     public User getUserIfCorrectPassword(AccountLoginBody body) {
 
         User user = accountRepository.findByEmail(body.email);
@@ -113,6 +131,32 @@ public class AccountService {
         }
 
         return user;
+    }
+
+    private AccountLoginSuccessBody createStudentResponse(Student student) {
+        AccountLoginSuccessBody responseBody = new AccountLoginSuccessBody();
+        responseBody.token = generateToken(student.getId().toString());
+        responseBody.id = student.getId();
+        responseBody.name = student.getFullName();
+        responseBody.email = student.getEmail();
+        responseBody.role = List.of(roleService.getRolesByUserId(student.getId()));
+        responseBody.year_group = student.getYearGroup();
+        responseBody.is_administrator = false;
+        return responseBody;
+    }
+
+    private AccountLoginSuccessBody createAdminResponse(Administrator admin) {
+        AccountLoginSuccessBody responseBody = new AccountLoginSuccessBody();
+        responseBody.token = generateToken(admin.getId().toString());
+        responseBody.id = admin.getId();
+        responseBody.name = ((User) admin).getFullName();
+        responseBody.email = ((User) admin).getEmail();
+        responseBody.role = null;
+        responseBody.tutoring_subjects = null;
+        responseBody.year_group = null;
+        responseBody.is_administrator = true;
+
+        return responseBody;
     }
 
 }

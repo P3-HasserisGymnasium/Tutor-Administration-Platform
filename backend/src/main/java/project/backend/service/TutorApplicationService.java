@@ -58,6 +58,7 @@ public class TutorApplicationService {
 
             timeSlot.setStartTimestamp(timeSlotBody.start_time);
             timeSlot.setEndTimestamp(timeSlotBody.end_time);
+            tutorApplication.getFreeTimeSlots().add(timeSlot);
         }
         
         return tutorApplicationRepository.save(tutorApplication);
@@ -78,15 +79,22 @@ public class TutorApplicationService {
         Student student = tutorApplication.getStudent();
 
         Tutor tutor = student.getTutor();
+
+        // check if student is applying for new subject or to become tutor
         if(tutor != null){
             List<SubjectEnum> existingTutoringSubjects = tutor.getTutoringSubjects();
             existingTutoringSubjects.addAll(tutorApplication.getSubjects());
+
+            List<TutorTimeSlot> existingTutorTimeSlot = tutor.getFreeTimeSlots();
+            existingTutorTimeSlot.addAll(tutorApplication.getFreeTimeSlots());
             tutor.setTutoringSubjects(existingTutoringSubjects);
             
         } else {
             tutor = new Tutor();
             tutor.setStudent(student);
             tutor.setTutoringSubjects(tutorApplication.getSubjects());
+            tutor.setFreeTimeSlots(tutorApplication.getFreeTimeSlots());
+
             student.setTutor(tutor);
         }
 

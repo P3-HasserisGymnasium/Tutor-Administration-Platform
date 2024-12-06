@@ -1,5 +1,6 @@
 package project.backend.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CollectionTable;
@@ -13,6 +14,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+
+
 
 @Entity
 public class TutorApplication {
@@ -29,6 +34,11 @@ public class TutorApplication {
     @CollectionTable(name = "tutor_subjects", joinColumns = @JoinColumn(name = "tutor_application_id"))
     @Enumerated(EnumType.STRING)
     List<SubjectEnum> subjects;
+
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "tutor_application_id")
+    List<TutorTimeSlot> freeTimeSlots = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
@@ -86,6 +96,14 @@ public class TutorApplication {
 
     public void setRejectionReason(String rejectionReason) {
         this.rejectionReason = rejectionReason;
+    }
+
+    public List<TutorTimeSlot> getFreeTimeSlots() {
+        return freeTimeSlots;
+    }
+
+    public void setFreeTimeSlots(List<TutorTimeSlot> freeTimeSlots) {
+        this.freeTimeSlots = freeTimeSlots;
     }
 
     
