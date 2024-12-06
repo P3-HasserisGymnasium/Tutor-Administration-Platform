@@ -1,6 +1,6 @@
 import { Card, CardContent, Typography, Avatar, Box } from "@mui/material";
 import { SubjectType } from "src/types/data_types"; // Import the Subject enum and mapping
-import SubjectIcon from "./SubjectIcon";
+import SubjectIcon from "../SubjectIcon";
 
 interface MiniCollabProb {
 	subject: SubjectType;

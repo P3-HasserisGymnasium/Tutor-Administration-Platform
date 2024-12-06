@@ -1,5 +1,7 @@
 package project.backend.controller;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +29,11 @@ public class PostController {
     public Post getPost(@PathVariable Long id) {
         return postService.getPostById(id)
             .orElse(null);
+    }
+
+    @GetMapping("/all")
+    public List<Post> getAllPost() {
+        return postService.getAllPosts();
     }
 
     @PostMapping("/")
