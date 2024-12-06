@@ -22,7 +22,7 @@ import project.backend.service.CollaborationService;
 @RestController
 @RequestMapping("/collaboration")
 public class CollaborationController {
-    
+
     private final CollaborationService collaborationService;
 
     public CollaborationController(CollaborationService collaborationService) {
@@ -60,22 +60,22 @@ public class CollaborationController {
     }
 
     @PostMapping("/request-suggestion/{id}")
-    public void requestCollaborationSuggestion(@PathVariable Long tuteeId, @RequestBody SubjectEnum subject){
+    public void requestCollaborationSuggestion(@PathVariable Long tuteeId, @RequestBody SubjectEnum subject) {
         collaborationService.requestCollaborationSuggestion(tuteeId, subject);
     }
 
     @PostMapping("/submit-suggestion/{collaborationId}/{tutorId}")
-    public void submitCollaborationSuggestion(@PathVariable Long collaborationId, @PathVariable Long tutorId){
+    public void submitCollaborationSuggestion(@PathVariable Long collaborationId, @PathVariable Long tutorId) {
         collaborationService.submitCollaborationSuggestion(collaborationId, tutorId);
     }
 
     @PostMapping("/accept/{collaborationId}")
-    public void acceptCollaboration(@PathVariable Long collaborationId, @RequestBody RoleEnum role){
+    public void acceptCollaboration(@PathVariable Long collaborationId, @RequestBody RoleEnum role) {
         collaborationService.acceptCollaboration(collaborationId, role);
     }
 
     @PostMapping("reject/{collaborationId}")
-    public void rejectCollaboration(@PathVariable Long collaborationId, @RequestBody RoleEnum role){
+    public void rejectCollaboration(@PathVariable Long collaborationId, @RequestBody RoleEnum role) {
         collaborationService.rejectCollaboration(collaborationId, role);
     }
 
@@ -90,10 +90,8 @@ public class CollaborationController {
     }
 
     @PostMapping("/feedback/{collaborationId}/{tuteeId}")
-        public void submitFeedback(@PathVariable Long collaborationId, @PathVariable Long tuteeId, @RequestBody Feedback feedback) {
+    public void submitFeedback(@PathVariable Long collaborationId, @PathVariable Long tuteeId,
+            @RequestBody Feedback feedback) {
         collaborationService.submitFeedback(collaborationId, tuteeId, feedback);
-}
-
-
-
+    }
 }
