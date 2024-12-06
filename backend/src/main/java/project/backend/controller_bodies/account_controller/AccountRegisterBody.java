@@ -6,7 +6,6 @@ import java.util.List;
 import project.backend.model.Language;
 import project.backend.model.RoleEnum;
 import project.backend.model.SubjectEnum;
-import project.backend.model.TutorTimeSlot;
 import project.backend.model.YearGroupEnum;
 
 
@@ -22,5 +21,5 @@ public class AccountRegisterBody {
     public List<Language> languages = new LinkedList<>();
     public List<SubjectEnum> subjects = new LinkedList<>();
     public String tutorProfileDescription;
-    public List<TutorTimeSlot> time_availability = new LinkedList<>();
+    public List<TimeSlotCreateBody> time_availability = new LinkedList<>();
 }

@@ -19,6 +19,9 @@ public class TutorTimeSlot {
     @ManyToOne
     Tutor tutor;
 
+    @Column(name = "week_day")
+    WeekDayEnum weekDay;
+
     @Column(name = "start")
     Timestamp startTimestamp;
 
@@ -37,6 +40,14 @@ public class TutorTimeSlot {
 
     public void setTutor(Tutor tutor) {
         this.tutor = tutor;
+    }
+
+    public WeekDayEnum getWeekDay() {
+        return weekDay;
+    }
+
+    public void setWeekDay(WeekDayEnum weekDay) {
+        this.weekDay = weekDay;
     }
 
     public Timestamp getStartTimestamp() {

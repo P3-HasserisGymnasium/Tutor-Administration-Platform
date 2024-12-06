@@ -1,5 +1,7 @@
 package project.backend.service;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.account_controller.AccountLoginBody;
 import project.backend.controller_bodies.account_controller.AccountRegisterBody;
+import project.backend.controller_bodies.account_controller.TimeCreateBody;
+import project.backend.controller_bodies.account_controller.TimeSlotCreateBody;
 import project.backend.exceptions.EmailAlreadyExistsException;
 import project.backend.exceptions.PasswordMismatchException;
 import project.backend.exceptions.UserNotFoundException;
@@ -14,6 +18,7 @@ import project.backend.model.RoleEnum;
 import project.backend.model.Student;
 import project.backend.model.Tutee;
 import project.backend.model.Tutor;
+import project.backend.model.TutorTimeSlot;
 import project.backend.model.User;
 import project.backend.repository.AccountRepository;
 import project.backend.repository.StudentRepository;
@@ -82,8 +87,23 @@ public class AccountService {
             newTutor.setTutoringSubjects(body.subjects);
             newTutor.setStudent(savedStudent);
             newTutor.setProfileDescription(body.tutorProfileDescription);
-            newTutor.setFreeTimeSlots(body.time_availability);
 
+            List<TutorTimeSlot> timeSlots = new LinkedList<>();
+            for (TimeSlotCreateBody timeSlotBody : body.time_availability) {
+                
+                for (TimeCreateBody timeBody : timeSlotBody.time) {
+                    
+                    TutorTimeSlot newTimeSlot = new TutorTimeSlot();
+                    newTimeSlot.setWeekDay(timeSlotBody.day);
+
+                    newTimeSlot.setStartTimestamp(timeBody.start_time);
+                    newTimeSlot.setEndTimestamp(timeBody.end_time);
+                    
+                    timeSlots.add(newTimeSlot);
+                }                
+            }
+
+            newTutor.setFreeTimeSlots(timeSlots);
             savedStudent.setTutor(newTutor);
 
             tutorRepository.save(newTutor);
