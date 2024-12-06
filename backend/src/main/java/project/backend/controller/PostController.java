@@ -1,5 +1,6 @@
 package project.backend.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,18 +25,33 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public Post getPost(@PathVariable Long id) {
-        return postService.getPostById(id)
-            .orElse(null);
+    public ResponseEntity<?> getPost(@PathVariable Long id) {
+        try {
+            Post post = postService.getPostById(id)
+                .orElse(null);
+            return ResponseEntity.ok(post);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/")
-    public Post createPost(@RequestBody Post post) {
-        return postService.savePost(post);
+    public ResponseEntity<?> createPost(@RequestBody Post post) {
+        try {
+            Post savedPost = postService.savePost(post);
+            return ResponseEntity.ok(savedPost);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deletePost(@PathVariable Long id) {
-        postService.deletePostById(id);
+    public ResponseEntity<?> deletePost(@PathVariable Long id) {
+        try {
+            postService.deletePostById(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

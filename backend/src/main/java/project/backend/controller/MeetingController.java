@@ -2,6 +2,7 @@ package project.backend.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,23 +27,47 @@ public class MeetingController {
     }
 
     @GetMapping("/{id}")
-    public Meeting getMeeting(@PathVariable Long id) {
-        return meetingService.getMeetingById(id)
-            .orElse(null);
+    public ResponseEntity<?> getMeeting(@PathVariable Long id) {
+        try {
+            Meeting meeting = meetingService.getMeetingById(id)
+                .orElse(null);
+            return ResponseEntity.ok(meeting);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/forCollaboration/{id}")
-    public List<Meeting> getMeetings(@PathVariable Long id) {
-        return meetingService.getMeetingsByCollaborationId(id);
+    public ResponseEntity<?> getMeetings(@PathVariable Long id) {
+        try {
+            List<Meeting> meetings = meetingService.getMeetingsByCollaborationId(id);
+            return ResponseEntity.ok(meetings);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/")
-    public Meeting createMeeting(@RequestBody Meeting meeting) {
-        return meetingService.saveMeeting(meeting);
+    public ResponseEntity<?> createMeeting(@RequestBody Meeting meeting) {
+        try {
+            Meeting savedMeeting = meetingService.saveMeeting(meeting);
+            return ResponseEntity.ok(savedMeeting);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
     
     @DeleteMapping("/{id}")
-    public void deleteMeeting(@PathVariable Long id) {
-        meetingService.deleteMeetingById(id);
+    public ResponseEntity<?> deleteMeeting(@PathVariable Long id) {
+        try {
+            meetingService.deleteMeetingById(id);
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

@@ -2,6 +2,7 @@ package project.backend.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,22 +28,42 @@ public class TutorApplicationController {
     }
 
     @GetMapping("/{id}")
-    public TutorApplication getTutorApplication(@PathVariable Long id) {
-        return tutorApplicationService.getTutorApplicationById(id);
+    public ResponseEntity<?> getTutorApplication(@PathVariable Long id) {
+        try {
+            TutorApplication tutorApplication = tutorApplicationService.getTutorApplicationById(id);
+            return ResponseEntity.ok(tutorApplication);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/all")
-    public List<TutorApplication> getAllTutorApplications() {
-        return tutorApplicationService.getAllTutorApplications();
+    public ResponseEntity<?> getAllTutorApplications() {
+        try {
+            List<TutorApplication> tutorApplications = tutorApplicationService.getAllTutorApplications();
+            return ResponseEntity.ok(tutorApplications);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/")
-    public TutorApplication createTutorApplication(@RequestBody TutorApplicationCreateBody body) {
-        return tutorApplicationService.createTutorApplication(body);
+    public ResponseEntity<?> createTutorApplication(@RequestBody TutorApplicationCreateBody body) {
+        try {
+            TutorApplication tutorApplication = tutorApplicationService.createTutorApplication(body);
+            return ResponseEntity.ok(tutorApplication);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTutorApplication(@PathVariable Long id) {
-        tutorApplicationService.deleteTutorApplicationById(id);
+    public ResponseEntity<?> deleteTutorApplication(@PathVariable Long id) {
+        try {
+            tutorApplicationService.deleteTutorApplicationById(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

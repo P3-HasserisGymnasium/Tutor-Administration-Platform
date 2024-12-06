@@ -2,6 +2,7 @@ package project.backend.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,33 +29,69 @@ public class NotificationController {
     }
 
     @GetMapping("/{id}")
-    public Notification getNotification(@PathVariable Long id) {
-        return notificationService.getNotificationById(id)
-            .orElse(null);
+    public ResponseEntity<?> getNotification(@PathVariable Long id) {
+        try {
+            Notification notification = notificationService.getNotificationById(id)
+                .orElse(null);
+            return ResponseEntity.ok(notification);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/all")
-    public List<Notification> getNotifications() {
-        return notificationService.getAllNotifications();
+    public ResponseEntity<?> getNotifications() {
+        try {
+            List<Notification> notifications = notificationService.getAllNotifications();
+            return ResponseEntity.ok(notifications);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/sentTo/{id}")
-    public List<Notification> getNotificationsSentToUserId(@PathVariable Long id) {
-        return notificationService.getAllNotificationsSentToUserId(id);
+    public ResponseEntity<?> getNotificationsSentToUserId(@PathVariable Long id) {
+        try {
+            List<Notification> notifications = notificationService.getAllNotificationsSentToUserId(id);
+            return ResponseEntity.ok(notifications);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/sentBy/{id}")
-    public List<Notification> getNotificationsSentByUserId(@PathVariable Long id) {
-        return notificationService.getAllNotificationsSentByUserId(id);
+    public ResponseEntity<?> getNotificationsSentByUserId(@PathVariable Long id) {
+        try {
+            List<Notification> notifications = notificationService.getAllNotificationsSentByUserId(id);
+            return ResponseEntity.ok(notifications);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/")
-    public Notification createNotification(@RequestBody NotificationCreateBody notification) {
-        return notificationService.createNotification(notification);
+    public ResponseEntity<?> createNotification(@RequestBody NotificationCreateBody notification) {
+        try {
+            Notification createdNotification = notificationService.createNotification(notification);
+            return ResponseEntity.ok(createdNotification);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteNotification(@PathVariable Long id) {
-        notificationService.deleteNotification(id);
+    public ResponseEntity<?> deleteNotification(@PathVariable Long id) {
+        try {
+            notificationService.deleteNotification(id);
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

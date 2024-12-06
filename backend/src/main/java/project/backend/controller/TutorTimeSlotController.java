@@ -1,5 +1,6 @@
 package project.backend.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,18 +25,33 @@ public class TutorTimeSlotController {
     }
 
     @GetMapping("/{id}")
-    public TutorTimeSlot getTutorTimeSlot(@PathVariable Long id) {
-        return tutorTimeSlotService.getTutorTimeSlotById(id)
-            .orElse(null);
+    public ResponseEntity<?> getTutorTimeSlot(@PathVariable Long id) {
+        try {
+            TutorTimeSlot tutorTimeSlot = tutorTimeSlotService.getTutorTimeSlotById(id)
+                .orElse(null);
+            return ResponseEntity.ok(tutorTimeSlot);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/")
-    public TutorTimeSlot createTutorTimeSlot(@RequestBody TutorTimeSlot tutorTimeSlot) {
-        return tutorTimeSlotService.saveTutorTimeSlot(tutorTimeSlot);
+    public ResponseEntity<?> createTutorTimeSlot(@RequestBody TutorTimeSlot tutorTimeSlot) {
+        try {
+            TutorTimeSlot savedTutorTimeSlot = tutorTimeSlotService.saveTutorTimeSlot(tutorTimeSlot);
+            return ResponseEntity.ok(savedTutorTimeSlot);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTutorTimeSlot(@PathVariable Long id) {
-        tutorTimeSlotService.deleteTutorTimeSlotById(id);
+    public ResponseEntity<?> deleteTutorTimeSlot(@PathVariable Long id) {
+        try {
+            tutorTimeSlotService.deleteTutorTimeSlotById(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
