@@ -81,8 +81,10 @@ public class AccountService {
 
             newTutor.setTutoringSubjects(body.tutorSubjects);
             newTutor.setStudent(savedStudent);
+            newTutor.setProfileDescription(body.tutorProfileDescription);
 
             savedStudent.setTutor(newTutor);
+
             tutorRepository.save(newTutor);
         }
         // if tutee role is selected, create a new tutee object
