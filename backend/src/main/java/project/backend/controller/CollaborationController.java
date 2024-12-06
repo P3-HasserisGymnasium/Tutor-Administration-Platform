@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import project.backend.controller_bodies.collaboration_bodies.CollaborationCreateBody;
 import project.backend.model.Collaboration;
+import project.backend.model.Feedback;
+import project.backend.model.SubjectEnum;
+import project.backend.model.RoleEnum;
 import project.backend.service.CollaborationService;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -55,4 +58,42 @@ public class CollaborationController {
     public void deleteCollaboration(@PathVariable Long id) {
         collaborationService.deleteCollaborationById(id);
     }
+
+    @PostMapping("/request-suggestion/{id}")
+    public void requestCollaborationSuggestion(@PathVariable Long tuteeId, @RequestBody SubjectEnum subject){
+        collaborationService.requestCollaborationSuggestion(tuteeId, subject);
+    }
+
+    @PostMapping("/submit-suggestion/{collaborationId}/{tutorId}")
+    public void submitCollaborationSuggestion(@PathVariable Long collaborationId, @PathVariable Long tutorId){
+        collaborationService.submitCollaborationSuggestion(collaborationId, tutorId);
+    }
+
+    @PostMapping("/accept/{collaborationId}")
+    public void acceptCollaboration(@PathVariable Long collaborationId, @RequestBody RoleEnum role){
+        collaborationService.acceptCollaboration(collaborationId, role);
+    }
+
+    @PostMapping("reject/{collaborationId}")
+    public void rejectCollaboration(@PathVariable Long collaborationId, @RequestBody RoleEnum role){
+        collaborationService.rejectCollaboration(collaborationId, role);
+    }
+
+    @PostMapping("/terminate/{collaborationId}")
+    public void terminateCollaboration(@PathVariable Long collaborationId, @RequestBody String terminationReason) {
+        collaborationService.terminateCollaboration(collaborationId, terminationReason);
+    }
+
+    @PostMapping("/establish/{collaborationId}")
+    public void establishCollaboration(@PathVariable Long collaborationId) {
+        collaborationService.establishCollaboration(collaborationId);
+    }
+
+    @PostMapping("/feedback/{collaborationId}/{tuteeId}")
+        public void submitFeedback(@PathVariable Long collaborationId, @PathVariable Long tuteeId, @RequestBody Feedback feedback) {
+        collaborationService.submitFeedback(collaborationId, tuteeId, feedback);
+}
+
+
+
 }
