@@ -45,33 +45,35 @@ public class JWTAuthenticationFilter implements Filter {
         Cookie[] cookies = httpRequest.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("Bearer".equals(cookie.getName())) {
-                    jwt = cookie.getValue();
-                    if (userID != null) {
+                switch (cookie.getName()) {
+                    case "Bearer":
+                        jwt = cookie.getValue();
                         break;
-                    }
-                } else if ("userState".equals(cookie.getName())) {
-                    userID = cookie.getValue();
-                    if (jwt != null) {
+                    case "userState":
+                        userID = cookie.getValue();
                         break;
-                    }
+                }
+                if (jwt != null && userID != null) {
+                    break;
                 }
             }
         }
 
-        if (jwt != null) {
-            try {
-                if (validateToken(jwt, userID)) {
-                    chain.doFilter(request, response);
-                    return;
-                }
-            } catch (Exception e) {
-                httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired or invalid");
+        if (jwt == null) {
+            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization cookie missing or invalid");
+            return;
+        }
+
+        try {
+            if (validateToken(jwt, userID)) {
+                chain.doFilter(request, response);
                 return;
             }
+        } catch (Exception e) {
+            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired or invalid");
+            return;
         }
 
-        httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization cookie missing or invalid");
     }
 
     @Override
