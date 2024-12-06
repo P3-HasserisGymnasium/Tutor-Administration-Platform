@@ -7,14 +7,62 @@ import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "~/api/authentication/useAuth";
+<<<<<<< HEAD
+import { useBreakpoints } from "~/utilities/helperFunctions";
+
+export default function SpeedDialMenu() {
+	const { logout } = useAuth();
+=======
 import { Role } from "~/types/data_types";
 
 export default function SpeedDialMenu() {
 	const { logout, userState } = useAuth();
+>>>>>>> origin/main
 	const [open, setOpen] = useState(false);
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 	const navigate = useNavigate();
+<<<<<<< HEAD
+	const rolePrefix = useLocation().pathname.includes("tutor") ? "/tutor" : "/tutee";
+	const { isShort } = useBreakpoints();
+	const actions = [
+		{
+			icon: <AccountBoxIcon />,
+			name: "Edit Profile",
+			route: `${rolePrefix}/profile`,
+		},
+		{ icon: <CircleNotificationsIcon />, name: "View Notifications", route: `${rolePrefix}/notifications` },
+		{ icon: <SupervisedUserCircleIcon />, name: "Apply to become tutor", route: `${rolePrefix}/tutor-application` },
+		{
+			icon: <PersonIcon />,
+			name: `Go to ${rolePrefix == "/tutee" ? "Tutor page" : "Tutee page"}`,
+			route: rolePrefix == "/tutee" ? "/tutor" : "/tutee",
+		},
+		{ icon: <LogoutIcon />, name: "Log out", route: "/", logout: true },
+	];
+
+	return (
+		<Box sx={{ height: 730, display: "flex", zIndex: 1000, justifyContent: "end", width: "100px", marginRight: 3 }}>
+			{" "}
+			<Backdrop open={open} />
+			<SpeedDial
+				ariaLabel="SpeedDial tooltip example"
+				sx={{
+					position: "absolute",
+					top: 13,
+
+					"& .MuiSpeedDial-fab": {
+						backgroundColor: "white",
+						"&:hover": {
+							backgroundColor: "white",
+						},
+					},
+
+					"& .MuiSpeedDialIcon-openIcon": {
+						backgroundColor: "white",
+					},
+
+=======
 	const location = useLocation();
 	const rolePrefix = location.pathname.startsWith("/tutor") ? "/tutor" : "/tutee";
 
@@ -90,6 +138,7 @@ export default function SpeedDialMenu() {
 						backgroundColor: "white",
 					},
 
+>>>>>>> origin/main
 					"& .MuiAvatar-root": {
 						backgroundColor: "white",
 						color: "black",
@@ -98,7 +147,11 @@ export default function SpeedDialMenu() {
 						},
 					},
 				}}
+<<<<<<< HEAD
+				FabProps={{ size: isShort ? "medium" : "large" }}
+=======
 				FabProps={{ size: "large" }}
+>>>>>>> origin/main
 				icon={<Avatar variant="circular">P3</Avatar>}
 				openIcon={<Avatar variant="circular">P3</Avatar>}
 				direction="down"
@@ -107,6 +160,42 @@ export default function SpeedDialMenu() {
 				onOpen={handleOpen}
 				open={open}
 			>
+<<<<<<< HEAD
+				{actions.map((action) => (
+					<SpeedDialAction
+						key={action.name}
+						sx={{
+							mb: 1,
+							"& .MuiSpeedDialAction-staticTooltipLabel": {
+								width: "11rem",
+								color: "black",
+								fontWeight: "bold",
+							},
+						}}
+						FabProps={{
+							size: "large",
+							sx: {
+								"& .MuiSvgIcon-root": {
+									height: "1.5em",
+									width: "1.5em",
+								},
+							},
+						}}
+						icon={action.icon}
+						tooltipTitle={action.name}
+						tooltipOpen
+						onClick={() => {
+							if (action.logout) {
+								logout();
+								navigate("/login");
+								return;
+							}
+							navigate(action.route);
+							handleClose();
+						}}
+					/>
+				))}
+=======
 				{actions.map(
 					(action) =>
 						action != null && ( //Check value not nul, since may not be tutor or tutee
@@ -144,6 +233,7 @@ export default function SpeedDialMenu() {
 							/>
 						)
 				)}
+>>>>>>> origin/main
 			</SpeedDial>
 		</Box>
 	);

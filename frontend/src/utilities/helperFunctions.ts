@@ -7,7 +7,6 @@ import tuteeTheme from "~/themes/tuteeTheme";
 import tutorTheme from "~/themes/tutorTheme";
 import unauthenticatedAppTheme from "~/themes/unauthenticatedAppTheme";
 
-
 /**
  * @returns {string} the heading of the current page based on the pathname.
  */
@@ -64,17 +63,18 @@ export function useCurrentTheme(): Theme {
 export const useBreakpoints = (): {
 	isMobile: boolean;
 	isLaptop: boolean;
+	isShort: boolean;
 	hasScrollbar: boolean;
 } => {
 	const isMobile = useMediaQuery("(max-width:664px)"); // 664 because of scrollbar appearance
 	const isLaptop = useMediaQuery("(max-width:1920px)");
+	const isShort = useMediaQuery("(max-height: 900px)");
 	const [hasScrollbar, setHasScrollbar] = useState(false);
 
 	// if the client height is less than the inner height, then the scrollbar is visible, otherwise it is not.
 	const checkScrollbar = () => {
 		const innerHeightPixels = window.innerHeight;
-		const documentElementClientHeightPixels =
-			document.documentElement.clientHeight;
+		const documentElementClientHeightPixels = document.documentElement.clientHeight;
 		setHasScrollbar(innerHeightPixels > documentElementClientHeightPixels);
 	};
 	useEffect(() => {
@@ -83,7 +83,7 @@ export const useBreakpoints = (): {
 		return () => window.removeEventListener("resize", checkScrollbar);
 	}, []);
 
-	return { isMobile, isLaptop, hasScrollbar };
+	return { isMobile, isLaptop, hasScrollbar, isShort };
 };
 
 /**
