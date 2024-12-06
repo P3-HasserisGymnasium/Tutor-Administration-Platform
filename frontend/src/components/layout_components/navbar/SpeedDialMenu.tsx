@@ -16,7 +16,7 @@ export default function SpeedDialMenu() {
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const rolePrefix = location.pathname.includes("tutor") ? "/tutor" : "/tutee";
+  const rolePrefix = location.pathname.startsWith("/tutor") ? "/tutor" : "/tutee";
 
   const isTutee = userState.role?.includes(Role.Enum.Tutee);
   const isTutor = userState.role?.includes(Role.Enum.Tutor);
