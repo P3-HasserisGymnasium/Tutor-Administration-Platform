@@ -1,6 +1,5 @@
 package project.backend.utilities;
 
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -13,14 +12,18 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-import static project.backend.utilities.JWTUtil.extractClaims;
-import static project.backend.utilities.JWTUtil.isTokenExpired;
+import static project.backend.utilities.JWTUtil.validateToken;
 
 public class JWTAuthenticationFilter implements Filter {
 
+    private boolean isPublicRoute(String path, String method) {
+        // Match specific routes and methods
+        return (path.equals("/api/account/login") && "POST".equalsIgnoreCase(method)) || 
+               (path.equals("/api/account/") && "POST".equalsIgnoreCase(method));     
+    }
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        // Initialization logic if needed
     }
 
     @Override
@@ -29,49 +32,51 @@ public class JWTAuthenticationFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        // Retrieve JWT from cookies
+        String requestPath = httpRequest.getRequestURI();
+        String requestMethod = httpRequest.getMethod();
+
+        if (isPublicRoute(requestPath, requestMethod)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String jwt = null;
+        String userID = null;
         Cookie[] cookies = httpRequest.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("JWT".equals(cookie.getName())) {
-                    jwt = cookie.getValue();
+                switch (cookie.getName()) {
+                    case "Bearer":
+                        jwt = cookie.getValue();
+                        break;
+                    case "user":
+                        userID = cookie.getValue();
+                        break;
+                }
+                if (jwt != null && userID != null) {
                     break;
                 }
             }
         }
 
-        // If JWT is found, validate it
-        if (jwt != null) {
-            Claims claims = extractClaims(jwt);
-            if (claims != null && !isTokenExpired(jwt)) {
-                // Set the user information in the request attribute
-                // String user_id = claims.getSubject();
-                // Fetch the user information
-                // userService.getUserById(user_id).ifPresent(user -> httpRequest.setAttribute("user", user));
-                // Can now be used via controllers like so: 
-                    // @RestController
-                /*  @GetMapping("/api/user")
-                    public String getUserInfo(@RequestAttribute("user") User user) {
-                        // Access the user object that was set in the JWT filter
-                        return "User Info: " + user.toString();
-                    } */
-
-            } else {
-                httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
-                return;
-            }
-        } else {
+        if (jwt == null) {
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization cookie missing or invalid");
             return;
         }
 
-        // Continue processing the request
-        chain.doFilter(request, response);
+        try {
+            if (validateToken(jwt, userID)) {
+                chain.doFilter(request, response);
+                return;
+            }
+        } catch (Exception e) {
+            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired or invalid");
+            return;
+        }
+
     }
 
     @Override
     public void destroy() {
-        // Cleanup logic if needed
     }
 }

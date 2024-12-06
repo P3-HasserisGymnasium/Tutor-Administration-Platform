@@ -5,54 +5,74 @@ import { UserState } from "~/types/entity_types";
 import { Role, Subject } from "~/types/data_types";
 
 interface AuthProviderProps {
-  children: ReactNode;
+	children: ReactNode;
 }
 
+const setCookie = (name: string, value: string, days: number) => {
+	const expires = new Date(Date.now() + days * 864e5).toUTCString();
+	document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+};
+
+const getCookie = (name: string) => {
+	return document.cookie
+		.split("; ")
+		.find((row) => row.startsWith(name + "="))
+		?.split("=")[1];
+};
+
+const deleteCookie = (name: string) => {
+	document.cookie = `${name}=; path=/; max-age=0`;
+};
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [userState, setUserState] = useState<UserState>(initialUserState);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [userState, setUserState] = useState<UserState>(initialUserState);
+	const [isAuthenticated, setIsAuthenticated] = useState(getCookie("isAuthenticated") === "true");
 
-  // Helper to get the Bearer token
-  const getToken = () => {
-    return document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("Bearer="))
-      ?.split("=")[1];
-  };
+	const getToken = () => getCookie("Bearer");
 
-  const login = (userData: UserState, token: string) => {
-    setIsAuthenticated(true);
-    setUserState({
-      id: userData.id,
-      name: userData.name,
-      role: userData.role?.map((role) => Role.Enum[role as keyof typeof Role.Enum]) || null,
-      email: userData.email,
-      year_group: userData.year_group as UserState["year_group"],
-      tutoring_subjects:
-        userData.tutoring_subjects?.map((subject) => Subject.Enum[subject as keyof typeof Subject.Enum]) || null,
-    });
-    document.cookie = `Bearer=${token}; path=/; max-age=1800;`;
-    localStorage.setItem("user", JSON.stringify(userData));
-  };
+	const login = (userData: UserState, token: string) => {
+		setIsAuthenticated(true);
+		setUserState({
+			id: userData.id,
+			name: userData.name,
+			role: userData.role?.map((role) => Role.Enum[role as keyof typeof Role.Enum]) || null,
+			email: userData.email,
+			year_group: userData.year_group as UserState["year_group"],
+			tutoring_subjects:
+				userData.tutoring_subjects?.map((subject) => Subject.Enum[subject as keyof typeof Subject.Enum]) || null,
+			is_administrator: userData.is_administrator,
+		});
+		setCookie("Bearer", token, 1);
+		setCookie("user", JSON.stringify(userData), 1);
+		setCookie("isAuthenticated", JSON.stringify(true), 1);
+	};
 
-  const logout = () => {
-    setUserState(initialUserState);
-    setIsAuthenticated(false);
-    document.cookie = "Bearer=; path=/; max-age=0;";
-    localStorage.removeItem("user");
-  };
+	const logout = () => {
+		setUserState(initialUserState);
+		setIsAuthenticated(false);
+		deleteCookie("Bearer");
+		deleteCookie("user");
+		deleteCookie("isAuthenticated");
+	};
 
-  useEffect(() => {
-    const token = getToken();
-    const storedUser = localStorage.getItem("user");
+	useEffect(() => {
+		const token = getToken();
+		const storedUser = getCookie("user");
+		const storedIsAuthenticated = getCookie("isAuthenticated");
 
-    if (token && storedUser) {
-      setUserState(JSON.parse(storedUser));
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
-  }, []); // Run once when the component mounts
+		if (token && storedUser && storedIsAuthenticated) {
+			try {
+				const parsedUser = JSON.parse(decodeURIComponent(storedUser));
+				setUserState(parsedUser);
+				setIsAuthenticated(true);
+			} catch (error) {
+				console.error("Failed to parse stored user data:", error);
+				setIsAuthenticated(false);
+			}
+		} else {
+			setIsAuthenticated(false);
+		}
+	}, []);
 
-  return <AuthContext.Provider value={{ userState, isAuthenticated, login, logout }}>{children}</AuthContext.Provider>;
+	return <AuthContext.Provider value={{ userState, isAuthenticated, login, logout }}>{children}</AuthContext.Provider>;
 };

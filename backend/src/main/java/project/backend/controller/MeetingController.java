@@ -1,5 +1,7 @@
 package project.backend.controller;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +40,6 @@ public class MeetingController {
             .orElse(null);
     }
 
-    /*
     @PostMapping("/")
     public Meeting createMeeting(@RequestBody Meeting meeting) {
         return meetingService.saveMeeting(meeting);
