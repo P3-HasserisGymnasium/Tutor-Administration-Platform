@@ -110,8 +110,9 @@ public class CollaborationService {
         collaboration.setTuteeState(CollaborationState.PENDING);
 
         Long tuteeId = collaboration.getTutee().getId();
-        notifyTutee(tuteeId, tutorId, collaborationId);
-        notifyTutor(tutorId, tuteeId, collaborationId);
+
+        notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId, EntityType.COLLABORATION);
+        notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId, EntityType.COLLABORATION);
 
         collaborationRepository.save(collaboration);  
     }
@@ -142,7 +143,10 @@ public class CollaborationService {
              // Dynamically determine the sender based on the role
             Long senderId = (role == RoleEnum.Tutee) ? collaboration.getTutee().getId() : collaboration.getTutor().getId();
             EntityType senderType = (role == RoleEnum.Tutee) ? EntityType.TUTEE : EntityType.TUTOR;
-            notifyAdmin(senderId, senderType, collaborationId, EntityType.COLLABORATION);
+
+            Administrator admin = administratorRepository.findFirstBy().orElseThrow(() -> new IllegalStateException("Administrator not found"));
+
+            notificationService.sendNotification(senderId, senderType, admin.getId(), EntityType.ADMIN,collaborationId, EntityType.COLLABORATION);
         }
 
         collaborationRepository.save(collaboration);
@@ -156,19 +160,22 @@ public class CollaborationService {
 
 
         if(collaboration.getAdminState() == CollaborationState.REJECTED){
-            notifyTutee(tuteeId, tutorId, collaborationId);
-            notifyTutor(tutorId, tuteeId, collaborationId);
             collaboration.setState(CollaborationState.REJECTED);
+
+            notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId, EntityType.COLLABORATION);
+            notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId, EntityType.COLLABORATION);
+
         } else if (role == RoleEnum.Tutee){
             collaboration.setTuteeState(CollaborationState.REJECTED);
             collaboration.setState(CollaborationState.REJECTED);
 
-            notifyTutor(tutorId, tuteeId, collaborationId);
+            notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId, EntityType.COLLABORATION);
+
         } else if (role == RoleEnum.Tutor){
             collaboration.setTutorState(CollaborationState.REJECTED);
             collaboration.setState(CollaborationState.REJECTED);
 
-            notifyTutee(tuteeId, tutorId, collaborationId);
+            notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId, EntityType.COLLABORATION);
         }else{
             throw new IllegalArgumentException("Invalid role specified.");
         } 
@@ -191,14 +198,17 @@ public class CollaborationService {
                 collaboration.setTuteeState(CollaborationState.ACCEPTED);
                 collaboration.setTutee(tutee);
                 collaboration.setTutorState(CollaborationState.WAITING_FOR_TUTOR);
-                notifyTutor(tutorId, tuteeId, collaborationId);
+
+                notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId, EntityType.COLLABORATION);
+
             }
             case Tutor -> {
                 Tutor tutor = roleService.getTutorById(tutorId);
                 collaboration.setTuteeState(CollaborationState.ACCEPTED);
                 collaboration.setTutor(tutor);
                 collaboration.setTuteeState(CollaborationState.WAITING_FOR_TUTEE);
-                notifyTutee(tuteeId, tutorId, collaborationId);
+
+                notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId, EntityType.COLLABORATION);
             }
             default -> throw new IllegalArgumentException("Invalid role specified.");
         }
@@ -244,52 +254,11 @@ public class CollaborationService {
         Tutor tutor = collaboration.getTutor();
 
         tutor.getFeedbacks().add(feedback); 
-        notifyAdmin(tuteeId, EntityType.TUTEE, feedback.getId(), EntityType.FEEDBACK);
-    }
-
-
-    private void notifyTutee(Long senderId, Long receiverId, Long collaborationId) {
-        NotificationCreateBody notificationBody = new NotificationCreateBody();
-        notificationBody.sender_id = senderId;
-        notificationBody.sender_type = EntityType.TUTOR; 
-        notificationBody.receiver_id = receiverId;
-        notificationBody.receiver_type = EntityType.TUTEE; 
-        notificationBody.context_id = collaborationId;
-        notificationBody.context_type = EntityType.COLLABORATION;
-        notificationBody.state = NotificationState.UNREAD;
-    
-        notificationService.createNotification(notificationBody);
-    }
-
-    private void notifyTutor(Long senderId, Long receiverId, Long collaborationId) {
-        NotificationCreateBody notificationBody = new NotificationCreateBody();
-        notificationBody.sender_id = senderId;
-        notificationBody.sender_type = EntityType.TUTEE;
-        notificationBody.receiver_id = receiverId;
-        notificationBody.receiver_type = EntityType.TUTOR; 
-        notificationBody.context_id = collaborationId;
-        notificationBody.context_type = EntityType.COLLABORATION;
-        notificationBody.state = NotificationState.UNREAD;
-    
-        notificationService.createNotification(notificationBody);
-    }
-
-
-    private void notifyAdmin(Long senderId, EntityType senderType, Long contextId, EntityType contextType) {
-        NotificationCreateBody notificationBody = new NotificationCreateBody();
 
         Administrator admin = administratorRepository.findFirstBy().orElseThrow(() -> new IllegalStateException("Administrator not found"));
-
-        notificationBody.sender_id = senderId;
-        notificationBody.sender_type = senderType;
-        notificationBody.receiver_id = admin.getId();
-        notificationBody.receiver_type = EntityType.ADMIN; 
-        notificationBody.context_id =  contextId;
-        notificationBody.context_type = contextType;
-        notificationBody.state = NotificationState.UNREAD;
     
-        notificationService.createNotification(notificationBody);
-        
+        notificationService.sendNotification(tuteeId, EntityType.TUTEE, admin.getId(), EntityType.ADMIN, feedback.getId(), EntityType.FEEDBACK);
     }
+
 
 }

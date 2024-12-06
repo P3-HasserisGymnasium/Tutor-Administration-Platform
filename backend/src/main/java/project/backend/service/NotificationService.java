@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.notification_controller.NotificationCreateBody;
 import project.backend.model.Notification;
+import project.backend.model.EntityType;
 import project.backend.model.NotificationState;
 import project.backend.repository.NotificationRepository;
 
@@ -38,6 +39,20 @@ public class NotificationService {
         notification.setState(body.state);
 
         return notificationRepository.save(notification);
+    }
+
+    public void sendNotification(Long senderId, EntityType senderType, Long receiverId, EntityType receiverType,
+                                  Long contextId, EntityType contextType) {
+        NotificationCreateBody body = new NotificationCreateBody();
+        body.sender_id = senderId;
+        body.sender_type = senderType;
+        body.receiver_id = receiverId;
+        body.receiver_type = receiverType;
+        body.context_id = contextId;
+        body.context_type = contextType;
+        body.state = NotificationState.UNREAD;
+
+        createNotification(body);
     }
 
     public List<Notification> getAllNotifications() {
