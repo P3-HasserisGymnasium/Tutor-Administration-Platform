@@ -77,13 +77,15 @@ public class CollaborationService {
     }
 
     // request admin for help
-    public void requestCollaborationSuggestion(Long tutteeId, SubjectEnum subject){
-        Tutee tutee = roleService.getStudentById(tutteeId).getTutee();
-        Collaboration collaboration = new Collaboration();
-        collaboration.setTutee(tutee);
-        collaboration.setState(CollaborationState.PENDING);
+    public void requestCollaborationSuggestion(Long tuteeId, SubjectEnum subject){
+        Tutee tutee = roleService.getStudentById(tuteeId).getTutee();
 
-        collaborationRepository.save(collaboration);
+        CollaborationCreateBody createBody = new CollaborationCreateBody();
+        createBody.tutee_id = tuteeId;
+        createBody.state = CollaborationState.PENDING;
+        createBody.subject = subject;
+
+        createCollaboration(createBody);
     }
 
 
@@ -158,29 +160,29 @@ public class CollaborationService {
     // request specififc tutor or tutor request tutee through a post
     public void requestCollaboration(Long tuteeId, Long tutorId, RoleEnum collabRequester, SubjectEnum subject){
 
-        Collaboration collaboration = new Collaboration();
-        collaboration.setSubject(subject);
-        collaboration.setState(CollaborationState.PENDING);
+        CollaborationCreateBody createBody = new CollaborationCreateBody();
+        createBody.state = CollaborationState.PENDING;
+        createBody.subject = subject;
 
         switch(collabRequester){
             case Tutee -> {
                 Tutee tutee = roleService.getTuteeById(tuteeId);
-                collaboration.setTuteeState(CollaborationState.ACCEPTED);
-                collaboration.setTutee(tutee);
-                collaboration.setTutorState(CollaborationState.WAITING_FOR_TUTOR);
+                createBody.state = CollaborationState.ACCEPTED;
+                createBody.tutee_id = tutee.getId();
+                createBody.tutorState = CollaborationState.WAITING_FOR_TUTOR;
                 //TODO: notify tutor
             }
             case Tutor -> {
                 Tutor tutor = roleService.getTutorByUserId(tutorId);
-                collaboration.setTuteeState(CollaborationState.ACCEPTED);
-                collaboration.setTutor(tutor);
-                collaboration.setTuteeState(CollaborationState.WAITING_FOR_TUTEE);
+                createBody.state = CollaborationState.ACCEPTED;
+                createBody.tutor_id = tutor.getId();
+                createBody.tutorState = CollaborationState.WAITING_FOR_TUTEE;
                 //TODO: notify tutor
             }
             default -> throw new IllegalArgumentException("Invalid role specified.");
         }
 
-        collaborationRepository.save(collaboration);
+        createCollaboration(createBody);
         // notify admin 
     }
 
