@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.collaboration_bodies.CollaborationCreateBody;
+import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.model.Collaboration;
 import project.backend.model.EntityType;
 import project.backend.model.CollaborationState;
-import project.backend.model.NotificationState;
 import project.backend.model.Feedback;
 import project.backend.model.RoleEnum;
 import project.backend.model.SubjectEnum;
@@ -20,9 +20,6 @@ import project.backend.model.Tutor;
 import project.backend.model.Administrator;
 import project.backend.repository.CollaborationRepository;
 import project.backend.repository.AdministratorRepository;
-
-
-import project.backend.controller_bodies.notification_controller.NotificationCreateBody;
 
 
 @Service
@@ -87,17 +84,14 @@ public class CollaborationService {
         collaborationRepository.deleteById(id);
     }
 
-    // request admin for help
-    public void requestCollaborationSuggestion(Long tuteeId, SubjectEnum subject){
-        Tutee tutee = roleService.getStudentById(tuteeId).getTutee();
-
-        CollaborationCreateBody createBody = new CollaborationCreateBody();
-        createBody.tutee_id = tuteeId;
-        createBody.state = CollaborationState.PENDING;
-        createBody.subject = subject;
-
-        createCollaboration(createBody);
-    }
+    // this is very weird implemented, should receive a post body, and correctly fill out all the options.
+     public void requestCollaborationSuggestion(Long studentId, PostBody requestBody){
+        Collaboration collaboration = new Collaboration();
+        collaboration.setSubject(requestBody.subject);
+        collaboration.setState(CollaborationState.PENDING);
+        collaboration.setTutee(roleService.getTuteeById(studentId));
+        collaborationRepository.save(collaboration);
+    } 
 
 
     // admin provides collaboration suggestion

@@ -1,7 +1,5 @@
 package project.backend.controller;
 
-import java.util.List;
-
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +8,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PostMapping;
 
 
 import project.backend.model.Meeting;
@@ -35,11 +32,11 @@ public class MeetingController {
     }
 
     @GetMapping("/all/{id}")
-    public Meeting[] getMeetings(@PathVariable Long id) {
-        return meetingService.getMeetingsById(id)
-            .orElse(null);
+    public Iterable<Meeting> getMeetings(@PathVariable Long id) {
+        return meetingService.getMeetingsById(id);
     }
 
+    /* 
     @PostMapping("/")
     public Meeting createMeeting(@RequestBody Meeting meeting) {
         return meetingService.saveMeeting(meeting);

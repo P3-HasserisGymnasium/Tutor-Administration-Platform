@@ -61,6 +61,11 @@ public class RoleService {
             .getTutor();
     }
 
+    public Tutor getTutorById(Long tutorId){
+        return tutorRepository.findById(tutorId)
+            .orElseThrow(() -> new IllegalArgumentException("Tutor not found with ID: " + tutorId));
+    }
+
     public Student getStudentById(Long id) {
         Optional<Student> studentOpt = studentRepository.findById(id);
 

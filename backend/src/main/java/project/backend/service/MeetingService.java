@@ -1,7 +1,6 @@
 package project.backend.service;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +8,7 @@ import org.springframework.stereotype.Service;
 
 import project.backend.model.Meeting;
 import project.backend.model.MeetingEnum;
-import project.backend.model.Collaboration;
 import project.backend.model.EntityType;
-import project.backend.model.NotificationType;
-import project.backend.model.RoleEnum;
 import project.backend.repository.MeetingRepository;
 
 @Service
@@ -33,7 +29,11 @@ public class MeetingService {
         return meetingRepository.findById(id);
     }
 
-    public List<Meeting> getMeetingsByCollaborationId(Long collaborationId) {
+    public Iterable<Meeting> getMeetingsById(Long id){
+        return meetingRepository.findAllById(null);
+    }
+
+    public Iterable<Meeting>  getMeetingsByCollaborationId(Long collaborationId) {
         return meetingRepository.findMeetingsByCollaborationId(collaborationId);
     }
 
@@ -41,7 +41,7 @@ public class MeetingService {
         return meetingRepository.save(meeting);
     }
 
-    public Meeting requestMeeting(Meeting meetingParam) { //TODO: needs other input eventually, ask thomas for params
+    public Meeting requestMeeting(Meeting meetingParam) { // TODO: needs other input eventually, ask thomas for params
         Meeting meeting = new Meeting(); //TODO: needs params to be set but w/e for now
         meeting.setMeetingState(MeetingEnum.PENDING);
 
