@@ -82,6 +82,7 @@ public class AccountService {
             newTutor.setTutoringSubjects(body.tutorSubjects);
             newTutor.setStudent(savedStudent);
             newTutor.setProfileDescription(body.tutorProfileDescription);
+            newTutor.setFreeTimeSlots(body.tutorTimeslots);
 
             savedStudent.setTutor(newTutor);
 
