@@ -5,6 +5,6 @@ import java.sql.Timestamp;
 
 
 public class TimeCreateBody {
-    public Timestamp start_time;
-    public Timestamp end_time;
+    public String start_time;
+    public String end_time;
 }
