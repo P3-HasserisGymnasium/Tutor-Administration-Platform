@@ -9,13 +9,20 @@ import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.collaboration_bodies.CollaborationCreateBody;
 import project.backend.model.Collaboration;
+import project.backend.model.EntityType;
 import project.backend.model.CollaborationState;
+import project.backend.model.NotificationState;
 import project.backend.model.Feedback;
 import project.backend.model.RoleEnum;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.model.Tutor;
+import project.backend.model.Administrator;
 import project.backend.repository.CollaborationRepository;
+import project.backend.repository.AdministratorRepository;
+
+
+import project.backend.controller_bodies.notification_controller.NotificationCreateBody;
 
 
 @Service
@@ -25,6 +32,9 @@ public class CollaborationService {
     final CollaborationRepository collaborationRepository;
 
     @Autowired
+    final AdministratorRepository administratorRepository;
+
+    @Autowired
     final NotificationService notificationService;
 
     @Autowired
@@ -32,10 +42,11 @@ public class CollaborationService {
 
 
 
-    public CollaborationService(CollaborationRepository collaborationRepository, RoleService roleService, NotificationService notificationService) {
+    public CollaborationService(CollaborationRepository collaborationRepository, RoleService roleService, NotificationService notificationService, AdministratorRepository administratorRepository) {
         this.collaborationRepository = collaborationRepository;
         this.roleService = roleService;
         this.notificationService = notificationService;
+        this.administratorRepository = administratorRepository;
     }
 
     public Collaboration getCollaborationById(Long id){
@@ -100,13 +111,15 @@ public class CollaborationService {
         collaboration.setTutorState(CollaborationState.PENDING);
         collaboration.setTuteeState(CollaborationState.PENDING);
 
-        // notify tutee
-        // notify tutor
-        collaborationRepository.save(collaboration);
-        
+        Long tuteeId = collaboration.getTutee().getId();
+
+        notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId, EntityType.COLLABORATION);
+        notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId, EntityType.COLLABORATION);
+
+        collaborationRepository.save(collaboration);  
     }
 
-
+   
     public void acceptCollaboration(Long collaborationId, RoleEnum role){
 
         Collaboration collaboration = getCollaborationById(collaborationId);
@@ -125,9 +138,17 @@ public class CollaborationService {
     
         if(collaboration.getTutorState() == CollaborationState.ACCEPTED && 
             collaboration.getTuteeState() == CollaborationState.ACCEPTED){
+            
 
             collaboration.setState(CollaborationState.WAITING_FOR_ADMIN);
-            // notify admin
+
+             // Dynamically determine the sender based on the role
+            Long senderId = (role == RoleEnum.Tutee) ? collaboration.getTutee().getId() : collaboration.getTutor().getId();
+            EntityType senderType = (role == RoleEnum.Tutee) ? EntityType.TUTEE : EntityType.TUTOR;
+
+            Administrator admin = administratorRepository.findFirstBy().orElseThrow(() -> new IllegalStateException("Administrator not found"));
+
+            notificationService.sendNotification(senderId, senderType, admin.getId(), EntityType.ADMIN,collaborationId, EntityType.COLLABORATION);
         }
 
         collaborationRepository.save(collaboration);
@@ -136,19 +157,27 @@ public class CollaborationService {
     public void rejectCollaboration(Long collaborationId, RoleEnum role){
         Collaboration collaboration = getCollaborationById(collaborationId);
 
+        Long tuteeId =  collaboration.getTutee().getId();
+        Long tutorId = collaboration.getTutor().getId();
+
 
         if(collaboration.getAdminState() == CollaborationState.REJECTED){
-            // notify tutor 
-            // notify tutee
             collaboration.setState(CollaborationState.REJECTED);
+
+            notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId, EntityType.COLLABORATION);
+            notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId, EntityType.COLLABORATION);
+
         } else if (role == RoleEnum.Tutee){
             collaboration.setTuteeState(CollaborationState.REJECTED);
             collaboration.setState(CollaborationState.REJECTED);
-            // notify tutor
+
+            notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId, EntityType.COLLABORATION);
+
         } else if (role == RoleEnum.Tutor){
             collaboration.setTutorState(CollaborationState.REJECTED);
             collaboration.setState(CollaborationState.REJECTED);
-            // notify tutee
+
+            notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId, EntityType.COLLABORATION);
         }else{
             throw new IllegalArgumentException("Invalid role specified.");
         } 
@@ -160,30 +189,33 @@ public class CollaborationService {
     // request specififc tutor or tutor request tutee through a post
     public void requestCollaboration(Long tuteeId, Long tutorId, RoleEnum collabRequester, SubjectEnum subject){
 
-        CollaborationCreateBody createBody = new CollaborationCreateBody();
-        createBody.state = CollaborationState.PENDING;
-        createBody.subject = subject;
+        Collaboration collaboration = new Collaboration();
+        collaboration.setSubject(subject);
+        collaboration.setState(CollaborationState.PENDING);
+        Long collaborationId = collaboration.getId();
 
         switch(collabRequester){
             case Tutee -> {
                 Tutee tutee = roleService.getTuteeById(tuteeId);
-                createBody.state = CollaborationState.ACCEPTED;
-                createBody.tutee_id = tutee.getId();
-                createBody.tutorState = CollaborationState.WAITING_FOR_TUTOR;
-                //TODO: notify tutor
+                collaboration.setTuteeState(CollaborationState.ACCEPTED);
+                collaboration.setTutee(tutee);
+                collaboration.setTutorState(CollaborationState.WAITING_FOR_TUTOR);
+
+                notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId, EntityType.COLLABORATION);
+
             }
             case Tutor -> {
-                Tutor tutor = roleService.getTutorByUserId(tutorId);
-                createBody.state = CollaborationState.ACCEPTED;
-                createBody.tutor_id = tutor.getId();
-                createBody.tutorState = CollaborationState.WAITING_FOR_TUTEE;
-                //TODO: notify tutor
+                Tutor tutor = roleService.getTutorById(tutorId);
+                collaboration.setTuteeState(CollaborationState.ACCEPTED);
+                collaboration.setTutor(tutor);
+                collaboration.setTuteeState(CollaborationState.WAITING_FOR_TUTEE);
+
+                notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId, EntityType.COLLABORATION);
             }
             default -> throw new IllegalArgumentException("Invalid role specified.");
         }
 
-        createCollaboration(createBody);
-        // notify admin 
+        collaborationRepository.save(collaboration);
     }
 
     public void terminateCollaboration(Long collaborationId, String terminationReason){
@@ -224,7 +256,11 @@ public class CollaborationService {
         Tutor tutor = collaboration.getTutor();
 
         tutor.getFeedbacks().add(feedback); 
-        // notify admin
+
+        Administrator admin = administratorRepository.findFirstBy().orElseThrow(() -> new IllegalStateException("Administrator not found"));
+    
+        notificationService.sendNotification(tuteeId, EntityType.TUTEE, admin.getId(), EntityType.ADMIN, feedback.getId(), EntityType.FEEDBACK);
     }
+
 
 }

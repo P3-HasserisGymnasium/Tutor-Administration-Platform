@@ -31,9 +31,10 @@ public class MeetingController {
             .orElse(null);
     }
 
-    @GetMapping("/forCollaboration/{id}")
-    public List<Meeting> getMeetings(@PathVariable Long id) {
-        return meetingService.getMeetingsByCollaborationId(id);
+    @GetMapping("/")
+    public Meeting[] getMeetings(@PathVariable Long id) {
+        return meetingService.getMeetingsById(id)
+            .orElse(null);
     }
 
     @PostMapping("/")
