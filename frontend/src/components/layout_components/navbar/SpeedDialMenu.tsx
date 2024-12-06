@@ -7,14 +7,20 @@ import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "~/api/authentication/useAuth";
+import { Role } from "~/types/data_types";
 
 export default function SpeedDialMenu() {
-  const { logout } = useAuth();
+  const { logout, userState } = useAuth();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
-  const rolePrefix = useLocation().pathname.includes("tutor") ? "/tutor" : "/tutee";
+  const location = useLocation();
+  const rolePrefix = location.pathname.includes("tutor") ? "/tutor" : "/tutee";
+
+  const isTutee = userState.role?.includes(Role.Enum.Tutee);
+  const isTutor = userState.role?.includes(Role.Enum.Tutor);
+
   const actions = [
     {
       icon: <AccountBoxIcon />,
@@ -22,12 +28,28 @@ export default function SpeedDialMenu() {
       route: `${rolePrefix}/profile`,
     },
     { icon: <CircleNotificationsIcon />, name: "View Notifications", route: `${rolePrefix}/notifications` },
-    { icon: <SupervisedUserCircleIcon />, name: "Apply to become tutor", route: `${rolePrefix}/tutor-application` },
-    {
-      icon: <PersonIcon />,
-      name: `Go to ${rolePrefix == "/tutee" ? "Tutor page" : "Tutee page"}`,
-      route: rolePrefix == "/tutee" ? "/tutor" : "/tutee",
-    },
+    ...(!isTutor ? [
+      {
+        icon: <SupervisedUserCircleIcon />,
+        name: "Apply to become tutor",
+        route: `${rolePrefix}/tutor-application`,
+      },
+    ] : []),
+    ...(isTutee && location.pathname != "/tutee" ? [
+      {
+        icon: <PersonIcon />,
+        name: `Go to Tutee page`,
+        route: "/tutee",
+      }
+    ] : []),
+    ...(isTutor && location.pathname != "/tutor" ? [
+      {
+        icon: <PersonIcon />,
+        name: `Go to Tutor page`,
+        route: "/tutor",
+      }
+    ] : []),
+    ,
     { icon: <LogoutIcon />, name: "Log out", route: "/", logout: true },
   ];
 
@@ -70,6 +92,7 @@ export default function SpeedDialMenu() {
         open={open}
       >
         {actions.map((action) => (
+          action != null && //Check value not nul, since may not be tutor or tutee
           <SpeedDialAction
             key={action.name}
             sx={{
