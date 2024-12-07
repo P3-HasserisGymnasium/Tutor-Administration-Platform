@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import project.backend.controller_bodies.collaboration_bodies.CollaborationCreateBody;
+import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.model.Collaboration;
 import project.backend.model.Feedback;
-import project.backend.model.SubjectEnum;
 import project.backend.model.RoleEnum;
 import project.backend.service.CollaborationService;
 
@@ -60,8 +60,8 @@ public class CollaborationController {
     }
 
     @PostMapping("/request-suggestion/{id}")
-    public void requestCollaborationSuggestion(@PathVariable Long tuteeId, @RequestBody SubjectEnum subject) {
-        collaborationService.requestCollaborationSuggestion(tuteeId, subject);
+    public void requestCollaborationSuggestion(@PathVariable Long id, PostBody requestBody) {
+        collaborationService.requestCollaborationSuggestion(id, requestBody);
     }
 
     @PostMapping("/submit-suggestion/{collaborationId}/{tutorId}")

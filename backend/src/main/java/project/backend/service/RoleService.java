@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.role_controller.TutorProfileResponse;
+import project.backend.model.Administrator;
 import project.backend.model.RoleEnum;
 import project.backend.model.Student;
 import project.backend.model.Tutee;
 import project.backend.model.Tutor;
+import project.backend.repository.AdministratorRepository;
 import project.backend.repository.RoleRepository;
 import project.backend.repository.StudentRepository;
 import project.backend.repository.TutorRepository;
@@ -27,10 +29,14 @@ public class RoleService {
     @Autowired
     final TutorRepository tutorRepository;
 
-    public RoleService(RoleRepository roleRepository, StudentRepository studentRepository, TutorRepository tutorRepository) {
+    @Autowired
+    final AdministratorRepository administratorRepository;
+
+    public RoleService(RoleRepository roleRepository, StudentRepository studentRepository, TutorRepository tutorRepository, AdministratorRepository administratorRepository) {
         this.roleRepository = roleRepository;
         this.studentRepository = studentRepository;
         this.tutorRepository = tutorRepository;
+        this.administratorRepository = administratorRepository;
     }
 
     public List<Student> getTutees() {
@@ -46,7 +52,8 @@ public class RoleService {
     }
 
     public Tutee getTuteeById(Long id){
-        Student student = getStudentById(id);
+        Student student = studentRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + id));
 
         Tutee tutee = student.getTutee();
         if (tutee == null){
@@ -57,8 +64,38 @@ public class RoleService {
     }
 
     public Tutor getTutorByUserId(Long userId){
-        return getStudentById(userId)
-            .getTutor();
+        Student student = studentRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + userId));
+        
+        Tutor tutor = student.getTutor();
+        if (tutor == null){
+            throw new IllegalArgumentException("This student is not assigned a Tutor");
+        }
+
+        return tutor;
+    }
+
+    public Tutee getTuteeByUserId(Long userId){
+
+        Student student = studentRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + userId));
+        
+        Tutee tutee = student.getTutee();
+        if (tutee == null){
+            throw new IllegalArgumentException("This student is not assigned a Tutee");
+        }
+
+        return tutee;
+    }
+
+    public Administrator getAdministratorByUserId(Long userId){
+        return administratorRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("Administrator not found with ID: " + userId));
+    }
+
+    public Tutor getTutorById(Long tutorId){
+        return tutorRepository.findById(tutorId)
+            .orElseThrow(() -> new IllegalArgumentException("Tutor not found with ID: " + tutorId));
     }
 
     public Student getStudentById(Long id) {

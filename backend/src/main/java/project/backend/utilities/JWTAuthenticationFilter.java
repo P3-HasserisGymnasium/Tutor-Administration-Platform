@@ -9,12 +9,20 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import project.backend.controller_bodies.AuthenticatedUserBody;
+import project.backend.service.RoleService;
 
 import java.io.IOException;
 
 import static project.backend.utilities.JWTUtil.validateToken;
 
 public class JWTAuthenticationFilter implements Filter {
+
+    final RoleService roleService;
+
+    public JWTAuthenticationFilter( RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     private boolean isPublicRoute(String path, String method) {
         // Match specific routes and methods
@@ -66,6 +74,15 @@ public class JWTAuthenticationFilter implements Filter {
 
         try {
             if (validateToken(jwt, userID)) {
+
+                AuthenticatedUserBody authenticatedUser = new AuthenticatedUserBody();
+                authenticatedUser.userId = Long.parseLong(userID);
+                authenticatedUser.tutorId = roleService.getTutorByUserId(authenticatedUser.userId).getId();
+                authenticatedUser.tuteeId = roleService.getTuteeByUserId(authenticatedUser.userId).getId();
+                authenticatedUser.studentId = roleService.getStudentById(authenticatedUser.userId).getId();
+                authenticatedUser.administratorId = roleService.getAdministratorByUserId(authenticatedUser.userId).getId();
+
+                request.setAttribute("authenticatedUser", authenticatedUser);
                 chain.doFilter(request, response);
                 return;
             }

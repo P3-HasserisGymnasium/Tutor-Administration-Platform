@@ -1,7 +1,6 @@
 package project.backend.service;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +8,7 @@ import org.springframework.stereotype.Service;
 
 import project.backend.model.Meeting;
 import project.backend.model.MeetingEnum;
-import project.backend.model.Collaboration;
 import project.backend.model.EntityType;
-import project.backend.model.NotificationType;
-import project.backend.model.RoleEnum;
 import project.backend.repository.MeetingRepository;
 
 @Service
@@ -33,7 +29,11 @@ public class MeetingService {
         return meetingRepository.findById(id);
     }
 
-    public List<Meeting> getMeetingsByCollaborationId(Long collaborationId) {
+    public Iterable<Meeting> getMeetingsById(Long id){
+        return meetingRepository.findMeetingsByTuteeOrTutorId(id);
+    }
+
+    public Iterable<Meeting>  getMeetingsByCollaborationId(Long collaborationId) {
         return meetingRepository.findMeetingsByCollaborationId(collaborationId);
     }
 
@@ -41,10 +41,13 @@ public class MeetingService {
         return meetingRepository.save(meeting);
     }
 
-    public Meeting requestMeeting(Meeting meetingParam) { //TODO: needs other input eventually, ask thomas for params
-        Meeting meeting = new Meeting(); //TODO: needs params to be set but w/e for now
+    public Meeting requestMeeting(Meeting meetingParam) {
+        Meeting meeting = new Meeting();
         meeting.setMeetingState(MeetingEnum.PENDING);
-
+        meeting.setStartTimestamp(meetingParam.getStartTimestamp());
+        meeting.setEndTimestamp(meetingParam.getEndTimestamp());
+        meeting.setMeetingDescription(meetingParam.getMeetingDescription());
+        meeting.setCollaborationId(meetingParam.getCollaboration());
 
         // notify tutor of meeting request
         Long tuteeId = meeting.getCollaboration().getTutee().getId();
@@ -79,7 +82,6 @@ public class MeetingService {
             .orElseThrow(() -> new IllegalArgumentException("Meeting with ID " + id + " not found"));
         meeting.setMeetingState(MeetingEnum.REJECTED);
 
-        // notify tutee of tutor rejecting meeting
         Long tuteeId = meeting.getCollaboration().getTutee().getId();
         Long tutorId = meeting.getCollaboration().getTutor().getId();
         notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, 
@@ -89,19 +91,18 @@ public class MeetingService {
     }
 
 
-    public void cancelMeeting(Long id, Long senderId, EntityType senderRole, Long receiverId, EntityType receiverRole) {
+    public void cancelMeeting(Long id) {
         Meeting meeting = meetingRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Meeting with ID " + id + " not found"));
         meeting.setMeetingState(MeetingEnum.FINISHED);
 
-        notificationService.sendNotification(senderId, senderRole, receiverId, receiverRole, 
-        meeting.getId(), EntityType.MEETING); 
-
+        Long tuteeId = meeting.getCollaboration().getTutee().getId();
+        Long tutorId = meeting.getCollaboration().getTutor().getId();
+        notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, meeting.getId(), EntityType.MEETING);
     
         meetingRepository.save(meeting);
     }
 
-    // not part of the class-diagram
     public void postponeMeeting(Timestamp newStart, Timestamp newEnd, Long id) {
         Meeting meeting = meetingRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Meeting with ID " + id + " not found"));
