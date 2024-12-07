@@ -230,21 +230,6 @@ public class CollaborationService {
         collaborationRepository.save(collaboration);
     }
 
-    public void establishCollaboration(Long collaborationId){
-        Collaboration collaboration = getCollaborationById(collaborationId);
-        
-        // Add the collaboration for tutee and tutor
-        Tutee tutee = collaboration.getTutee();
-        tutee.getCollaborations().add(collaboration);
-        
-        Tutor tutor = collaboration.getTutor();
-        tutor.getCollaborations().add(collaboration);
-        
-        collaboration.setState(CollaborationState.ESTABLISHED);
-        collaboration.setStartTimestamp(new Timestamp(System.currentTimeMillis()));
-        collaborationRepository.save(collaboration);
-    }
-
     public void submitFeedback(Long collaborationId, Long tuteeId, Feedback feedback){
         Collaboration collaboration = getCollaborationById(collaborationId);
 
