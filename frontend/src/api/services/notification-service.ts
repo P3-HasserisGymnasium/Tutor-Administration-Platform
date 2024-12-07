@@ -1,27 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../api-client";
-import { NotificationContextType } from "~/types/data_types";
-
-
-type NotificationType = {
-	notificationContext: NotificationContextType;
-	participants: number; // As ID's
-};
+import { NotificationType } from "~/types/entity_types";
 
 export const useNotificationService = () => {
-	const getNotifications = useQuery({
-		queryKey: ["getNotifications"],
-		queryFn: async () => {
-			const { data } = await apiClient.get<NotificationType[]>(
-				`/api/notification_service`
-			);
-			return data;
-		},
-		refetchOnWindowFocus: false,
-		placeholderData: [],
-	});
-
-	return {
-		getNotifications,
+	const useGetNotifications = () => {
+		return useQuery({
+			queryKey: ["getNotifications"],
+			queryFn: async () => {
+				const { data } = await apiClient.get<NotificationType[]>(`/api/notifications`);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			refetchInterval: 60000, // Refetch every minute
+			placeholderData: [],
+		});
 	};
+
+	return { useGetNotifications };
 };
