@@ -12,15 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 import project.backend.model.Collaboration;
 import project.backend.model.Meeting;
 import project.backend.service.MeetingService;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
-import project.backend.controller_bodies.meeting_controller.MeetingCancelRequestBody;
 
 import project.backend.utilities.HelperFunctions;
 
