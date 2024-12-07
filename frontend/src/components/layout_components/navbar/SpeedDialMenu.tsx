@@ -1,4 +1,4 @@
-import { Backdrop, SpeedDial, SpeedDialAction, Avatar, Box } from "@mui/material";
+import { Backdrop, SpeedDial, SpeedDialAction, Avatar, Box, Badge } from "@mui/material";
 import { useState } from "react";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
@@ -7,14 +7,19 @@ import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "~/api/authentication/useAuth";
+import { useNotificationService } from "~/api/services/notification-service";
 
 export default function SpeedDialMenu() {
 	const { logout } = useAuth();
+	const { useGetNotifications } = useNotificationService();
 	const [open, setOpen] = useState(false);
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 	const navigate = useNavigate();
 	const rolePrefix = useLocation().pathname.includes("tutor") ? "/tutor" : "/tutee";
+
+	const { data: notifications } = useGetNotifications();
+
 	const actions = [
 		{
 			icon: <AccountBoxIcon />,
@@ -61,7 +66,28 @@ export default function SpeedDialMenu() {
 					},
 				}}
 				FabProps={{ size: "large" }}
-				icon={<Avatar variant="circular">P3</Avatar>}
+				icon={
+					<Badge
+						anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+						sx={{
+							"& .MuiBadge-badge": {
+								width: "30px",
+								fontSize: "1.25rem",
+								height: "30px",
+								borderRadius: "50%",
+								backgroundColor: "red",
+								"&:hover": {
+									backgroundColor: "#dd0000",
+								},
+							},
+						}}
+						badgeContent={notifications?.length}
+						color="success"
+						onClick={() => navigate(`${rolePrefix}/notifications`)}
+					>
+						<Avatar variant="circular">P3</Avatar>
+					</Badge>
+				}
 				openIcon={<Avatar variant="circular">P3</Avatar>}
 				direction="down"
 				hidden={false}

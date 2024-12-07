@@ -11,6 +11,7 @@ import {
 	Day,
 	NotificationContext,
 	NotificationParticipant,
+	NotificationState,
 } from "./data_types";
 
 export const zodPostSchema = z.object({
@@ -62,6 +63,7 @@ export const zodNotificationSchema = z.object({
 	receiver_type: NotificationParticipant,
 	context_id: zodUUID,
 	context_type: NotificationContext,
+	state: NotificationState,
 });
 
 export const zodAccountRegisterSchema = z.object({
@@ -166,3 +168,4 @@ export type MeetingType = z.infer<typeof zodMeetingSchema>;
 export type CollaborationType = z.infer<typeof zodCollaborationSchema>;
 export type Feedback = z.infer<typeof zodFeedbackSchema>;
 export type AccountRegisterType = z.infer<typeof zodAccountRegisterSchema>;
+export type NotificationType = z.infer<typeof zodNotificationSchema>;
