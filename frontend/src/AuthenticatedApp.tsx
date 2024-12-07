@@ -18,6 +18,7 @@ import NotFound from "./api/authentication/NotFound";
 import Forbidden from "./api/authentication/Forbidden";
 import { useAuth } from "./api/authentication/useAuth";
 import AdministratorPage from "./components/page_components/dialogs/AdministratorPage";
+import CollaborationPage from "./components/page_components/CollaborationPage";
 
 export default function AuthenticatedApp() {
 	const { isMobile, hasScrollbar } = useBreakpoints();
@@ -49,7 +50,6 @@ export default function AuthenticatedApp() {
 						}
 					/>
 					<Route path="/login" element={<HomePage />} />
-
 					{/* Tutee routes */}
 					{isTutee ? (
 						<>
@@ -62,6 +62,7 @@ export default function AuthenticatedApp() {
 								<Route path="request-admin" element={<RequestAdminPage />} />
 								<Route path="tutor-list" element={<TutorListPage />} />
 								<Route path="tutor-application" element={<TutorApplicationPage />} />
+								<Route path="collaboration/*" element={<CollaborationPage />} />
 							</Route>
 							<Route path="*" element={<NotFound />} />
 						</>
@@ -76,6 +77,7 @@ export default function AuthenticatedApp() {
 								<Route path="posts-list" element={<PostsListPage />} />
 								<Route path="tutor-application" element={<TutorApplicationPage />} />
 								<Route path="*" element={<NotFound />} />
+								<Route path="collaboration/*" element={<CollaborationPage />} />
 							</Route>
 						</>
 					) : null}

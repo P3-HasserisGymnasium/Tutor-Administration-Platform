@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,10 +17,11 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import project.backend.model.Collaboration;
 import project.backend.model.Meeting;
+import project.backend.service.CollaborationService;
 import project.backend.service.MeetingService;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
-
+import project.backend.controller_bodies.meeting_controller.MeetingBody;
 import project.backend.utilities.HelperFunctions;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -28,11 +30,13 @@ import project.backend.utilities.HelperFunctions;
 public class MeetingController {
 
     final MeetingService meetingService;
+    final CollaborationService collaborationService;
     private final HelperFunctions helperFunctions;
 
-    public MeetingController(MeetingService meetingService, HelperFunctions helperFunctions) {
+    public MeetingController(MeetingService meetingService, HelperFunctions helperFunctions, CollaborationService collaborationService) {
         this.meetingService = meetingService;
         this.helperFunctions = helperFunctions;
+        this.collaborationService = collaborationService;
     }
 
     @GetMapping("/{id}")
@@ -65,17 +69,28 @@ public class MeetingController {
         return ResponseEntity.status(HttpStatus.OK).body(meetings);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<?> requestMeeting(@RequestBody Meeting meeting, HttpServletRequest request) {
+    @PostMapping("/request")
+    public ResponseEntity<String> requestMeeting(@RequestBody MeetingBody meeting, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        if (!helperFunctions.isUserPermitted(authenticatedUser, meeting.getCollaboration().getTutee().getId())) {
+        Collaboration collaboration = collaborationService.getCollaborationById(meeting.id);
+
+        if (!helperFunctions.isUserPermitted(authenticatedUser, collaboration.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to create this meeting");
         }
 
-        meetingService.saveMeeting(meeting);
+        Meeting newMeeting = new Meeting();
+        newMeeting.setCollaboration(collaboration);
+        newMeeting.setMeetingState(meeting.state);
+        newMeeting.setStartTimestamp(meeting.date.time.start_time);
+        newMeeting.setEndTimestamp(meeting.date.time.end_time);
+        newMeeting.setMeetingDescription(meeting.meeting_description);
 
-        return ResponseEntity.status(HttpStatus.OK).body("Meeting created");
+        String message = "Meeting request sent";
+
+        meetingService.saveMeeting(newMeeting);
+
+        return ResponseEntity.ok(message);
     }
 
     @DeleteMapping("/{id}")
