@@ -109,16 +109,14 @@ public class MeetingController {
     }
 
     @PutMapping("/cancel/{id}")
-    public ResponseEntity<?> cancelMeeting(@PathVariable Long id, @RequestBody MeetingCancelRequestBody cancelRequest, HttpServletRequest request) {
+    public ResponseEntity<?> cancelMeeting(@PathVariable Long id, HttpServletRequest request) {
 
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        if (!helperFunctions.isUserPermitted(authenticatedUser, cancelRequest.senderId)) {
+        if (!helperFunctions.isUserPermitted(authenticatedUser, id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to cancel this meeting");
         }
-        meetingService.cancelMeeting(id, 
-        cancelRequest.senderId, cancelRequest.senderRole, 
-        cancelRequest.receiverId, cancelRequest.receiverRole);
+        meetingService.cancelMeeting(id);
 
         return ResponseEntity.status(HttpStatus.OK).body("Meeting cancelled");
     }
