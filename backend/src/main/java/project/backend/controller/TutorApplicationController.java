@@ -19,7 +19,7 @@ import project.backend.service.TutorApplicationService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/tutorApplication")
+@RequestMapping("/tutor-application")
 public class TutorApplicationController {
     
     final TutorApplicationService tutorApplicationService;
