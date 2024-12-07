@@ -76,7 +76,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public void deletePost(@PathVariable Long id, HttpServletRequest request) {
+    public ResponseEntity<?> deletePost(@PathVariable Long id, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (authenticatedUser.getTuteeId() != postService.getPostById(id).get().getTutee().getId() || !authenticatedUser.isAdministrator()) {
@@ -85,7 +85,7 @@ public class PostController {
 
         postService.deletePostById(id);
 
-        ResponseEntity.status(HttpStatus.OK).body("Post deleted");
+        return ResponseEntity.status(HttpStatus.OK).body("Post deleted");
     }
 
     @PutMapping("/{id}")
