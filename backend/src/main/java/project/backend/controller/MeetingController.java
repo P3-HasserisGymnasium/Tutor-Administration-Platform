@@ -1,5 +1,7 @@
 package project.backend.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,12 +9,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 
+import project.backend.model.Collaboration;
 import project.backend.model.Meeting;
 import project.backend.service.MeetingService;
+import project.backend.controller_bodies.AuthUser;
+import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.meeting_controller.MeetingCancelRequestBody;
+
+import project.backend.utilities.HelperFunctions;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -20,53 +30,98 @@ import project.backend.controller_bodies.meeting_controller.MeetingCancelRequest
 public class MeetingController {
 
     final MeetingService meetingService;
+    private final HelperFunctions helperFunctions;
 
-    public MeetingController(MeetingService meetingService) {
+    public MeetingController(MeetingService meetingService, HelperFunctions helperFunctions) {
         this.meetingService = meetingService;
+        this.helperFunctions = helperFunctions;
     }
 
     @GetMapping("/{id}")
-    public Meeting getMeeting(@PathVariable Long id) {
-        return meetingService.getMeetingById(id)
-            .orElse(null);
+    public ResponseEntity<?> getMeeting(@PathVariable Long id, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        Meeting meeting = meetingService.getMeetingById(id).orElse(null);
+
+        if (meeting == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Meeting not found");
+        }
+
+        Collaboration collaboration = meeting.getCollaboration();
+        if (authenticatedUser.getTutorId() == collaboration.getTutor().getId() || authenticatedUser.getTuteeId() == collaboration.getTutee().getId()) {
+            return ResponseEntity.status(HttpStatus.OK).body(meeting);
+        }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to view this meeting");
     }
 
-    @GetMapping("/all/{id}")
-    public Iterable<Meeting> getMeetings(@PathVariable Long id) {
-        return meetingService.getMeetingsById(id);
-    }
+    @GetMapping("/all/{userId}")
+    public ResponseEntity<?> getMeetings(@PathVariable Long userId, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-    /* 
-    @PostMapping("/")
-    public Meeting createMeeting(@RequestBody Meeting meeting) {
-        return meetingService.saveMeeting(meeting);
+        if (!helperFunctions.isUserPermitted(authenticatedUser, userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to view these meetings");
+        }
+
+        Iterable<Meeting> meetings = meetingService.getMeetingsById(userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(meetings);
     }
-    */
 
     @DeleteMapping("/{id}")
-    public void deleteMeeting(@PathVariable Long id) {
+    public ResponseEntity<?> deleteMeeting(@PathVariable Long id, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to delete this meeting");
+        }
+
         meetingService.deleteMeetingById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Meeting deleted");
     }
 
     @PutMapping("/accept/{id}")
-    public void acceptMeeting(@PathVariable Long id){
+    public ResponseEntity<?> acceptMeeting(@PathVariable Long id, HttpServletRequest request) {
+
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isTutor()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to accept this meeting");
+        }
+
         meetingService.acceptMeeting(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Meeting accepted");
     }
 
     @PutMapping("/reject/{id}")
-    public void rejectMeeting(@PathVariable Long id){
+    public ResponseEntity<?> rejectMeeting(@PathVariable Long id, HttpServletRequest request) {
+
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isTutor()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to reject this meeting");
+        }
+
         meetingService.rejectMeeting(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Meeting rejected");
     }
 
     @PutMapping("/cancel/{id}")
-    public void cancelMeeting(@PathVariable Long id, @RequestBody MeetingCancelRequestBody cancelRequest){
+    public ResponseEntity<?> cancelMeeting(@PathVariable Long id, @RequestBody MeetingCancelRequestBody cancelRequest, HttpServletRequest request) {
+
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!helperFunctions.isUserPermitted(authenticatedUser, cancelRequest.senderId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to cancel this meeting");
+        }
         meetingService.cancelMeeting(id, 
         cancelRequest.senderId, cancelRequest.senderRole, 
         cancelRequest.receiverId, cancelRequest.receiverRole);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Meeting cancelled");
     }
-
-
-
 
 
 }

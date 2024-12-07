@@ -30,7 +30,7 @@ public class MeetingService {
     }
 
     public Iterable<Meeting> getMeetingsById(Long id){
-        return meetingRepository.findAllById(id);
+        return meetingRepository.findMeetingsByTuteeOrTutorId(id);
     }
 
     public Iterable<Meeting>  getMeetingsByCollaborationId(Long collaborationId) {

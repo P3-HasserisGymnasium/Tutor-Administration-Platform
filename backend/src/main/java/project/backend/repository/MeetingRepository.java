@@ -12,6 +12,9 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     Iterable<Meeting> findMeetingsByCollaborationId(Long collaboration_id);
 
     @Query("SELECT m FROM Meeting m WHERE m.collaboration.tutor.id = ?1")
-    Meeting[] findMeetingsByTutorId(Long tutor_id);
+    Iterable<Meeting> findMeetingsByTutorId(Long tutor_id);
+
+    @Query("SELECT m FROM Meeting m WHERE m.collaboration.tutee.id = ?1 OR m.collaboration.tutor.id = ?1")
+    Iterable<Meeting> findMeetingsByTuteeOrTutorId(Long tutee_id);
        
 }
