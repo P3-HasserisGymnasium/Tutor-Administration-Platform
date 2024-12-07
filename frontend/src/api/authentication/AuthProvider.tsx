@@ -3,26 +3,11 @@ import React, { useState, useEffect, ReactNode } from "react";
 import { AuthContext, initialUserState } from "./AuthContext";
 import { UserState } from "~/types/entity_types";
 import { Role, Subject } from "~/types/data_types";
+import { getCookie, setCookie, deleteCookie } from "~/utilities/helperFunctions";
 
 interface AuthProviderProps {
 	children: ReactNode;
 }
-
-const setCookie = (name: string, value: string, days: number) => {
-	const expires = new Date(Date.now() + days * 864e5).toUTCString();
-	document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
-};
-
-const getCookie = (name: string) => {
-	return document.cookie
-		.split("; ")
-		.find((row) => row.startsWith(name + "="))
-		?.split("=")[1];
-};
-
-const deleteCookie = (name: string) => {
-	document.cookie = `${name}=; path=/; max-age=0`;
-};
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	const [userState, setUserState] = useState<UserState>(initialUserState);

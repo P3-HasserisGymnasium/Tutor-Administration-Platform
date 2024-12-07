@@ -135,3 +135,28 @@ export const useVariableHeight = (value?: string | number) => {
 		}
 	}
 };
+
+/**
+ * setCookie sets a cookie with a given name, value and expiration date.
+ */
+export const setCookie = (name: string, value: string, hours: number) => {
+	const expires = new Date(Date.now() + hours * 36e5).toUTCString();
+	document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+};
+
+/**
+ * getCookie retrieves a cookie with a given name.
+ */
+export const getCookie = (name: string) => {
+	return document.cookie
+		.split("; ")
+		.find((row) => row.startsWith(name + "="))
+		?.split("=")[1];
+};
+
+/**
+ * deleteCookie deletes a cookie with a given name.
+ */
+export const deleteCookie = (name: string) => {
+	document.cookie = `${name}=; path=/; max-age=0`;
+};
