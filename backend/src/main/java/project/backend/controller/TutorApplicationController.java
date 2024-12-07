@@ -1,7 +1,7 @@
 package project.backend.controller;
 
-import java.util.List;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
+import project.backend.controller_bodies.AuthUser;
+import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.tutor_application_controller.TutorApplicationCreateBody;
-import project.backend.model.TutorApplication;
-import project.backend.model.SubjectEnum;
 import project.backend.service.TutorApplicationService;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -28,37 +29,75 @@ public class TutorApplicationController {
     }
 
     @GetMapping("/{id}")
-    public TutorApplication getTutorApplication(@PathVariable Long id) {
-        return tutorApplicationService.getTutorApplicationById(id);
+    public ResponseEntity<?> getTutorApplication(@PathVariable Long id, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to view this tutor application");
+
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(tutorApplicationService.getTutorApplicationById(id));
     }
 
     @GetMapping("/all")
-    public List<TutorApplication> getAllTutorApplications() {
-        return tutorApplicationService.getAllTutorApplications();
+    public ResponseEntity<?> getAllTutorApplications(HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to view all tutor applications");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(tutorApplicationService.getAllTutorApplications());
     }
 
     @PostMapping("/")
-    public TutorApplication createTutorApplication(@RequestBody TutorApplicationCreateBody body) {
-        return tutorApplicationService.createTutorApplication(body);
+    public ResponseEntity<?> createTutorApplication(@RequestBody TutorApplicationCreateBody body, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isTutee()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to create a tutor application");
+        }
+        
+        return ResponseEntity.status(HttpStatus.OK).body(tutorApplicationService.createTutorApplication(body));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTutorApplication(@PathVariable Long id) {
+    public ResponseEntity<?> deleteTutorApplication(@PathVariable Long id, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to delete this tutor application");
+        }
+
         tutorApplicationService.deleteTutorApplicationById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Tutor application deleted");
     }
 
-    @PostMapping("/accept-tutor-application/{id}")
-    public void acceptTutorApplication(@PathVariable Long id){
+    @PostMapping("/accept/{id}")
+    public ResponseEntity<?>  acceptTutorApplication(@PathVariable Long id, HttpServletRequest request){
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to accept this tutor application");
+        }
+
         tutorApplicationService.acceptTutorApplication(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Tutor application accepted");
     }
 
-    @PostMapping("/reject-tutor-application/{id}")
-    public void rejectTutorApplication(@PathVariable Long id, @RequestBody String rejectReason){
+    @PostMapping("/reject/{id}")
+    public ResponseEntity<?>  rejectTutorApplication(@PathVariable Long id, @RequestBody String rejectReason, HttpServletRequest request){
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to reject this tutor application");
+        }
+
         tutorApplicationService.rejectTutorApplication(id, rejectReason);
-    }
 
-    @PostMapping("/remove-subject/{id}")
-    public void removeSubject(@PathVariable Long id, @RequestBody SubjectEnum subject){
-        tutorApplicationService.removeTutoringSubject(id, subject);
+        return ResponseEntity.status(HttpStatus.OK).body("Tutor application rejected");
     }
 }
