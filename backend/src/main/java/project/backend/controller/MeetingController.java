@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,6 @@ import project.backend.model.Meeting;
 import project.backend.service.MeetingService;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
-import project.backend.controller_bodies.meeting_controller.MeetingCancelRequestBody;
 
 import project.backend.utilities.HelperFunctions;
 
@@ -65,6 +65,19 @@ public class MeetingController {
         Iterable<Meeting> meetings = meetingService.getMeetingsById(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(meetings);
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<?> requestMeeting(@RequestBody Meeting meeting, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!helperFunctions.isUserPermitted(authenticatedUser, meeting.getCollaboration().getTutee().getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to create this meeting");
+        }
+
+        meetingService.saveMeeting(meeting);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Meeting created");
     }
 
     @DeleteMapping("/{id}")
