@@ -16,6 +16,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("SELECT s FROM Student s WHERE s.tutor IS NOT NULL")
     List<Student> getTutors();
 
-    Student getStudentByUserId(Long userId);
+    Student getStudentById(Long userId);
 
 }

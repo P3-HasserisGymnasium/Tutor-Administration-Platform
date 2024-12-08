@@ -178,7 +178,7 @@ public class RoleService {
     }
 
     public TuteeProfileResponse getTuteeProfile(Long id) {
-        Student student = studentRepository.getStudentByUserId(id);
+        Student student = studentRepository.getStudentById(id);
 
 
         List<Collaboration> collaborations = student.getTutee().getCollaborations();

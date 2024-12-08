@@ -72,7 +72,7 @@ export const useMeetingService = () => {
 	});
 
 	return {
-		requestMeeting,
+		useRequestMeeting,
 		cancelMeeting,
 		acceptMeeting,
 		rejectMeeting,
