@@ -70,12 +70,12 @@ export const NotificationParticipant = z.enum(["Tutor", "Tutee", "Admin"] as con
 
 export const NotificationState = z.enum(["Unread", "Read", "Deleted"] as const);
 export const CollaborationState = z.enum([
-	"Pending",
-	"WaitingForTutor",
-	"WaitingForTutee",
-	"Accepted",
-	"Rejected",
-	"Terminated",
+	"PENDING",
+	"WAITINGFORTUTOR",
+	"WAITINGFORTUTEE",
+	"ACCEPTED",
+	"REJECTED",
+	"TERMINATED",
 ] as const);
 export const zodUUID = z.number();
 
