@@ -47,7 +47,7 @@ public class MeetingService {
         meeting.setStartTimestamp(meetingParam.getStartTimestamp());
         meeting.setEndTimestamp(meetingParam.getEndTimestamp());
         meeting.setMeetingDescription(meetingParam.getMeetingDescription());
-        meeting.setCollaborationId(meetingParam.getCollaboration());
+        meeting.setCollaboration(meetingParam.getCollaboration());
 
         // notify tutor of meeting request
         Long tuteeId = meeting.getCollaboration().getTutee().getId();

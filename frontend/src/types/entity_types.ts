@@ -12,6 +12,7 @@ import {
 	NotificationContext,
 	NotificationParticipant,
 	NotificationState,
+	zodMeetingTime,
 } from "./data_types";
 
 export const zodPostSchema = z.object({
@@ -34,11 +35,10 @@ export const zodProfileSchema = z.object({
 export const zodMeetingSchema = z.object({
 	id: zodUUID,
 	rejection_reason: z.string().optional(),
-	end_date: z.date(),
 	collaboration_id: zodUUID,
 	meeting_description: z.string().optional(),
 	state: MeetingState,
-	start_date: z.date(),
+	date: zodMeetingTime,
 });
 
 export const zodCollaborationSchema = z.object({

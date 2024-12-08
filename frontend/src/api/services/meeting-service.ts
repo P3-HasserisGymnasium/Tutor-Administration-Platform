@@ -22,60 +22,68 @@ export const useMeetingService = () => {
 		});
 	};
 
-	const cancelMeeting = useMutation({
-		mutationKey: ["cancelMeeting"],
-		mutationFn: async (meetingId: number) => {
-			await apiClient.delete(`/api/meeting_service/${meetingId}`);
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
-		},
-		onSuccess: () => {
-			toast.success("Møde aflyst");
-		},
-	});
+	const useCancelMeeting = () => {
+		return useMutation({
+			mutationKey: ["cancelMeeting"],
+			mutationFn: async (meetingId: number) => {
+				await apiClient.delete(`/api/meeting_service/${meetingId}`);
+			},
+			onError: (e: AxiosError<{ detail: string }>) => {
+				toast.error(e?.response?.data?.detail);
+			},
+			onSuccess: () => {
+				toast.success("Møde aflyst");
+			},
+		});
+	};
 
-	const acceptMeeting = useMutation({
-		mutationKey: ["acceptMeeting"],
-		mutationFn: async (meetingId: number) => {
-			await apiClient.delete(`/api/meeting_service/${meetingId}`);
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
-		},
-		onSuccess: () => {
-			toast.success("Møde accepteret");
-		},
-	});
+	const useAcceptMeeting = () => {
+		return useMutation({
+			mutationKey: ["acceptMeeting"],
+			mutationFn: async (meetingId: number) => {
+				await apiClient.delete(`/api/meeting_service/${meetingId}`);
+			},
+			onError: (e: AxiosError<{ detail: string }>) => {
+				toast.error(e?.response?.data?.detail);
+			},
+			onSuccess: () => {
+				toast.success("Møde accepteret");
+			},
+		});
+	};
 
-	const rejectMeeting = useMutation({
-		mutationKey: ["rejectMeeting"],
-		mutationFn: async (meetingId: number) => {
-			await apiClient.delete(`/api/meeting_service/${meetingId}`);
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
-		},
-		onSuccess: () => {
-			toast.success("Møde accepteret");
-		},
-	});
+	const useRejectMeeting = () => {
+		return useMutation({
+			mutationKey: ["rejectMeeting"],
+			mutationFn: async (meetingId: number) => {
+				await apiClient.delete(`/api/meeting_service/${meetingId}`);
+			},
+			onError: (e: AxiosError<{ detail: string }>) => {
+				toast.error(e?.response?.data?.detail);
+			},
+			onSuccess: () => {
+				toast.success("Møde afvist");
+			},
+		});
+	};
 
-	const getMeetings = useQuery({
-		queryKey: ["getMeetings"],
-		queryFn: async () => {
-			const { data } = await apiClient.get<MeetingType[]>(`/api/meeting_service`);
-			return data;
-		},
-		refetchOnWindowFocus: false,
-		placeholderData: [],
-	});
+	const useGetMeetings = () => {
+		return useQuery({
+			queryKey: ["getMeetings"],
+			queryFn: async () => {
+				const { data } = await apiClient.get<MeetingType[]>(`/api/meeting_service`);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			placeholderData: [],
+		});
+	};
 
 	return {
 		useRequestMeeting,
-		cancelMeeting,
-		acceptMeeting,
-		rejectMeeting,
-		getMeetings,
+		useCancelMeeting,
+		useAcceptMeeting,
+		useRejectMeeting,
+		useGetMeetings,
 	};
 };
