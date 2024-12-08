@@ -11,7 +11,7 @@ export const usePostService = () => {
 		queryKey: ["getPosts"],
 		queryFn: async () => {
 			const { data } = await apiClient.get<PostType[]>(
-				`/api/post_service`
+				`/api/post/all`
 			);
 			return data;
 		},

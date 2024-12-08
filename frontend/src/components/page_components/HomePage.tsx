@@ -6,6 +6,8 @@ import InfoIcon from "@mui/icons-material/Info";
 import MeetingsList from "../content_components/MeetingList";
 import MiniCalendar from "../content_components/HomePageComponents/MiniCalendar";
 import MiniPostList from "../content_components/HomePageComponents/MiniPostList";
+import MiniCollabList from "../content_components/HomePageComponents/MiniCollabList"
+//import { useNavigate } from "react-router-dom";
 
 
 
@@ -16,6 +18,8 @@ export default function HomePage() {
   const handleViewChange = (newView: React.SetStateAction<string>) => {
     setView(newView);
   };
+
+  //const navigate = useNavigate();
 
 
   return (
@@ -71,7 +75,7 @@ export default function HomePage() {
           </IconButton>
         </Tooltip>
         </Box>
-        <Box sx={{position: "flex",alignContent: "center" , alignItems: "center", width:"100%", height: "100%", border: "white 1px"}}>
+        <Box sx={{position: "flex",alignContent: "center" , alignItems: "center", border: "white 1px", overflow: "hidden",}}>
         { view === 'calendar' ? (
             <MiniCalendar /> 
           ) : (
@@ -114,6 +118,81 @@ export default function HomePage() {
         </Tooltip>
         
         <MiniPostList/>
+
+        {/* View More Button */}
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            marginTop: 4,
+            position: "relative",
+            alignItems: "right",
+            display: "block",
+            marginLeft: "auto",
+            marginRight: "auto",
+            padding: "10px 20px",
+            fontSize: "16px",
+            backgroundColor: "#001F54", // Darker blue for button
+          }}
+          //onClick={() => navigate("")}
+        >
+          View more
+        </Button>
+      </Box>
+
+      <Box sx={{
+          display: "flex",
+          flexDirection: "column",
+          border: "1px solid #white", 
+          borderRadius: "8px",
+          overflow: "hidden",
+          p: 2,
+          position: "relative"}}
+          >
+      <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 2 }}>
+        Your Active Collaborations
+        </Typography>
+        <Typography variant="body2" sx={{ color: "#555", marginBottom: 4 }}>
+           Click to view collaboration page
+        </Typography>
+
+         {/* info icon */}
+        <Tooltip title="More information" arrow>
+          <IconButton
+            sx={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              alignItems: "right",
+            }}
+            aria-label="info"
+          >
+            <InfoIcon />
+          </IconButton>
+        </Tooltip>
+
+        <MiniCollabList/>
+        
+
+        {/* View More Button */}
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            marginTop: 4,
+            position: "relative",
+            alignItems: "right",
+            display: "block",
+            marginLeft: "auto",
+            marginRight: "auto",
+            padding: "10px 20px",
+            fontSize: "16px",
+            backgroundColor: "#001F54", // Darker blue for button
+          }}
+          //onClick={() => navigate("")}
+        >
+          View more
+        </Button>
       </Box>
 
     </MediumShortOnShortBoxLayout>

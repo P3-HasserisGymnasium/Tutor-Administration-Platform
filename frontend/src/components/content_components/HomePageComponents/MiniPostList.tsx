@@ -50,24 +50,10 @@ export default function MiniPostList() {
           ) : (
             <Typography>No posts found.</Typography>
           )}
+
         </Box>
   
-        {/* View More Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{
-            marginTop: 4,
-            display: "block",
-            marginLeft: "auto",
-            marginRight: "auto",
-            padding: "10px 20px",
-            fontSize: "16px",
-            backgroundColor: "#001F54", // Darker blue for button
-          }}
-        >
-          View more
-        </Button>
+      
       </Box>
     );
 }
