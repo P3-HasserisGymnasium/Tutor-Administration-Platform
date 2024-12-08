@@ -64,12 +64,11 @@ public class RoleService {
     }
 
     public Tutor getTutorByUserId(Long userId){
-        Student student = studentRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + userId));
+        Student student = studentRepository.findById(userId).orElse(null);
         
         Tutor tutor = student.getTutor();
         if (tutor == null){
-            throw new IllegalArgumentException("This student is not assigned a Tutor");
+            return null;
         }
 
         return tutor;
@@ -90,7 +89,7 @@ public class RoleService {
 
     public Administrator getAdministratorByUserId(Long userId){
         return administratorRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("Administrator not found with ID: " + userId));
+            .orElse(null);
     }
 
     public Tutor getTutorById(Long tutorId){

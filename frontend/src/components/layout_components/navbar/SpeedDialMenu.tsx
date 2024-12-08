@@ -10,7 +10,7 @@ import { useAuth } from "~/api/authentication/useAuth";
 import { useNotificationService } from "~/api/services/notification-service";
 
 export default function SpeedDialMenu() {
-	const { logout } = useAuth();
+	const { logout, userState } = useAuth();
 	const { useGetNotifications } = useNotificationService();
 	const [open, setOpen] = useState(false);
 	const handleOpen = () => setOpen(true);
@@ -18,7 +18,7 @@ export default function SpeedDialMenu() {
 	const navigate = useNavigate();
 	const rolePrefix = useLocation().pathname.includes("tutor") ? "/tutor" : "/tutee";
 
-	const { data: notifications } = useGetNotifications();
+	const { data: notifications } = useGetNotifications(userState?.id || "");
 
 	const actions = [
 		{
