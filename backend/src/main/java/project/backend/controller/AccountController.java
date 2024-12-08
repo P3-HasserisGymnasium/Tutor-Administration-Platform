@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
+import project.backend.controller_bodies.AuthUser;
+import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.account_controller.AccountLoginBody;
 import project.backend.controller_bodies.account_controller.AccountRegisterBody;
 import project.backend.exceptions.EmailAlreadyExistsException;
@@ -37,13 +40,20 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
-        return accountService.getUserById(id).orElse(null);
+    public ResponseEntity<?> getUser(@PathVariable Long id, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (authenticatedUser.getUserId() != id && !authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to view this user");
+        }
+
+        User user = accountService.getUserById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> createUser(@RequestBody AccountRegisterBody body) {
-        
+    public ResponseEntity<?> createUser(@RequestBody AccountRegisterBody body) {        
         try {
             User savedUser = accountService.saveNewUser(body);
             return ResponseEntity.ok(savedUser);
@@ -54,8 +64,16 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable Long id, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (authenticatedUser.getUserId() != id && !authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to delete this user");
+        }
+
         accountService.deleteUserById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
     }
 
     @PostMapping("/login")

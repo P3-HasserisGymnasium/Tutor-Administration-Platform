@@ -1,5 +1,4 @@
 package project.backend.service;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.backend.model.TutorTimeSlot;
@@ -14,8 +13,8 @@ public class TutorTimeSlotService {
     public TutorTimeSlotService(TutorTimeslotRepository tutorTimeslotRepository) {
         this.tutorTimeslotRepository = tutorTimeslotRepository;
     }
-    public Optional<TutorTimeSlot> getTutorTimeSlotById(Long id){
-        return tutorTimeslotRepository.findById(id);
+    public Iterable<TutorTimeSlot> getTutorTimeSlotById(Long id){
+        return tutorTimeslotRepository.findAllById(id);
     }
     public TutorTimeSlot saveTutorTimeSlot(TutorTimeSlot tutorTimeSlot) {
         return tutorTimeslotRepository.save(tutorTimeSlot);
