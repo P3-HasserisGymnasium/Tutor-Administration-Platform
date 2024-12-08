@@ -13,8 +13,8 @@ export const useMeetingService = () => {
 				console.log("form here data", data);
 				return data;
 			},
-			onError: (e: AxiosError<{ detail: string }>) => {
-				toast.error(e?.response?.data?.detail);
+			onError: (e: AxiosError) => {
+				toast.error("" + e?.response?.data);
 			},
 			onSuccess: (data) => {
 				toast.success(data);
@@ -28,8 +28,8 @@ export const useMeetingService = () => {
 			mutationFn: async (meetingId: number) => {
 				await apiClient.delete(`/api/meeting_service/${meetingId}`);
 			},
-			onError: (e: AxiosError<{ detail: string }>) => {
-				toast.error(e?.response?.data?.detail);
+			onError: (e: AxiosError) => {
+				toast.error("" + e?.response?.data);
 			},
 			onSuccess: () => {
 				toast.success("Møde aflyst");
@@ -43,8 +43,8 @@ export const useMeetingService = () => {
 			mutationFn: async (meetingId: number) => {
 				await apiClient.delete(`/api/meeting_service/${meetingId}`);
 			},
-			onError: (e: AxiosError<{ detail: string }>) => {
-				toast.error(e?.response?.data?.detail);
+			onError: (e: AxiosError) => {
+				toast.error("" + e?.response?.data);
 			},
 			onSuccess: () => {
 				toast.success("Møde accepteret");
@@ -58,8 +58,8 @@ export const useMeetingService = () => {
 			mutationFn: async (meetingId: number) => {
 				await apiClient.delete(`/api/meeting_service/${meetingId}`);
 			},
-			onError: (e: AxiosError<{ detail: string }>) => {
-				toast.error(e?.response?.data?.detail);
+			onError: (e: AxiosError) => {
+				toast.error("" + e?.response?.data);
 			},
 			onSuccess: () => {
 				toast.success("Møde afvist");

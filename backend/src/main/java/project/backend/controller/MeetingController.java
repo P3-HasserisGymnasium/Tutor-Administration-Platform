@@ -73,7 +73,14 @@ public class MeetingController {
     public ResponseEntity<String> requestMeeting(@RequestBody MeetingBody meeting, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
+        System.out.println(meeting);
+        System.out.println("ussr" + authenticatedUser);
+
         Collaboration collaboration = collaborationService.getCollaborationById(meeting.id);
+
+        if (collaboration == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Collaboration not found");
+        }
 
         if (!helperFunctions.isUserPermitted(authenticatedUser, collaboration.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to create this meeting");
@@ -82,8 +89,8 @@ public class MeetingController {
         Meeting newMeeting = new Meeting();
         newMeeting.setCollaboration(collaboration);
         newMeeting.setMeetingState(meeting.state);
-        newMeeting.setStartTimestamp(meeting.date.time.start_time);
-        newMeeting.setEndTimestamp(meeting.date.time.end_time);
+        newMeeting.setStartTimestamp(meeting.start_date);
+        newMeeting.setEndTimestamp(meeting.end_date);
         newMeeting.setMeetingDescription(meeting.meeting_description);
 
         String message = "Meeting request sent";
