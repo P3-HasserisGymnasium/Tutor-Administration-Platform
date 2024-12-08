@@ -18,7 +18,7 @@ export default function SpeedDialMenu() {
 	const navigate = useNavigate();
 	const rolePrefix = useLocation().pathname.includes("tutor") ? "/tutor" : "/tutee";
 
-	const { data: notifications } = useGetNotifications(userState?.id || "");
+	const { data: notifications } = useGetNotifications(userState?.id || 1);
 
 	const actions = [
 		{
