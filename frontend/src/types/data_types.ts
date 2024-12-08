@@ -64,7 +64,7 @@ export const zodPostCreationSchema = z.object({
 	duration: z.union([z.array(z.number()), z.undefined()]),
 });
 
-export const MeetingState = z.enum(["Pending", "Accepted", "Rejected", "Terminated"] as const);
+export const MeetingState = z.enum(["PENDING", "ACCEPTED", "REJECTED", "TERMINATED"] as const);
 export const NotificationContext = z.enum(["TutorApplication", "Feedback", "Collaboration", "Meeting"] as const);
 export const NotificationParticipant = z.enum(["Tutor", "Tutee", "Admin"] as const);
 
@@ -77,7 +77,7 @@ export const CollaborationState = z.enum([
 	"Rejected",
 	"Terminated",
 ] as const);
-export const zodUUID = z.string().uuid();
+export const zodUUID = z.number();
 
 // Defining types for forms and zod schemas
 export const TimeSlot = zodTimeSlotSchema;

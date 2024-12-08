@@ -48,7 +48,8 @@ public class CollaborationService {
 
     public Collaboration getCollaborationById(Long id){
         Optional<Collaboration> collaboratOpt = collaborationRepository.findById(id);
-        return collaboratOpt.orElseThrow(() -> new IllegalArgumentException("Collaboratio with id" + id + "not found"));
+
+        return collaboratOpt.orElse(null);
     }
 
     public List<Collaboration> getCollaborationsWithTutor(Long tutorId){

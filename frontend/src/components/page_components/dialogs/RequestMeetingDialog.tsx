@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Divider, TextField, Typography } from "@mui/material";
-import { DatePicker, DesktopTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 import { useMeetingService } from "~/api/services/meeting-service";
 import CustomButton from "~/components/content_components/CustomButton";
 import TimeAvailabilityBox from "~/components/content_components/TimeAvailabilityBox";
-import { TimeAvailabilitiesType } from "~/types/data_types";
+import { MeetingState, TimeAvailabilitiesType } from "~/types/data_types";
 import { MeetingType, zodMeetingSchema } from "~/types/entity_types";
 
 type RequestMeetingDialogProps = {
@@ -20,46 +20,30 @@ type RequestMeetingDialogProps = {
 
 export default function RequestMeetingDialog({ open, setOpen, timeAvailabilities }: RequestMeetingDialogProps) {
 	const requestMeeting = useMeetingService().useRequestMeeting();
-	const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-	const [startTime, setStartTime] = useState<Dayjs>(dayjs("2022-04-17T00:00"));
-	const [endTime, setEndTime] = useState<Dayjs>(dayjs("2022-04-17T00:00"));
+	const [startTime, setStartTime] = useState<Dayjs>(dayjs());
+	const [endTime, setEndTime] = useState<Dayjs>(dayjs());
 	const formMethods = useForm<MeetingType>({
 		resolver: zodResolver(zodMeetingSchema),
 		defaultValues: {
-			collaboration_id: useLocation().pathname.split("/")[3],
-			state: "Pending",
-			id: "123",
+			collaboration_id: Number(useLocation().pathname.split("/")[3]),
+			state: MeetingState.Enum.PENDING,
+			id: 123,
+			rejection_reason: "",
 		},
 	});
-	const { setValue, getValues, register } = formMethods;
+	const { getValues, register } = formMethods;
 
 	const handleRequestMeeting = () => {
-		const values = getValues();
-
-		if (!selectedDate || !startTime || !endTime) {
+		if (!startTime || !endTime) {
 			console.error("Invalid time availability");
 			return;
 		}
 
-		setValue("date", {
-			day: selectedDate.format("YYYY-MM-DD"),
-			time: {
-				start_time: startTime.format("HH:mm"),
-				end_time: endTime.format("HH:mm"),
-			},
-		});
-
-		requestMeeting.mutate(values, {
+		requestMeeting.mutate(getValues(), {
 			onSuccess: (data) => {
 				console.log("data", data);
 			},
 		});
-	};
-	const timePickerStyle = {
-		"& .MuiInputBase-root": {
-			height: "2em", // Control the height of the input field
-			fontSize: "1rem", // Adjust font size
-		},
 	};
 
 	return (
@@ -102,42 +86,27 @@ export default function RequestMeetingDialog({ open, setOpen, timeAvailabilities
 				<DialogContent sx={{ display: "flex", pl: 1, flexDirection: "column" }}>
 					<LocalizationProvider dateAdapter={AdapterDayjs}>
 						<Typography mb={1} variant="h6">
-							Select a date for the meeting
+							Select a time for the meeting
 						</Typography>
-						<DatePicker
-							disablePast
-							{...register("date")}
-							onChange={(newValue: Dayjs | null) => {
-								if (newValue) setSelectedDate(newValue);
-							}}
-							sx={{
-								"& .MuiInputBase-root": {
-									fontSize: "1rem",
-								},
-							}}
-							label="Select date"
-						/>
-						<Typography mb={2} mt={3} variant="h6">
-							Choose a duration
-						</Typography>
-						<Box sx={{ display: "flex", gap: 2, width: "80%" }}>
-							<DesktopTimePicker
-								label="From"
+						<Box>
+							<DateTimePicker
+								{...register("start_time")}
+								label="Start time"
+								value={startTime}
 								ampm={false}
-								defaultValue={dayjs("2022-04-17T00:00")}
-								onChange={(newValue: Dayjs | null) => {
+								sx={{ mb: 2 }}
+								onChange={(newValue) => {
 									if (newValue) setStartTime(newValue);
 								}}
-								sx={timePickerStyle}
 							/>
-							<DesktopTimePicker
-								label="Until"
+							<DateTimePicker
+								{...register("end_time")}
+								label="End time"
 								ampm={false}
-								defaultValue={dayjs("2022-04-17T00:00")}
-								onChange={(newValue: Dayjs | null) => {
+								value={endTime}
+								onChange={(newValue) => {
 									if (newValue) setEndTime(newValue);
 								}}
-								sx={timePickerStyle}
 							/>
 						</Box>
 						<Typography mb={1} mt={3} variant="h6">

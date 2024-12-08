@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import project.backend.model.EntityType;
 import project.backend.model.Notification;
 import project.backend.model.NotificationState;
-import project.backend.model.NotificationType;
 import project.backend.repository.NotificationRepository;
 
 @SpringBootTest
