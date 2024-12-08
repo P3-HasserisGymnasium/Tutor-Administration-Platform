@@ -27,8 +27,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 				userData.tutoring_subjects?.map((subject) => Subject.Enum[subject as keyof typeof Subject.Enum]) || null,
 			is_administrator: userData.is_administrator,
 		});
+		if (!userData) {
+			return;
+		}
 		setCookie("Bearer", token, 1);
-		setCookie("user", JSON.stringify(userData), 1);
+		setCookie("user", JSON.stringify(userData), 1); // Store only the `id`
 		setCookie("isAuthenticated", JSON.stringify(true), 1);
 	};
 

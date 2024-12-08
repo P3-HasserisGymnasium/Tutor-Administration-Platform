@@ -22,7 +22,7 @@ import project.backend.service.NotificationService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/notification")
+@RequestMapping("/notifications")
 public class NotificationController {
 
     private final NotificationService notificationService;
