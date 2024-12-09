@@ -67,8 +67,8 @@ public class TutorApplicationService {
         for (TutorTimeSlotCreateBody timeSlotBody : applicationBody.time_availability) {
             TutorTimeSlot timeSlot = new TutorTimeSlot();
 
-            timeSlot.setStartTimestamp(timeSlotBody.start_time);
-            timeSlot.setEndTimestamp(timeSlotBody.end_time);
+            timeSlot.setStartTime(timeSlotBody.start_time);
+            timeSlot.setEndTime(timeSlotBody.end_time);
             tutorApplication.getFreeTimeSlots().add(timeSlot);
 
             tutorTimeslotRepository.save(timeSlot);
