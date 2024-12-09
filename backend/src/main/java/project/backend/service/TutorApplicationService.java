@@ -15,6 +15,7 @@ import project.backend.model.TutorApplicationState;
 import project.backend.model.TutorTimeSlot;
 import project.backend.repository.TutorApplicationRepository;
 import project.backend.repository.TutorRepository;
+import project.backend.repository.TutorTimeslotRepository;
 
 @Service
 public class TutorApplicationService {
@@ -28,10 +29,14 @@ public class TutorApplicationService {
     @Autowired
     final TutorRepository tutorRepository;
 
-    public TutorApplicationService(TutorApplicationRepository tutorApplicationRepository, RoleService roleService, TutorRepository tutorRepository) {
+    @Autowired
+    final TutorTimeslotRepository tutorTimeslotRepository;
+
+    public TutorApplicationService(TutorApplicationRepository tutorApplicationRepository, RoleService roleService, TutorRepository tutorRepository, TutorTimeslotRepository tutorTimeslotRepository) {
         this.tutorApplicationRepository = tutorApplicationRepository;
         this.roleService = roleService;
         this.tutorRepository = tutorRepository;
+        this.tutorTimeslotRepository = tutorTimeslotRepository;
     }
 
     public TutorApplication getTutorApplicationById(Long id){
@@ -49,9 +54,15 @@ public class TutorApplicationService {
 
         Student student = roleService.getStudentById(applicationBody.student_id);
         tutorApplication.setStudent(student);
+        
+        List<TutorApplication> applications = student.getTutorApplications();
+        applications.add(tutorApplication);
+        student.setTutorApplications(applications);
 
         tutorApplication.setSubjects(applicationBody.subjects);
         tutorApplication.setDescription(applicationBody.tutor_profile_description);
+
+        TutorApplication savedTutorApplication = tutorApplicationRepository.save(tutorApplication);
         
         for (TutorTimeSlotCreateBody timeSlotBody : applicationBody.time_availability) {
             TutorTimeSlot timeSlot = new TutorTimeSlot();
@@ -59,9 +70,10 @@ public class TutorApplicationService {
             timeSlot.setStartTimestamp(timeSlotBody.start_time);
             timeSlot.setEndTimestamp(timeSlotBody.end_time);
             tutorApplication.getFreeTimeSlots().add(timeSlot);
+
+            tutorTimeslotRepository.save(timeSlot);
         }
-        
-        return tutorApplicationRepository.save(tutorApplication);
+        return savedTutorApplication;
     }
 
     public void deleteTutorApplicationById(Long id) {

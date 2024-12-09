@@ -1,14 +1,17 @@
 package project.backend.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -23,6 +26,10 @@ public class Student extends User {
 
     @Embedded
     StudentContactInfo contactInfo;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    List<TutorApplication> tutorApplications;
 
     @OneToOne
     @JsonManagedReference
@@ -57,6 +64,14 @@ public class Student extends User {
 
     public void setContactInfo(StudentContactInfo contactInfo) {
         this.contactInfo = contactInfo;
+    }
+
+    public List<TutorApplication> getTutorApplications() {
+        return tutorApplications;
+    }
+
+    public void setTutorApplications(List<TutorApplication> tutorApplications) {
+        this.tutorApplications = tutorApplications;
     }
 
     public Tutee getTutee() {
