@@ -33,6 +33,14 @@ public class MeetingService {
         return meetingRepository.findMeetingsByTuteeOrTutorId(id);
     }
 
+    public Iterable<Meeting> getMeetingsByTutorId(Long tutorId) {
+        return meetingRepository.findMeetingsByTutorId(tutorId);
+    }
+
+    public Iterable<Meeting> getMeetingsByTuteeId(Long tuteeId) {
+        return meetingRepository.findMeetingsByTuteeId(tuteeId);
+    }
+
     public Iterable<Meeting>  getMeetingsByCollaborationId(Long collaborationId) {
         return meetingRepository.findMeetingsByCollaborationId(collaborationId);
     }

@@ -3,7 +3,7 @@ import FullCalendar from "@fullcalendar/react"; // Correct capitalization
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Box, Paper, Typography } from "@mui/material";
+import { Paper } from "@mui/material";
 // import { useMeetingService } from "~/api/services/meeting-service";
 
 /*
@@ -37,25 +37,12 @@ export default function MiniCalendar(){
 
    
     return(
-        <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 2,
-        height: "100vh",
-        backgroundColor: "#f5f5f5", // Optional: Light gray background
-      }}
-    >
-      <Typography variant="h4" gutterBottom>
-        Calendar
-      </Typography>
+        
+     
       <Paper
         elevation={3}
         sx={{
-          width: "100%",
-          maxWidth: "1200px",
+          width: "95%",
           padding: 2,
           borderRadius: 2,
         }}
@@ -75,7 +62,7 @@ export default function MiniCalendar(){
           
         />
       </Paper>
-    </Box>
+  
     
 
     );
