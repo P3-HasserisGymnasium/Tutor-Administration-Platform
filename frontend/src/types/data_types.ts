@@ -38,7 +38,7 @@ export const zodTutorListFilterSchema = z.object({
 	languages: z.array(Language),
 });
 
-export const zodTimeAvailabilitiesSchema = z.object({
+export const zodTimeAvailabilitySchema = z.object({
 	day: Day,
 	time: z.array(zodTimeSlotSchema),
 });
@@ -50,7 +50,7 @@ export const zodMeetingTime = z.object({
 
 export const zodTutorApplicationSchema = z.object({
 	subjects: z.array(Subject),
-	time_availability: z.array(zodTimeAvailabilitiesSchema),
+	time_availability: z.array(zodTimeAvailabilitySchema),
 	application: z.string(),
 });
 export const zodPostListFilterSchema = z.object({
@@ -82,7 +82,7 @@ export const zodUUID = z.number();
 // Defining types for forms and zod schemas
 export const TimeSlot = zodTimeSlotSchema;
 export type tutorListFilterType = z.infer<typeof zodTutorListFilterSchema>;
-export type TimeAvailabilitiesType = z.infer<typeof zodTimeAvailabilitiesSchema>;
+export type TimeAvailabilityType = z.infer<typeof zodTimeAvailabilitySchema>;
 export type zodMeetingTimeType = z.infer<typeof zodMeetingTime>;
 export type PostListFilterType = z.infer<typeof zodPostListFilterSchema>;
 export type TimeSlotType = z.infer<typeof zodTimeSlotSchema>;

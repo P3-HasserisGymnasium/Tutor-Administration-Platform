@@ -150,8 +150,6 @@ public class RoleService {
     @Deprecated
     public Object getProfile(Long id, RoleEnum role) {
         Student student = getStudentById(id);
-
-
         if(role == RoleEnum.Tutee && student.getTutee() != null){
             return student.getTutee();
         } else if(role == RoleEnum.Tutor && student.getTutor() != null){
@@ -163,17 +161,12 @@ public class RoleService {
 
     public TutorProfileResponse getTutorProfile(Long id) {
         Tutor tutor = getTutorByUserId(id);
-    
-
         TutorProfileResponse response = new TutorProfileResponse();
-        response.full_name = tutor.getStudent()
-            .getFullName();
+        response.full_name = tutor.getStudent().getFullName();
         response.description = tutor.getProfileDescription();
-        response.year_group = tutor.getStudent()
-            .getYearGroup();
+        response.yearGroup = tutor.getStudent().getYearGroup();
         response.tutoring_subjects = tutor.getTutoringSubjects();
-        response.contact_info = tutor.getStudent()
-            .getContactInfo();
+        response.contact_info = tutor.getStudent().getContactInfo();
         response.time_availability = tutor.getFreeTimeSlots();
         response.languages = tutor.getStudent().getLanguages();
         

@@ -1,7 +1,6 @@
 import {Box, Button, Typography }from "@mui/material";
 import { useAuth } from "~/api/authentication/useAuth";
 import { useRoleService } from "~/api/services/roleService";
-import { useEffect } from "react";
 import InitialsAvatar from "./InitialsAvatar";
 import { useTheme } from "@mui/system";
 import { Theme } from "@mui/material/styles";
@@ -9,11 +8,14 @@ import { Theme } from "@mui/material/styles";
 export default function TutorProfile() {
     const theme = useTheme<Theme>();
     const {userState} = useAuth();
-    const profileMutation = useRoleService().getTutorProfile;
+    console.log("userState", userState);
+    const {data: tutorProfile, isLoading, isError} = useRoleService().useGetTutorProfile(userState.id as number);
+    console.log("tutorProfile", tutorProfile);  
 
+    /* 
     useEffect(() => {
         if (userState.id) {
-            profileMutation.mutate(userState.id, {
+            profileMutation.mutate((String(userState.id)), {
                 onSuccess: (data) => {
                     //const profile = data;
                     console.log("received data", data);
@@ -24,7 +26,15 @@ export default function TutorProfile() {
             });
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userState.id]);
+    }, [userState.id]); */
+
+    if (isLoading) {
+        return <Typography>Loading...</Typography>;
+    }
+
+    if (isError) {
+        return <Typography>Error...</Typography>;
+    }
 
     return (
         <Box sx={{display:"flex", flexDirection:"column", padding:"1em" }}>

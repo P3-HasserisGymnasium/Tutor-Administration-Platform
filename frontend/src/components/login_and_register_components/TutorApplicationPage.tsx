@@ -1,6 +1,6 @@
 import { Box, Button, TextField, Theme, Typography, useTheme } from "@mui/material";
 import { useFormContext } from "react-hook-form";
-import { useSubmit, useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import { toast } from "react-toastify";
 import TutorlyLogoBlue from "src/assets/TutorlyLogoBlue.svg"
 import { useAccountService } from "~/api/services/account-service";
@@ -17,13 +17,12 @@ const TutorApplicationPage: React.FC<TutorApplicationPageProps> = ({ setPage }) 
 
     const navigate = useNavigate();
 
-    const registerMutation = useAccountService().registerAccount();
+    const registerMutation = useAccountService().useRegisterAccount();
 
     const registerTutor = () => {
         const values = getValues();
         registerMutation.mutate(values, {
             onSuccess: (/*data*/) => {
-                useSubmit();
                 navigate("/start");
             },
             onError: (e) => {

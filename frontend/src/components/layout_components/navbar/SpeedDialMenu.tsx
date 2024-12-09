@@ -1,4 +1,4 @@
-import { Backdrop, SpeedDial, SpeedDialAction, Avatar, Box, Badge } from "@mui/material";
+import { Backdrop, SpeedDial, SpeedDialAction, Box, Badge } from "@mui/material";
 import { useState } from "react";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";

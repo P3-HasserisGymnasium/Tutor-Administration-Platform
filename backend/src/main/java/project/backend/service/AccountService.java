@@ -51,7 +51,11 @@ public class AccountService {
     @Autowired
     final TutorTimeslotRepository timeSlotRepository;
 
-    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository, TutorRepository tutorRepository, TuteeRepository tuteeRepository, TutorTimeslotRepository timeSlotRepository) {
+    @Autowired
+    final RoleService roleService;
+
+    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository, TutorRepository tutorRepository, TuteeRepository tuteeRepository, TutorTimeslotRepository timeSlotRepository, RoleService roleService) {
+        this.roleService = roleService;
         this.accountRepository = accountRepository;
         this.studentRepository = studentRepository;
         this.tutorRepository = tutorRepository;
@@ -98,8 +102,8 @@ public class AccountService {
                     TutorTimeSlot newTimeSlot = new TutorTimeSlot();
                     newTimeSlot.setWeekDay(timeSlotBody.day);
 
-                    newTimeSlot.setStartTime(timeBody.start_time);
-                    newTimeSlot.setEndTime(timeBody.end_time);
+                    newTimeSlot.setStartTimestamp(timeBody.start_time);
+                    newTimeSlot.setEndTimestamp(timeBody.end_time);
                     
                     timeSlotRepository.save(newTimeSlot);
 

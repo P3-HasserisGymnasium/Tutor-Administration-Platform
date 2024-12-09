@@ -1,6 +1,6 @@
 import { Box, Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, TextField, Theme, Typography, useTheme } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
-import { useNavigate, useSubmit } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import TutorlyLogoBlue from "src/assets/TutorlyLogoBlue.svg"
 import { useAccountService } from "~/api/services/account-service";
 import { Language, Role, RoleType, YearGroup } from "~/types/data_types";
@@ -14,7 +14,7 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
     const theme = useTheme<Theme>();
     const formMethods = useFormContext<AccountRegisterType>();
 
-    const registerMutation = useAccountService().registerAccount();
+    const registerMutation = useAccountService().useRegisterAccount();
     const { getValues, register, control, handleSubmit, formState: {
         errors
     }, setError } = formMethods;
@@ -35,7 +35,6 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
         else if (isTutee) {
             registerMutation.mutate(values, {
                 onSuccess: (/*data*/) => {
-                    useSubmit();
                     navigate("/start");
                 },
                 onError: (/*error*/) => {

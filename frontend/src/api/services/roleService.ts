@@ -17,13 +17,13 @@ type tutorProfileType = {
 	languages: LanguageType[]
 }
 
-export const useRoleService = () => {
+export const useRoleService =()=> {
 
 	const assignTuteeRole = useMutation({
 		mutationKey: ["assignTuteeRole"],
 		mutationFn: async (studentId: number) => {
 			const { data } = await apiClient.post<number>(
-				"/api/role_service",
+				"/api/role",
 				studentId
 			);
 			return data;
@@ -40,7 +40,7 @@ export const useRoleService = () => {
 		mutationKey: ["removeRole"],
 		mutationFn: async (roleId: number) => {
 			const { data } = await apiClient.post<number>(
-				"/api/role_service",
+				"/api/role",
 				roleId
 			);
 			return data;
@@ -58,7 +58,7 @@ export const useRoleService = () => {
 		queryKey: ["getTutees"],
 		queryFn: async () => {
 			const { data } = await apiClient.get<number[]>(
-				`/api/role_service`
+				`/api/role`
 			);
 			return data;
 		},
@@ -71,7 +71,7 @@ export const useRoleService = () => {
 		mutationKey: ["getTutors"],
 		mutationFn: async (filters: tutorListFilterType) => {
 			const { data } = await apiClient.post<ProfileType[]>(
-				`/api/role_service`, filters
+				`/api/role`, filters
 			);
 			return data;
 		},
@@ -83,21 +83,31 @@ export const useRoleService = () => {
 		},
 	});
 
-	const getTutorProfile = useMutation({
-			mutationKey: ["getProfile"],
-			mutationFn: async (id:string|null) => {
+	const useGetTutorProfile = (id: number) => { return useQuery({
+			queryKey: ["getProfile", id],
+			queryFn: async () => {
 				const { data } = await apiClient.get<tutorProfileType>(
-					`/api/role/tutor/${id}`,
+					`/api/role/${id}/Tutor`,
 				);
 				return data;
 			},
-	}); 
+			refetchOnWindowFocus: false,
+			placeholderData: {
+				contact_info: null,
+				description: null,
+				full_name: null,
+				time_availability: [],
+				tutoring_subjects: [],
+				yearGroup: "PRE_IB",
+				languages: []
+			},
+	})};
 
 	const editProfile = useMutation({
 		mutationKey: ["editProfile"],
 		mutationFn: async (profile: ProfileType) => {
 			const { data } = await apiClient.post<ProfileType>(
-				"/api/role_service",
+				"/api/role",
 				profile
 			);
 			return data;
@@ -115,7 +125,7 @@ export const useRoleService = () => {
 		removeRole,
 		getTutees,
 		getTutors,
-		getTutorProfile,
+		useGetTutorProfile,
 		editProfile
 	};
 };

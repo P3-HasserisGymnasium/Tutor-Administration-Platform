@@ -18,7 +18,7 @@ import { Role } from "./types/data_types";
 import NotFound from "./api/authentication/NotFound";
 import Forbidden from "./api/authentication/Forbidden";
 import { useAuth } from "./api/authentication/useAuth";
-import AdministratorPage from "./components/page_components/dialogs/AdministratorPage";
+//import AdministratorPage from "./components/page_components/dialogs/AdministratorPage";
 import CollaborationPage from "./components/page_components/CollaborationPage";
 
 export default function AuthenticatedApp() {
@@ -29,7 +29,7 @@ export default function AuthenticatedApp() {
 
 	const isTutee = userState.role?.includes(Role.Enum.Tutee);
 	const isTutor = userState.role?.includes(Role.Enum.Tutor);
-	const isAdmin = userState.is_administrator;
+	//const isAdmin = userState.is_administrator;
 	console.log("isAuthenticated is equal to: ", isAuthenticated);
 	return (
 		<Box
