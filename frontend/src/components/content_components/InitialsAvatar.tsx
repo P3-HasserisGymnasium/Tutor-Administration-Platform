@@ -3,7 +3,7 @@ import { SxProps, Theme } from "@mui/system";
 
 function stringAvatar(fullName: string) {
   return {
-    children: `${fullName.split(' ')[0][0]}${fullName.split(' ')[1][0]}`,
+    children: `${fullName.split(' ')[0][0]}${fullName.split(' ')[1]?.[0]}`,
   }; 
 }
 
