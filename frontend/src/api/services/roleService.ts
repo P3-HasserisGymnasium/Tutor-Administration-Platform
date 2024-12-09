@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
 import { tutorListFilterType } from '~/types/data_types';
-import { ProfileType } from "~/types/entity_types";
+import { TutorProfileType } from "~/types/entity_types";
 
 // tutee/tutor:role_id -> role:student_id -> student:id
 
@@ -62,7 +62,7 @@ export const useRoleService = () => {
 	const getTutors = useMutation({
 		mutationKey: ["getTutors"],
 		mutationFn: async (filters: tutorListFilterType) => {
-			const { data } = await apiClient.post<ProfileType[]>(
+			const { data } = await apiClient.post<TutorProfileType[]>(
 				`/api/role_service`, filters
 			);
 			return data;
@@ -78,7 +78,7 @@ export const useRoleService = () => {
 	const getProfile = useQuery({
 		queryKey: ["getProfile"],
 		queryFn: async () => {
-			const { data } = await apiClient.get<ProfileType>(
+			const { data } = await apiClient.get<TutorProfileType>(
 				`/api/role_service`
 			);
 			return data;
@@ -88,8 +88,8 @@ export const useRoleService = () => {
 
 	const editProfile = useMutation({
 		mutationKey: ["editProfile"],
-		mutationFn: async (profile: ProfileType) => {
-			const { data } = await apiClient.post<ProfileType>(
+		mutationFn: async (profile: TutorProfileType) => {
+			const { data } = await apiClient.post<TutorProfileType>(
 				"/api/role_service",
 				profile
 			);

@@ -12,6 +12,7 @@ import {
 	NotificationContext,
 	NotificationParticipant,
 	NotificationState,
+	zodTimeAvailabilitiesSchema,
 } from "./data_types";
 
 export const zodPostSchema = z.object({
@@ -23,12 +24,19 @@ export const zodPostSchema = z.object({
 	state: z.string(),
 });
 
-export const zodProfileSchema = z.object({
+export const zodTutorProfileSchema = z.object({
 	full_name: z.string(),
 	year_group: YearGroup,
 	languages: z.array(Language),
 	subjects: z.array(Subject),
+	time_availability: z.array(zodTimeAvailabilitiesSchema),
 	description: z.string().optional(),
+});
+
+export const zodTuteeProfileSchema = z.object({
+	full_name: z.string(),
+	year_group: YearGroup,
+	languages: z.array(Language),
 });
 
 export const zodMeetingSchema = z.object({
@@ -163,7 +171,8 @@ export type LoginSuccessDataType = z.infer<typeof zodLoginSuccessDataType>;
 export type LoginType = z.infer<typeof zodLoginSchema>;
 export type UserState = z.infer<typeof zodUserStateSchema>;
 export type PostType = z.infer<typeof zodPostSchema>;
-export type ProfileType = z.infer<typeof zodProfileSchema>;
+export type TutorProfileType = z.infer<typeof zodTutorProfileSchema>;
+export type TuteeProfileType = z.infer<typeof zodTuteeProfileSchema>;
 export type MeetingType = z.infer<typeof zodMeetingSchema>;
 export type CollaborationType = z.infer<typeof zodCollaborationSchema>;
 export type Feedback = z.infer<typeof zodFeedbackSchema>;
