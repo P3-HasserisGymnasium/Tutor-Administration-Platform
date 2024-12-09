@@ -1,5 +1,5 @@
 //import { useEffect, useState } from "react";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 //import axios from "axios";
 import MiniPost from "./MiniPost";
 import { PostType } from "~/types/entity_types";
@@ -8,13 +8,12 @@ type MiniPostListProps = {
 	posts: PostType[] | undefined;
 	isLoading: boolean;
 	isError: boolean;
-	refetch: () => void;
 };
 
-export default function MiniPostList({ posts, isLoading, isError, refetch }: MiniPostListProps) {
+export default function MiniPostList({ posts, isLoading, isError }: MiniPostListProps) {
 	if (isLoading) {
 		return (
-			<Box sx={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
+			<Box sx={{ display: "flex", justifyContent: "center", marginTop: 4, width: "100%" }}>
 				<CircularProgress />
 			</Box>
 		);
@@ -22,16 +21,13 @@ export default function MiniPostList({ posts, isLoading, isError, refetch }: Min
 
 	if (isError) {
 		return (
-			<Box sx={{ textAlign: "center", marginTop: 4 }}>
-				<Typography color="error">Error fetching posts. Please try again.</Typography>
-				<Button onClick={() => refetch()} variant="contained" sx={{ marginTop: 2 }}>
-					Retry
-				</Button>
-			</Box>
+			<Typography variant="h6" color="red">
+				Error fetching posts. Please refresh the page.
+			</Typography>
 		);
 	}
 
-	const safePost = posts || []; // since post can be undefined
+	if (!posts) return <Typography variant="h6">No posts found.</Typography>;
 
 	return (
 		<Box
@@ -43,8 +39,8 @@ export default function MiniPostList({ posts, isLoading, isError, refetch }: Min
 				padding: 2,
 			}}
 		>
-			{safePost.length > 0 ? (
-				safePost.map((post) => <MiniPost key={post.id} postData={post} />)
+			{posts.length > 0 ? (
+				posts.map((post) => <MiniPost key={post.id} postData={post} />)
 			) : (
 				<Typography variant="h6">No posts found.</Typography>
 			)}

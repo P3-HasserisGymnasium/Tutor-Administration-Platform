@@ -1,16 +1,24 @@
 import { Dialog, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
+import Loading from "~/api/authentication/Loading";
 import MiniCollab from "~/components/content_components/HomePageComponents/MiniCollab";
 import { CollaborationType } from "~/types/entity_types";
 
 type ViewCollaborationsDialogProps = {
 	open: boolean;
 	setOpen: Dispatch<SetStateAction<boolean>>;
-	collaborations: CollaborationType[];
+	collaborations: CollaborationType[] | undefined;
+	isLoading: boolean;
 };
 
-export default function RequestMeetingDialog({ open, setOpen, collaborations }: ViewCollaborationsDialogProps) {
+export default function RequestMeetingDialog({
+	open,
+	setOpen,
+	collaborations,
+	isLoading,
+}: ViewCollaborationsDialogProps) {
 	console.log("collaborations", collaborations);
+
 	return (
 		<Dialog
 			open={open}
@@ -26,17 +34,23 @@ export default function RequestMeetingDialog({ open, setOpen, collaborations }: 
 				},
 			}}
 		>
-			<DialogTitle sx={{ fontWeight: "bold", fontSize: "1.5rem", textAlign: "center", pb: 0 }}>
-				Your active collaborations
-			</DialogTitle>
-			<DialogContentText textAlign={"center"} pt={0}>
-				Click on a collaboration to go the respective collaboration page
-			</DialogContentText>
-			<DialogContent sx={{ display: "flex", flexWrap: "wrap", gap: 2, pr: 0, justifyContent: "center" }}>
-				{collaborations.map((collaboration) => (
-					<MiniCollab key={collaboration.tutor_id + collaboration.tutee_name} collaboration={collaboration} />
-				))}
-			</DialogContent>
+			{isLoading ? (
+				<Loading size={100} />
+			) : (
+				<>
+					<DialogTitle sx={{ fontWeight: "bold", fontSize: "1.5rem", textAlign: "center", pb: 0 }}>
+						Your active collaborations
+					</DialogTitle>
+					<DialogContentText textAlign={"center"} pt={0}>
+						Click on a collaboration to go the respective collaboration page
+					</DialogContentText>
+					<DialogContent sx={{ display: "flex", flexWrap: "wrap", gap: 2, pr: 0, justifyContent: "center" }}>
+						{collaborations?.map((collaboration) => (
+							<MiniCollab key={collaboration.tutor_id + collaboration.tutee_name} collaboration={collaboration} />
+						))}
+					</DialogContent>
+				</>
+			)}
 		</Dialog>
 	);
 }

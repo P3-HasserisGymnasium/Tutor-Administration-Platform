@@ -13,13 +13,15 @@ import CustomButton from "~/components/content_components/CustomButton";
 import { usePostService } from "~/api/services/post-service";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useAuth } from "~/api/authentication/useAuth";
+import ViewCollaborationsDialog from "../dialogs/ViewCollaborationsDialog";
 
 export default function TuteePage() {
 	const theme = useCurrentTheme();
 	const { isMobile } = useBreakpoints();
 	const [view, setView] = useState<"list" | "calender">("list");
+	const [showCollabDialog, setShowCollabDialog] = useState(false);
 	const { userState } = useAuth();
-	const { data: posts, isLoading, isError, refetch } = usePostService().useGetTuteePosts();
+	const { data: posts, isLoading: postsLoading, isError: postsError } = usePostService().useGetTuteePosts();
 	const {
 		data: collaborations,
 		isLoading: collabLoading,
@@ -30,6 +32,12 @@ export default function TuteePage() {
 
 	return (
 		<ThemeProvider theme={theme}>
+			<ViewCollaborationsDialog
+				open={showCollabDialog}
+				setOpen={setShowCollabDialog}
+				collaborations={collaborations}
+				isLoading={collabLoading}
+			/>
 			<MediumShortOnShortBoxLayout>
 				<Box
 					sx={{
@@ -134,10 +142,15 @@ export default function TuteePage() {
 						</Tooltip>
 					</Box>
 					<Box sx={{ display: "flex", gap: 2 }}>
-						<MiniPostList posts={posts} isLoading={isLoading} isError={isError} refetch={refetch} />
+						<MiniPostList posts={posts} isLoading={postsLoading} isError={postsError} />
 					</Box>
 					<Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
-						<CustomButton variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+						<CustomButton
+							onClick={() => setShowCollabDialog(true)}
+							variant="contained"
+							color="primary"
+							sx={{ fontSize: "18px" }}
+						>
 							View all
 						</CustomButton>
 						<CustomButton variant="contained" color="primary" sx={{ fontSize: "18px" }}>

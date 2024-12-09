@@ -15,25 +15,25 @@ import { useAuth } from "./api/authentication/useAuth";
 const AuthenticatedApp = lazy(() => import("./AuthenticatedApp"));
 
 export default function App() {
-  const theme = useCurrentTheme(); // must use hook to make sure the theme is updated, stateful
-  const { isAuthenticated } = useAuth();
+	const theme = useCurrentTheme(); // must use hook to make sure the theme is updated, stateful
+	const { isAuthenticated } = useAuth();
 
-  if (!isAuthenticated) {
-    return (
-      <ThemeProvider theme={unauthenticatedAppTheme}>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      </ThemeProvider>
-    );
-  }
-  return (
-    <ThemeProvider theme={theme}>
-      <Suspense fallback={<Loading />}>
-        <AuthenticatedApp />
-      </Suspense>
-    </ThemeProvider>
-  );
+	if (!isAuthenticated) {
+		return (
+			<ThemeProvider theme={unauthenticatedAppTheme}>
+				<Routes>
+					<Route path="/login" element={<Login />} />
+					<Route path="/register" element={<Register />} />
+					<Route path="*" element={<Navigate to="/login" />} />
+				</Routes>
+			</ThemeProvider>
+		);
+	}
+	return (
+		<ThemeProvider theme={theme}>
+			<Suspense fallback={<Loading size={150} />}>
+				<AuthenticatedApp />
+			</Suspense>
+		</ThemeProvider>
+	);
 }
