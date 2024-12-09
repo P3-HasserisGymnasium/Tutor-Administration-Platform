@@ -67,6 +67,14 @@ public class NotificationService {
         return notificationRepository.findAllSentByUserId(userId);
     }
 
+    public List<Notification> getAllNotificationsSentToTuteeId(Long userId) {
+        return notificationRepository.findAllSentToTutee(userId);
+    }
+
+    public List<Notification> getAllNotificationsSentToTutorId(Long userId) {
+        return notificationRepository.findAllSentToTutor(userId);
+    }
+
     public Optional<Notification> getNotificationById(Long id) {
         return notificationRepository.findById(id);
     }
