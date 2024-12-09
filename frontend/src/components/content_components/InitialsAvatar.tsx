@@ -1,4 +1,5 @@
-import { Avatar } from "@mui/material";
+import { Avatar} from "@mui/material";
+import { SxProps, Theme } from "@mui/system";
 
 function stringAvatar(fullName: string) {
   return {
@@ -6,9 +7,11 @@ function stringAvatar(fullName: string) {
   }; 
 }
 
-export default function InitialsAvatar({ fullName }: { fullName: string|null }) {
+export default function InitialsAvatar({sx, fullName }: {sx?: SxProps<Theme>, fullName: string|null }) {
   if(fullName != null) {
-    return <Avatar {...stringAvatar(fullName)} />;
+    return <Avatar sx={sx} {...stringAvatar(fullName)} />;
+  } else {
+    return <Avatar sx={sx} {...stringAvatar("I B")}/>;
   }
 }
 
