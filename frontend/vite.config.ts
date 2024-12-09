@@ -1,11 +1,8 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
 import path from 'path';
 
-const root = resolve(__dirname, './src');
-console.log("dirname", __dirname);
-console.log("root", root);
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -22,5 +19,10 @@ export default defineConfig({
       public: '/public',
     },
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json'],
+  },
+  test: {
+    globals: true, // Allows you to use `describe`, `test`, and `expect` globally
+    environment: 'jsdom', // Simulates a browser environment
+    setupFiles: './src/tests/test-setup.ts', // Optional: setup file to configure the testing environment
   },
 });

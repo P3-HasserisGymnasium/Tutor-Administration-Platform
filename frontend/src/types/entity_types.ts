@@ -60,8 +60,8 @@ export const zodCollaborationSchema = z.object({
 	tutor_name: z.string(),
 	state: CollaborationState,
 	subject: Subject,
-	end_date: z.date().optional(),
-	start_date: z.date().optional(),
+	end_date: z.union([z.date(), z.string()]).optional(),
+	start_date: z.union([z.date(), z.string()]).optional(),
 });
 
 export const zodFeedbackSchema = z.object({

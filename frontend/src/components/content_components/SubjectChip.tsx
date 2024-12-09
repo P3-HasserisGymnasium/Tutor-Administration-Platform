@@ -1,13 +1,14 @@
 import { Chip } from "@mui/material";
-import { SubjectType} from "~/types/data_types";
-import {useTheme, Theme} from "@mui/material/styles";
+import { SubjectType } from "~/types/data_types";
+import { useTheme, Theme } from "@mui/material/styles";
 
 // Enum for subject colors
-export default function SubjectChip({ Subject }:{Subject: SubjectType} ) {
+export default function SubjectChip({ Subject }: { Subject: SubjectType }) {
   const theme = useTheme<Theme>();
 
   return (
     <Chip
+      data-testid="subjectchip"
       label={Subject}
       sx={{
         backgroundColor: theme.customColors.subjectColors[Subject],
