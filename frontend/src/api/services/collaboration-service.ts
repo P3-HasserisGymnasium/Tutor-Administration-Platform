@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { PostType, CollaborationType, Feedback } from "~/types/entity_types";
+import { PostType, CollaborationType, Feedback, TerminationType } from "~/types/entity_types";
 
 export const useCollaborationService = () => {
 	//Admin requests a collaboration
@@ -53,6 +53,7 @@ export const useCollaborationService = () => {
 		mutationKey: ["requestCollaborationSuggestion"],
 		mutationFn: async (collaborationSuggestionRequest: PostType) => {
 			const { data } = await apiClient.post<PostType>("/api/collaboration", collaborationSuggestionRequest);
+
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -68,6 +69,7 @@ export const useCollaborationService = () => {
 		mutationKey: ["requestCollaboration"],
 		mutationFn: async (collaboration: CollaborationType) => {
 			const { data } = await apiClient.post<CollaborationType>("/api/collaboration", collaboration);
+
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -78,19 +80,21 @@ export const useCollaborationService = () => {
 		},
 	});
 
-	const terminateCollaboration = useMutation({
-		mutationKey: ["terminateCollaboration"],
-		mutationFn: async (id: number) => {
-			const { data } = await apiClient.post<number>("/api/collaboration", id);
-			return data;
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
-		},
-		onSuccess: () => {
-			toast.success("Collaboration terminated");
-		},
-	});
+	const useTerminateCollaboration = () => {
+		return useMutation({
+			mutationKey: ["terminateCollaboration"],
+			mutationFn: async ({ id, terminationReason }: TerminationType) => {
+				const { data } = await apiClient.post<string>("/api/collaboration/terminate/" + id, terminationReason);
+				return data;
+			},
+			onError: (e: AxiosError<{ detail: string }>) => {
+				toast.error(e?.response?.data?.detail);
+			},
+			onSuccess: () => {
+				toast.success("Collaboration terminated");
+			},
+		});
+	};
 
 	const submitFeedback = useMutation({
 		mutationKey: ["submitFeedback"],
@@ -105,16 +109,6 @@ export const useCollaborationService = () => {
 			toast.success("Feedback submitted");
 		},
 	});
-
-	/* const getCollaborations = useQuery({
-		queryKey: ["getCollaborations"],
-		queryFn: async () => {
-			const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/all`);
-			return data;
-		},
-		refetchOnWindowFocus: false,
-		placeholderData: [],
-	}); */
 
 	const useGetCollaborationsWithTutee = (id: number | null) => {
 		return useQuery({
@@ -131,14 +125,13 @@ export const useCollaborationService = () => {
 	};
 
 	return {
-		submitCollaborationSuggestion,
 		useGetCollaborationsWithTutee,
+		submitCollaborationSuggestion,
 		acceptCollaboration,
 		rejectCollaboration,
 		requestCollaborationSuggestion,
 		requestCollaboration,
-		terminateCollaboration,
-		submitFeedback /* 
-		getCollaborations, */,
+		useTerminateCollaboration,
+		submitFeedback,
 	};
 };
