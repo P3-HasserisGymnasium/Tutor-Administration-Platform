@@ -13,8 +13,7 @@ import CustomButton from "~/components/content_components/CustomButton";
 import { usePostService } from "~/api/services/post-service";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useAuth } from "~/api/authentication/useAuth";
-import ViewCollaborationsDialog from "../dialogs/ViewCollaborationsDialog";
-
+import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
 export default function TuteePage() {
 	const theme = useCurrentTheme();
 	const { isMobile } = useBreakpoints();
@@ -27,8 +26,6 @@ export default function TuteePage() {
 		isLoading: collabLoading,
 		isError: collabError,
 	} = useCollaborationService().useGetCollaborationsWithTutee(userState?.id || null);
-
-	//const navigate = useNavigate();
 
 	return (
 		<ThemeProvider theme={theme}>

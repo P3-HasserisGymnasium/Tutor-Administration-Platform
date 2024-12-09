@@ -53,6 +53,7 @@ export const useCollaborationService = () => {
 		mutationKey: ["requestCollaborationSuggestion"],
 		mutationFn: async (collaborationSuggestionRequest: PostType) => {
 			const { data } = await apiClient.post<PostType>("/api/collaboration", collaborationSuggestionRequest);
+
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -68,6 +69,7 @@ export const useCollaborationService = () => {
 		mutationKey: ["requestCollaboration"],
 		mutationFn: async (collaboration: CollaborationType) => {
 			const { data } = await apiClient.post<CollaborationType>("/api/collaboration", collaboration);
+
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -108,16 +110,6 @@ export const useCollaborationService = () => {
 		},
 	});
 
-	/* const getCollaborations = useQuery({
-		queryKey: ["getCollaborations"],
-		queryFn: async () => {
-			const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/all`);
-			return data;
-		},
-		refetchOnWindowFocus: false,
-		placeholderData: [],
-	}); */
-
 	const useGetCollaborationsWithTutee = (id: number | null) => {
 		return useQuery({
 			queryKey: ["getCollaborationsWithTutee", id],
@@ -133,14 +125,13 @@ export const useCollaborationService = () => {
 	};
 
 	return {
-		submitCollaborationSuggestion,
 		useGetCollaborationsWithTutee,
+		submitCollaborationSuggestion,
 		acceptCollaboration,
 		rejectCollaboration,
 		requestCollaborationSuggestion,
 		requestCollaboration,
 		useTerminateCollaboration,
-		submitFeedback /* 
-		getCollaborations, */,
+		submitFeedback,
 	};
 };
