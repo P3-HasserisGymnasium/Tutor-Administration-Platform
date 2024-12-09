@@ -1,20 +1,15 @@
 import { Card, CardContent, Typography, Avatar, Box } from "@mui/material";
-import { SubjectType } from "src/types/data_types"; // Import the Subject enum and mapping
 import SubjectIcon from "./SubjectIcon";
+import { CollaborationType } from "~/types/entity_types";
+import { useLocation, useNavigate } from "react-router-dom";
 
-interface MiniCollabProb {
-	subject: SubjectType;
-	collaborator: string;
-	avatar: string;
-}
+export default function MiniCollab({ collaboration }: { collaboration: CollaborationType }) {
+	const navigate = useNavigate();
+	const rolePrefix = useLocation().pathname.includes("tutor") ? "/tutor" : "/tutee";
 
-export default function MiniCollab({
-	subject,
-	collaborator,
-	avatar,
-}: MiniCollabProb) {
 	return (
 		<Card
+			onClick={() => navigate(`${rolePrefix}/collaboration/${collaboration.id}`)}
 			sx={{
 				width: 200,
 				borderRadius: 2,
@@ -22,6 +17,10 @@ export default function MiniCollab({
 				backgroundColor: "#BEE2FD",
 				textAlign: "center",
 				padding: 1,
+				"&:hover": {
+					backgroundColor: "#9fc8e7",
+					cursor: "pointer",
+				},
 			}}
 		>
 			<CardContent>
@@ -34,11 +33,9 @@ export default function MiniCollab({
 						marginBottom: 1,
 					}}
 				>
-					<SubjectIcon Subject={subject} />
-
+					<SubjectIcon Subject={collaboration.subject} />
 					<Avatar
-						alt={collaborator || "No collaborator"}
-						src={avatar}
+						alt={collaboration.tutor_name || "No collaborator"}
 						sx={{
 							width: 70,
 							height: 70,
@@ -47,15 +44,15 @@ export default function MiniCollab({
 							display: "flex",
 							alignSelf: "flex-right",
 						}}
-					/>
+						variant="circular"
+					>
+						P3
+					</Avatar>
 				</Box>
 
 				{/* Collaboration Text */}
-				<Typography
-					variant="body1"
-					sx={{ fontSize: 14, color: "black" }}
-				>
-					Collaboration with {collaborator}
+				<Typography variant="body2" sx={{ fontSize: 15, color: "black", fontWeight: "bold" }}>
+					Collaboration with {collaboration.tutor_name}
 				</Typography>
 			</CardContent>
 		</Card>
