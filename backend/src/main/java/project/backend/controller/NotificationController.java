@@ -67,22 +67,34 @@ public class NotificationController {
 
     }
 
-    @GetMapping("/sentTo/{id}")
+    @GetMapping("/sentToTutee/{id}")
     public ResponseEntity<?> getNotificationsSentToTuteeByUserId(@PathVariable Long id, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        Long userId = authenticatedUser.getUserId();
 
-        if (id != authenticatedUser.getUserId() && !authenticatedUser.isAdministrator()) {
+        if (id != userId && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to view notifications sent to this user");
         }
 
-        List<Notification> notifications = notificationService.getAllNotificationsSentToUserId(id);
-        if (notifications == null) {
-            return ResponseEntity.status(HttpStatus.OK).body("No notifications found");
+        List<Notification> notifications = notificationService.getAllNotificationsSentToTuteeId(userId);
+        if (notifications == null || notifications.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
         }
 
-        notifications.removeIf(notification -> notification.getReceiverType() == EntityType.TUTOR);
+        return ResponseEntity.status(HttpStatus.OK).body(notifications);
+    }
 
-        if (notifications.isEmpty()) {
+    @GetMapping("/sentToTutor/{id}")
+    public ResponseEntity<?> getNotificationsSentToTutorByUserId(@PathVariable Long id, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        Long userId = authenticatedUser.getUserId();
+
+        if (id != userId && !authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to view notifications sent to this user");
+        }
+
+        List<Notification> notifications = notificationService.getAllNotificationsSentToTutorId(userId);
+        if (notifications == null || notifications.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
         }
 
