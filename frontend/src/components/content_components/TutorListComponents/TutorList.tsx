@@ -12,6 +12,12 @@ export default function TutorList() {
     languages: [Language.Enum.Danish, Language.Enum.English],
     subjects: [Subject.Enum.Math, Subject.Enum.Physics],
     description: "I am a tutor :)",
+    time_availability: [{
+      day: "Monday",
+      time: [
+        { start_time: "12:00", end_time: "13:00" }
+      ]
+    }]
   };
   /*
   useEffect(() => {

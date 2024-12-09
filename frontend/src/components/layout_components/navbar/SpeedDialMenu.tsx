@@ -37,7 +37,7 @@ export default function SpeedDialMenu() {
 	];
 
 	return (
-		<Box sx={{ height: 730, display: "flex", zIndex: 1000, justifyContent: "end", width: "100px", marginRight: 3 }}>
+		<Box sx={{ height: 730, display: "flex", zIndex: 0, justifyContent: "end", width: "100px", marginRight: 3 }}>
 			{" "}
 			<Backdrop open={open} />
 			<SpeedDial

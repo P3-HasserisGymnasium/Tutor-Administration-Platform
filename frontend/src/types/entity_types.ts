@@ -12,6 +12,7 @@ import {
 	NotificationContext,
 	NotificationParticipant,
 	NotificationState,
+	zodTimeAvailabilitiesSchema,
 } from "./data_types";
 
 export const zodPostSchema = z.object({
@@ -28,6 +29,7 @@ export const zodProfileSchema = z.object({
 	year_group: YearGroup,
 	languages: z.array(Language),
 	subjects: z.array(Subject),
+	time_availability: z.array(zodTimeAvailabilitiesSchema),
 	description: z.string().optional(),
 });
 
