@@ -2,11 +2,16 @@
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 //import axios from "axios";
 import MiniPost from "./MiniPost";
-import { usePostService } from "~/api/services/post-service";
+import { PostType } from "~/types/entity_types";
 
-export default function MiniPostList() {
-	const { data: posts, isLoading, isError, refetch } = usePostService().useGetTuteePosts();
+type MiniPostListProps = {
+	posts: PostType[] | undefined;
+	isLoading: boolean;
+	isError: boolean;
+	refetch: () => void;
+};
 
+export default function MiniPostList({ posts, isLoading, isError, refetch }: MiniPostListProps) {
 	if (isLoading) {
 		return (
 			<Box sx={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
@@ -42,7 +47,7 @@ export default function MiniPostList() {
 				{safePost.length > 0 ? (
 					safePost.map((post) => <MiniPost key={post.id} postData={post} />)
 				) : (
-					<Typography>No posts found.</Typography>
+					<Typography variant="h6">No posts found.</Typography>
 				)}
 			</Box>
 		</Box>

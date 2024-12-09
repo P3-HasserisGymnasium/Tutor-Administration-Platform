@@ -109,7 +109,7 @@ export const useCollaborationService = () => {
 	const getCollaborations = useQuery({
 		queryKey: ["getCollaborations"],
 		queryFn: async () => {
-			const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration`);
+			const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/all`);
 			return data;
 		},
 		refetchOnWindowFocus: false,

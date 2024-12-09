@@ -71,7 +71,7 @@ export const useMeetingService = () => {
 		return useQuery({
 			queryKey: ["getMeetings"],
 			queryFn: async () => {
-				const { data } = await apiClient.get<MeetingType[]>(`/api/meeting`);
+				const { data } = await apiClient.get<MeetingType[]>(`/api/meeting/`);
 				return data;
 			},
 			refetchOnWindowFocus: false,

@@ -9,6 +9,8 @@ import MiniPostList from "../content_components/HomePageComponents/MiniPostList"
 import MiniCollabList from "../content_components/HomePageComponents/MiniCollabList";
 //import { useNavigate } from "react-router-dom";
 import { useCurrentTheme, useBreakpoints } from "~/utilities/helperFunctions";
+import CustomButton from "../content_components/CustomButton";
+import { usePostService } from "~/api/services/post-service";
 
 export default function HomePage() {
 	const [view, setView] = React.useState("meeting");
@@ -18,6 +20,8 @@ export default function HomePage() {
 	const handleViewChange = (newView: React.SetStateAction<string>) => {
 		setView(newView);
 	};
+
+	const { data: posts, isLoading, isError, refetch } = usePostService().useGetTuteePosts();
 
 	//const navigate = useNavigate();
 
@@ -101,59 +105,42 @@ export default function HomePage() {
 						flexDirection: "column",
 						border: "1px solid #white",
 						borderRadius: "8px",
-						overflow: "hidden",
-						p: 2,
-						position: "relative",
+						justifyContent: "space-between",
+						height: "100%",
 					}}
 				>
-					{/* Page Title */}
-					<Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 2 }}>
-						List of posts
-					</Typography>
-					<Typography variant="body2" sx={{ color: "#555", marginBottom: 4 }}>
-						Click on a post to view details
-					</Typography>
+					<Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, ml: 2, mt: 2, mr: 2 }}>
+						<Box sx={{ display: "flex", alignItems: "flex-end" }}>
+							<Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>
+								List of posts
+							</Typography>
+							<Typography variant="body2" sx={{ color: "#555", marginBottom: 1.3, ml: 1 }}>
+								Click on a post to view details
+							</Typography>
+						</Box>
 
-					{/* info icon */}
-					<Tooltip title="More information" arrow>
-						<IconButton
-							sx={{
-								position: "absolute",
-								top: 8,
-								right: 8,
-								alignItems: "right",
-							}}
-							aria-label="info"
-						>
-							<InfoIcon />
-						</IconButton>
-					</Tooltip>
-
-					<MiniPostList />
-
-					{/* View More Button */}
-					<Button
-						variant="contained"
-						color="primary"
-						sx={{
-							marginTop: 4,
-							position: "relative",
-							alignItems: "right",
-							display: "block",
-							marginLeft: "auto",
-							marginRight: "auto",
-							padding: "10px 20px",
-							fontSize: "16px",
-							backgroundColor: theme.palette.primary.main, // Use primary color from the theme
-							color: theme.palette.getContrastText(theme.palette.primary.main),
-							"&:hover": {
-								backgroundColor: theme.palette.primary.dark,
-							},
-						}}
-						//onClick={() => navigate("")}
-					>
-						View more
-					</Button>
+						<Tooltip title="More information" arrow>
+							<IconButton
+								sx={{
+									alignItems: "right",
+								}}
+								aria-label="info"
+							>
+								<InfoIcon />
+							</IconButton>
+						</Tooltip>
+					</Box>
+					<Box sx={{ display: "flex", gap: 2 }}>
+						<MiniPostList posts={posts} isLoading={isLoading} isError={isError} refetch={refetch} />
+					</Box>
+					<Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
+						<CustomButton variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+							View all
+						</CustomButton>
+						<CustomButton variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+							Create a post
+						</CustomButton>
+					</Box>
 				</Box>
 
 				<Box
@@ -162,58 +149,39 @@ export default function HomePage() {
 						flexDirection: "column",
 						border: "1px solid #white",
 						borderRadius: "8px",
-						overflow: "hidden",
-						p: 2,
-						position: "relative",
+						justifyContent: "space-between",
+						height: "100%",
 					}}
 				>
-					<Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 2 }}>
-						Your Active Collaborations
-					</Typography>
-					<Typography variant="body2" sx={{ color: "#555", marginBottom: 4 }}>
-						Click to view collaboration page
-					</Typography>
+					<Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, ml: 2, mt: 2, mr: 2 }}>
+						<Box sx={{ display: "flex", alignItems: "flex-end" }}>
+							<Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>
+								Your Active Collaborations
+							</Typography>
+							<Typography variant="body2" sx={{ color: "#555", marginBottom: 1.3, ml: 1 }}>
+								Click to view collaboration page
+							</Typography>
+						</Box>
 
-					{/* info icon */}
-					<Tooltip title="More information" arrow>
-						<IconButton
-							sx={{
-								position: "absolute",
-								top: 8,
-								right: 8,
-								alignItems: "right",
-							}}
-							aria-label="info"
-						>
-							<InfoIcon />
-						</IconButton>
-					</Tooltip>
-
-					<MiniCollabList />
-
-					{/* View More Button */}
-					<Button
-						variant="contained"
-						color="primary"
-						sx={{
-							marginTop: 4,
-							position: "relative",
-							alignItems: "right",
-							display: "block",
-							marginLeft: "auto",
-							marginRight: "auto",
-							padding: "10px 20px",
-							fontSize: "16px",
-							backgroundColor: theme.palette.primary.main, // Use primary color from the theme
-							color: theme.palette.getContrastText(theme.palette.primary.main),
-							"&:hover": {
-								backgroundColor: theme.palette.primary.dark,
-							},
-						}}
-						//onClick={() => navigate("")}
-					>
-						View more
-					</Button>
+						<Tooltip title="More information" arrow>
+							<IconButton
+								sx={{
+									alignItems: "right",
+								}}
+								aria-label="info"
+							>
+								<InfoIcon />
+							</IconButton>
+						</Tooltip>
+					</Box>
+					<Box sx={{ display: "flex", gap: 2 }}>
+						<MiniCollabList />
+					</Box>
+					<Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
+						<CustomButton variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+							View more
+						</CustomButton>
+					</Box>
 				</Box>
 			</MediumShortOnShortBoxLayout>
 		</ThemeProvider>
