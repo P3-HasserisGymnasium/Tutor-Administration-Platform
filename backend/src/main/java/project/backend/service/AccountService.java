@@ -94,6 +94,8 @@ public class AccountService {
             newTutor.setStudent(savedStudent);
             newTutor.setProfileDescription(body.tutorProfileDescription);
 
+            tutorRepository.save(newTutor);
+
             List<TutorTimeSlot> timeSlots = new LinkedList<>();
             for (TimeSlotCreateBody timeSlotBody : body.time_availability) {
                 
@@ -114,8 +116,6 @@ public class AccountService {
 
             newTutor.setFreeTimeSlots(timeSlots);
             savedStudent.setTutor(newTutor);
-
-            tutorRepository.save(newTutor);
         }
         if (body.roles.contains(RoleEnum.Tutee)) {
             Tutee newTutee = new Tutee();
