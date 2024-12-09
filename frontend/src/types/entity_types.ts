@@ -34,6 +34,9 @@ export const zodProfileSchema = z.object({
 export const zodMeetingSchema = z.object({
 	id: zodUUID,
 	collaboration_id: zodUUID,
+	partner_name: z.string(),
+	tutee_user_id: zodUUID,
+	tutor_user_id: zodUUID,
 	start_time: z.string(),
 	end_time: z.string(),
 	state: MeetingState,

@@ -1,5 +1,5 @@
 import { Card, CardContent, Typography, Avatar, Box } from "@mui/material";
-import SubjectIcon from "./SubjectIcon";
+import SubjectIcon from "~/components/content_components/SubjectIcon";
 import { CollaborationType } from "~/types/entity_types";
 import { useLocation, useNavigate } from "react-router-dom";
 
