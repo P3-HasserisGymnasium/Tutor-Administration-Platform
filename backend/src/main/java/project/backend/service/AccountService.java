@@ -104,6 +104,7 @@ public class AccountService {
 
                     newTimeSlot.setStartTimestamp(timeBody.start_time);
                     newTimeSlot.setEndTimestamp(timeBody.end_time);
+                    newTimeSlot.setTutor(newTutor);
                     
                     timeSlotRepository.save(newTimeSlot);
 
