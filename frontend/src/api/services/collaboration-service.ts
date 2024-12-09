@@ -106,7 +106,7 @@ export const useCollaborationService = () => {
 		},
 	});
 
-	const getCollaborations = useQuery({
+	/* const getCollaborations = useQuery({
 		queryKey: ["getCollaborations"],
 		queryFn: async () => {
 			const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/all`);
@@ -114,16 +114,31 @@ export const useCollaborationService = () => {
 		},
 		refetchOnWindowFocus: false,
 		placeholderData: [],
-	});
+	}); */
+
+	const useGetCollaborationsWithTutee = (id: number | null) => {
+		return useQuery({
+			queryKey: ["getCollaborationsWithTutee", id],
+			queryFn: async ({ queryKey }) => {
+				const id = queryKey[1];
+				const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/with_tutee/${id}`);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			placeholderData: [],
+			enabled: !!id,
+		});
+	};
 
 	return {
 		submitCollaborationSuggestion,
+		useGetCollaborationsWithTutee,
 		acceptCollaboration,
 		rejectCollaboration,
 		requestCollaborationSuggestion,
 		requestCollaboration,
 		terminateCollaboration,
-		submitFeedback,
-		getCollaborations,
+		submitFeedback /* 
+		getCollaborations, */,
 	};
 };

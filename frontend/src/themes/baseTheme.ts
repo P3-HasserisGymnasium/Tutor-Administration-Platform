@@ -40,21 +40,21 @@ const baseTheme = createTheme(
 			darkTuteeColor: colors.darkTuteeColor,
 			darkTutorColor: colors.darkTutorColor,
 			subjectColors: {
-				[Subject.Enum.Music]: { background: "#b2c9e0" },
-				[Subject.Enum.Math]: { background: "#ffcccb" },
-				[Subject.Enum.Ess]: { background: "#c1e1c5" },
-				[Subject.Enum.English]: { background: "#ffd700" },
-				[Subject.Enum.Danish]: { background: "#FF4141" },
-				[Subject.Enum.German]: { background: "#87EB8E" },
-				[Subject.Enum.French]: { background: "#1B76FF" },
-				[Subject.Enum.Biology]: { background: "#98fb98" },
-				[Subject.Enum.Chemistry]: { background: "#dcdcdc" },
-				[Subject.Enum.Pe]: { background: "#ffa07a" },
-				[Subject.Enum.Va]: { background: "#ffdead" },
-				[Subject.Enum.Psychology]: { background: "#dda0dd" },
-				[Subject.Enum.Econ]: { background: "#add8e6" },
-				[Subject.Enum.Ss]: { background: "#f0e68c" },
-				[Subject.Enum.Physics]: { background: "#ff6347" },
+				[Subject.Enum.MUSIC]: { background: "#b2c9e0" },
+				[Subject.Enum.MATH]: { background: "#ffcccb" },
+				[Subject.Enum.ESS]: { background: "#c1e1c5" },
+				[Subject.Enum.ENGLISH]: { background: "#ffd700" },
+				[Subject.Enum.DANISH]: { background: "#FF4141" },
+				[Subject.Enum.GERMAN]: { background: "#87EB8E" },
+				[Subject.Enum.FRENCH]: { background: "#1B76FF" },
+				[Subject.Enum.BIOLOGY]: { background: "#98fb98" },
+				[Subject.Enum.CHEMISTRY]: { background: "#dcdcdc" },
+				[Subject.Enum.PE]: { background: "#ffa07a" },
+				[Subject.Enum.VA]: { background: "#ffdead" },
+				[Subject.Enum.PSYCHOLOGY]: { background: "#dda0dd" },
+				[Subject.Enum.ECON]: { background: "#add8e6" },
+				[Subject.Enum.SS]: { background: "#f0e68c" },
+				[Subject.Enum.PHYSICS]: { background: "#ff6347" },
 			},
 		},
 		breakpoints: {
@@ -115,16 +115,16 @@ const baseTheme = createTheme(
 				},
 			},
 			/*
-        MuiDesktopTimePicker: {
-            styleOverrides: {
-                root: {
-                "& .MuiInputBase-root": {
-                    fontSize: "0.875rem", // Small font size for the input
-                    padding: "8px", // Adjust padding to make it compact
-                },
-                },
-            },
-        },*/
+		MuiDesktopTimePicker: {
+			styleOverrides: {
+				root: {
+				"& .MuiInputBase-root": {
+					fontSize: "0.875rem", // Small font size for the input
+					padding: "8px", // Adjust padding to make it compact
+				},
+				},
+			},
+		},*/
 		},
 	},
 	daDK

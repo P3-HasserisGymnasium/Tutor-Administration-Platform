@@ -45,12 +45,15 @@ export const zodMeetingSchema = z.object({
 });
 
 export const zodCollaborationSchema = z.object({
-	end_date: z.date().optional(),
+	id: zodUUID,
 	tutee_id: zodUUID,
-	start_date: z.date().optional(),
 	tutor_id: zodUUID,
+	tutee_name: z.string(),
+	tutor_name: z.string(),
 	state: CollaborationState,
 	subject: Subject,
+	end_date: z.date().optional(),
+	start_date: z.date().optional(),
 });
 
 export const zodFeedbackSchema = z.object({

@@ -34,22 +34,20 @@ export default function MiniPostList({ posts, isLoading, isError, refetch }: Min
 	const safePost = posts || []; // since post can be undefined
 
 	return (
-		<Box sx={{ padding: 4 }}>
-			{/* Post grid */}
-			<Box
-				sx={{
-					display: "flex",
-					flexWrap: "wrap",
-					gap: "16px",
-					justifyContent: "start",
-				}}
-			>
-				{safePost.length > 0 ? (
-					safePost.map((post) => <MiniPost key={post.id} postData={post} />)
-				) : (
-					<Typography variant="h6">No posts found.</Typography>
-				)}
-			</Box>
+		<Box
+			sx={{
+				display: "flex",
+				flexWrap: "wrap",
+				gap: "16px",
+				justifyContent: "start",
+				padding: 2,
+			}}
+		>
+			{safePost.length > 0 ? (
+				safePost.map((post) => <MiniPost key={post.id} postData={post} />)
+			) : (
+				<Typography variant="h6">No posts found.</Typography>
+			)}
 		</Box>
 	);
 }

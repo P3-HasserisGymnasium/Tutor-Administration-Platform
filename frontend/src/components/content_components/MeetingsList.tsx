@@ -7,7 +7,7 @@ import { MeetingState } from "~/types/data_types";
 import { useAuth } from "~/api/authentication/useAuth";
 import { useTheme, Theme } from "@mui/material/styles";
 
-export default function MeetingList() {
+export default function MeetingsList() {
 	const theme = useTheme<Theme>();
 	const { data: meetings, isLoading, error } = useMeetingService().useGetMeetings();
 	const { userState } = useAuth();

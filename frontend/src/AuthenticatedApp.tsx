@@ -19,6 +19,7 @@ import Forbidden from "./api/authentication/Forbidden";
 import { useAuth } from "./api/authentication/useAuth";
 import AdministratorPage from "./components/page_components/dialogs/AdministratorPage";
 import CollaborationPage from "./components/page_components/CollaborationPage";
+import TuteePage from "./components/page_components/tutee/TuteePage";
 
 export default function AuthenticatedApp() {
 	const { isMobile, hasScrollbar } = useBreakpoints();
@@ -55,7 +56,7 @@ export default function AuthenticatedApp() {
 						<>
 							<Route path="/tutor/*" element={<Forbidden />} />
 							<Route path="/tutee/*">
-								<Route path="" element={<HomePage />} />
+								<Route path="" element={<TuteePage />} />
 								<Route path="profile" element={<TuteeProfilePage />} />
 								<Route path="notifications" element={<TuteeNotificationsPage />} />
 								<Route path="create-post" element={<CreatePostPage />} />

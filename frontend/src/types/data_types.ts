@@ -2,21 +2,21 @@ import { z } from "zod";
 
 // Defining zod schemas for forms
 export const Subject = z.enum([
-	"Music",
-	"Math",
-	"Ess",
-	"English",
-	"Danish",
-	"German",
-	"French",
-	"Biology",
-	"Chemistry",
-	"Pe",
-	"Va",
-	"Psychology",
-	"Econ",
-	"Ss",
-	"Physics",
+	"MUSIC",
+	"MATH",
+	"ESS",
+	"ENGLISH",
+	"DANISH",
+	"GERMAN",
+	"FRENCH",
+	"BIOLOGY",
+	"CHEMISTRY",
+	"PE",
+	"VA",
+	"PSYCHOLOGY",
+	"ECON",
+	"SS",
+	"PHYSICS",
 ] as const);
 export const Day = z.enum(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] as const);
 export const Language = z.enum(["Danish", "English"] as const);
@@ -70,12 +70,12 @@ export const NotificationParticipant = z.enum(["Tutor", "Tutee", "Admin"] as con
 
 export const NotificationState = z.enum(["Unread", "Read", "Deleted"] as const);
 export const CollaborationState = z.enum([
-	"Pending",
-	"WaitingForTutor",
-	"WaitingForTutee",
-	"Accepted",
-	"Rejected",
-	"Terminated",
+	"PENDING",
+	"WAITINGFORTUTOR",
+	"WAITINGFORTUTEE",
+	"ACCEPTED",
+	"REJECTED",
+	"TERMINATED",
 ] as const);
 export const zodUUID = z.number();
 
