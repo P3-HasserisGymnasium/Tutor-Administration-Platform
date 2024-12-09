@@ -17,10 +17,12 @@ export default function SpeedDialMenu() {
 	const handleClose = () => setOpen(false);
 	const navigate = useNavigate();
 	const rolePrefix = useLocation().pathname.includes("tutor") ? "/tutor" : "/tutee";
+	const viewingTutor = useLocation().pathname.includes("tutor");
+	const viewingTutee = useLocation().pathname.includes("tutee");
 
 	const { data: notifications } = useGetNotifications(userState?.id || 1);
 
-	const actions = [
+	const staticActions = [
 		{
 			icon: <AccountBoxIcon />,
 			name: "Edit Profile",
@@ -28,13 +30,36 @@ export default function SpeedDialMenu() {
 		},
 		{ icon: <CircleNotificationsIcon />, name: "View Notifications", route: `${rolePrefix}/notifications` },
 		{ icon: <SupervisedUserCircleIcon />, name: "Apply to become tutor", route: `${rolePrefix}/tutor-application` },
-		{
-			icon: <PersonIcon />,
-			name: `Go to ${rolePrefix == "/tutee" ? "Tutor page" : "Tutee page"}`,
-			route: rolePrefix == "/tutee" ? "/tutor" : "/tutee",
-		},
 		{ icon: <LogoutIcon />, name: "Log out", route: "/", logout: true },
 	];
+
+	let actions = [
+		...staticActions
+	];
+
+	if (viewingTutor === false) {
+		actions.splice(
+			actions.length - 2,
+			0,
+			{
+				icon: <PersonIcon />,
+				name: `Go to Tutor page`,
+				route: "/tutor",
+			},
+		);
+	}
+	if (viewingTutee === false) {
+		actions.splice(
+			actions.length - 2,
+			0,
+			{
+				icon: <PersonIcon />,
+				name: `Go to Tutee page`,
+				route: "/tutee",
+			},
+		);
+		
+	}
 
 	return (
 		<Box sx={{ height: 730, display: "flex", zIndex: 1000, justifyContent: "end", width: "100px", marginRight: 3 }}>
