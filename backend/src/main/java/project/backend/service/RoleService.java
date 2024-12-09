@@ -1,11 +1,14 @@
 package project.backend.service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import project.backend.controller_bodies.account_controller.TimeCreateBody;
+import project.backend.controller_bodies.account_controller.TimeSlotCreateBody;
 import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
 import project.backend.controller_bodies.role_controller.TutorProfileResponse;
 import project.backend.model.Administrator;
@@ -15,6 +18,8 @@ import project.backend.model.Student;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.model.Tutor;
+import project.backend.model.TutorTimeSlot;
+import project.backend.model.WeekDayEnum;
 import project.backend.repository.AccountRepository;
 import project.backend.repository.AdministratorRepository;
 import project.backend.repository.RoleRepository;
@@ -167,7 +172,31 @@ public class RoleService {
         response.yearGroup = tutor.getStudent().getYearGroup();
         response.tutoring_subjects = tutor.getTutoringSubjects();
         response.contact_info = tutor.getStudent().getContactInfo();
-        response.time_availability = tutor.getFreeTimeSlots();
+
+        List<TimeSlotCreateBody> timeSlotRepsonses = new LinkedList<>();
+        for (TutorTimeSlot timeSlot : tutor.getFreeTimeSlots()) {
+            TimeSlotCreateBody timeSlotResponse = new TimeSlotCreateBody();
+            
+            WeekDayEnum weekDay = timeSlot.getWeekDay();
+            for (WeekDayEnum day : WeekDayEnum.values()) {
+                for (TimeSlotCreateBody timeSlotCreateBody : timeSlotRepsonses) {
+                    if (timeSlotCreateBody.day == day) {
+                        timeSlotResponse = timeSlotCreateBody;
+                        break;
+                    }
+                }
+            }
+
+            timeSlotResponse.day = weekDay;
+
+            TimeCreateBody timeCreateBody = new TimeCreateBody();
+            timeCreateBody.start_time = timeSlot.getStartTime();
+            timeCreateBody.end_time = timeSlot.getEndTime();
+            timeSlotResponse.time.add(timeCreateBody);
+
+            timeSlotRepsonses.add(timeSlotResponse);
+        }
+        response.time_availability = timeSlotRepsonses;
         response.languages = tutor.getStudent().getLanguages();
         
         return response;

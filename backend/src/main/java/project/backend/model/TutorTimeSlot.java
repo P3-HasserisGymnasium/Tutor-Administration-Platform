@@ -55,15 +55,15 @@ public class TutorTimeSlot {
         return startTime;
     }
 
-    public void setStartTimestamp(String startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTimestamp() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTimestamp(String endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 }
