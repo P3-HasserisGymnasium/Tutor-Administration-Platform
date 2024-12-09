@@ -83,7 +83,10 @@ export default function TuteePage() {
 							</Button>
 						</ButtonGroup>
 
-						<Tooltip title="More information" arrow>
+						<Tooltip
+							title="Your schedule showcases all of your meetings across all your collaborations, as a tutee. Click on a meeting to go to the specific collaboration."
+							arrow
+						>
 							<IconButton
 								sx={{
 									position: "absolute",
@@ -130,7 +133,10 @@ export default function TuteePage() {
 							</Typography>
 						</Box>
 
-						<Tooltip title="More information" arrow>
+						<Tooltip
+							title="Posts are visible to tutors. Tutors can request to help you, in which case you can accept their help. You can create a new post, or edit and delete an existing post."
+							arrow
+						>
 							<IconButton
 								sx={{
 									alignItems: "right",
@@ -179,7 +185,10 @@ export default function TuteePage() {
 							</Typography>
 						</Box>
 
-						<Tooltip title="More information" arrow>
+						<Tooltip
+							title="Each collaboration with a tutor has a specific collaboration page. To view this page, simply click on one of the collaborations. When creating a collaboration, you can either find a tutor and request a collaboration with them, create a post which tutors can see, or request help from the administrator to find a fitting tutor."
+							arrow
+						>
 							<IconButton
 								sx={{
 									alignItems: "right",
