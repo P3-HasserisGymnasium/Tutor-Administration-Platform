@@ -10,15 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.15",
     "@fullcalendar/react": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
     "@hookform/resolvers": "^3.9.1",
     "@mui/icons-material": "^6.1.8",
-    "@mui/material": "^6.1.6",
+    "@mui/material": "^6.1.10",
     "@mui/x-date-pickers": "^7.22.3",
     "@tanstack/query-sync-storage-persister": "^5.60.5",
     "@tanstack/react-query": "^5.60.5",
