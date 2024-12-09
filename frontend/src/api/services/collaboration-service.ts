@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { PostType, CollaborationType, Feedback } from "~/types/entity_types";
+import { PostType, CollaborationType, Feedback, TerminationType } from "~/types/entity_types";
 
 
 
@@ -96,22 +96,24 @@ export const useCollaborationService = () => {
 		},
 	});
 
-	const terminateCollaboration = useMutation({
-		mutationKey: ["terminateCollaboration"],
-		mutationFn: async (id: Number) => {
-			const { data } = await apiClient.post<Number>(
-				"/api/collaboration_service",
-				id
-			);
-			return data;
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
-		},
-		onSuccess: () => {
-			toast.success("Collaboration terminated");
-		},
-	});
+	const terminateCollaboration = () => {
+		return useMutation({
+			mutationKey: ["terminateCollaboration"],
+			mutationFn: async ({ id, terminationReason }: TerminationType) => {
+				const { data } = await apiClient.post<String>(
+					"/api/collaboration/terminate/" + id,
+					terminationReason
+				);
+				return data;
+			},
+			onError: (e: AxiosError<{ detail: string }>) => {
+				toast.error(e?.response?.data?.detail);
+			},
+			onSuccess: () => {
+				toast.success("Collaboration terminated");
+			},
+		});
+	}
 
 	const submitFeedback = useMutation({
 		mutationKey: ["submitFeedback"],

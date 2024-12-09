@@ -162,6 +162,11 @@ export const zodLoginSchema = z.object({
 	password: z.string(),
 });
 
+export const zodTerminationSchema = z.object({
+	id: z.number(),
+	terminationReason: z.string(),
+});
+
 export type LoginSuccessDataType = z.infer<typeof zodLoginSuccessDataType>;
 export type LoginType = z.infer<typeof zodLoginSchema>;
 export type UserState = z.infer<typeof zodUserStateSchema>;
@@ -172,3 +177,4 @@ export type CollaborationType = z.infer<typeof zodCollaborationSchema>;
 export type Feedback = z.infer<typeof zodFeedbackSchema>;
 export type AccountRegisterType = z.infer<typeof zodAccountRegisterSchema>;
 export type NotificationType = z.infer<typeof zodNotificationSchema>;
+export type TerminationType = z.infer<typeof zodTerminationSchema>
