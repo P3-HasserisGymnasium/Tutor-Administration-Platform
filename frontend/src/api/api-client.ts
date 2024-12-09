@@ -9,16 +9,12 @@ const apiClient = axios.create({
 });
 
 // Intercept the response to handle token expiration
-apiClient.interceptors.response.use(
-	function (response) {
+apiClient.interceptors.response.use(function (response) {
+	response.headers["Access-Control-Allow-Origin"] = "*";
+	response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS";
 
-		response.headers['Access-Control-Allow-Origin'] = '*';
-		response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
-		response.headers['Access-Control-Allow-Headers'] = 'Content-Type: application/json, Accept: application/json, Authorization';
-
-		return response;
-	},
-)
+	return response;
+});
 
 // Create a new query client
 const queryClient = new QueryClient({
@@ -30,10 +26,7 @@ const queryClient = new QueryClient({
 					return false;
 				}
 				// Auth errors or 404 errors should not be retried
-				if (
-					(error as AxiosError).response?.status === 401 ||
-					(error as AxiosError).response?.status === 404
-				) {
+				if ((error as AxiosError).response?.status === 401 || (error as AxiosError).response?.status === 404) {
 					return false;
 				}
 				if (failureCount < 3) {

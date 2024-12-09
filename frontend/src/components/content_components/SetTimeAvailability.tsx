@@ -1,16 +1,10 @@
-import {
-	Autocomplete,
-	Box,
-	Button,
-	TextField,
-	Typography,
-} from "@mui/material";
+import { Autocomplete, Box, Button, TextField, Typography } from "@mui/material";
 import { DayType, Day } from "~/types/data_types";
 import { useFormContext } from "react-hook-form";
 import dayjs, { Dayjs } from "dayjs";
 import { DesktopTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { TimeAvailabilityType } from "~/types/data_types";
+import { TimeAvailabilitiesType } from "~/types/data_types";
 import { useState } from "react";
 import { useTheme, Theme } from "@mui/material/styles";
 import TimeAvailability from "./TimeAvailability";
@@ -18,9 +12,7 @@ import { toast } from "react-toastify";
 
 export default function SetTimeAvailability() {
 	const [selectedDay, setSelectedDay] = useState<DayType | null>(null);
-	const [startTime, setStartTime] = useState<Dayjs>(
-		dayjs("2022-04-17T00:00")
-	);
+	const [startTime, setStartTime] = useState<Dayjs>(dayjs("2022-04-17T00:00"));
 	const [endTime, setEndTime] = useState<Dayjs>(dayjs("2022-04-17T00:00"));
 	const { setValue, getValues } = useFormContext();
 	const theme = useTheme<Theme>();
@@ -33,7 +25,7 @@ export default function SetTimeAvailability() {
 			return;
 		}
 
-		const newTimeAvailability: TimeAvailabilityType = {
+		const newTimeAvailability: TimeAvailabilitiesType = {
 			day: selectedDay,
 			time: [
 				{
@@ -43,12 +35,8 @@ export default function SetTimeAvailability() {
 			],
 		};
 
-		const existingTimeAvailabilities: TimeAvailabilityType[] =
-			getValues("time_availability");
-		const validTimeAvailabilities = obtainValidTimeAvailabilities(
-			existingTimeAvailabilities,
-			newTimeAvailability
-		);
+		const existingTimeAvailabilities: TimeAvailabilitiesType[] = getValues("time_availability");
+		const validTimeAvailabilities = obtainValidTimeAvailabilities(existingTimeAvailabilities, newTimeAvailability);
 
 		if (!validTimeAvailabilities) {
 			console.error("Invalid time availability");
@@ -87,13 +75,9 @@ export default function SetTimeAvailability() {
 						<Autocomplete
 							sx={{ paddingBottom: "1em" }}
 							disablePortal
-							onChange={(_, newValue) =>
-								setSelectedDay(newValue as DayType | null)
-							}
+							onChange={(_, newValue) => setSelectedDay(newValue as DayType | null)}
 							options={Day.options}
-							renderInput={(params) => (
-								<TextField {...params} label="Select day" />
-							)}
+							renderInput={(params) => <TextField {...params} label="Select day" />}
 						/>
 						<Box sx={{ display: "flex", flexDirection: "row" }}>
 							<DesktopTimePicker
@@ -137,7 +121,7 @@ function SelectedTimeAvailabilities({
 	timeAvailabilities,
 	borderColor,
 }: {
-	timeAvailabilities: TimeAvailabilityType[];
+	timeAvailabilities: TimeAvailabilitiesType[];
 	borderColor: string;
 }) {
 	return (
@@ -156,10 +140,7 @@ function SelectedTimeAvailabilities({
 					}}
 				>
 					{timeAvailabilities.map((timeAvailability, i) => (
-						<TimeAvailability
-							key={i}
-							timeAvailability={timeAvailability}
-						/>
+						<TimeAvailability key={"time-availability-" + i} timeAvailability={timeAvailability} />
 					))}
 				</Box>
 			)}
@@ -168,9 +149,9 @@ function SelectedTimeAvailabilities({
 }
 
 function obtainValidTimeAvailabilities(
-	existingTimeAvailabilities: TimeAvailabilityType[],
-	newTimeAvailability: TimeAvailabilityType
-): TimeAvailabilityType[] | undefined {
+	existingTimeAvailabilities: TimeAvailabilitiesType[],
+	newTimeAvailability: TimeAvailabilitiesType
+): TimeAvailabilitiesType[] | undefined {
 	const startTime = newTimeAvailability.time[0].start_time.split(":");
 	const startTimeHourInteger = Number(startTime[0]);
 	const startTimeMinutesInteger = Number(startTime[1]);
@@ -178,28 +159,25 @@ function obtainValidTimeAvailabilities(
 	const endTimeHourInteger = Number(endTime[0]);
 	const endTimeMinutesInteger = Number(endTime[1]);
 
-  console.log("startTimeHourInteger", startTimeHourInteger);
-  console.log("inminutes", startTimeMinutesInteger);
-  console.log("endtimehours", endTimeHourInteger);
-  console.log("inminutes", endTimeMinutesInteger);
+	console.log("startTimeHourInteger", startTimeHourInteger);
+	console.log("inminutes", startTimeMinutesInteger);
+	console.log("endtimehours", endTimeHourInteger);
+	console.log("inminutes", endTimeMinutesInteger);
 
-
-
-  if (!(startTimeHourInteger < endTimeHourInteger)) {
-    if (!(startTimeMinutesInteger < endTimeMinutesInteger)) return;
-
-  }
+	if (!(startTimeHourInteger < endTimeHourInteger)) {
+		if (!(startTimeMinutesInteger < endTimeMinutesInteger)) return;
+	}
 	if (!existingTimeAvailabilities) return [newTimeAvailability];
 
-  const existingSameDayTimeAvailability = existingTimeAvailabilities.find(
-    (time: TimeAvailabilityType) => time.day === newTimeAvailability.day
-  );
-  if (!existingSameDayTimeAvailability) return [...existingTimeAvailabilities, newTimeAvailability];
-  const equivalentTimeSlot = existingSameDayTimeAvailability?.time.find(
-    (timeslot) =>
-      timeslot.start_time === newTimeAvailability.time[0].start_time &&
-      timeslot.end_time === newTimeAvailability.time[0].end_time
-  );
+	const existingSameDayTimeAvailability = existingTimeAvailabilities.find(
+		(time: TimeAvailabilitiesType) => time.day === newTimeAvailability.day
+	);
+	if (!existingSameDayTimeAvailability) return [...existingTimeAvailabilities, newTimeAvailability];
+	const equivalentTimeSlot = existingSameDayTimeAvailability?.time.find(
+		(timeslot) =>
+			timeslot.start_time === newTimeAvailability.time[0].start_time &&
+			timeslot.end_time === newTimeAvailability.time[0].end_time
+	);
 
 	if (equivalentTimeSlot) return existingTimeAvailabilities;
 

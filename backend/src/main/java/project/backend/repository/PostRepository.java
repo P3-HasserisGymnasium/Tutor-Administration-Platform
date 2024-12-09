@@ -7,4 +7,6 @@ import project.backend.model.Post;
 public interface PostRepository extends JpaRepository<Post, Long> {
     // Custom queries for posts
     
+
+    public Post[] findByTutee_Id(Long tuteeId);
 }

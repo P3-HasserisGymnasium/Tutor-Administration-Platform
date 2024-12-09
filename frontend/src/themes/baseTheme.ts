@@ -12,7 +12,7 @@ const colors = {
 const baseTheme = createTheme({
     palette: {
         primary: {
-            main: '#000000',
+            main: '#323232'
         },
         error: {
             main: colors.errorColor,
@@ -27,7 +27,7 @@ const baseTheme = createTheme({
         buttonColor: colors.buttonTextColor,
         collaborationBackgroundColor: '#000000',
         postBackGroundColor: '#000000',
-        headingTextColor: '#000000',
+        headingTextColor: '#FFFFFF',
         boxBorderColor: '#000000',
         arrowColor: '#000000',
         subjectColors: {

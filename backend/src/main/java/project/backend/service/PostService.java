@@ -38,6 +38,10 @@ public class PostService {
         return postRepository.findById(id);
     }
 
+    public Post[] getPostsByTuteeId(Long tuteeId){
+        return postRepository.findByTutee_Id(tuteeId);
+    }
+
     public Post savePost(Post post) {
         post.setState(PostState.VISIBLE);
         return postRepository.save(post);

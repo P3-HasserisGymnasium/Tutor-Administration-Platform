@@ -12,4 +12,5 @@ public class AccountLoginSuccessBody {
     public String email;
     public YearGroupEnum year_group;
     public List<SubjectEnum> tutoring_subjects;
+    public Boolean is_administrator;
 }

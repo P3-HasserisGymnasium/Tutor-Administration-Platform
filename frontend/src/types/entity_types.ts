@@ -7,10 +7,11 @@ import {
 	MeetingState,
 	CollaborationState,
 	zodUUID,
-	zodRole,
-	zodDay,
+	Role,
+	Day,
 	NotificationContext,
 	NotificationParticipant,
+	NotificationState,
 } from "./data_types";
 
 export const zodPostSchema = z.object({
@@ -32,12 +33,14 @@ export const zodProfileSchema = z.object({
 
 export const zodMeetingSchema = z.object({
 	id: zodUUID,
-	rejection_reason: z.string().optional(),
-	end_date: z.date(),
 	collaboration_id: zodUUID,
-	meeting_description: z.string().optional(),
+	partner_name: z.string(),
+	partner_id: zodUUID,
+	start_time: z.string(),
+	end_time: z.string(),
 	state: MeetingState,
-	start_date: z.date(),
+	rejection_reason: z.string().optional(),
+	meeting_description: z.string().optional(),
 });
 
 export const zodCollaborationSchema = z.object({
@@ -62,6 +65,7 @@ export const zodNotificationSchema = z.object({
 	receiver_type: NotificationParticipant,
 	context_id: zodUUID,
 	context_type: NotificationContext,
+	state: NotificationState,
 });
 
 export const zodAccountRegisterSchema = z.object({
@@ -104,7 +108,7 @@ export const zodAccountRegisterSchema = z.object({
 		.optional(), // Optional field, validation applies if provided
 
 	roles: z
-		.array(zodRole, {
+		.array(Role, {
 			required_error: "You must select at least one role", // Required array error
 		})
 		.min(1, "You must select at least one role"), // Minimum array length validation
@@ -124,7 +128,7 @@ export const zodAccountRegisterSchema = z.object({
 	time_availability: z
 		.array(
 			z.object({
-				day: zodDay,
+				day: Day,
 				time: z.array(TimeSlot),
 			})
 		)
@@ -134,20 +138,22 @@ export const zodAccountRegisterSchema = z.object({
 export const zodUserStateSchema = z.object({
 	id: zodUUID.nullable(),
 	name: z.string().nullable(),
-	role: z.array(zodRole).nullable(),
+	role: z.array(Role).nullable(),
 	email: z.string().email().nullable(),
 	year_group: YearGroup.nullable(),
 	tutoring_subjects: z.array(Subject).nullable(),
+	is_administrator: z.boolean().nullable(),
 });
 
 export const zodLoginSuccessDataType = z.object({
 	token: z.string(),
 	id: zodUUID.nullable(),
 	name: z.string().nullable(),
-	role: z.array(zodRole).nullable(),
+	role: z.array(Role).nullable(),
 	email: z.string().email().nullable(),
 	year_group: YearGroup.nullable(),
 	tutoring_subjects: z.array(Subject).nullable(),
+	is_administrator: z.boolean().nullable(),
 });
 
 export const zodLoginSchema = z.object({
@@ -164,3 +170,4 @@ export type MeetingType = z.infer<typeof zodMeetingSchema>;
 export type CollaborationType = z.infer<typeof zodCollaborationSchema>;
 export type Feedback = z.infer<typeof zodFeedbackSchema>;
 export type AccountRegisterType = z.infer<typeof zodAccountRegisterSchema>;
+export type NotificationType = z.infer<typeof zodNotificationSchema>;

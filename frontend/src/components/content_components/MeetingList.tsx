@@ -2,78 +2,61 @@
 import { useMeetingService } from "~/api/services/meeting-service";
 //import React from "react";
 import { Box, Typography, Paper, CircularProgress } from "@mui/material";
-import { useAuth } from "~/api/authentication/useAuth";
 
-export default function MeetingList(){
+import { MeetingState } from "~/types/data_types";
 
-  // Fetch meetings from the API
-  const { getMeetings } = useMeetingService();
-  const { data: meetings, isLoading, error } = getMeetings;
-  console.log(meetings)
-  const {userState} = useAuth();
+export default function MeetingList() {
+	// Fetch meetings from the API
 
-  const currentUser = userState;
+	const { data: meetings, isLoading, error } = useMeetingService().useGetMeetings();
 
+	// Filter accepted meetings based on the "state"
+	const userMeetings = meetings?.filter((meeting) => {
+		return meeting.state === MeetingState.Enum.ACCEPTED;
+	});
 
-  // Filter accepted meetings based on the "state"
-  const userMeetings = Array.isArray(meetings)
-  ? meetings.filter(
-      (meeting) =>
-        meeting.meeting_info.state === "Accepted" &&
-        (meeting.tutor_id === currentUser.id || meeting.tutee_id === currentUser.id)
-    )
-  : [];  console.log(meetings)
+	if (error) return <Typography color="error">Failed to load meetings.</Typography>;
 
+	if (userMeetings?.length === 0) return <Typography>No accepted meetings available.</Typography>;
 
-    return (
-        <Paper elevation={3} sx={{ padding: 2, borderRadius: 2 }}>
-          {isLoading ? (
-            <Box sx={{ display: "flex", justifyContent: "center", padding: 2 }}>
-              <CircularProgress />
-            </Box>
-          ) : error ? (
-            <Typography color="error">Failed to load meetings.</Typography>
-          ) : userMeetings.length > 0 ? (
-            userMeetings.map((meeting) => (
-              <Box
-                key={meeting.meeting_info.id}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  backgroundColor: "#f5f5f5",
-                  padding: 2,
-                  borderRadius: 2,
-                  marginBottom: 2,
-                  borderLeft: "5px solid #3f51b5",
-                }}
-              >
-                <Typography
-                  variant="body1"
-                  sx={{ fontWeight: "bold", color: "#3f51b5" }}
-                >
-                  {new Date(meeting.meeting_info.start_date).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}{" "}
-                  -{" "}
-                  {new Date(meeting.meeting_info.end_date).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </Typography>
-                <Typography variant="body2" sx={{ marginBottom: 1 }}>
-                  {new Date(meeting.meeting_info.start_date).toLocaleDateString([], {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </Typography>
-                <Typography variant="h6">{`Meeting with tutor ${meeting.tutor_name}`}</Typography>
-              </Box>
-            ))
-          ) : (
-            <Typography>No accepted meetings available.</Typography>
-          )}
-        </Paper>
-      );
+	if (isLoading) return <CircularProgress />;
+
+	return (
+		<Paper elevation={3} sx={{ padding: 2, borderRadius: 2 }}>
+			{userMeetings?.map((meeting) => (
+				<Box
+					key={meeting.id + meeting.partner_name}
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						backgroundColor: "#f5f5f5",
+						padding: 2,
+						borderRadius: 2,
+						marginBottom: 2,
+						borderLeft: "5px solid #3f51b5",
+					}}
+				>
+					<Typography variant="body1" sx={{ fontWeight: "bold", color: "#3f51b5" }}>
+						{new Date(meeting.end_time).toLocaleTimeString([], {
+							hour: "2-digit",
+							minute: "2-digit",
+						})}{" "}
+						-{" "}
+						{new Date(meeting.start_time).toLocaleTimeString([], {
+							hour: "2-digit",
+							minute: "2-digit",
+						})}
+					</Typography>
+					<Typography variant="body2" sx={{ marginBottom: 1 }}>
+						{new Date(meeting.start_time).toLocaleDateString([], {
+							day: "numeric",
+							month: "short",
+							year: "numeric",
+						})}
+					</Typography>
+					<Typography variant="h6">{`Meeting with tutor ${meeting.partner_name}`}</Typography>
+				</Box>
+			))}
+		</Paper>
+	);
 }

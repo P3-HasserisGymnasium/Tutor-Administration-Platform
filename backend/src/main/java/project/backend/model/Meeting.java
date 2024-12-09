@@ -53,7 +53,7 @@ public class Meeting {
         return collaboration;
     }
 
-    public void setCollaborationId(Collaboration collaboration) {
+    public void setCollaboration(Collaboration collaboration) {
         this.collaboration = collaboration;
     }
 

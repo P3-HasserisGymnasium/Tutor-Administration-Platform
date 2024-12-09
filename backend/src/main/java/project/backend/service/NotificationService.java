@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.notification_controller.NotificationCreateBody;
 import project.backend.model.Notification;
+import project.backend.model.EntityType;
+import project.backend.model.NotificationState;
 import project.backend.repository.NotificationRepository;
 
 
@@ -39,6 +41,20 @@ public class NotificationService {
         return notificationRepository.save(notification);
     }
 
+    public void sendNotification(Long senderId, EntityType senderType, Long receiverId, EntityType receiverType,
+                                  Long contextId, EntityType contextType) {
+        NotificationCreateBody body = new NotificationCreateBody();
+        body.sender_id = senderId;
+        body.sender_type = senderType;
+        body.receiver_id = receiverId;
+        body.receiver_type = receiverType;
+        body.context_id = contextId;
+        body.context_type = contextType;
+        body.state = NotificationState.UNREAD;
+
+        createNotification(body);
+    }
+
     public List<Notification> getAllNotifications() {
         return notificationRepository.findAll();
     }
@@ -58,4 +74,13 @@ public class NotificationService {
     public void deleteNotification(Long id) {
         notificationRepository.deleteById(id);
     }
+
+    public void changeNotificationState(Long notificationId, NotificationState newState) {
+    Notification notification = notificationRepository.findById(notificationId)
+        .orElseThrow(() -> new IllegalArgumentException("Notification with ID " + notificationId + " not found"));
+
+    notification.setState(newState);
+
+    notificationRepository.save(notification);
+}
 }

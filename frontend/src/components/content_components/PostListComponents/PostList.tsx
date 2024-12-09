@@ -4,7 +4,7 @@ import { PostType } from "~/types/entity_types";
 
 export default function PostList() {
 	const postDemo: PostType = {
-		id: "1",
+		id: 4,
 		title: "Looking for a math Tutor",
 		description: "Need help with calculus",
 		duration: "12",
