@@ -1,5 +1,7 @@
 package project.backend.controller;
 
+import java.util.Collections;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,6 +51,23 @@ public class PostController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(post);
+    }
+
+    @GetMapping("/tutee")
+    public ResponseEntity<?> getOwnPosts(HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (authenticatedUser.getTuteeId() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to view your posts");
+        }
+
+        Post[] posts = postService.getPostsByTuteeId(authenticatedUser.getTuteeId());
+
+        if (posts == null) {
+            return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
     @PostMapping("/")

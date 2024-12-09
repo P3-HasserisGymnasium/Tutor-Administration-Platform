@@ -56,15 +56,48 @@ public class MeetingController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to view this meeting");
     }
 
-    @GetMapping("/all/{userId}")
-    public ResponseEntity<?> getMeetings(@PathVariable Long userId, HttpServletRequest request) {
+    @GetMapping("/")
+    public ResponseEntity<?> getMeetings(HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        if (!helperFunctions.isUserPermitted(authenticatedUser, userId)) {
+    
+        if (!authenticatedUser.isTutor() && authenticatedUser.isTutee()) {
+            return ResponseEntity.status(HttpStatus.OK).body(meetingService.getMeetingsByTuteeId(authenticatedUser.getTuteeId()));
+        }
+
+        if (authenticatedUser.isTutor() && !authenticatedUser.isTutee()) {
+            return ResponseEntity.status(HttpStatus.OK).body(meetingService.getMeetingsByTutorId(authenticatedUser.getTutorId()));
+        }
+
+        if (!authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to view these meetings");
         }
 
-        Iterable<Meeting> meetings = meetingService.getMeetingsById(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(meetingService.getMeetingsById(authenticatedUser.getUserId()));
+    }
+
+    @GetMapping("/tutee")
+    public ResponseEntity<?> getTuteeMeetings(HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isTutee()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to view these meetings");
+        }
+
+        Iterable<Meeting> meetings = meetingService.getMeetingsByTuteeId(authenticatedUser.getTuteeId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(meetings);
+    }
+
+    @GetMapping("/tutor")
+    public ResponseEntity<?> getTutorMeetings(HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isTutor()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to view these meetings");
+        }
+
+        Iterable<Meeting> meetings = meetingService.getMeetingsByTutorId(authenticatedUser.getTutorId());
 
         return ResponseEntity.status(HttpStatus.OK).body(meetings);
     }

@@ -4,18 +4,12 @@ import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
 import { PostType, CollaborationType, Feedback } from "~/types/entity_types";
 
-
-
-
 export const useCollaborationService = () => {
 	//Admin requests a collaboration
 	const submitCollaborationSuggestion = useMutation({
 		mutationKey: ["submitCollaborationSuggestion"],
 		mutationFn: async (collaboration: CollaborationType) => {
-			const { data } = await apiClient.post<CollaborationType>(
-				"/api/collaboration_service",
-				collaboration
-			);
+			const { data } = await apiClient.post<CollaborationType>("/api/collaboration", collaboration);
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -28,11 +22,8 @@ export const useCollaborationService = () => {
 
 	const acceptCollaboration = useMutation({
 		mutationKey: ["acceptCollaboration"],
-		mutationFn: async (id: Number) => {
-			const { data } = await apiClient.post<Number>(
-				"/api/collaboration_service",
-				id
-			);
+		mutationFn: async (id: number) => {
+			const { data } = await apiClient.post<number>("/api/collaboration", id);
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -45,11 +36,8 @@ export const useCollaborationService = () => {
 
 	const rejectCollaboration = useMutation({
 		mutationKey: ["rejectCollaboration"],
-		mutationFn: async (id: Number) => {
-			const { data } = await apiClient.post<Number>(
-				"/api/collaboration_service",
-				id
-			);
+		mutationFn: async (id: number) => {
+			const { data } = await apiClient.post<number>("/api/collaboration", id);
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -64,10 +52,7 @@ export const useCollaborationService = () => {
 	const requestCollaborationSuggestion = useMutation({
 		mutationKey: ["requestCollaborationSuggestion"],
 		mutationFn: async (collaborationSuggestionRequest: PostType) => {
-			const { data } = await apiClient.post<PostType>(
-				"/api/collaboration_service",
-				collaborationSuggestionRequest
-			);
+			const { data } = await apiClient.post<PostType>("/api/collaboration", collaborationSuggestionRequest);
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -82,10 +67,7 @@ export const useCollaborationService = () => {
 	const requestCollaboration = useMutation({
 		mutationKey: ["requestCollaboration"],
 		mutationFn: async (collaboration: CollaborationType) => {
-			const { data } = await apiClient.post<CollaborationType>(
-				"/api/collaboration_service",
-				collaboration
-			);
+			const { data } = await apiClient.post<CollaborationType>("/api/collaboration", collaboration);
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -98,11 +80,8 @@ export const useCollaborationService = () => {
 
 	const terminateCollaboration = useMutation({
 		mutationKey: ["terminateCollaboration"],
-		mutationFn: async (id: Number) => {
-			const { data } = await apiClient.post<Number>(
-				"/api/collaboration_service",
-				id
-			);
+		mutationFn: async (id: number) => {
+			const { data } = await apiClient.post<number>("/api/collaboration", id);
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -116,10 +95,7 @@ export const useCollaborationService = () => {
 	const submitFeedback = useMutation({
 		mutationKey: ["submitFeedback"],
 		mutationFn: async (feedback: Feedback) => {
-			const { data } = await apiClient.post<Feedback>(
-				"/api/collaboration_service",
-				feedback
-			);
+			const { data } = await apiClient.post<Feedback>("/api/collaboration", feedback);
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -130,26 +106,39 @@ export const useCollaborationService = () => {
 		},
 	});
 
-	const getCollaborations = useQuery({
+	/* const getCollaborations = useQuery({
 		queryKey: ["getCollaborations"],
 		queryFn: async () => {
-			const { data } = await apiClient.get<CollaborationType[]>(
-				`/api/post_service`
-			);
+			const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/all`);
 			return data;
 		},
 		refetchOnWindowFocus: false,
 		placeholderData: [],
-	});
+	}); */
+
+	const useGetCollaborationsWithTutee = (id: number | null) => {
+		return useQuery({
+			queryKey: ["getCollaborationsWithTutee", id],
+			queryFn: async ({ queryKey }) => {
+				const id = queryKey[1];
+				const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/with_tutee/${id}`);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			placeholderData: [],
+			enabled: !!id,
+		});
+	};
 
 	return {
 		submitCollaborationSuggestion,
+		useGetCollaborationsWithTutee,
 		acceptCollaboration,
 		rejectCollaboration,
 		requestCollaborationSuggestion,
 		requestCollaboration,
 		terminateCollaboration,
-		submitFeedback,
-		getCollaborations,
+		submitFeedback /* 
+		getCollaborations, */,
 	};
 };
