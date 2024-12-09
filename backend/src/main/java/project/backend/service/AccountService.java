@@ -1,5 +1,6 @@
 package project.backend.service;
 
+import java.sql.Time;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,7 @@ import project.backend.repository.AccountRepository;
 import project.backend.repository.StudentRepository;
 import project.backend.repository.TuteeRepository;
 import project.backend.repository.TutorRepository;
+import project.backend.repository.TutorTimeslotRepository;
 import project.backend.utilities.PasswordUtility;
 
 @Service
@@ -41,11 +43,15 @@ public class AccountService {
     @Autowired
     final TuteeRepository tuteeRepository;
 
-    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository, TutorRepository tutorRepository, TuteeRepository tuteeRepository) {
+    @Autowired
+    final TutorTimeslotRepository timeSlotRepository;
+
+    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository, TutorRepository tutorRepository, TuteeRepository tuteeRepository, TutorTimeslotRepository timeSlotRepository) {
         this.accountRepository = accountRepository;
         this.studentRepository = studentRepository;
         this.tutorRepository = tutorRepository;
         this.tuteeRepository = tuteeRepository;
+        this.timeSlotRepository = timeSlotRepository;
     }
 
     public boolean emailExists(String email) {
@@ -99,6 +105,8 @@ public class AccountService {
                     newTimeSlot.setStartTime(timeBody.start_time);
                     newTimeSlot.setEndTime(timeBody.end_time);
                     
+                    timeSlotRepository.save(newTimeSlot);
+
                     timeSlots.add(newTimeSlot);
                 }                
             }

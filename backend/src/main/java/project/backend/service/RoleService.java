@@ -119,6 +119,7 @@ public class RoleService {
 
     public TutorProfileResponse getTutorProfile(Long id) {
         Tutor tutor = getTutorByUserId(id);
+    
 
         TutorProfileResponse response = new TutorProfileResponse();
         response.full_name = tutor.getStudent()
@@ -129,7 +130,9 @@ public class RoleService {
         response.tutoring_subjects = tutor.getTutoringSubjects();
         response.contact_info = tutor.getStudent()
             .getContactInfo();
-
+        response.time_availability = tutor.getFreeTimeSlots();
+        response.languages = tutor.getStudent().getLanguages();
+        
         return response;
     }
 
