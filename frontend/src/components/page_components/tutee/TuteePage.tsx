@@ -44,7 +44,7 @@ const mockCollaborations: CollaborationType[] = [
 export default function TuteePage() {
 	return (
 		<MediumShortOnShortBoxLayout>
-			<ViewCollaborationsDialog open={true} setOpen={() => {}} collaborations={mockCollaborations} />{" "}
+			<ViewCollaborationsDialog open={false} setOpen={() => { }} collaborations={mockCollaborations} />{" "}
 			{/*Replace with actual collaborations that have been fetched */}
 			<div>Put calendar / Meeting overview here</div>
 			<div>Put your active posts here</div>
