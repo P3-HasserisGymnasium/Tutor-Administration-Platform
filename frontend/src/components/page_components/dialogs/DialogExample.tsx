@@ -2,7 +2,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material
 import { Dispatch, SetStateAction } from "react";
 import { PostType } from "~/types/entity_types";
 import CustomButton from "~/components/content_components/CustomButton";
-import MiniPost from "~/components/content_components/MiniPost";
+import MiniPost from "~/components/content_components/HomePageComponents/MiniPost";
 import { Subject } from "~/types/data_types";
 
 type GeneralDialogProps = {

@@ -1,6 +1,6 @@
 import MediumShortOnShortBoxLayout from "components/layout_components/MediumShortOnShortBoxLayout";
 import React, {  } from "react";
-import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip} from "@mui/material";
+import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip, ThemeProvider} from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 // import tutorTheme from "~/themes/tutorTheme";
 import MeetingsList from "../content_components/MeetingList";
@@ -8,11 +8,14 @@ import MiniCalendar from "../content_components/HomePageComponents/MiniCalendar"
 import MiniPostList from "../content_components/HomePageComponents/MiniPostList";
 import MiniCollabList from "../content_components/HomePageComponents/MiniCollabList"
 //import { useNavigate } from "react-router-dom";
+import { useCurrentTheme, useBreakpoints } from "~/utilities/helperFunctions";
 
 
 
 export default function HomePage() {
   const [view, setView] = React.useState('meeting');
+  const theme = useCurrentTheme(); 
+  const { isMobile } = useBreakpoints();
 
   
   const handleViewChange = (newView: React.SetStateAction<string>) => {
@@ -23,6 +26,7 @@ export default function HomePage() {
 
 
   return (
+    <ThemeProvider theme={theme}>
     <MediumShortOnShortBoxLayout>
       <Box
         sx={{
@@ -31,32 +35,44 @@ export default function HomePage() {
           border: "1px solid #white", 
           borderRadius: "8px",
           overflow: "hidden",
-          p: 2,
+           p: isMobile ? 1 : 2,
           position: "relative"
           
         }}
       >
         {/* Header with Title and Buttons */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 17 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: isMobile ? 2 : 17 }}>
           <Typography variant="h6">
             {view === 'calendar' ? "Calendar" : "Meeting List"}
           </Typography>
 
           {/* Button group for toggling between calendar and meeting */}
           <ButtonGroup variant="outlined" aria-label="outlined primary button group">
-            <Button sx ={{ color: 'white',
-            backgroundColor: view === 'meeting' ? '#6A79AA' : '#041758',
-            '&:hover': {
-              backgroundColor: view === 'meeting' ? 'lightblue' : 'rgba(0, 0, 255, 0.1)',}
+            <Button sx ={{ color: theme.palette.text.primary, // Dynamically use the theme's text color
+          backgroundColor: view === "meeting"
+            ? theme.palette.primary.main 
+            : theme.palette.background.paper, 
+          "&:hover": {
+            backgroundColor:
+              view === "meeting"
+                ? theme.palette.primary.light 
+                : theme.palette.action.hover, 
+          },
               }} 
               onClick={() => handleViewChange('calendar')}>Show Calendar
             </Button>
 
             <Button
-            sx ={{ color: 'white',
-              backgroundColor: view === 'calendar' ? '#6A79AA' : '#041758',
-              '&:hover': {
-                backgroundColor: view === 'calendar' ? 'lightblue' : 'rgba(0, 0, 255, 0.1)',}
+            sx ={{ color: theme.palette.text.primary, 
+              backgroundColor: view === "calendar"
+                ? theme.palette.primary.main 
+                : theme.palette.background.paper, 
+              "&:hover": {
+                backgroundColor:
+                  view === "calendar"
+                    ? theme.palette.primary.light 
+                    : theme.palette.action.hover, 
+              },
               }}
              onClick={() => handleViewChange('meeting')}>Show Meetings</Button>
           </ButtonGroup>
@@ -74,6 +90,7 @@ export default function HomePage() {
             <InfoIcon />
           </IconButton>
         </Tooltip>
+        
         </Box>
         <Box sx={{position: "flex",alignContent: "center" , alignItems: "center", border: "white 1px", overflow: "hidden",}}>
         { view === 'calendar' ? (
@@ -132,7 +149,10 @@ export default function HomePage() {
             marginRight: "auto",
             padding: "10px 20px",
             fontSize: "16px",
-            backgroundColor: "#001F54", // Darker blue for button
+            backgroundColor: theme.palette.primary.main, // Use primary color from the theme
+            color: theme.palette.getContrastText(theme.palette.primary.main), 
+            "&:hover": {
+              backgroundColor: theme.palette.primary.dark, },
           }}
           //onClick={() => navigate("")}
         >
@@ -178,6 +198,7 @@ export default function HomePage() {
         <Button
           variant="contained"
           color="primary"
+
           sx={{
             marginTop: 4,
             position: "relative",
@@ -187,7 +208,10 @@ export default function HomePage() {
             marginRight: "auto",
             padding: "10px 20px",
             fontSize: "16px",
-            backgroundColor: "#001F54", // Darker blue for button
+            backgroundColor: theme.palette.primary.main, // Use primary color from the theme
+            color: theme.palette.getContrastText(theme.palette.primary.main), 
+            "&:hover": {
+              backgroundColor: theme.palette.primary.dark, },
           }}
           //onClick={() => navigate("")}
         >
@@ -196,5 +220,6 @@ export default function HomePage() {
       </Box>
 
     </MediumShortOnShortBoxLayout>
+    </ThemeProvider>
   );
 }
