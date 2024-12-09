@@ -11,6 +11,7 @@ import {
 	Day,
 	NotificationContext,
 	NotificationParticipant,
+	NotificationState,
 } from "./data_types";
 
 export const zodPostSchema = z.object({
@@ -32,12 +33,12 @@ export const zodProfileSchema = z.object({
 
 export const zodMeetingSchema = z.object({
 	id: zodUUID,
-	rejection_reason: z.string().optional(),
-	end_date: z.date(),
 	collaboration_id: zodUUID,
-	meeting_description: z.string().optional(),
+	start_time: z.string(),
+	end_time: z.string(),
 	state: MeetingState,
-	start_date: z.date(),
+	rejection_reason: z.string().optional(),
+	meeting_description: z.string().optional(),
 });
 
 export const zodCollaborationSchema = z.object({
@@ -62,6 +63,7 @@ export const zodNotificationSchema = z.object({
 	receiver_type: NotificationParticipant,
 	context_id: zodUUID,
 	context_type: NotificationContext,
+	state: NotificationState,
 });
 
 export const zodAccountRegisterSchema = z.object({
@@ -138,6 +140,7 @@ export const zodUserStateSchema = z.object({
 	email: z.string().email().nullable(),
 	year_group: YearGroup.nullable(),
 	tutoring_subjects: z.array(Subject).nullable(),
+	is_administrator: z.boolean().nullable(),
 });
 
 export const zodLoginSuccessDataType = z.object({
@@ -148,6 +151,7 @@ export const zodLoginSuccessDataType = z.object({
 	email: z.string().email().nullable(),
 	year_group: YearGroup.nullable(),
 	tutoring_subjects: z.array(Subject).nullable(),
+	is_administrator: z.boolean().nullable(),
 });
 
 export const zodLoginSchema = z.object({
@@ -164,3 +168,4 @@ export type MeetingType = z.infer<typeof zodMeetingSchema>;
 export type CollaborationType = z.infer<typeof zodCollaborationSchema>;
 export type Feedback = z.infer<typeof zodFeedbackSchema>;
 export type AccountRegisterType = z.infer<typeof zodAccountRegisterSchema>;
+export type NotificationType = z.infer<typeof zodNotificationSchema>;

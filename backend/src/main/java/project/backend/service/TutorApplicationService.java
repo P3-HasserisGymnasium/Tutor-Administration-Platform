@@ -5,12 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import project.backend.controller_bodies.tutor_application_controller.TutorApplicationCreateBody;
+import project.backend.controller_bodies.tutor_application_controller.TutorTimeSlotCreateBody;
 import project.backend.model.Student;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutor;
 import project.backend.model.TutorApplication;
 import project.backend.model.TutorApplicationState;
+import project.backend.model.TutorTimeSlot;
 import project.backend.repository.TutorApplicationRepository;
+import project.backend.repository.TutorRepository;
 
 @Service
 public class TutorApplicationService {
@@ -21,9 +25,13 @@ public class TutorApplicationService {
     @Autowired
     private final RoleService roleService;
 
-    public TutorApplicationService(TutorApplicationRepository tutorApplicationRepository, RoleService roleService ) {
+    @Autowired
+    final TutorRepository tutorRepository;
+
+    public TutorApplicationService(TutorApplicationRepository tutorApplicationRepository, RoleService roleService, TutorRepository tutorRepository) {
         this.tutorApplicationRepository = tutorApplicationRepository;
         this.roleService = roleService;
+        this.tutorRepository = tutorRepository;
     }
 
     public TutorApplication getTutorApplicationById(Long id){
@@ -31,7 +39,28 @@ public class TutorApplicationService {
             .orElseThrow(() -> new IllegalArgumentException("Tutor application with ID " + id + " not found"));
     }
 
-    public TutorApplication saveTutorApplication(TutorApplication tutorApplication) {
+    public List<TutorApplication> getAllTutorApplications(){
+        return tutorApplicationRepository.findAll();
+    }
+
+    public TutorApplication createTutorApplication(TutorApplicationCreateBody applicationBody) {
+        
+        TutorApplication tutorApplication = new TutorApplication();
+
+        Student student = roleService.getStudentById(applicationBody.student_id);
+        tutorApplication.setStudent(student);
+
+        tutorApplication.setSubjects(applicationBody.subjects);
+        tutorApplication.setDescription(applicationBody.tutor_profile_description);
+        
+        for (TutorTimeSlotCreateBody timeSlotBody : applicationBody.time_availability) {
+            TutorTimeSlot timeSlot = new TutorTimeSlot();
+
+            timeSlot.setStartTimestamp(timeSlotBody.start_time);
+            timeSlot.setEndTimestamp(timeSlotBody.end_time);
+            tutorApplication.getFreeTimeSlots().add(timeSlot);
+        }
+        
         return tutorApplicationRepository.save(tutorApplication);
     }
 
@@ -39,13 +68,8 @@ public class TutorApplicationService {
         tutorApplicationRepository.deleteById(id);
     }
 
-    public TutorApplication createTutorApplication(TutorApplication tutorApplication){
-        tutorApplication.setState(TutorApplicationState.PENDING);
-        return saveTutorApplication(tutorApplication);
-    }
-
     public void acceptTutorApplication(Long id){
-        TutorApplication tutorApplication= getTutorApplicationById(id);
+        TutorApplication tutorApplication = getTutorApplicationById(id);
 
         if(tutorApplication.getState() == TutorApplicationState.ACCEPTED){
             throw new IllegalStateException("Tutor application has already been accepted.");
@@ -55,20 +79,28 @@ public class TutorApplicationService {
         Student student = tutorApplication.getStudent();
 
         Tutor tutor = student.getTutor();
+
+        // check if student is applying for new subject or to become tutor
         if(tutor != null){
             List<SubjectEnum> existingTutoringSubjects = tutor.getTutoringSubjects();
-            existingTutoringSubjects.add(tutorApplication.getSubject());
+            existingTutoringSubjects.addAll(tutorApplication.getSubjects());
+
+            List<TutorTimeSlot> existingTutorTimeSlot = tutor.getFreeTimeSlots();
+            existingTutorTimeSlot.addAll(tutorApplication.getFreeTimeSlots());
             tutor.setTutoringSubjects(existingTutoringSubjects);
             
         } else {
             tutor = new Tutor();
             tutor.setStudent(student);
-            tutor.setTutoringSubjects(List.of(tutorApplication.getSubject()));
+            tutor.setTutoringSubjects(tutorApplication.getSubjects());
+            tutor.setFreeTimeSlots(tutorApplication.getFreeTimeSlots());
+
             student.setTutor(tutor);
         }
 
-        saveTutorApplication(tutorApplication);
+        tutorApplicationRepository.save(tutorApplication);
         roleService.saveStudent(student); 
+        tutorRepository.save(tutor);
     }
 
     public void rejectTutorApplication(Long id, String rejectionReason){
@@ -77,7 +109,7 @@ public class TutorApplicationService {
 
         tutorApplication.setRejectionReason(rejectionReason);
 
-        saveTutorApplication(tutorApplication);
+        tutorApplicationRepository.save(tutorApplication);
     }
 
     public void removeTutoringSubject(Long studentId, SubjectEnum subject){

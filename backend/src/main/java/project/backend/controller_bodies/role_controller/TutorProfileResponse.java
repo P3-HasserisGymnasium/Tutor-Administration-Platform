@@ -11,7 +11,6 @@ import project.backend.model.YearGroupEnum;
 
 
 public class TutorProfileResponse {
-    
     public String full_name;
     public String description;
     public YearGroupEnum yearGroup;

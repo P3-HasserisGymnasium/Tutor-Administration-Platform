@@ -16,4 +16,11 @@ public class CollaborationCreateBody {
     public CollaborationState state;
 
     public SubjectEnum subject;
+
+    public CollaborationState adminState;
+
+    public CollaborationState tutorState;
+
+    public CollaborationState tuteeState;
+
 }
