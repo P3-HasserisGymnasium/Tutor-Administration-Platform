@@ -40,9 +40,7 @@ const queryClient = new QueryClient({
 		onSuccess: () => {
 			queryClient.invalidateQueries(); // Invalidate all queries on success for refetch
 		},
-		onError: (error) => {
-			console.log("Error occurred: ", error);
-		},
+		onError: () => {},
 	}),
 });
 
