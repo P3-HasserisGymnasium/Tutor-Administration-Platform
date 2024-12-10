@@ -1,16 +1,18 @@
 import * as React from "react";
 import { TutorProfileType } from "~/types/entity_types";
-import { Avatar, Box, Button, Typography } from "@mui/material";
-import avatarDemo from "./avatarDemo.png";
+import { Box, Button, Typography } from "@mui/material";
 import SubjectChip from "components/content_components/SubjectChip.tsx";
 import { SubjectType } from "~/types/data_types";
 import CustomButton from "../CustomButton";
 import { useTheme } from "@mui/system";
 import { Theme } from "@mui/material/styles";
 import TutorProfileDialog from "~/components/page_components/dialogs/ProfileDialog";
+import { useAuth } from "~/api/authentication/useAuth";
+import InitialsAvatar from "../InitialsAvatar";
 
 export default function TutorCard({ profile }: { profile: TutorProfileType }) {
   const theme = useTheme<Theme>();
+  const { userState } = useAuth();
 
   const [open, setOpen] = React.useState(false);
 
@@ -25,16 +27,7 @@ export default function TutorCard({ profile }: { profile: TutorProfileType }) {
         borderRadius: "0.5em",
       }}
     >
-      <Avatar
-        sx={{
-          borderRadius: "50%",
-          marginRight: "1em",
-          width: "4em",
-          height: "4em",
-        }}
-        src={avatarDemo}
-        alt={profile.full_name}
-      />
+      <InitialsAvatar fullName={userState.name}/>
       <Box
         sx={{
           marginRight: "1em",
@@ -46,7 +39,7 @@ export default function TutorCard({ profile }: { profile: TutorProfileType }) {
         <Typography variant="h4">
           {profile.year_group}
         </Typography>
-        {profile.subjects.map((subject: SubjectType, id: number) => (
+        {profile.tutoring_subjects.map((subject: SubjectType, id: number) => (
           <SubjectChip key={id} Subject={subject} />
         ))}
       </Box>

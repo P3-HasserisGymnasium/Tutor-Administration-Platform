@@ -22,6 +22,7 @@ export const Day = z.enum(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday
 export const Language = z.enum(["Danish", "English"] as const);
 export const Role = z.enum(["Tutor", "Tutee"] as const);
 export const YearGroup = z.enum(["PRE_IB", "IB_1", "IB_2"] as const);
+export const ComunicationMedium = z.enum(["Discord", "Microsoft_teams", "Skype", "Messenger", "Email"] as const);
 export const zodTimeSlotSchema = z.object({
 	start_time: z.string(),
 	end_time: z.string(),
@@ -38,7 +39,7 @@ export const zodTutorListFilterSchema = z.object({
 	languages: z.array(Language),
 });
 
-export const zodTimeAvailabilitiesSchema = z.object({
+export const zodTimeAvailabilitySchema = z.object({
 	day: Day,
 	time: z.array(zodTimeSlotSchema),
 });
@@ -50,7 +51,7 @@ export const zodMeetingTime = z.object({
 
 export const zodTutorApplicationSchema = z.object({
 	subjects: z.array(Subject),
-	time_availability: z.array(zodTimeAvailabilitiesSchema),
+	time_availability: z.array(zodTimeAvailabilitySchema),
 	application: z.string(),
 });
 export const zodPostListFilterSchema = z.object({
@@ -82,7 +83,7 @@ export const zodUUID = z.number();
 // Defining types for forms and zod schemas
 export const TimeSlot = zodTimeSlotSchema;
 export type tutorListFilterType = z.infer<typeof zodTutorListFilterSchema>;
-export type TimeAvailabilitiesType = z.infer<typeof zodTimeAvailabilitiesSchema>;
+export type TimeAvailabilityType = z.infer<typeof zodTimeAvailabilitySchema>;
 export type zodMeetingTimeType = z.infer<typeof zodMeetingTime>;
 export type PostListFilterType = z.infer<typeof zodPostListFilterSchema>;
 export type TimeSlotType = z.infer<typeof zodTimeSlotSchema>;
@@ -98,6 +99,7 @@ export type NotificationStateType = z.infer<typeof NotificationState>;
 export type DayType = z.infer<typeof Day>;
 export type SubjectType = z.infer<typeof Subject>;
 export type CollaborationStateType = z.infer<typeof CollaborationState>;
+export type ComunicationMediumType = z.infer<typeof ComunicationMedium>;
 export type UUIDType = z.infer<typeof zodUUID>;
 export type AccountRegisterResponseType = {
 	tutor: boolean;

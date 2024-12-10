@@ -1,12 +1,12 @@
 import { Box, Typography } from "@mui/material";
-import { TimeAvailabilitiesType } from "~/types/data_types";
+import { TimeAvailabilityType, TimeSlotType } from "~/types/data_types";
 import CustomButton from "./CustomButton";
 import { useTheme, Theme } from "@mui/material/styles";
 import { useFormContext } from "react-hook-form";
 
 interface TimeAvailabilityProps {
 	key: string;
-	timeAvailability: TimeAvailabilitiesType;
+	timeAvailability: TimeAvailabilityType;
 }
 
 export default function TimeAvailability({ timeAvailability }: TimeAvailabilityProps) {
@@ -27,7 +27,7 @@ export default function TimeAvailability({ timeAvailability }: TimeAvailabilityP
 		if (currentTimeAvailabilities) {
 			setValue(
 				"time_availability",
-				currentTimeAvailabilities.filter((value: TimeAvailabilitiesType) => value !== timeAvailability)
+				currentTimeAvailabilities.filter((value: TimeAvailabilityType) => value !== timeAvailability)
 			);
 		}
 	};
@@ -52,7 +52,7 @@ export default function TimeAvailability({ timeAvailability }: TimeAvailabilityP
 			</CustomButton>
 
 			<Typography variant="h4">{timeAvailability?.day}</Typography>
-			{timeAvailability.time.map((timeSlot, index) => (
+			{timeAvailability.time.map((timeSlot:TimeSlotType, index:number) => (
 				<Typography
 					key={`${timeSlot.start_time}-${index}`}
 					variant="body1"

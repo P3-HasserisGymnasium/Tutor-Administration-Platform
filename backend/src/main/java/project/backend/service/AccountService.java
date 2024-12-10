@@ -1,5 +1,8 @@
 package project.backend.service;
 
+import java.sql.Time;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,8 @@ import static project.backend.utilities.JWTUtil.generateToken;
 import project.backend.controller_bodies.account_controller.AccountLoginBody;
 import project.backend.controller_bodies.account_controller.AccountLoginSuccessBody;
 import project.backend.controller_bodies.account_controller.AccountRegisterBody;
+import project.backend.controller_bodies.account_controller.TimeCreateBody;
+import project.backend.controller_bodies.account_controller.TimeSlotCreateBody;
 import project.backend.exceptions.EmailAlreadyExistsException;
 import project.backend.exceptions.PasswordMismatchException;
 import project.backend.exceptions.UserNotFoundException;
@@ -19,11 +24,13 @@ import project.backend.model.RoleEnum;
 import project.backend.model.Student;
 import project.backend.model.Tutee;
 import project.backend.model.Tutor;
+import project.backend.model.TutorTimeSlot;
 import project.backend.model.User;
 import project.backend.repository.AccountRepository;
 import project.backend.repository.StudentRepository;
 import project.backend.repository.TuteeRepository;
 import project.backend.repository.TutorRepository;
+import project.backend.repository.TutorTimeslotRepository;
 import project.backend.utilities.PasswordUtility;
 
 @Service
@@ -42,14 +49,18 @@ public class AccountService {
     final TuteeRepository tuteeRepository;
 
     @Autowired
+    final TutorTimeslotRepository timeSlotRepository;
+
+    @Autowired
     final RoleService roleService;
 
-    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository, TutorRepository tutorRepository, TuteeRepository tuteeRepository, RoleService roleService) {
+    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository, TutorRepository tutorRepository, TuteeRepository tuteeRepository, TutorTimeslotRepository timeSlotRepository, RoleService roleService) {
+        this.roleService = roleService;
         this.accountRepository = accountRepository;
         this.studentRepository = studentRepository;
         this.tutorRepository = tutorRepository;
         this.tuteeRepository = tuteeRepository;
-        this.roleService = roleService;
+        this.timeSlotRepository = timeSlotRepository;
     }
 
     public boolean emailExists(String email) {
@@ -73,18 +84,40 @@ public class AccountService {
         newStudent.setPasswordHash(passwordHash);
         newStudent.setLanguages(body.languages);
         newStudent.setYearGroup(body.yearGroup);
-        
+        System.out.println("Roles: " + body.roles);
         Student savedStudent = studentRepository.save(newStudent);
-
+        System.out.println("Saved Staaaaaaaudent: " + savedStudent);
         if (body.roles.contains(RoleEnum.Tutor)) {
             Tutor newTutor = new Tutor();
 
-            newTutor.setTutoringSubjects(body.tutorSubjects);
+            newTutor.setTutoringSubjects(body.subjects);
             newTutor.setStudent(savedStudent);
+            newTutor.setProfileDescription(body.tutorProfileDescription);
 
-            savedStudent.setTutor(newTutor);
             tutorRepository.save(newTutor);
+            System.out.println("TimssssseSlots: " + body.time_availability);
+            List<TutorTimeSlot> timeSlots = new LinkedList<>();
+            for (TimeSlotCreateBody timeSlotBody : body.time_availability) {
+                
+                for (TimeCreateBody timeBody : timeSlotBody.time) {
+                    
+                    TutorTimeSlot newTimeSlot = new TutorTimeSlot();
+                    newTimeSlot.setWeekDay(timeSlotBody.day);
+
+                    newTimeSlot.setStartTime(timeBody.start_time);
+                    newTimeSlot.setEndTime(timeBody.end_time);
+                    newTimeSlot.setTutor(newTutor);
+                    
+                    timeSlotRepository.save(newTimeSlot);
+
+                    timeSlots.add(newTimeSlot);
+                }                
+            }
+            System.out.println("TimeSlots: " + timeSlots);
+            newTutor.setFreeTimeSlots(timeSlots);
+            savedStudent.setTutor(newTutor);
         }
+        System.out.println("Saved Studensadadasdt: " + savedStudent);
         if (body.roles.contains(RoleEnum.Tutee)) {
             Tutee newTutee = new Tutee();
 
@@ -93,7 +126,7 @@ public class AccountService {
             savedStudent.setTutee(newTutee);  
             tuteeRepository.save(newTutee);
         }
-
+        System.out.println("Saved Student: " + savedStudent);
         return savedStudent;
     }
 

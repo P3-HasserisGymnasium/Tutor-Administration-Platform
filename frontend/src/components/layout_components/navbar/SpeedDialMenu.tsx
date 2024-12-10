@@ -1,4 +1,4 @@
-import { Backdrop, SpeedDial, SpeedDialAction, Avatar, Box, Badge } from "@mui/material";
+import { Backdrop, SpeedDial, SpeedDialAction, Box, Badge } from "@mui/material";
 import { useState } from "react";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "~/api/authentication/useAuth";
 import { useNotificationService } from "~/api/services/notification-service";
 import { useRolePrefix } from "~/utilities/helperFunctions";
+import InitialsAvatar from "~/components/content_components/InitialsAvatar";
 
 export default function SpeedDialMenu() {
 	const { logout, userState } = useAuth();
@@ -72,6 +73,7 @@ export default function SpeedDialMenu() {
 				sx={{
 					position: "absolute",
 					top: 13,
+					zIndex: 0,
 
 					"& .MuiSpeedDial-fab": {
 						backgroundColor: "white",
@@ -112,10 +114,10 @@ export default function SpeedDialMenu() {
 						color="success"
 						onClick={() => navigate(`${rolePrefix}/notifications`)}
 					>
-						<Avatar variant="circular">P3</Avatar>
+						<InitialsAvatar fullName={userState.name} />
 					</Badge>
 				}
-				openIcon={<Avatar variant="circular">P3</Avatar>}
+				openIcon={<InitialsAvatar fullName={userState.name} />}
 				direction="down"
 				hidden={false}
 				onClose={() => setOpen(false)}

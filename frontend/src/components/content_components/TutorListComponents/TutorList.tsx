@@ -10,7 +10,8 @@ export default function TutorList() {
     full_name: "Lukas Saltenis",
     year_group: YearGroup.Enum["PRE_IB"],
     languages: [Language.Enum.Danish, Language.Enum.English],
-    subjects: [Subject.Enum.MATH, Subject.Enum.PHYSICS],
+    tutoring_subjects: [Subject.Enum.MATH, Subject.Enum.PHYSICS],
+    contact_info: [{username: "Saltenis", ComunicationMedium: "Discord"}],
     description: "I am a tutor :)",
     time_availability: [
       {

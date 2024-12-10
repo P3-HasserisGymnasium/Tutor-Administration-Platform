@@ -9,13 +9,13 @@ import { useLocation } from "react-router-dom";
 import { useMeetingService } from "~/api/services/meeting-service";
 import CustomButton from "~/components/content_components/CustomButton";
 import TimeAvailabilityBox from "~/components/content_components/TimeAvailabilityBox";
-import { MeetingState, TimeAvailabilitiesType } from "~/types/data_types";
+import { MeetingState, TimeAvailabilityType } from "~/types/data_types";
 import { MeetingType, zodMeetingSchema } from "~/types/entity_types";
 
 type RequestMeetingDialogProps = {
 	open: boolean;
 	setOpen: Dispatch<SetStateAction<boolean>>;
-	timeAvailabilities: TimeAvailabilitiesType[];
+	timeAvailabilities: TimeAvailabilityType[];
 };
 
 export default function RequestMeetingDialog({ open, setOpen, timeAvailabilities }: RequestMeetingDialogProps) {

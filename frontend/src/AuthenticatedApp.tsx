@@ -7,7 +7,8 @@ import TutorPage from "components/page_components/tutor/TutorPage";
 import CreatePostPage from "components/page_components/tutee/CreatePostPage";
 import TutorListPage from "components/page_components/tutee/TutorListPage";
 import TuteeNotificationsPage from "components/page_components/tutee/TuteeNotificationsPage";
-import TuteeProfilePage from "components/page_components/tutee/TuteeProfilePage";
+import TuteeProfilePage from "./components/page_components/tutee/TuteeProfilePage";
+import TutorProfilePage from "./components/page_components/tutor/TutorProfilePage";
 import RequestAdminPage from "components/page_components/tutee/RequestAdminPage";
 import PostsListPage from "components/page_components/tutor/PostsListPage";
 import { useBreakpoints } from "./utilities/helperFunctions";
@@ -17,7 +18,7 @@ import { Role } from "./types/data_types";
 import NotFound from "./api/authentication/NotFound";
 import Forbidden from "./api/authentication/Forbidden";
 import { useAuth } from "./api/authentication/useAuth";
-import AdministratorPage from "./components/page_components/dialogs/AdministratorPage";
+//import AdministratorPage from "./components/page_components/dialogs/AdministratorPage";
 import CollaborationPage from "./components/page_components/CollaborationPage";
 import TuteePage from "./components/page_components/tutee/TuteePage";
 
@@ -29,7 +30,8 @@ export default function AuthenticatedApp() {
 
 	const isTutee = userState.role?.includes(Role.Enum.Tutee);
 	const isTutor = userState.role?.includes(Role.Enum.Tutor);
-	const isAdmin = userState.is_administrator;
+	//const isAdmin = userState.is_administrator;
+	console.log("isAuthenticated is equal to: ", isAuthenticated);
 	return (
 		<Box
 			sx={{
@@ -68,21 +70,19 @@ export default function AuthenticatedApp() {
 						</>
 					) : null}
 
-					{/* Tutor routes */}
-					{isTutor ? (
-						<>
-							<Route path="/tutee/*" element={<Forbidden />} />
-							<Route path="/tutor/*">
-								<Route path="" element={<TutorPage />} />
-								<Route path="posts-list" element={<PostsListPage />} />
-								<Route path="tutor-application" element={<TutorApplicationPage />} />
-								<Route path="*" element={<NotFound />} />
-								<Route path="collaboration/*" element={<CollaborationPage />} />
-							</Route>
-						</>
-					) : null}
-
-					{isAdmin ? <Route path="/admin/*" element={<AdministratorPage />} /> : null}
+          {/* Tutor routes */}
+          {isTutor ? (
+            <>
+              <Route path="/tutee/*" element={<Forbidden />} />
+              <Route path="/tutor/*">
+                <Route path="" element={<TutorPage />} />
+                <Route path="posts-list" element={<PostsListPage />} />
+                <Route path="tutor-application" element={<TutorApplicationPage />} />
+                <Route path="profile" element={<TutorProfilePage/>}/>
+                <Route path="*" element={<NotFound />} />
+              </Route>
+            </>
+          ) : null}
 
 					{/* Catch-all for invalid roles */}
 					<Route path="*" element={<NotFound />} />

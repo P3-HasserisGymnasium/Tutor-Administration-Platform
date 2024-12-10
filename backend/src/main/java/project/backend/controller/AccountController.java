@@ -56,7 +56,7 @@ public class AccountController {
     public ResponseEntity<?> createUser(@RequestBody AccountRegisterBody body) {        
         try {
             User savedUser = accountService.saveNewUser(body);
-            return ResponseEntity.ok(savedUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
         }
         catch (EmailAlreadyExistsException | PasswordMismatchException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());

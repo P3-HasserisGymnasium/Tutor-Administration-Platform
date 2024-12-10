@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import dayjs, { Dayjs } from "dayjs";
 import { DesktopTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { TimeAvailabilitiesType } from "~/types/data_types";
+import { TimeAvailabilityType } from "~/types/data_types";
 import { useState } from "react";
 import { useTheme, Theme } from "@mui/material/styles";
 import TimeAvailability from "./TimeAvailability";
@@ -25,7 +25,7 @@ export default function SetTimeAvailability() {
 			return;
 		}
 
-		const newTimeAvailability: TimeAvailabilitiesType = {
+		const newTimeAvailability: TimeAvailabilityType = {
 			day: selectedDay,
 			time: [
 				{
@@ -35,7 +35,7 @@ export default function SetTimeAvailability() {
 			],
 		};
 
-		const existingTimeAvailabilities: TimeAvailabilitiesType[] = getValues("time_availability");
+		const existingTimeAvailabilities: TimeAvailabilityType[] = getValues("time_availability");
 		const validTimeAvailabilities = obtainValidTimeAvailabilities(existingTimeAvailabilities, newTimeAvailability);
 
 		if (!validTimeAvailabilities) {
@@ -121,7 +121,7 @@ function SelectedTimeAvailabilities({
 	timeAvailabilities,
 	borderColor,
 }: {
-	timeAvailabilities: TimeAvailabilitiesType[];
+	timeAvailabilities: TimeAvailabilityType[];
 	borderColor: string;
 }) {
 	return (
@@ -149,9 +149,9 @@ function SelectedTimeAvailabilities({
 }
 
 function obtainValidTimeAvailabilities(
-	existingTimeAvailabilities: TimeAvailabilitiesType[],
-	newTimeAvailability: TimeAvailabilitiesType
-): TimeAvailabilitiesType[] | undefined {
+	existingTimeAvailabilities: TimeAvailabilityType[],
+	newTimeAvailability: TimeAvailabilityType
+): TimeAvailabilityType[] | undefined {
 	const startTime = newTimeAvailability.time[0].start_time.split(":");
 	const startTimeHourInteger = Number(startTime[0]);
 	const startTimeMinutesInteger = Number(startTime[1]);
@@ -170,7 +170,7 @@ function obtainValidTimeAvailabilities(
 	if (!existingTimeAvailabilities) return [newTimeAvailability];
 
 	const existingSameDayTimeAvailability = existingTimeAvailabilities.find(
-		(time: TimeAvailabilitiesType) => time.day === newTimeAvailability.day
+		(time: TimeAvailabilityType) => time.day === newTimeAvailability.day
 	);
 	if (!existingSameDayTimeAvailability) return [...existingTimeAvailabilities, newTimeAvailability];
 	const equivalentTimeSlot = existingSameDayTimeAvailability?.time.find(
