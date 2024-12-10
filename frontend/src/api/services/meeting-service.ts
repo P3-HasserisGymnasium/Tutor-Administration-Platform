@@ -10,7 +10,6 @@ export const useMeetingService = () => {
 			mutationKey: ["requestMeeting"],
 			mutationFn: async (meeting: MeetingType) => {
 				const { data } = await apiClient.post("/api/meeting/request", meeting);
-				console.log("form here data", data);
 				return data;
 			},
 			onError: (e: AxiosError) => {
