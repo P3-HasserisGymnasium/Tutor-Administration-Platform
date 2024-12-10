@@ -155,6 +155,7 @@ export default function EditPostDialog({ open, setOpen, post }: EditPostDialogPr
             fullWidth
           ></TextField>
         </DialogContent>
+        
         <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
           <Button sx={{ width: "10em" }} onClick={handleSubmit(onSubmit)}>
             Save

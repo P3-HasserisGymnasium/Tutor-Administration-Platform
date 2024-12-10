@@ -4,6 +4,7 @@ import { Day, TimeAvailabilitiesType } from "~/types/data_types";
 import { useState } from "react";
 import EndCollaborationDialog from "./dialogs/EndCollaborationDialog";
 
+
 const mockTimeAvailabilities: TimeAvailabilitiesType[] = [
 	{
 		day: Day.Enum.Monday,
@@ -58,6 +59,9 @@ export default function CollaborationPage() {
 				open={isEndCollaborationDialogOpen}
 				setOpen={setIsEndCollaborationDialogOpen}
 			/>
+
+	
+
 			<div>Put scedule here</div>
 			<div>Put tutor communication here</div>
 			<div>Put meetings here</div>

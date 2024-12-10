@@ -11,6 +11,7 @@ const colors = {
 	tutorColor: "#082BA2",
 	darkTuteeColor: "#C0752F",
 	darkTutorColor: "#041758",
+	greyButtonColor: "#625957",
 };
 
 const baseTheme = createTheme(
@@ -39,6 +40,7 @@ const baseTheme = createTheme(
 			tutorColor: colors.tutorColor,
 			darkTuteeColor: colors.darkTuteeColor,
 			darkTutorColor: colors.darkTutorColor,
+			greyButtonColor: "#625957",
 			subjectColors: {
 				[Subject.Enum.MUSIC]: { background: "#b2c9e0" },
 				[Subject.Enum.MATH]: { background: "#ffcccb" },
