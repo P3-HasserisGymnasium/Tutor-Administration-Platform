@@ -124,8 +124,23 @@ export const useCollaborationService = () => {
 		});
 	};
 
+	const useGetCollaborationsWithTutor = (id: number | null) => {
+		return useQuery({
+			queryKey: ["getCollaborationsWithTutee", id],
+			queryFn: async ({ queryKey }) => {
+				const id = queryKey[1];
+				const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/with_tutor/${id}`);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			placeholderData: [],
+			enabled: !!id,
+		});
+	};
+
 	return {
 		useGetCollaborationsWithTutee,
+		useGetCollaborationsWithTutor,
 		submitCollaborationSuggestion,
 		acceptCollaboration,
 		rejectCollaboration,

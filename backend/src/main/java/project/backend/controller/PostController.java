@@ -1,6 +1,7 @@
 package project.backend.controller;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,23 @@ public class PostController {
         this.roleService = roleService;
     }
 
+    @GetMapping("")
+    public ResponseEntity<?> getPosts(HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isTutor() && !authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to view these posts");
+        }
+
+        List<Post> posts = postService.getAllPosts();
+
+        System.out.println("posts" + posts);
+        if (posts == null) {
+            return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(posts);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getPost(@PathVariable Long id, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
@@ -74,6 +92,8 @@ public class PostController {
 
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
+
+  
 
     @PostMapping("/")
     public ResponseEntity<?> createPost(@RequestBody PostBody postBody, HttpServletRequest request) {

@@ -37,7 +37,7 @@ export const usePostService = () => {
 		return useMutation({
 			mutationKey: ["createPost"],
 			mutationFn: async (post: PostCreationType) => {
-				const { data } = await apiClient.post<PostCreationType>("/api/post/", post);
+				const { data } = await apiClient.post<PostCreationType>("/api/post", post);
 				return data;
 			},
 			onError: (e: AxiosError<{ detail: string }>) => {
