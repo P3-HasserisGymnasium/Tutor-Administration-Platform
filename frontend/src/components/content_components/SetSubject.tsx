@@ -9,7 +9,7 @@ import CustomButton from "./CustomButton";
 export default function SetSubject() {
 	const { getValues } = useFormContext();
 	const borderColor = useTheme<Theme>().customColors.boxBorderColor;
-	const subjects = getValues("subjects");
+	//const subjects = getValues("subjects");
 	return (
 		<Box
 			data-testid="setsubjectcontainer"

@@ -39,7 +39,7 @@ export default function TutorProfile() {
                 <Box sx={{display:"flex", flexDirection:"column", gap:"1em"}}>
 
                     <Typography variant="h3">Year Group:</Typography>
-                    <Typography variant="body1">{tutorProfile?.yearGroup.replace("_", "-")}</Typography>
+                    <Typography variant="body1">{tutorProfile?.year_group.replace("_", "-")}</Typography>
 
                     <Typography variant="h3">{(tutorProfile && tutorProfile?.languages.length > 1)?"Languages:":"Language:"}</Typography>
                     <Typography variant="body1">{tutorProfile?.languages.join(", ")}</Typography>

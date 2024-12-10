@@ -39,7 +39,7 @@ export default function TutorCard({ profile }: { profile: TutorProfileType }) {
         <Typography variant="h4">
           {profile.year_group}
         </Typography>
-        {profile.subjects.map((subject: SubjectType, id: number) => (
+        {profile.tutoring_subjects.map((subject: SubjectType, id: number) => (
           <SubjectChip key={id} Subject={subject} />
         ))}
       </Box>

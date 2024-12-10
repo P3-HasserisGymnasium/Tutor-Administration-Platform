@@ -30,7 +30,7 @@ export const zodTutorProfileSchema = z.object({
 	full_name: z.string(),
 	year_group: YearGroup,
 	languages: z.array(Language),
-	subjects: z.array(Subject),
+	tutoring_subjects: z.array(Subject),
 	contact_info: z.array(z.object({username: z.string(), ComunicationMedium})),
 	time_availability: z.array(zodTimeAvailabilitySchema),
 	description: z.string().optional(),

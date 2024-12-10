@@ -88,15 +88,15 @@ export const useRoleService =()=> {
 				full_name: "",
 				time_availability: [],
 				tutoring_subjects: [],
-				yearGroup: "PRE_IB",
+				year_group: "PRE_IB",
 				languages: []
 			},
 	})};
 
 	const editProfile = useMutation({
 		mutationKey: ["editProfile"],
-		mutationFn: async (profile: ProfileType) => {
-			const { data } = await apiClient.post<ProfileType>(
+		mutationFn: async (profile: TutorProfileType) => {
+			const { data } = await apiClient.post<TutorProfileType>(
 				"/api/role",
 				profile
 			);
