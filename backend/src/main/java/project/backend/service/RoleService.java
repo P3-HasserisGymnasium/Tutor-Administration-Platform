@@ -169,7 +169,7 @@ public class RoleService {
         TutorProfileResponse response = new TutorProfileResponse();
         response.full_name = tutor.getStudent().getFullName();
         response.description = tutor.getProfileDescription();
-        response.yearGroup = tutor.getStudent().getYearGroup();
+        response.year_group = tutor.getStudent().getYearGroup();
         response.tutoring_subjects = tutor.getTutoringSubjects();
         response.contact_info = tutor.getStudent().getContactInfo();
 

@@ -15,7 +15,7 @@ const examplePost: PostType = {
   title: "Introduction to Algebra",
   description:
     "A session focused on the fundamentals of algebra, including solving equations, graphing, and simplifying expressions.",
-  subject: Subject.Enum.FRENCH,
+  subject: Subject.Enum.French,
   duration: "1 hour",
   state: "active",
 };

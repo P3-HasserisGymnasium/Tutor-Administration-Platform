@@ -6,7 +6,7 @@ describe("SetSubject", () => {
   beforeEach(() => {
     vi.mock("react-hook-form", () => ({
       useFormContext: () => ({
-        getValues: () => [Subject.Enum.MATH, Subject.Enum.ENGLISH, Subject.Enum.SS, Subject.Enum.ECON],
+        getValues: () => [Subject.Enum.Math, Subject.Enum.English, Subject.Enum.Ss, Subject.Enum.Econ],
       }),
     }));
 

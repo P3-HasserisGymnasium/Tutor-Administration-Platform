@@ -14,12 +14,7 @@ interface TutorApplicationPageProps {
 const TutorApplicationPage: React.FC<TutorApplicationPageProps> = ({ setPage }) => {
   const theme = useTheme<Theme>();
   const formMethods = useFormContext<AccountRegisterType>();
-  const {
-    handleSubmit,
-    register,
-    getValues,
-    formState: { errors },
-  } = formMethods;
+  const { handleSubmit, register, getValues } = formMethods;
 
   const navigate = useNavigate();
 
@@ -36,8 +31,6 @@ const TutorApplicationPage: React.FC<TutorApplicationPageProps> = ({ setPage }) 
       },
     });
   };
-  console.log("getValues", getValues());
-  console.log("errors:", errors);
 
   return (
     <Box sx={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
