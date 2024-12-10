@@ -12,8 +12,10 @@ import {
 	NotificationContext,
 	NotificationParticipant,
 	NotificationState,
-	zodTimeAvailabilitiesSchema,
+	ComunicationMedium,
+	zodTimeAvailabilitySchema,
 } from "./data_types";
+
 
 export const zodPostSchema = z.object({
   id: zodUUID,
@@ -28,8 +30,9 @@ export const zodTutorProfileSchema = z.object({
 	full_name: z.string(),
 	year_group: YearGroup,
 	languages: z.array(Language),
-	subjects: z.array(Subject),
-	time_availability: z.array(zodTimeAvailabilitiesSchema),
+	tutoring_subjects: z.array(Subject),
+	contact_info: z.array(z.object({username: z.string(), ComunicationMedium})),
+	time_availability: z.array(zodTimeAvailabilitySchema),
 	description: z.string().optional(),
 });
 
@@ -62,6 +65,16 @@ export const zodCollaborationSchema = z.object({
 	subject: Subject,
 	end_date: z.union([z.date(), z.string()]).optional(),
 	start_date: z.union([z.date(), z.string()]).optional(),
+});
+
+export const tutorProfileSchema = z.object({
+	contact_info: z.array(z.object({username: z.string(), ComunicationMedium})),
+	description: z.string(),
+	full_name: z.string(),
+	time_availability: z.array(zodTimeAvailabilitySchema),
+	tutoring_subjects: z.array(Subject),
+	yearGroup: YearGroup,
+	languages: z.array(Language),
 });
 
 export const zodFeedbackSchema = z.object({

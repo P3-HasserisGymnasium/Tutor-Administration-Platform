@@ -32,6 +32,7 @@ public class Tutor extends Role {
     List<Feedback> feedbacks = new ArrayList<>();
 
     @OneToMany(mappedBy = "tutor")
+    @JsonBackReference
     List<TutorTimeSlot> freeTimeSlots = new ArrayList<>();
 
     @OneToMany(mappedBy = "tutor")

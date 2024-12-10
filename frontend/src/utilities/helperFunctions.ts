@@ -34,6 +34,10 @@ export function useHeading(): string {
 			return "Tutor Application";
 		case "/tutor/posts-list":
 			return "List of Posts";
+		case "/tutee/notifications":
+		case "/tutor/notifications":
+		case "/notifications":
+			return "Notifications";
 		default:
 			return "";
 	}

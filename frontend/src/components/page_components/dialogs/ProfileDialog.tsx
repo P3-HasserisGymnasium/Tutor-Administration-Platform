@@ -60,7 +60,7 @@ const TutorProfileDialog = ({ open, setOpen, tutorProfile }: TutorProfileDialogP
                             <strong>Languages:</strong> {tutorProfile.languages.join(", ")}
                         </Typography>
                         <Typography variant="body1">
-                            <strong>Subjects:</strong> {tutorProfile.subjects.join(", ")}
+                            <strong>Subjects:</strong> {tutorProfile.tutoring_subjects.join(", ")}
                         </Typography>
                     </Box>
 

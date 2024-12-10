@@ -18,7 +18,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 
 
-
 @Entity
 public class TutorApplication {
 
@@ -29,15 +28,14 @@ public class TutorApplication {
     @ManyToOne
     private Student student; 
 
-    @Column(name = "subject")
-    @ElementCollection(targetClass = Language.class)
-    @CollectionTable(name = "tutor_subjects", joinColumns = @JoinColumn(name = "tutor_application_id"))
+    @ElementCollection
+    @CollectionTable(name = "tutor_application_subjects", joinColumns = @JoinColumn(name = "application_id"))
+    @Column(name = "tutoring_subject")
     @Enumerated(EnumType.STRING)
     List<SubjectEnum> subjects;
 
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "tutor_application_id")
     List<TutorTimeSlot> freeTimeSlots = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)

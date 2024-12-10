@@ -1,4 +1,5 @@
 import { Box, TextField, Typography, Checkbox, FormControlLabel } from "@mui/material";
+import { Box, TextField, Typography, Checkbox, FormControlLabel } from "@mui/material";
 import CustomAutocomplete from "../CustomAutocomplete";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,22 +12,24 @@ import { usePostService } from "~/api/services/post-service";
 import { useAuth } from "~/api/authentication/useAuth";
 
 export default function PostCreation() {
-
-	const createPostMutation = usePostService().useCreatePost();
-	const useFormParameter = {
-		resolver: zodResolver(zodPostCreationSchema),
-		defaultValues: {
-			title: "",
-			subject: undefined,
-			duration: [0, 12],
-			description: "",
-		},
-	};
-	const filterMethods = useForm<PostCreationType>(useFormParameter);
+  const createPostMutation = usePostService().useCreatePost();
+  const useFormParameter = {
+    resolver: zodResolver(zodPostCreationSchema),
+    defaultValues: {
+      title: "",
+      subject: undefined,
+      duration: [0, 12],
+      description: "",
+    },
+  };
+  const filterMethods = useForm<PostCreationType>(useFormParameter);
 
   const { control, register, setValue, getValues } = filterMethods;
   useWatch({ control });
+  const { control, register, setValue, getValues } = filterMethods;
+  useWatch({ control });
 
+  const [checked, setChecked] = useState<boolean>(false);
   const [checked, setChecked] = useState<boolean>(false);
 
   const isMd = useMediaQuery((theme) => theme.breakpoints.down("md"));
@@ -40,17 +43,28 @@ export default function PostCreation() {
       return 6;
     }
   };
+  const isMd = useMediaQuery((theme) => theme.breakpoints.down("md"));
+  const isLg = useMediaQuery((theme) => theme.breakpoints.down("lg"));
+  const getMaxRows = () => {
+    if (isMd) {
+      return 2;
+    } else if (isLg) {
+      return 5;
+    } else {
+      return 6;
+    }
+  };
 
-	const createPost = (values: PostCreationType) => {
-		createPostMutation.mutate(values, {
-			onSuccess: (data) => {
-				console.log(data);
-			},
-			onError: (e) => {
-				console.log(e);
-			}
-		});
-	};
+  const createPost = (values: PostCreationType) => {
+    createPostMutation.mutate(values, {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+      onError: (e) => {
+        console.log(e);
+      },
+    });
+  };
 
   return (
     <FormProvider {...filterMethods}>
@@ -137,11 +151,7 @@ export default function PostCreation() {
             alignItems: "center",
           }}
         >
-          <Button
-            variant="contained"
-            onClick={filterMethods.handleSubmit(createPost)}
-            disabled={!(getValues("subject") && getValues("title"))}
-          >
+          <Button variant="contained" onClick={filterMethods.handleSubmit(createPost)} disabled={!(getValues("subject") && getValues("title"))}>
             Create post
           </Button>
         </Box>

@@ -134,11 +134,7 @@ export default function RequestAdmin() {
             alignItems: "center",
           }}
         >
-          <Button
-            variant="contained"
-            onClick={filterMethods.handleSubmit(createPost)}
-            disabled={!(getValues("subject") && getValues("title"))}
-          >
+          <Button variant="contained" onClick={filterMethods.handleSubmit(createPost)} disabled={!(getValues("subject") && getValues("title"))}>
             Create post
           </Button>
         </Box>

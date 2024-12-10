@@ -1,16 +1,4 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  TextField,
-  Theme,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, TextField, Theme, Typography, useTheme } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import TutorlyLogoBlue from "src/assets/TutorlyLogoBlue.svg";
@@ -40,7 +28,6 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
 
   const verifyRoles = (values: AccountRegisterType) => {
     const roles: RoleType[] = getValues("roles");
-    console.log(roles);
 
     const isTutor = roles.includes("Tutor");
     const isTutee = roles.includes("Tutee");
@@ -293,11 +280,7 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
               alignItems: "flex-end",
             }}
           >
-            <Button
-              onClick={() => navigate("/start")}
-              sx={{ margin: 1, backgroundColor: theme.customColors.headingTextColor }}
-              variant="contained"
-            >
+            <Button onClick={() => navigate("/start")} sx={{ margin: 1, backgroundColor: theme.customColors.headingTextColor }} variant="contained">
               Go back
             </Button>
             <Button
@@ -327,8 +310,7 @@ const PrimaryRegisterPage: React.FC<PrimaryRegisterPageProps> = ({ setPage }) =>
           <br></br>
           <strong>Becoming a student</strong>
           <br></br>
-          <br></br>A tutee can establish collaborations by creating a post, finding a tutor or requesting an
-          administrator for help.
+          <br></br>A tutee can establish collaborations by creating a post, finding a tutor or requesting an administrator for help.
           <br></br>
           <br></br>A tutor can view and accept posts to create collaborations.
           <br></br>

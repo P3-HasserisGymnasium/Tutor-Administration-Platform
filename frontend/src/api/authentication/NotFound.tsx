@@ -15,13 +15,11 @@ export default function NotFound() {
   return (
     <Box sx={{ height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
       <Box sx={{ textAlign: "center" }}>
-        <Typography variant="h1">This page does not exist</Typography>
+        <Typography fontSize={"35px"} variant="h2">
+          This page does not exist
+        </Typography>
         <Link style={{ cursor: "pointer" }} to={navigationPath}>
-          <Typography
-            variant="h2"
-            mt={2}
-            sx={{ textDecoration: "none", color: "black", "&:hover": { textDecoration: "underline" } }}
-          >
+          <Typography variant="h2" mt={2} sx={{ textDecoration: "none", color: "black", "&:hover": { textDecoration: "underline" } }}>
             Go back
           </Typography>
         </Link>
