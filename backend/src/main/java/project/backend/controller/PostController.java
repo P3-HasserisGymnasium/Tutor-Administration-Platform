@@ -1,6 +1,7 @@
 package project.backend.controller;
 
 import java.util.Collections;
+import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -117,18 +118,24 @@ public class PostController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> editPost(@PathVariable Long id, @RequestBody PostBody postBody, HttpServletRequest request) {
+        System.out.println("before authuser");
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        System.out.println("after authuser");
 
-        if (authenticatedUser.getTuteeId() != postService.getPostById(id).get().getTutee().getId() || !authenticatedUser.isAdministrator()) {
+        if (!Objects.equals(authenticatedUser.getTuteeId(), postService.getPostById(id).get().getTutee().getId()) || !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You do not have permission to update this post");
         }
-
         Post post = postService.getPostById(id).get();
         post.setSubject(postBody.subject);
         post.setTitle(postBody.title);
         post.setDescription(postBody.description);
         post.setDuration(postBody.duration);
         post.setState(PostState.VISIBLE);
+
+        System.out.println("PostController subject" + postBody.subject);
+        System.out.println("PostController title" + postBody.title);
+        System.out.println("PostController description" + postBody.description);
+        System.out.println("PostController duration" + postBody.duration);
 
         postService.editPost(id, post);
 

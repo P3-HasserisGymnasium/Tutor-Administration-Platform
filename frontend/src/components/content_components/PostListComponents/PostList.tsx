@@ -1,7 +1,17 @@
 import { Box, Stack, Typography } from "@mui/material";
-/* import PostCard from "./PostCard";
+import PostCard from "./PostCard";
 import { PostType } from "~/types/entity_types";
- */
+import { PostState, Subject } from "~/types/data_types";
+
+const mockPost: PostType = {
+	id: 1,
+	title: "Sample Post",
+	description: "This is a sample post description.",
+	subject: Subject.Enum.MATH,
+	duration: [2, 4],
+	state: PostState.Enum.VISIBLE,
+};
+
 export default function PostList() {
 	return (
 		<Box
@@ -21,8 +31,7 @@ export default function PostList() {
 					marginTop: "0.5em",
 				}}
 			>
-				{/* 				<PostCard key={1} post={postDemo} />
-				 */}{" "}
+				<PostCard key={1} post={mockPost} />
 			</Stack>
 		</Box>
 	);

@@ -12,16 +12,18 @@ interface CustomAutocompleteProps {
 	variant: "subject" | "yearGroup";
 	multiple?: boolean;
 	sx?: SxProps<Theme>;
+	initialValue?: SubjectType
 }
 
 const CustomAutocomplete: React.FC<CustomAutocompleteProps> = ({
 	variant,
 	multiple,
 	sx,
+	initialValue,
 }) => {
 	switch (variant) {
 		case "subject":
-			return <SubjectAutocomplete multiple={multiple} sx={sx} />;
+			return <SubjectAutocomplete initialValue={initialValue} multiple={multiple} sx={sx} />;
 		case "yearGroup":
 			return <YearGroupAutocomplete multiple={multiple} sx={sx} />;
 		default:
@@ -34,9 +36,11 @@ export default CustomAutocomplete;
 function SubjectAutocomplete({
 	multiple,
 	sx,
+	initialValue
 }: {
 	multiple?: boolean;
 	sx?: SxProps<Theme>;
+	initialValue?: SubjectType
 }) {
 	const { control } = useFormContext();
 	return (
@@ -50,6 +54,7 @@ function SubjectAutocomplete({
 					onChange={(_, newValue) => {
 						field.onChange(newValue);
 					}}
+					defaultValue={initialValue}
 					filterSelectedOptions
 					{...(multiple && {
 						renderTags: (value) =>

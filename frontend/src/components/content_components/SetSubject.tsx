@@ -6,7 +6,11 @@ import { useTheme, Theme } from "@mui/material/styles";
 import SubjectIcon from "./SubjectIcon";
 import CustomButton from "./CustomButton";
 
-export default function SetSubject() {
+type SetSubjectProps = {
+	variant: string;
+};
+
+export default function SetSubject({ variant }: SetSubjectProps) {
 	const { getValues } = useFormContext();
 	const borderColor = useTheme<Theme>().customColors.boxBorderColor;
 	return (
@@ -14,8 +18,8 @@ export default function SetSubject() {
 			data-testid="setsubjectcontainer"
 			sx={{ display: "flex", flexDirection: "row", width: "100%", gap: "1em", alignItems: "center" }}
 		>
-			<SelectSubject />
-			{getValues("subjects").length > 0 && (
+			<SelectSubject variant={variant} />
+			{getValues("subject").length > 0 && (
 				<Box
 					sx={{
 						display: "flex",
@@ -28,7 +32,7 @@ export default function SetSubject() {
 						whiteSpace: "nowrap",
 					}}
 				>
-					{getValues("subjects").map((subject: SubjectType) => {
+					{getValues("subject").map((subject: SubjectType) => {
 						return <SubjectCard subject={subject} />;
 					})}
 				</Box>
@@ -70,7 +74,7 @@ function SubjectCard({ subject }: { subject: SubjectType }) {
 	);
 }
 
-function SelectSubject() {
+function SelectSubject({ variant }: SetSubjectProps) {
 	const { setValue, getValues } = useFormContext();
 	const borderColor = useTheme<Theme>().customColors.boxBorderColor;
 	const [newSubject, setNewSubject] = useState<SubjectType | null>(null);
@@ -99,20 +103,16 @@ function SelectSubject() {
 			}}
 		>
 			<Typography variant="h4" align="center">
-				New subject
+				{" "}
+				{variant == "edit" ? "Select new subject" : "Edit subject"}
 			</Typography>
 			<Autocomplete
 				disablePortal
-				data-testid="subjectautocomplete"
 				onChange={(_, newValue) => setNewSubject(newValue)}
 				options={Object.values(Subject.enum)}
 				renderInput={(params) => <TextField {...params} label="Select subject" />}
 			/>
-			{newSubject && (
-				<Button data-testid="subjectaddbutton" onClick={handleAdd}>
-					Add
-				</Button>
-			)}
+			{newSubject && <Button onClick={handleAdd}>Add</Button>}
 		</Box>
 	);
 }

@@ -72,7 +72,7 @@ export const usePostService = () => {
 				if (!post.id) {
 					throw new Error("Post id is required");
 				}
-				const { data } = await apiClient.put<PostType>(`/api/post/`, post);
+				const { data } = await apiClient.put<PostType>(`/api/post/${post.id}`, post);
 				return data;
 			},
 			onError: (e: AxiosError<{ detail: string }>) => {
