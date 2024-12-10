@@ -1,5 +1,5 @@
 import { afterEach } from "vitest";
-import { render, screen, cleanup, fireEvent } from "@testing-library/react";
+import { render, screen, cleanup} from "@testing-library/react";
 import { PostType } from "~/types/entity_types";
 import { Subject } from "~/types/data_types";
 import { BrowserRouter } from "react-router-dom";

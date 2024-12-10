@@ -16,7 +16,7 @@ import {
 } from "./data_types";
 
 export const zodPostSchema = z.object({
-	id: zodUUID,
+	id: zodUUID.optional(),
 	title: z.string(),
 	description: z.string(),
 	subject: Subject,

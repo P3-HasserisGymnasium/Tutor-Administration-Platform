@@ -2,6 +2,8 @@ package project.backend.model;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,6 +21,7 @@ public class Post {
     Long id;
 
     @ManyToOne
+    @JsonBackReference
     Tutee tutee;
 
     @Enumerated(EnumType.STRING)
@@ -32,7 +35,7 @@ public class Post {
     String description;
 
     @Column(name = "duration", nullable = true)
-    int duration;
+    int[] duration;
 
     @Column(name = "creation_date")
     Timestamp creationTimestamp;
@@ -83,11 +86,11 @@ public class Post {
         this.description = description;
     }
 
-    public int getDuration() {
+    public int[] getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(int[] duration) {
         this.duration = duration;
     }
 

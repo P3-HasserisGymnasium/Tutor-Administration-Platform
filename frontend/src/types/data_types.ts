@@ -62,6 +62,7 @@ export const zodPostCreationSchema = z.object({
 	description: z.string(),
 	subject: Subject,
 	duration: z.union([z.array(z.number()), z.undefined()]),
+	userId: z.number().nullable(),
 });
 
 export const MeetingState = z.enum(["PENDING", "ACCEPTED", "REJECTED", "TERMINATED"] as const);

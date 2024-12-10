@@ -25,7 +25,7 @@ export default function AuthenticatedApp() {
 	const { isMobile, hasScrollbar } = useBreakpoints();
 	const widthRightOffset = hasScrollbar ? "16px" : "0px";
 
-	const { userState, isAuthenticated } = useAuth();
+	const { userState} = useAuth();
 
 	const isTutee = userState.role?.includes(Role.Enum.Tutee);
 	const isTutor = userState.role?.includes(Role.Enum.Tutor);

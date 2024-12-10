@@ -3,8 +3,12 @@ import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
 import { PostType } from "~/types/entity_types";
+import { PostCreationType } from "~/types/data_types";
+import { useNavigate } from "react-router-dom";
 
 export const usePostService = () => {
+	const navigate = useNavigate();
+
 	const useGetPosts = () => {
 		return useQuery({
 			queryKey: ["getPosts"],
@@ -32,15 +36,16 @@ export const usePostService = () => {
 	const useCreatePost = () => {
 		return useMutation({
 			mutationKey: ["createPost"],
-			mutationFn: async (post: PostType) => {
-				const { data } = await apiClient.post<PostType>("/api/post", post);
+			mutationFn: async (post: PostCreationType) => {
+				const { data } = await apiClient.post<PostCreationType>("/api/post/", post);
 				return data;
 			},
 			onError: (e: AxiosError<{ detail: string }>) => {
 				toast.error(e?.response?.data?.detail);
 			},
 			onSuccess: () => {
-				toast.success("Post oprettet");
+				toast.success("Post created");
+				navigate("/tutee")
 			},
 		});
 	};

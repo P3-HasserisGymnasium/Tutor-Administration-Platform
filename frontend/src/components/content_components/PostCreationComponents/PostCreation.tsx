@@ -13,8 +13,12 @@ import SetDuration from "../SetDuration";
 import { useState } from "react";
 import { useMediaQuery } from "@mui/material";
 import Button from "@mui/material/Button";
+import { usePostService } from "~/api/services/post-service";
+import { useAuth } from "~/api/authentication/useAuth";
 
 export default function PostCreation() {
+	const { userState } = useAuth();
+	const createPostMutation = usePostService().useCreatePost();
 	const useFormParameter = {
 		resolver: zodResolver(zodPostCreationSchema),
 		defaultValues: {
@@ -22,6 +26,7 @@ export default function PostCreation() {
 			subject: undefined,
 			duration: [0, 12],
 			description: "",
+			userId: userState.id,
 		},
 	};
 	const filterMethods = useForm<PostCreationType>(useFormParameter);
@@ -44,7 +49,14 @@ export default function PostCreation() {
 	};
 
 	const createPost = (values: PostCreationType) => {
-		console.log(values);
+		createPostMutation.mutate(values, {
+			onSuccess: (data) => {
+				console.log(data);
+			},
+			onError: (e) => {
+				console.log(e);
+			}
+		});
 	};
 
 	return (
