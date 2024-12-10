@@ -13,7 +13,7 @@ export default function Navbar() {
   return (
     <Box
       sx={{
-        height: "8vh",
+        height: "5em",
         width: "100%",
         display: "flex",
         justifyContent: "left",

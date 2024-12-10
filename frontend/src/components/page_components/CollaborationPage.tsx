@@ -2,6 +2,7 @@ import MediumShortOnShortBoxLayout from "components/layout_components/MediumShor
 import RequestMeetingDialog from "./dialogs/RequestMeetingDialog";
 import { Day, TimeAvailabilitiesType } from "~/types/data_types";
 import { useState } from "react";
+import EndCollaborationDialog from "./dialogs/EndCollaborationDialog";
 
 const mockTimeAvailabilities: TimeAvailabilitiesType[] = [
 	{
@@ -43,7 +44,8 @@ const mockTimeAvailabilities: TimeAvailabilitiesType[] = [
 ];
 
 export default function CollaborationPage() {
-	const [isRequestMeetingDialogOpen, setIsRequestMeetingDialogOpen] = useState(true);
+	const [isRequestMeetingDialogOpen, setIsRequestMeetingDialogOpen] = useState(false);
+	const [isEndCollaborationDialogOpen, setIsEndCollaborationDialogOpen] = useState(true);
 
 	return (
 		<MediumShortOnShortBoxLayout>
@@ -51,6 +53,10 @@ export default function CollaborationPage() {
 				open={isRequestMeetingDialogOpen}
 				setOpen={setIsRequestMeetingDialogOpen}
 				timeAvailabilities={mockTimeAvailabilities}
+			/>
+			<EndCollaborationDialog
+				open={isEndCollaborationDialogOpen}
+				setOpen={setIsEndCollaborationDialogOpen}
 			/>
 			<div>Put scedule here</div>
 			<div>Put tutor communication here</div>

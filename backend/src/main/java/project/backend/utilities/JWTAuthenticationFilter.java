@@ -99,18 +99,19 @@ public class JWTAuthenticationFilter implements Filter {
 
             AuthenticatedUserBody authenticatedUser = new AuthenticatedUserBody();
             authenticatedUser.userId = Long.parseLong(userID);
-            Tutor tutor = roleService.getTutorByUserId(authenticatedUser.userId);
-            if (tutor != null) {
-                authenticatedUser.tutorId = tutor.getId();
-            }
-            Tutee tutee = roleService.getTuteeByUserId(authenticatedUser.userId);
-            if (tutee != null) {
-                authenticatedUser.tuteeId = tutee.getId();
-            }
             Student student = roleService.getStudentById(authenticatedUser.userId);
             if (student != null) {
                 authenticatedUser.studentId = student.getId();
             }
+            Tutor tutor = student.getTutor();
+            if (tutor != null) {
+                authenticatedUser.tutorId = tutor.getId();
+            }
+            Tutee tutee = student.getTutee();
+            if (tutee != null) {
+                authenticatedUser.tuteeId = tutee.getId();
+            }
+        
             Administrator administrator = roleService.getAdministratorByUserId(authenticatedUser.userId);
             if (administrator != null) {
                 authenticatedUser.administratorId = administrator.getId();
