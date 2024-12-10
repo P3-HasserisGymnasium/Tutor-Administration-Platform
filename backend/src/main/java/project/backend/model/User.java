@@ -36,10 +36,10 @@ public abstract class User {
     private String passwordHash;
 
     @Column(name = "languages")
-    @ElementCollection(targetClass = Language.class)
+    @ElementCollection(targetClass = LanguageEnum.class)
     @CollectionTable(name = "user_languages", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    private List<Language> languages = new LinkedList<>();
+    private List<LanguageEnum> languages = new LinkedList<>();
 
     public User() {
     }
@@ -72,11 +72,11 @@ public abstract class User {
         this.passwordHash = password;
     }
 
-    public List<Language> getLanguages() {
+    public List<LanguageEnum> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(List<Language> languages) {
+    public void setLanguages(List<LanguageEnum> languages) {
         this.languages = languages;
     }
 }

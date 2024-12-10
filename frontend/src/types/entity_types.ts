@@ -1,19 +1,21 @@
 import { z } from "zod";
 import {
-	Language,
-	Subject,
-	YearGroup,
-	TimeSlot,
-	MeetingState,
-	CollaborationState,
-	zodUUID,
-	Role,
-	Day,
-	NotificationContext,
-	NotificationParticipant,
-	NotificationState,
-	zodTimeAvailabilitiesSchema,
+  Language,
+  Subject,
+  YearGroup,
+  TimeSlot,
+  MeetingState,
+  CollaborationState,
+  zodUUID,
+  Role,
+  Day,
+  NotificationContext,
+  NotificationParticipant,
+  NotificationState,
+  ComunicationMedium,
+  zodTimeAvailabilitySchema,
 } from "./data_types";
+
 
 export const zodPostSchema = z.object({
   id: zodUUID,
@@ -25,43 +27,54 @@ export const zodPostSchema = z.object({
 });
 
 export const zodTutorProfileSchema = z.object({
-	full_name: z.string(),
-	year_group: YearGroup,
-	languages: z.array(Language),
-	subjects: z.array(Subject),
-	time_availability: z.array(zodTimeAvailabilitiesSchema),
-	description: z.string().optional(),
+  full_name: z.string(),
+  year_group: YearGroup,
+  languages: z.array(Language),
+  tutoring_subjects: z.array(Subject),
+  contact_info: z.array(z.object({ username: z.string(), ComunicationMedium })),
+  time_availability: z.array(zodTimeAvailabilitySchema),
+  description: z.string().optional(),
 });
 
 export const zodTuteeProfileSchema = z.object({
-	full_name: z.string(),
-	year_group: YearGroup,
-	languages: z.array(Language),
+  full_name: z.string(),
+  year_group: YearGroup,
+  languages: z.array(Language),
 });
 
 export const zodMeetingSchema = z.object({
-	id: zodUUID,
-	collaboration_id: zodUUID,
-	partner_name: z.string(),
-	tutee_user_id: zodUUID,
-	tutor_user_id: zodUUID,
-	start_time: z.string(),
-	end_time: z.string(),
-	state: MeetingState,
-	rejection_reason: z.string().optional(),
-	meeting_description: z.string().optional(),
+  id: zodUUID,
+  collaboration_id: zodUUID,
+  partner_name: z.string(),
+  tutee_user_id: zodUUID,
+  tutor_user_id: zodUUID,
+  start_time: z.string(),
+  end_time: z.string(),
+  state: MeetingState,
+  rejection_reason: z.string().optional(),
+  meeting_description: z.string().optional(),
 });
 
 export const zodCollaborationSchema = z.object({
-	id: zodUUID,
-	tutee_id: zodUUID,
-	tutor_id: zodUUID,
-	tutee_name: z.string(),
-	tutor_name: z.string(),
-	state: CollaborationState,
-	subject: Subject,
-	end_date: z.date().optional(),
-	start_date: z.date().optional(),
+  id: zodUUID,
+  tutee_id: zodUUID,
+  tutor_id: zodUUID,
+  tutee_name: z.string(),
+  tutor_name: z.string(),
+  state: CollaborationState,
+  subject: Subject,
+  end_date: z.union([z.date(), z.string()]).optional(),
+  start_date: z.union([z.date(), z.string()]).optional(),
+});
+
+export const tutorProfileSchema = z.object({
+  contact_info: z.array(z.object({ username: z.string(), ComunicationMedium })),
+  description: z.string(),
+  full_name: z.string(),
+  time_availability: z.array(zodTimeAvailabilitySchema),
+  tutoring_subjects: z.array(Subject),
+  yearGroup: YearGroup,
+  languages: z.array(Language),
 });
 
 export const zodFeedbackSchema = z.object({
@@ -81,7 +94,7 @@ export const zodNotificationSchema = z.object({
 });
 
 export const zodAccountRegisterSchema = z.object({
-  fullName: z
+  full_name: z
     .string({
       required_error: "You must provide a name", // Required field error
     })
@@ -99,14 +112,14 @@ export const zodAccountRegisterSchema = z.object({
     })
     .min(6, "Password must be at least 6 characters long"), // Minimum length validation
 
-  confirmPassword: z
+  confirm_password: z
     .string({
       required_error: "You must confirm your password", // Required field error
     })
     .min(6, "Password confirmation must match the password"), // Minimum length validation
   // Password match check should be handled elsewhere (e.g., in `refine`)
 
-  yearGroup: z
+  year_group: z
     .string({
       required_error: "You must select a year group", // Optional field validation
     }) // Optional field, no required error
@@ -131,7 +144,7 @@ export const zodAccountRegisterSchema = z.object({
     })
     .optional(), // Optional field
 
-  tutorProfileDescription: z
+  tutor_profile_description: z
     .string({
       required_error: "You must provide a description", // Optional field validation
     })
@@ -174,8 +187,8 @@ export const zodLoginSchema = z.object({
 });
 
 export const zodTerminationSchema = z.object({
-	id: z.number(),
-	terminationReason: z.string(),
+  id: z.number(),
+  terminationReason: z.string(),
 });
 
 export type LoginSuccessDataType = z.infer<typeof zodLoginSuccessDataType>;

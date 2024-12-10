@@ -1,14 +1,16 @@
 import { Card, CardContent, Typography, Avatar, Box } from "@mui/material";
 import SubjectIcon from "~/components/content_components/SubjectIcon";
 import { CollaborationType } from "~/types/entity_types";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useRolePrefix } from "~/utilities/helperFunctions";
 
 export default function MiniCollab({ collaboration }: { collaboration: CollaborationType }) {
 	const navigate = useNavigate();
-	const rolePrefix = useLocation().pathname.includes("tutor") ? "/tutor" : "/tutee";
+	const rolePrefix = useRolePrefix();
 
 	return (
 		<Card
+			data-testid="collabcontainer"
 			onClick={() => navigate(`${rolePrefix}/collaboration/${collaboration.id}`)}
 			sx={{
 				width: 200,
@@ -51,7 +53,11 @@ export default function MiniCollab({ collaboration }: { collaboration: Collabora
 				</Box>
 
 				{/* Collaboration Text */}
-				<Typography variant="body2" sx={{ fontSize: 15, color: "black", fontWeight: "bold" }}>
+				<Typography
+					variant="body2"
+					sx={{ fontSize: 15, color: "black", fontWeight: "bold" }}
+					data-testid="collabwithname"
+				>
 					Collaboration with {collaboration.tutor_name}
 				</Typography>
 			</CardContent>

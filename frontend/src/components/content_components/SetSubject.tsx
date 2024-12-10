@@ -14,9 +14,9 @@ export default function SetSubject({ variant }: SetSubjectProps) {
   const { getValues } = useFormContext();
   const borderColor = useTheme<Theme>().customColors.boxBorderColor;
   return (
-    <Box sx={{ display: "flex", flexDirection: "row", width: "100%", gap: "1em", alignItems: "center" }}>
+    <Box data-testid="setsubjectcontainer" sx={{ display: "flex", flexDirection: "row", width: "100%", gap: "1em", alignItems: "center" }}>
       <SelectSubject variant={variant} />
-      {getValues("subject").length > 0 && (
+      {getValues("subjects").length > 0 && (
         <Box
           sx={{
             display: "flex",
@@ -29,8 +29,8 @@ export default function SetSubject({ variant }: SetSubjectProps) {
             whiteSpace: "nowrap",
           }}
         >
-          {getValues("subject").map((subject: SubjectType) => {
-            return <SubjectCard subject={subject} />;
+          {getValues("subjects").map((subject: SubjectType) => {
+            return <SubjectCard key={subject} subject={subject} />;
           })}
         </Box>
       )}
@@ -41,10 +41,10 @@ export default function SetSubject({ variant }: SetSubjectProps) {
 function SubjectCard({ subject }: { subject: SubjectType }) {
   const { setValue, getValues } = useFormContext();
   const deleteSubject = () => {
-    const currentSubjects = getValues("subject");
+    const currentSubjects = getValues("subjects");
     if (currentSubjects) {
       setValue(
-        "subject",
+        "subjects",
         currentSubjects.filter((value: SubjectType) => value !== subject)
       );
     }
@@ -63,7 +63,7 @@ function SubjectCard({ subject }: { subject: SubjectType }) {
         position: "relative",
       }}
     >
-      <CustomButton customType="x" onClick={deleteSubject}>
+      <CustomButton data-testid="removesubjectx" customType="x" onClick={deleteSubject}>
         X
       </CustomButton>
       <SubjectIcon Subject={subject} />
@@ -71,19 +71,22 @@ function SubjectCard({ subject }: { subject: SubjectType }) {
   );
 }
 
-function SelectSubject({ variant }: { variant: string }) {
+function SelectSubject({ variant }: SetSubjectProps) {
   const { setValue, getValues } = useFormContext();
   const borderColor = useTheme<Theme>().customColors.boxBorderColor;
   const [newSubject, setNewSubject] = useState<SubjectType | null>(null);
 
   const handleAdd = () => {
-    const selectedSubjects: SubjectType[] = getValues("subject");
+    console.log("in here");
+    const selectedSubjects: SubjectType[] = getValues("subjects");
     if (selectedSubjects.length !== 0 && newSubject) {
       if (!selectedSubjects.includes(newSubject)) {
-        setValue("subject", [...selectedSubjects, newSubject]);
+        console.log("in heres");
+        setValue("subjects", [...selectedSubjects, newSubject]);
       }
     } else {
-      setValue("subject", [newSubject]);
+      console.log("in heressss");
+      setValue("subjects", [newSubject]);
     }
   };
 
@@ -100,6 +103,7 @@ function SelectSubject({ variant }: { variant: string }) {
       }}
     >
       <Typography variant="h4" align="center">
+        {" "}
         {variant == "edit" ? "Select new subject" : "Edit subject"}
       </Typography>
       <Autocomplete

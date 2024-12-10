@@ -1,6 +1,8 @@
 package project.backend.model;
 
 import java.sql.Timestamp;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,6 +21,7 @@ public class Post {
     Long id;
 
     @ManyToOne
+    @JsonBackReference
     Tutee tutee;
 
     @Enumerated(EnumType.STRING)

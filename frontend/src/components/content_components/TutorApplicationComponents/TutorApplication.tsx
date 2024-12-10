@@ -1,6 +1,6 @@
 import { Box, Button, Typography, TextField, useMediaQuery } from "@mui/material";
 import { TutorApplicationType, zodTutorApplicationSchema } from "~/types/data_types";
-import { useForm, FormProvider, useWatch } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SetTimeAvailability from "components/content_components/SetTimeAvailability";
 import SetSubject from "../SetSubject";
@@ -15,12 +15,7 @@ export default function TutorApplication() {
     },
   });
 
-  const { control, getValues, register } = filterMethods;
-  const keepWatch = useWatch({
-    control,
-  });
-
-  console.log(keepWatch);
+  const { getValues, register } = filterMethods;
 
   const isMd = useMediaQuery((theme) => theme.breakpoints.down("md"));
   const isLg = useMediaQuery((theme) => theme.breakpoints.down("lg"));
@@ -33,9 +28,6 @@ export default function TutorApplication() {
       return 20;
     }
   };
-
-  console.log(keepWatch);
-
   return (
     <FormProvider {...filterMethods}>
       <Box sx={{ display: "flex", flexDirection: "column", height: "95%", padding: "1em" }}>
@@ -85,7 +77,18 @@ export default function TutorApplication() {
         </Box>
         <Box sx={{ flexGrow: 1 }}></Box>
         <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "1em" }}>
-          {getValues("subjects").length > 0 && <Button variant="contained" /*onClick={handleSend}*/>Send Application</Button>}
+          {!(getValues("subjects").length > 0) ||
+            (!(getValues("time_availability").length > 0) && (
+              <Typography variant="body2" sx={{ color: "red" }}>
+                Please select at least one subject and one time availability
+              </Typography>
+            ))}
+          <Button
+            variant="contained"
+            disabled={!(getValues("subjects").length > 0) || !(getValues("time_availability").length > 0)} /*onClick={handleSend}*/
+          >
+            Send Application
+          </Button>
         </Box>
       </Box>
     </FormProvider>
