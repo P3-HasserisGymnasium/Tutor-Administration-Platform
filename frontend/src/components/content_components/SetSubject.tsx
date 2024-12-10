@@ -32,7 +32,7 @@ export default function SetSubject({ variant }: SetSubjectProps) {
 						whiteSpace: "nowrap",
 					}}
 				>
-					{getValues("subject").map((subject: SubjectType) => {
+					{getValues("subjects").map((subject: SubjectType) => {
 						return <SubjectCard subject={subject} />;
 					})}
 				</Box>
