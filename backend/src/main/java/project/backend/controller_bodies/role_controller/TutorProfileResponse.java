@@ -8,10 +8,8 @@ import project.backend.model.SubjectEnum;
 import project.backend.model.TutorTimeSlot;
 import project.backend.model.YearGroupEnum;
 
-
-
 public class TutorProfileResponse {
-    
+
     public String full_name;
     public String description;
     public YearGroupEnum year_group;

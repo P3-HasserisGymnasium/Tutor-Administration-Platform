@@ -60,12 +60,21 @@ public class RoleService {
         return tutees;
     }
 
-    public List<Tutor> getTutors() {
+    public List<TutorProfileResponse> getTutors() {
         List<Student> students = studentRepository.getTutors();
-        List<Tutor> tutors = new ArrayList<Tutor>();
+        List<TutorProfileResponse> tutors = new ArrayList<>();
         for (Student student : students) {
-            Tutor tutor = student.getTutor();
-            tutors.add(tutor);
+            TutorProfileResponse response = new TutorProfileResponse();
+
+            response.contact_info = student.getContactInfo();
+            response.full_name = student.getFullName();
+            response.languages = student.getLanguages();
+            response.year_group = student.getYearGroup();
+            response.time_availability = student.getTutor().getFreeTimeSlots();
+            response.tutoring_subjects = student.getTutor().getTutoringSubjects();
+            response.description = student.getTutor().getProfileDescription();
+
+            tutors.add(response);
         }
         return tutors;
     }

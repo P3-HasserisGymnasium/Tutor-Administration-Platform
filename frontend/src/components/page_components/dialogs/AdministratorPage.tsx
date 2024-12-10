@@ -1,61 +1,55 @@
-import { Box, Typography } from "@mui/material";
+import { Box, ThemeProvider, Typography } from "@mui/material";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useRoleService } from "~/api/services/roleService";
 import ShortOnShortShortOnShortBoxLayout from "~/components/layout_components/ShortOnShortShortOnShortBoxLayout";
-import TuteeIcon from "src/assets/TuteeIcon.svg";
-import TutorIcon from "src/assets/TutorIcon.svg";
-import CollaborationIcon from "src/assets/CollaborationIcon.svg";
+import AdminOverview from "./AdminOverview";
+import AdminRequests from "./AdminManageRequests";
+import AdminManageTutees from "./AdminManageTutees";
+import AdminManageTutors from "./AdminManageTutors";
+import { useCurrentTheme } from "~/utilities/helperFunctions";
 
 export default function AdministratorPage() {
-	const { data: tutors } = useRoleService().getTutors();
+	const theme = useCurrentTheme();
+
+	const { data: tutors, isLoading: isTutorsLoading } = useRoleService().getTutors();
 	const { data: tutees } = useRoleService().getTutees();
 	const { data: collaborations } = useCollaborationService().getCollabortations();
 
-	let tutorCount = 0;
-	let tuteeCount = 0;
-	let collaborationCount = 0;
-
-	if (tutors != undefined) {
-		tutorCount = tutors.length;
-	}
-	if (tutees != undefined) {
-		tuteeCount = tutees.length;
-	}
-	if (collaborations != undefined) {
-		collaborationCount += collaborations.length;
-	}
-
+	let tutorCount = tutors?.length;
+	let tuteeCount = tutees?.length;
+	let collaborationCount = collaborations?.length;
 	return (
-		<ShortOnShortShortOnShortBoxLayout>
-			<div>Requests here</div>
-			<div>Something there</div>
-			<Box sx={{ height: "100%", width: "100%", padding: 3 }}>
-				<Typography variant="h1">
-					Overview
-				</Typography>
-				<Box sx={{ height: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
-					<Box sx={{ alignItems: "center", justifyContent: "center" }}>
-						<img src={TuteeIcon} style={{ width: "100%" }}></img>
-						<Typography variant="h2" sx={{ textAlign: "center" }}>
-							{tuteeCount} tutees
-						</Typography>
-					</Box>
-					<Box sx={{ alignItems: "center", justifyContent: "center", paddingBottom: "100px" }}>
-						<img src={CollaborationIcon} style={{ width: "100%" }}></img>
-						<Typography variant="h2" sx={{ textAlign: "center" }}>
-							{collaborationCount} collaborations
-						</Typography>
-					</Box>
-					<Box sx={{ alignItems: "center", justifyContent: "center", paddingTop: "25px" }}>
-						<img src={TutorIcon} style={{ width: "100%" }}></img>
-						<Typography variant="h2" sx={{ textAlign: "center" }}>
-							{tutorCount} tutors
-						</Typography>
-					</Box>
-				</Box>
 
-			</Box>
-			<div>Something where</div>
-		</ShortOnShortShortOnShortBoxLayout >
+		<ThemeProvider theme={theme}>
+			<ShortOnShortShortOnShortBoxLayout>
+				<Box sx={{ height: "100%", width: "100%" }}>
+					<Typography variant="h1" sx={{ paddingTop: 3, paddingLeft: 3 }}>
+						Requests
+					</Typography>
+					<AdminRequests />
+				</Box>
+				<Box sx={{ height: "100%", width: "100%" }}>
+					<Typography variant="h1" sx={{ paddingTop: 3, paddingLeft: 3 }}>
+						Manage tutees
+					</Typography>
+					<AdminManageTutees />
+				</Box>
+				<Box sx={{ height: "100%", width: "100%" }}>
+					<Typography variant="h1" sx={{ paddingTop: 3, paddingLeft: 3 }}>
+						Overview
+					</Typography>
+					<AdminOverview
+						tutorCount={tutorCount}
+						tuteeCount={tuteeCount}
+						collaborationCount={collaborationCount} />
+				</Box>
+				<Box sx={{ height: "100%", width: "100%" }}>
+					<Typography variant="h1" sx={{ paddingTop: 3, paddingLeft: 3 }}>
+						Manage tutors
+					</Typography>
+					<AdminManageTutors tutors={tutors} isLoading={isTutorsLoading} />
+				</Box>
+			</ShortOnShortShortOnShortBoxLayout >
+		</ThemeProvider>
 	);
 }

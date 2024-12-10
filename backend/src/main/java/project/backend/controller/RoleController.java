@@ -18,7 +18,6 @@ import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
 import project.backend.controller_bodies.role_controller.TutorProfileResponse;
 import project.backend.model.RoleEnum;
 import project.backend.model.Tutee;
-import project.backend.model.Tutor;
 import project.backend.service.RoleService;
 import project.backend.utilities.HelperFunctions;
 
@@ -54,7 +53,7 @@ public class RoleController {
 
         // Everyone is allowed yes?
 
-        List<Tutor> tutors = roleService.getTutors();
+        List<TutorProfileResponse> tutors = roleService.getTutors();
 
         return ResponseEntity.status(HttpStatus.OK).body(tutors);
     }
