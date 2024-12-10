@@ -12,7 +12,8 @@ import { usePostService } from "~/api/services/post-service";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useAuth } from "~/api/authentication/useAuth";
 import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
-export default function TuteePage() {
+
+export default function TutorPage() {
 	const theme = useCurrentTheme();
 	const { isMobile } = useBreakpoints();
 	const [view, setView] = useState<"list" | "calender">("list");
