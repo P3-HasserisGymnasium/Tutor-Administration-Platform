@@ -39,14 +39,7 @@ export default function PostCreation() {
     }
   };
   const createPost = (values: PostCreationType) => {
-    createPostMutation.mutate(values, {
-      onSuccess: (data) => {
-        console.log(data);
-      },
-      onError: (e) => {
-        console.log(e);
-      },
-    });
+    createPostMutation.mutate(values, {});
   };
 
   return (

@@ -20,18 +20,12 @@ export default function DeleteAccountDialog({ open, setOpen }: DeleteAccountDial
 
   const onSubmit = () => {
     if (userId) {
-      console.log("User ID:", userId);
-
       const userIdString = userId.toString();
 
       deleteCollabMutation.mutate(userIdString, {
         onSuccess: () => {
           setOpen(false);
           // redirect to start login page
-          console.log("Account succesfullu deleted");
-        },
-        onError: (error) => {
-          console.error("Error deleting account:", error);
         },
       });
     } else {

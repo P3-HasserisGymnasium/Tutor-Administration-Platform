@@ -37,9 +37,7 @@ export default function RequestAdmin() {
     }
   };
 
-  const createPost = (values: PostCreationType) => {
-    console.log(values);
-  };
+  const createPost = () => {};
 
   return (
     <FormProvider {...filterMethods}>

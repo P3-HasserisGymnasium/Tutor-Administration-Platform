@@ -12,8 +12,6 @@ type ViewPostsDialogProps = {
 };
 
 export default function RequestMeetingDialog({ open, setOpen, posts, isLoading }: ViewPostsDialogProps) {
-  console.log("collaborations", posts);
-
   return (
     <Dialog
       open={open}
@@ -33,9 +31,7 @@ export default function RequestMeetingDialog({ open, setOpen, posts, isLoading }
         <Loading size={100} />
       ) : (
         <>
-          <DialogTitle sx={{ fontWeight: "bold", fontSize: "1.5rem", textAlign: "center", pb: 0 }}>
-            Your active posts
-          </DialogTitle>
+          <DialogTitle sx={{ fontWeight: "bold", fontSize: "1.5rem", textAlign: "center", pb: 0 }}>Your active posts</DialogTitle>
           <DialogContentText textAlign={"center"} pt={0}>
             Click on a post to edit it
           </DialogContentText>

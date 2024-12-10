@@ -1,6 +1,6 @@
 import { Box, Button, Typography, TextField, useMediaQuery } from "@mui/material";
 import { TutorApplicationType, zodTutorApplicationSchema } from "~/types/data_types";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SetTimeAvailability from "components/content_components/SetTimeAvailability";
 import SetSubject from "../SetSubject";
@@ -15,7 +15,8 @@ export default function TutorApplication() {
     },
   });
 
-  const { getValues, register } = filterMethods;
+  const { getValues, register, control } = filterMethods;
+  useWatch({ control });
 
   const isMd = useMediaQuery((theme) => theme.breakpoints.down("md"));
   const isLg = useMediaQuery((theme) => theme.breakpoints.down("lg"));
@@ -28,6 +29,7 @@ export default function TutorApplication() {
       return 20;
     }
   };
+
   return (
     <FormProvider {...filterMethods}>
       <Box sx={{ display: "flex", flexDirection: "column", height: "95%", padding: "1em" }}>

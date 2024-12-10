@@ -2,7 +2,7 @@ import { Box, Stack, Typography, Button } from "@mui/material";
 import SetDuration from "../SetDuration";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PostListFilterType, zodPostListFilterSchema } from "../../../types/data_types";
+import { zodPostListFilterSchema } from "../../../types/data_types";
 import CustomAutocomplete from "../CustomAutocomplete";
 
 export default function PostFilter() {
@@ -15,9 +15,7 @@ export default function PostFilter() {
   });
   const { control, handleSubmit } = filterMethods;
   useWatch({ control });
-  const filter = (values: PostListFilterType) => {
-    console.log(values);
-  };
+  const filter = () => {};
 
   return (
     <FormProvider {...filterMethods}>

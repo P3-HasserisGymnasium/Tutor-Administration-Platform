@@ -77,15 +77,12 @@ function SelectSubject({ variant }: SetSubjectProps) {
   const [newSubject, setNewSubject] = useState<SubjectType | null>(null);
 
   const handleAdd = () => {
-    console.log("in here");
     const selectedSubjects: SubjectType[] = getValues("subjects");
     if (selectedSubjects.length !== 0 && newSubject) {
       if (!selectedSubjects.includes(newSubject)) {
-        console.log("in heres");
         setValue("subjects", [...selectedSubjects, newSubject]);
       }
     } else {
-      console.log("in heressss");
       setValue("subjects", [newSubject]);
     }
   };

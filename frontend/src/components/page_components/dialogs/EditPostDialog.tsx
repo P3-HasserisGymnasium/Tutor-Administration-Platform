@@ -1,16 +1,6 @@
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
-  Typography,
-  Box,
-  FormControlLabel,
-  Checkbox,
-  DialogActions,
-} from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, TextField, Typography, Box, FormControlLabel, Checkbox, DialogActions } from "@mui/material";
 import { Button } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import SetDuration from "~/components/content_components/SetDuration";
@@ -43,13 +33,9 @@ export default function EditPostDialog({ open, setOpen, post }: EditPostDialogPr
   const { handleSubmit, setValue, register } = formMethods;
 
   const onSubmit = (data: PostType) => {
-    console.log("Post editeed :)", data);
     editPostMutation.mutate(data, {
       onSuccess: () => {
         setOpen(false);
-      },
-      onError: (error) => {
-        console.log("error:", error);
       },
     });
   };
@@ -155,7 +141,7 @@ export default function EditPostDialog({ open, setOpen, post }: EditPostDialogPr
             fullWidth
           ></TextField>
         </DialogContent>
-        
+
         <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
           <Button sx={{ width: "10em" }} onClick={handleSubmit(onSubmit)}>
             Save
