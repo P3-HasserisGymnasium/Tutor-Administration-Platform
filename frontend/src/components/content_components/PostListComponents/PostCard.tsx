@@ -12,16 +12,13 @@ export default function PostCard({ post }: { post: PostType }) {
 			sx={{
 				display: "flex",
 				flexDirection: "row",
-				backgroundColor:
-					theme.customColors.collaborationBackgroundColor,
+				backgroundColor: theme.customColors.collaborationBackgroundColor,
 				border: "1px solid " + theme.customColors.headingTextColor,
 				padding: "1em",
 				borderRadius: "0.5em",
 			}}
 		>
-			<Box
-				sx={{ display: "flex", flexDirection: "column", gap: "0.4em" }}
-			>
+			<Box sx={{ display: "flex", flexDirection: "column", gap: "0.4em" }}>
 				<Typography variant="h3">{post.title}</Typography>
 				<Box
 					sx={{
@@ -34,7 +31,7 @@ export default function PostCard({ post }: { post: PostType }) {
 					<SubjectChip Subject={post.subject}></SubjectChip>
 				</Box>
 				<Typography variant="h4">
-					Duration: {post.duration} months
+					Duration: {post?.duration?.[0]}-{post?.duration?.[1]} months
 				</Typography>
 				<Button variant="contained" sx={{ alignSelf: "flex-start" }}>
 					Request Collaboration

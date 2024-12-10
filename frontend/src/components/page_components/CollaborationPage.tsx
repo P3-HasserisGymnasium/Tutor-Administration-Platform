@@ -1,10 +1,10 @@
 import MediumShortOnShortBoxLayout from "components/layout_components/MediumShortOnShortBoxLayout";
 import RequestMeetingDialog from "./dialogs/RequestMeetingDialog";
-import { Day, TimeAvailabilitiesType } from "~/types/data_types";
+import { Day, TimeAvailabilityType } from "~/types/data_types";
 import { useState } from "react";
 import EndCollaborationDialog from "./dialogs/EndCollaborationDialog";
 
-const mockTimeAvailabilities: TimeAvailabilitiesType[] = [
+const mockTimeAvailabilities: TimeAvailabilityType[] = [
 	{
 		day: Day.Enum.Monday,
 		time: [
