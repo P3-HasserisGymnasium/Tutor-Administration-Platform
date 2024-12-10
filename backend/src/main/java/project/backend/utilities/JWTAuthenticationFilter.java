@@ -98,8 +98,13 @@ public class JWTAuthenticationFilter implements Filter {
             System.out.println("JWTAuthenticationFilter: Token is valid");
 
             AuthenticatedUserBody authenticatedUser = new AuthenticatedUserBody();
-            authenticatedUser.userId = Long.parseLong(userID);
-            Student student = roleService.getStudentById(authenticatedUser.userId);
+            Long id = authenticatedUser.getUserId();
+            System.out.println("id: " + id);
+            if (id == null) {
+                httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization cookie missing or invalid");
+                return;
+            }
+            Student student = roleService.getStudentById(id);
             if (student != null) {
                 authenticatedUser.studentId = student.getId();
             }

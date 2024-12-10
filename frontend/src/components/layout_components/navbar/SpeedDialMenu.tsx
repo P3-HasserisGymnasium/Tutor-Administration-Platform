@@ -57,6 +57,7 @@ export default function SpeedDialMenu() {
       { icon: <LogoutIcon />, name: "Log out", route: "/", logout: true }
     );
   }
+  console.log("userState", userState);
 
   return (
     <Box sx={{ height: 730, display: "flex", zIndex: { zIndex }, justifyContent: "end", width: "100px", marginRight: 3 }}>

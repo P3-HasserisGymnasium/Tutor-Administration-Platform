@@ -1,5 +1,4 @@
 import { Box, TextField, Typography, Checkbox, FormControlLabel } from "@mui/material";
-import { Box, TextField, Typography, Checkbox, FormControlLabel } from "@mui/material";
 import CustomAutocomplete from "../CustomAutocomplete";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,7 +8,6 @@ import { useState } from "react";
 import { useMediaQuery } from "@mui/material";
 import Button from "@mui/material/Button";
 import { usePostService } from "~/api/services/post-service";
-import { useAuth } from "~/api/authentication/useAuth";
 
 export default function PostCreation() {
   const createPostMutation = usePostService().useCreatePost();
@@ -26,10 +24,7 @@ export default function PostCreation() {
 
   const { control, register, setValue, getValues } = filterMethods;
   useWatch({ control });
-  const { control, register, setValue, getValues } = filterMethods;
-  useWatch({ control });
 
-  const [checked, setChecked] = useState<boolean>(false);
   const [checked, setChecked] = useState<boolean>(false);
 
   const isMd = useMediaQuery((theme) => theme.breakpoints.down("md"));
@@ -43,18 +38,6 @@ export default function PostCreation() {
       return 6;
     }
   };
-  const isMd = useMediaQuery((theme) => theme.breakpoints.down("md"));
-  const isLg = useMediaQuery((theme) => theme.breakpoints.down("lg"));
-  const getMaxRows = () => {
-    if (isMd) {
-      return 2;
-    } else if (isLg) {
-      return 5;
-    } else {
-      return 6;
-    }
-  };
-
   const createPost = (values: PostCreationType) => {
     createPostMutation.mutate(values, {
       onSuccess: (data) => {

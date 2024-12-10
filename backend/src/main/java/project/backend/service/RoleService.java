@@ -124,6 +124,9 @@ public class RoleService {
         Student student = getStudentById(id);
         Tutor tutor = student.getTutor();
         Tutee tutee = student.getTutee();
+        System.out.println("tutor: " + tutor);
+        System.out.println("tutee: " + tutee);
+        
 
         if (tutor != null && tutee != null) {
             return new RoleEnum[] { RoleEnum.Tutor, RoleEnum.Tutee };
