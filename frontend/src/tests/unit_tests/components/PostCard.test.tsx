@@ -5,7 +5,7 @@ import { ThemeProvider } from "@mui/material";
 import tuteeTheme from "~/themes/tuteeTheme";
 import { BrowserRouter } from "react-router-dom";
 import { PostType } from "~/types/entity_types";
-import { Subject } from "~/types/data_types";
+import { PostState, Subject } from "~/types/data_types";
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
 	<ThemeProvider theme={tuteeTheme}>
@@ -14,10 +14,12 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 const mockPost: PostType = {
+	id: 12,
 	title: "Sample Post",
 	subject: Subject.Enum.MATH,
-	duration: [1, 2],
+	duration: [3, 6],
 	description: "This is a sample post description.",
+	state: PostState.Enum.VISIBLE,
 };
 
 describe("PostCard", () => {
@@ -40,7 +42,7 @@ describe("PostCard", () => {
 				<PostCard post={mockPost} />
 			</Wrapper>
 		);
-		expect(screen.getByText("Math")).toBeInTheDocument();
+		expect(screen.getByText("MATH")).toBeInTheDocument();
 	});
 
 	it("should render the duration", () => {
@@ -49,7 +51,7 @@ describe("PostCard", () => {
 				<PostCard post={mockPost} />
 			</Wrapper>
 		);
-		expect(screen.getByText("Duration: 6 months")).toBeInTheDocument();
+		expect(screen.getByText("Duration: 3-6 months")).toBeInTheDocument();
 	});
 
 	it("should render the description", () => {

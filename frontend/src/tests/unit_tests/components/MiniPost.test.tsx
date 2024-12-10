@@ -18,7 +18,7 @@ const mockPost: PostType = {
 	title: "Sample Post",
 	description: "This is a sample post description.",
 	subject: Subject.Enum.MATH,
-	duration: "2 hours",
+	duration: [2, 4],
 	state: "VISIBLE",
 };
 

@@ -1,5 +1,5 @@
 import { afterEach } from "vitest";
-import { render, screen, cleanup, fireEvent } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 import PostCreation from "~/components/content_components/PostCreationComponents/PostCreation";
 import { ThemeProvider } from "@mui/material";
 import tuteeTheme from "~/themes/tuteeTheme";
