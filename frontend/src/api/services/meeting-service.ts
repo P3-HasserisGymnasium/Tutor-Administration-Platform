@@ -10,7 +10,6 @@ export const useMeetingService = () => {
 			mutationKey: ["requestMeeting"],
 			mutationFn: async (meeting: MeetingType) => {
 				const { data } = await apiClient.post("/api/meeting/request", meeting);
-				console.log("form here data", data);
 				return data;
 			},
 			onError: (e: AxiosError) => {
@@ -26,7 +25,7 @@ export const useMeetingService = () => {
 		return useMutation({
 			mutationKey: ["cancelMeeting"],
 			mutationFn: async (meetingId: number) => {
-				await apiClient.delete(`/api/meeting_service/${meetingId}`);
+				await apiClient.delete(`/api/meeting/${meetingId}`);
 			},
 			onError: (e: AxiosError) => {
 				toast.error("" + e?.response?.data);
@@ -41,7 +40,7 @@ export const useMeetingService = () => {
 		return useMutation({
 			mutationKey: ["acceptMeeting"],
 			mutationFn: async (meetingId: number) => {
-				await apiClient.delete(`/api/meeting_service/${meetingId}`);
+				await apiClient.delete(`/api/meeting/${meetingId}`);
 			},
 			onError: (e: AxiosError) => {
 				toast.error("" + e?.response?.data);
@@ -71,7 +70,7 @@ export const useMeetingService = () => {
 		return useQuery({
 			queryKey: ["getMeetings"],
 			queryFn: async () => {
-				const { data } = await apiClient.get<MeetingType[]>(`/api/meeting_service`);
+				const { data } = await apiClient.get<MeetingType[]>(`/api/meeting/`);
 				return data;
 			},
 			refetchOnWindowFocus: false,

@@ -26,17 +26,28 @@ export const zodPostSchema = z.object({
 	state: z.string(),
 });
 
-export const zodProfileSchema = z.object({
+export const zodTutorProfileSchema = z.object({
 	full_name: z.string(),
 	year_group: YearGroup,
 	languages: z.array(Language),
 	subjects: z.array(Subject),
+	contact_info: z.array(z.object({username: z.string(), ComunicationMedium})),
+	time_availability: z.array(zodTimeAvailabilitySchema),
 	description: z.string().optional(),
+});
+
+export const zodTuteeProfileSchema = z.object({
+	full_name: z.string(),
+	year_group: YearGroup,
+	languages: z.array(Language),
 });
 
 export const zodMeetingSchema = z.object({
 	id: zodUUID,
 	collaboration_id: zodUUID,
+	partner_name: z.string(),
+	tutee_user_id: zodUUID,
+	tutor_user_id: zodUUID,
 	start_time: z.string(),
 	end_time: z.string(),
 	state: MeetingState,
@@ -45,12 +56,15 @@ export const zodMeetingSchema = z.object({
 });
 
 export const zodCollaborationSchema = z.object({
-	end_date: z.date().optional(),
+	id: zodUUID,
 	tutee_id: zodUUID,
-	start_date: z.date().optional(),
 	tutor_id: zodUUID,
+	tutee_name: z.string(),
+	tutor_name: z.string(),
 	state: CollaborationState,
 	subject: Subject,
+	end_date: z.union([z.date(), z.string()]).optional(),
+	start_date: z.union([z.date(), z.string()]).optional(),
 });
 
 export const tutorProfileSchema = z.object({
@@ -172,14 +186,20 @@ export const zodLoginSchema = z.object({
 	password: z.string(),
 });
 
+export const zodTerminationSchema = z.object({
+	id: z.number(),
+	terminationReason: z.string(),
+});
+
 export type LoginSuccessDataType = z.infer<typeof zodLoginSuccessDataType>;
 export type LoginType = z.infer<typeof zodLoginSchema>;
 export type UserState = z.infer<typeof zodUserStateSchema>;
 export type PostType = z.infer<typeof zodPostSchema>;
-export type ProfileType = z.infer<typeof zodProfileSchema>;
+export type TutorProfileType = z.infer<typeof zodTutorProfileSchema>;
+export type TuteeProfileType = z.infer<typeof zodTuteeProfileSchema>;
 export type MeetingType = z.infer<typeof zodMeetingSchema>;
 export type CollaborationType = z.infer<typeof zodCollaborationSchema>;
 export type Feedback = z.infer<typeof zodFeedbackSchema>;
 export type AccountRegisterType = z.infer<typeof zodAccountRegisterSchema>;
 export type NotificationType = z.infer<typeof zodNotificationSchema>;
-export type TutorProfileType = z.infer<typeof tutorProfileSchema>;
+export type TerminationType = z.infer<typeof zodTerminationSchema>

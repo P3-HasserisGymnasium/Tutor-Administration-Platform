@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import SubjectChip from "./SubjectChip";
-import { Subject } from "~/types/data_types";
+//import { Subject } from "~/types/data_types";
 import { PostType } from "~/types/entity_types";
 
 type MiniPostProp = {
@@ -10,6 +10,7 @@ type MiniPostProp = {
 export default function MiniPost({ postData }: MiniPostProp) {
   return (
     <Box
+      data-testid="minipostcontainer"
       sx={{
         backgroundColor: "rgba(251, 193, 135, 0.5)",
         border: "1px solid rgba(173, 92, 0, 1)",
@@ -23,6 +24,7 @@ export default function MiniPost({ postData }: MiniPostProp) {
       }}
     >
       <Typography
+        data-testid="posttitle"
         sx={{
           fontSize: "15px",
           fontWeight: "inter",
@@ -32,17 +34,18 @@ export default function MiniPost({ postData }: MiniPostProp) {
           alignSelf: "flex-center",
         }}
       >
-        Need help with music exam in 2 weeks
+        {postData.title || "No Title"}
       </Typography>
 
       <Box>
-        <SubjectChip Subject={Subject.Enum.Math} />
+        <SubjectChip Subject={postData.subject} />
 
         <Typography
           sx={{
             fontSize: "12px",
             color: "#333", // Dark gray for text
           }}
+          data-testid="postduration"
         >
           {postData?.duration ? postData.duration : "No duration"}
         </Typography>

@@ -1,17 +1,20 @@
-import { ProfileType } from "~/types/entity_types";
+import * as React from "react";
+import { TutorProfileType } from "~/types/entity_types";
 import { Box, Button, Typography } from "@mui/material";
-//import avatarDemo from "./avatarDemo.png";
 import SubjectChip from "components/content_components/SubjectChip.tsx";
 import { SubjectType } from "~/types/data_types";
 import CustomButton from "../CustomButton";
 import { useTheme } from "@mui/system";
 import { Theme } from "@mui/material/styles";
-import InitialsAvatar from "../InitialsAvatar";
+import TutorProfileDialog from "~/components/page_components/dialogs/ProfileDialog";
 import { useAuth } from "~/api/authentication/useAuth";
+import InitialsAvatar from "../InitialsAvatar";
 
-export default function TutorCard({ profile }: { profile: ProfileType }) {
+export default function TutorCard({ profile }: { profile: TutorProfileType }) {
   const theme = useTheme<Theme>();
   const { userState } = useAuth();
+
+  const [open, setOpen] = React.useState(false);
 
   return (
     <Box
@@ -49,9 +52,10 @@ export default function TutorCard({ profile }: { profile: ProfileType }) {
           justifyContent: "center",
         }}
       >
-        <Button variant="contained" sx={{marginBottom:"0.5em"}}>
+        <Button variant="contained" sx={{marginBottom:"0.5em"}} onClick={() => setOpen(true)}>
           View profile
         </Button>
+        <TutorProfileDialog open={open} setOpen={setOpen} tutorProfile={profile} />
         <CustomButton customType="success">
           Request collaboration
         </CustomButton>

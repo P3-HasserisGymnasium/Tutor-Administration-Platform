@@ -1,7 +1,8 @@
 package project.backend.service;
 
-import java.util.Optional;
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 import project.backend.model.Post;
 import project.backend.model.PostState;
 import project.backend.model.Tutee;
-
 import project.backend.repository.PostRepository;
 import project.backend.repository.TuteeRepository;
 
@@ -24,6 +24,8 @@ public class PostService {
   
     @Autowired
     final TuteeRepository tuteeRepository;
+
+    
   
 
     public PostService(PostRepository postRepository, RoleService roleService, TuteeRepository tuteeRepository) {
@@ -36,6 +38,10 @@ public class PostService {
         return postRepository.findById(id);
     }
 
+    public Post[] getPostsByTuteeId(Long tuteeId){
+        return postRepository.findByTutee_Id(tuteeId);
+    }
+
     public Post savePost(Post post) {
         post.setState(PostState.VISIBLE);
         return postRepository.save(post);
@@ -43,6 +49,9 @@ public class PostService {
 
     public void deletePostById(Long postId) {
         postRepository.deleteById(postId);
+    }
+    public List<Post> getAllPosts() {
+        return postRepository.findAll();
     }
 /*
     public Post createPost(Post post, Long id){

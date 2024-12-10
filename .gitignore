@@ -61,4 +61,4 @@ temp/
 gradle-wrapper.jar
 
 # backup files
-backup/
+backups/
