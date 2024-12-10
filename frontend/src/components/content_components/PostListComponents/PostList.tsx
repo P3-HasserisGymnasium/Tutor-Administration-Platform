@@ -31,7 +31,7 @@ export default function PostList() {
 					marginTop: "0.5em",
 				}}
 			>
-				<PostCard key={1} post={mockPost} />
+				<PostCard data-testid="postcard1" key={1} post={mockPost} />
 			</Stack>
 		</Box>
 	);

@@ -19,7 +19,7 @@ export default function SetSubject({ variant }: SetSubjectProps) {
 			sx={{ display: "flex", flexDirection: "row", width: "100%", gap: "1em", alignItems: "center" }}
 		>
 			<SelectSubject variant={variant} />
-			{getValues("subject").length > 0 && (
+			{getValues("subjects").length > 0 && (
 				<Box
 					sx={{
 						display: "flex",
