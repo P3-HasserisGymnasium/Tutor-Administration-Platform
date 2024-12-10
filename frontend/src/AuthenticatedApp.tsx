@@ -21,6 +21,7 @@ import { useAuth } from "./api/authentication/useAuth";
 //import AdministratorPage from "./components/page_components/dialogs/AdministratorPage";
 import CollaborationPage from "./components/page_components/CollaborationPage";
 import TuteePage from "./components/page_components/tutee/TuteePage";
+import NotificationsList from "./components/content_components/NotificationsListe";
 
 export default function AuthenticatedApp() {
   const { isMobile, hasScrollbar } = useBreakpoints();
@@ -60,7 +61,7 @@ export default function AuthenticatedApp() {
               <Route path="/tutee/*">
                 <Route path="" element={<TuteePage />} />
                 <Route path="profile" element={<TuteeProfilePage />} />
-                <Route path="notifications" element={<TuteeNotificationsPage />} />
+                <Route path="notifications" element={<NotificationsList />} />
                 <Route path="create-post" element={<CreatePostPage />} />
                 <Route path="request-admin" element={<RequestAdminPage />} />
                 <Route path="tutor-list" element={<TutorListPage />} />
@@ -78,8 +79,7 @@ export default function AuthenticatedApp() {
               <Route path="/tutor/*">
                 <Route path="" element={<TutorPage />} />
                 <Route path="posts-list" element={<PostsListPage />} />
-                <Route path="notifications" element={<TuteeNotificationsPage />} />
-
+                <Route path="notifications" element={<NotificationsList />} />
                 {rolePrefix == "/tutor" && <Route path="tutor-application" element={<TutorApplicationPage />} />}
                 <Route path="profile" element={<TutorProfilePage />} />
                 <Route path="*" element={<NotFound />} />
