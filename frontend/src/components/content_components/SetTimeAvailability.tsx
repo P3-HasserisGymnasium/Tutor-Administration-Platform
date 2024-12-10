@@ -24,7 +24,6 @@ export default function SetTimeAvailability() {
 			toast.error("Please select a day");
 			return;
 		}
-
 		const newTimeAvailability: TimeAvailabilitiesType = {
 			day: selectedDay,
 			time: [

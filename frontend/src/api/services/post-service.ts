@@ -4,75 +4,65 @@ import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
 import { PostType } from "~/types/entity_types";
 
-
-
 export const usePostService = () => {
-	const getPosts = useQuery({
-		queryKey: ["getPosts"],
-		queryFn: async () => {
-			const { data } = await apiClient.get<PostType[]>(
-				`/api/post_service`
-			);
-			return data;
-		},
-		refetchOnWindowFocus: false,
-		placeholderData: [],
-	});
+  const getPosts = useQuery({
+    queryKey: ["getPosts"],
+    queryFn: async () => {
+      const { data } = await apiClient.get<PostType[]>(`/api/post_service`);
+      return data;
+    },
+    refetchOnWindowFocus: false,
+    placeholderData: [],
+  });
 
-	const createPost = useMutation({
-		mutationKey: ["createPost"],
-		mutationFn: async (post: PostType) => {
-			const { data } = await apiClient.post<PostType>(
-				"/api/post_service",
-				post
-			);
-			return data;
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
-		},
-		onSuccess: () => {
-			toast.success("Post oprettet");
-		},
-	});
+  const createPost = useMutation({
+    mutationKey: ["createPost"],
+    mutationFn: async (post: PostType) => {
+      const { data } = await apiClient.post<PostType>("/api/post", post);
+      return data;
+    },
+    onError: (e: AxiosError<{ detail: string }>) => {
+      toast.error(e?.response?.data?.detail);
+    },
+    onSuccess: () => {
+      toast.success("Post oprettet");
+    },
+  });
 
-	const deletePost = useMutation({
-		mutationKey: ["deletePost"],
-		mutationFn: async (postId: number) => {
-			await apiClient.delete(`/api/post_service/${postId}`);
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
-		},
-		onSuccess: () => {
-			toast.success("Post slettet");
-		},
-	});
+  const deletePost = useMutation({
+    mutationKey: ["deletePost"],
+    mutationFn: async (postId: number) => {
+      await apiClient.delete(`/api/post/${postId}`);
+    },
+    onError: (e: AxiosError<{ detail: string }>) => {
+      toast.error(e?.response?.data?.detail);
+    },
+    onSuccess: () => {
+      toast.success("Post slettet");
+    },
+  });
 
-	const editPost = useMutation({
-		mutationKey: ["editPost"],
-		mutationFn: async (post: PostType) => {
-			if (!post.id) {
-				throw new Error("Post id is required");
-			}
-			const { data } = await apiClient.put<PostType>(
-				`/api/post_service/`,
-				post
-			);
-			return data;
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
-		},
-		onSuccess: () => {
-			toast.success("Post redigeret");
-		},
-	});
+  const editPost = useMutation({
+    mutationKey: ["editPost"],
+    mutationFn: async (post: PostType) => {
+      if (!post.id) {
+        throw new Error("Post id is required");
+      }
+      const { data } = await apiClient.put<PostType>(`/api/post/${post.id}`, post);
+      return data;
+    },
+    onError: (e: AxiosError<{ detail: string }>) => {
+      toast.error(e?.response?.data?.detail);
+    },
+    onSuccess: () => {
+      toast.success("Post redigeret");
+    },
+  });
 
-	return {
-		createPost,
-		deletePost,
-		editPost,
-		getPosts,
-	};
+  return {
+    createPost,
+    deletePost,
+    editPost,
+    getPosts,
+  };
 };

@@ -39,7 +39,7 @@ const TutorTimeAvailabilityPage: React.FC<TutorTimeAvailabilityProps> = ({ setPa
             alignItems: "center",
           }}
         >
-          <SetSubject />
+          <SetSubject variant="create" />
 
           <SetTimeAvailability />
 
