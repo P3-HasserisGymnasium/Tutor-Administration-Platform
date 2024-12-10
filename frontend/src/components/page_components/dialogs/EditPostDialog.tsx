@@ -26,7 +26,7 @@ type EditPostDialogProps = {
 
 export default function EditPostDialog({ open, setOpen, post }: EditPostDialogProps) {
   const [checked, setChecked] = useState<boolean>(false);
-  const editPostMutation = usePostService().editPost;
+  const editPostMutation = usePostService().useEditPost();
   const useFormParameter = {
     resolver: zodResolver(zodPostSchema),
     defaultValues: {

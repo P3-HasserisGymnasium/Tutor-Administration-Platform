@@ -14,11 +14,23 @@ import { usePostService } from "~/api/services/post-service";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useAuth } from "~/api/authentication/useAuth";
 import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
+import EditPostDialog from "../dialogs/EditPostDialog";
+import { PostState, Subject } from "~/types/data_types";
+import { PostType } from "~/types/entity_types";
+const post: PostType = {
+  id: 1,
+  title: "hjælp mig",
+  description: "iosjdsiaojdaojdasdiasdjsaod jsadj iasojdasd",
+  subject: Subject.Enum.DANISH,
+  duration: [2, 8],
+  state: PostState.Enum.VISIBLE,
+};
 export default function TuteePage() {
 	const theme = useCurrentTheme();
 	const { isMobile } = useBreakpoints();
 	const [view, setView] = useState<"list" | "calender">("list");
 	const [showCollabDialog, setShowCollabDialog] = useState(false);
+	const [showEditPostDialog, setShowEditPostDialog] = useState(true);
 	const { userState } = useAuth();
 	const { data: posts, isLoading: postsLoading, isError: postsError } = usePostService().useGetTuteePosts();
 	const {
@@ -35,6 +47,7 @@ export default function TuteePage() {
 				collaborations={collaborations}
 				isLoading={collabLoading}
 			/>
+			<EditPostDialog open={showEditPostDialog} setOpen={setShowEditPostDialog} post={post}/>
 			<MediumShortOnShortBoxLayout>
 				<Box
 					sx={{
