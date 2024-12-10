@@ -82,6 +82,7 @@ export default function AuthenticatedApp() {
                 <Route path="notifications" element={<NotificationsList />} />
                 {rolePrefix == "/tutor" && <Route path="tutor-application" element={<TutorApplicationPage />} />}
                 <Route path="profile" element={<TutorProfilePage />} />
+                <Route path="collaboration/*" element={<CollaborationPage />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </>
