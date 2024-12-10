@@ -26,13 +26,13 @@ describe("SetSubject", () => {
   });
 
   it("should render the SetSubject component", () => {
-    render(<SetSubject />);
+    render(<SetSubject variant="create" />);
 
     expect(screen.getByTestId("setsubjectcontainer")).toBeInTheDocument();
   });
 
   it("should render the SetSubject component with 'X' subjects", () => {
-    render(<SetSubject />);
+    render(<SetSubject variant="edit" />);
 
     expect(screen.getByTestId("setsubjectcontainer")).toBeInTheDocument();
     const removalXs = screen.getAllByTestId("removesubjectx");

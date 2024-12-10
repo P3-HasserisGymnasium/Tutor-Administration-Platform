@@ -38,7 +38,7 @@ export default function TutorApplication() {
         <Box sx={{ display: "flex", flexDirection: "row", border: "1px solid" + "black", borderRadius: "0.5em" }}>
           <Box sx={{ display: "flex", flexDirection: "column", width: "50%", gap: "1em", paddingRight: "1em" }}>
             <Typography variant="h4">Subjects</Typography>
-            <SetSubject />
+            <SetSubject variant="create" />
 
             <SetTimeAvailability />
           </Box>

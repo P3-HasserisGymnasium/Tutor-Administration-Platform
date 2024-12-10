@@ -37,7 +37,9 @@ export default function RequestAdmin() {
     }
   };
 
-  const createPost = () => {};
+  const createPost = (values: PostCreationType) => {
+    console.log(values);
+  };
 
   return (
     <FormProvider {...filterMethods}>
@@ -86,7 +88,7 @@ export default function RequestAdmin() {
                 {!checked && (
                   <Box sx={{ width: "100%" }}>
                     {" "}
-                    <SetDuration />
+                    <SetDuration startDuration={undefined} />
                   </Box>
                 )}
                 <Box sx={{ display: "flex", alignItems: "flex-start" }}>

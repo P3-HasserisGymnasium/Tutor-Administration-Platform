@@ -7,8 +7,10 @@ import SetDuration from "../SetDuration";
 import { useState } from "react";
 import { useMediaQuery } from "@mui/material";
 import Button from "@mui/material/Button";
+import { usePostService } from "~/api/services/post-service";
 
 export default function PostCreation() {
+  const createPostMutation = usePostService().useCreatePost();
   const useFormParameter = {
     resolver: zodResolver(zodPostCreationSchema),
     defaultValues: {
@@ -36,9 +38,15 @@ export default function PostCreation() {
       return 6;
     }
   };
-
   const createPost = (values: PostCreationType) => {
-    console.log(values);
+    createPostMutation.mutate(values, {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+      onError: (e) => {
+        console.log(e);
+      },
+    });
   };
 
   return (
@@ -84,7 +92,7 @@ export default function PostCreation() {
             {!checked && (
               <Box sx={{ width: "100%" }}>
                 {" "}
-                <SetDuration />
+                <SetDuration startDuration={undefined} />
               </Box>
             )}
             <Box sx={{ display: "flex", alignItems: "flex-start" }}>

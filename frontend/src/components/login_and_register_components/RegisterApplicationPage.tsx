@@ -56,10 +56,10 @@ const TutorApplicationPage: React.FC<TutorApplicationPageProps> = ({ setPage }) 
           }}
         >
           <TextField
-            {...register("tutorProfileDescription")}
+            {...register("tutor_profile_description")}
             sx={{ marginTop: 8, width: "100%" }}
             maxRows={25}
-            id="tutorProfileDescription"
+            id="tutor_profile_description"
             label="Write your tutor description"
             variant="outlined"
             multiline
