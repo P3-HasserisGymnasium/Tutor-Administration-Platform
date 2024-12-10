@@ -19,6 +19,14 @@ export function useHeading(): string {
 			return "Tutee Dashboard";
 		case "/tutor":
 			return "Tutor Dashboard";
+		case "/admin":
+			return "Admin page";
+		case "/admin/review-collaboration":
+			return "Review collaboration";
+		case "/admin/pairing-help":
+			return "Pairing-help";
+		case "/admin/mange-user":
+			return "Manage user";
 		case "/tutee/create-post":
 			return "Create Post";
 		case "/tutee/tutor-list":

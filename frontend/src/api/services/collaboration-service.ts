@@ -110,6 +110,20 @@ export const useCollaborationService = () => {
 		},
 	});
 
+	const getCollabortations = () => {
+		return useQuery({
+			queryKey: ["getCollaborations"],
+			queryFn: async () => {
+				const { data } = await apiClient.get<CollaborationType[]>(
+					`/api/collaboration/all`
+				);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			placeholderData: [],
+		})
+	};
+
 	const useGetCollaborationsWithTutee = (id: number | null) => {
 		return useQuery({
 			queryKey: ["getCollaborationsWithTutee", id],
@@ -126,6 +140,7 @@ export const useCollaborationService = () => {
 
 	return {
 		useGetCollaborationsWithTutee,
+		getCollabortations,
 		submitCollaborationSuggestion,
 		acceptCollaboration,
 		rejectCollaboration,

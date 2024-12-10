@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,17 +19,19 @@ import jakarta.persistence.OneToMany;
 
 @Entity
 public class Collaboration {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    
+
     @ManyToOne
     @JoinColumn(name = "tutee_id")
+    @JsonManagedReference
     Tutee tutee;
 
     @ManyToOne
     @JoinColumn(name = "tutor_id")
+    @JsonManagedReference
     Tutor tutor;
 
     @Enumerated(EnumType.STRING)
@@ -53,7 +57,7 @@ public class Collaboration {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tutorState")
-    CollaborationState tutorState; 
+    CollaborationState tutorState;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "adminState")
@@ -62,7 +66,8 @@ public class Collaboration {
     @OneToMany(mappedBy = "collaboration")
     List<Meeting> meetings = new ArrayList<>();
 
-    public Collaboration() {}
+    public Collaboration() {
+    }
 
     public Long getId() {
         return id;
@@ -136,27 +141,27 @@ public class Collaboration {
         this.meetings = meetings;
     }
 
-    public void setTutorState(CollaborationState tutorState){
-        this.tutorState =  tutorState;
+    public void setTutorState(CollaborationState tutorState) {
+        this.tutorState = tutorState;
     }
 
-    public CollaborationState getTutorState(){
+    public CollaborationState getTutorState() {
         return tutorState;
     }
 
-    public void setTuteeState(CollaborationState tuteeState){
+    public void setTuteeState(CollaborationState tuteeState) {
         this.tuteeState = tuteeState;
     }
 
-    public CollaborationState getTuteeState(){
+    public CollaborationState getTuteeState() {
         return tuteeState;
     }
 
-    public void setAdminState(CollaborationState adminState){
+    public void setAdminState(CollaborationState adminState) {
         this.adminState = adminState;
     }
 
-    public CollaborationState getAdminState(){
+    public CollaborationState getAdminState() {
         return adminState;
     }
 

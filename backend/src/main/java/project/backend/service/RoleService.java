@@ -1,5 +1,6 @@
 package project.backend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +40,9 @@ public class RoleService {
     @Autowired
     final AdministratorRepository administratorRepository;
 
-    public RoleService(RoleRepository roleRepository, StudentRepository studentRepository, TutorRepository tutorRepository, AdministratorRepository administratorRepository, AccountRepository accountRepository) {
+    public RoleService(RoleRepository roleRepository, StudentRepository studentRepository,
+            TutorRepository tutorRepository, AdministratorRepository administratorRepository,
+            AccountRepository accountRepository) {
         this.roleRepository = roleRepository;
         this.studentRepository = studentRepository;
         this.tutorRepository = tutorRepository;
@@ -47,62 +50,74 @@ public class RoleService {
         this.accountRepository = accountRepository;
     }
 
-    public List<Student> getTutees() {
-        return studentRepository.getTutees();
+    public List<Tutee> getTutees() {
+        List<Student> students = studentRepository.getTutees();
+        List<Tutee> tutees = new ArrayList<Tutee>();
+        for (Student student : students) {
+            Tutee tutee = student.getTutee();
+            tutees.add(tutee);
+        }
+        return tutees;
     }
 
-    public List<Student> getTutors() {
-        return studentRepository.getTutors();
+    public List<Tutor> getTutors() {
+        List<Student> students = studentRepository.getTutors();
+        List<Tutor> tutors = new ArrayList<Tutor>();
+        for (Student student : students) {
+            Tutor tutor = student.getTutor();
+            tutors.add(tutor);
+        }
+        return tutors;
     }
 
     public Student saveStudent(Student student) {
         return studentRepository.save(student);
     }
 
-    public Tutee getTuteeById(Long id){
+    public Tutee getTuteeById(Long id) {
         Student student = studentRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + id));
 
         Tutee tutee = student.getTutee();
-        if (tutee == null){
+        if (tutee == null) {
             throw new IllegalArgumentException("This student is not assigned a Tutee");
         }
 
         return tutee;
     }
 
-    public Tutor getTutorByUserId(Long userId){
+    public Tutor getTutorByUserId(Long userId) {
         Student student = studentRepository.findById(userId).orElse(null);
-        
+
         Tutor tutor = student.getTutor();
-        if (tutor == null){
+        if (tutor == null) {
             return null;
         }
 
         return tutor;
     }
 
-    public Tutee getTuteeByUserId(Long userId){
+    public Tutee getTuteeByUserId(Long userId) {
 
         Student student = studentRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + userId));
-        
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + userId));
+
         Tutee tutee = student.getTutee();
-        if (tutee == null){
+        if (tutee == null) {
             throw new IllegalArgumentException("This student is not assigned a Tutee");
         }
 
         return tutee;
     }
 
-    public Administrator getAdministratorByUserId(Long userId){
+    public Administrator getAdministratorByUserId(Long userId) {
         return administratorRepository.findById(userId)
-            .orElse(null);
+                .orElse(null);
     }
 
-    public Tutor getTutorById(Long tutorId){
+    public Tutor getTutorById(Long tutorId) {
         return tutorRepository.findById(tutorId)
-            .orElseThrow(() -> new IllegalArgumentException("Tutor not found with ID: " + tutorId));
+                .orElseThrow(() -> new IllegalArgumentException("Tutor not found with ID: " + tutorId));
     }
 
     public Student getStudentById(Long id) {
@@ -151,10 +166,9 @@ public class RoleService {
     public Object getProfile(Long id, RoleEnum role) {
         Student student = getStudentById(id);
 
-
-        if(role == RoleEnum.Tutee && student.getTutee() != null){
+        if (role == RoleEnum.Tutee && student.getTutee() != null) {
             return student.getTutee();
-        } else if(role == RoleEnum.Tutor && student.getTutor() != null){
+        } else if (role == RoleEnum.Tutor && student.getTutor() != null) {
             return student.getTutor();
         } else {
             throw new IllegalArgumentException("Invalid role specified.");
@@ -166,20 +180,19 @@ public class RoleService {
 
         TutorProfileResponse response = new TutorProfileResponse();
         response.full_name = tutor.getStudent()
-            .getFullName();
+                .getFullName();
         response.description = tutor.getProfileDescription();
         response.year_group = tutor.getStudent()
-            .getYearGroup();
+                .getYearGroup();
         response.tutoring_subjects = tutor.getTutoringSubjects();
         response.contact_info = tutor.getStudent()
-            .getContactInfo();
+                .getContactInfo();
 
         return response;
     }
 
     public TuteeProfileResponse getTuteeProfile(Long id) {
         Student student = studentRepository.getStudentById(id);
-
 
         List<Collaboration> collaborations = student.getTutee().getCollaborations();
         List<SubjectEnum> subjects = collaborations.stream().map(collab -> collab.getSubject()).toList();
@@ -203,11 +216,11 @@ public class RoleService {
     public void removeRole(Long id, RoleEnum role) {
         Student student = getStudentById(id);
 
-        if (role == RoleEnum.Tutee && student.getTutee() != null){
+        if (role == RoleEnum.Tutee && student.getTutee() != null) {
             student.setTutee(null);
             saveStudent(student);
 
-        }else if(role == RoleEnum.Tutor && student.getTutor() != null){
+        } else if (role == RoleEnum.Tutor && student.getTutor() != null) {
             student.setTutor(null);
             saveStudent(student);
 

@@ -44,6 +44,7 @@ export default function AuthenticatedApp() {
 					<Route
 						path="/"
 						element={
+							(isAdmin && <Navigate to="/admin" />) ||
 							(isTutee && isTutor && <HomePage />) ||
 							(isTutee && !isTutor && <Navigate to="/tutee" />) ||
 							(!isTutee && isTutor && <Navigate to="/tutor" />)

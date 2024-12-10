@@ -1,5 +1,7 @@
 package project.backend.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +17,16 @@ import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
 import project.backend.controller_bodies.role_controller.TutorProfileResponse;
 import project.backend.model.RoleEnum;
+import project.backend.model.Tutee;
+import project.backend.model.Tutor;
 import project.backend.service.RoleService;
 import project.backend.utilities.HelperFunctions;
-
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/role")
 public class RoleController {
-    
+
     @Autowired
     final RoleService roleService;
     private final HelperFunctions helperFunctions;
@@ -33,14 +36,39 @@ public class RoleController {
         this.helperFunctions = helperFunctions;
     }
 
+    @GetMapping("/tutees")
+    public ResponseEntity<?> getTutees(HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to view all tutees");
+        }
+
+        List<Tutee> tutees = roleService.getTutees();
+
+        return ResponseEntity.status(HttpStatus.OK).body(tutees);
+    }
+
+    @GetMapping("/tutors")
+    public ResponseEntity<?> getTutors(HttpServletRequest request) {
+
+        // Everyone is allowed yes?
+
+        List<Tutor> tutors = roleService.getTutors();
+
+        return ResponseEntity.status(HttpStatus.OK).body(tutors);
+    }
+
     @GetMapping("/{id}/{role}")
-    public ResponseEntity<?> getProfile(@PathVariable long id, @PathVariable RoleEnum role, HttpServletRequest request) {
+    public ResponseEntity<?> getProfile(@PathVariable long id, @PathVariable RoleEnum role,
+            HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!helperFunctions.isUserPermitted(authenticatedUser, id)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You do not have access to this profile");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Unauthorized: You do not have access to this profile");
         }
-        
+
         if (role == RoleEnum.Tutor) {
             try {
                 TutorProfileResponse response = roleService.getTutorProfile(id);

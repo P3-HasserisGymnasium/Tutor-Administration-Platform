@@ -48,7 +48,8 @@ public class CollaborationController {
         }
 
         if (!helperFunctions.isUserPermitted(authenticatedUser, collaboration.getId())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to view this collaboration");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Unauthorized: You must be logged in to view this collaboration");
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(collaboration);
@@ -59,7 +60,8 @@ public class CollaborationController {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!helperFunctions.isUserPermitted(authenticatedUser, id)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to view this collaboration");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Unauthorized: You must be logged in to view this collaboration");
         }
 
         List<Collaboration> collaborations = collaborationService.getCollaborationsWithTutor(id);
@@ -71,12 +73,13 @@ public class CollaborationController {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!helperFunctions.isUserPermitted(authenticatedUser, id)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to view this collaboration");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Unauthorized: You must be logged in to view this collaboration");
         }
 
         List<Collaboration> collaborations = collaborationService.getCollaborationsWithTutee(id);
         return ResponseEntity.status(HttpStatus.OK).body(collaborations);
-        
+
     }
 
     @GetMapping("/all")
@@ -84,7 +87,8 @@ public class CollaborationController {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!helperFunctions.isUserPermitted(authenticatedUser, null)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to view this collaboration");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Unauthorized: You must be logged in to view this collaboration");
         }
 
         List<Collaboration> collaborations = collaborationService.getAllCollaborations();
@@ -93,11 +97,13 @@ public class CollaborationController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> createCollaboration(@RequestBody CollaborationCreateBody body, HttpServletRequest request) {
+    public ResponseEntity<?> createCollaboration(@RequestBody CollaborationCreateBody body,
+            HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!helperFunctions.isUserPermitted(authenticatedUser, null)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to create this collaboration");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Unauthorized: You must be logged in to create this collaboration");
         }
 
         collaborationService.createCollaboration(body);
@@ -110,7 +116,8 @@ public class CollaborationController {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!helperFunctions.isUserPermitted(authenticatedUser, id)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to delete this collaboration");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Unauthorized: You must be logged in to delete this collaboration");
         }
 
         collaborationService.deleteCollaborationById(id);
@@ -118,11 +125,13 @@ public class CollaborationController {
     }
 
     @PostMapping("/request-suggestion/{id}")
-    public ResponseEntity<?> requestCollaborationSuggestion(@PathVariable Long tuteeId, @RequestBody PostBody requestBody, HttpServletRequest request) {
+    public ResponseEntity<?> requestCollaborationSuggestion(@PathVariable Long tuteeId,
+            @RequestBody PostBody requestBody, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!helperFunctions.isUserPermitted(authenticatedUser, tuteeId)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to request this collaboration suggestion");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Unauthorized: You must be logged in to request this collaboration suggestion");
         }
 
         collaborationService.requestCollaborationSuggestion(tuteeId, requestBody);
@@ -130,22 +139,26 @@ public class CollaborationController {
     }
 
     @PostMapping("/submit-suggestion/{collaborationId}/{tutorId}")
-    public ResponseEntity<?> submitCollaborationSuggestion(@PathVariable Long collaborationId, @PathVariable Long tutorId, HttpServletRequest request) {
+    public ResponseEntity<?> submitCollaborationSuggestion(@PathVariable Long collaborationId,
+            @PathVariable Long tutorId, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!helperFunctions.isUserPermitted(authenticatedUser, collaborationId)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to submit this collaboration suggestion");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Unauthorized: You must be logged in to submit this collaboration suggestion");
         }
         collaborationService.submitCollaborationSuggestion(collaborationId, tutorId);
         return ResponseEntity.status(HttpStatus.OK).body("Collaboration suggestion submitted");
-        }
+    }
 
     @PostMapping("/accept/{collaborationId}")
-    public ResponseEntity<?> acceptCollaboration(@PathVariable Long collaborationId, @RequestBody RoleEnum role, HttpServletRequest request) {
+    public ResponseEntity<?> acceptCollaboration(@PathVariable Long collaborationId, @RequestBody RoleEnum role,
+            HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!helperFunctions.isUserPermitted(authenticatedUser, collaborationId)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to accept this collaboration");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Unauthorized: You must be logged in to accept this collaboration");
         }
 
         collaborationService.acceptCollaboration(collaborationId, role);
@@ -153,11 +166,13 @@ public class CollaborationController {
     }
 
     @PostMapping("reject/{collaborationId}")
-    public ResponseEntity<?> rejectCollaboration(@PathVariable Long collaborationId, @RequestBody RoleEnum role, HttpServletRequest request) {
+    public ResponseEntity<?> rejectCollaboration(@PathVariable Long collaborationId, @RequestBody RoleEnum role,
+            HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!helperFunctions.isUserPermitted(authenticatedUser, collaborationId)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to reject this collaboration");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Unauthorized: You must be logged in to reject this collaboration");
         }
 
         collaborationService.rejectCollaboration(collaborationId, role);
@@ -165,11 +180,13 @@ public class CollaborationController {
     }
 
     @PostMapping("/terminate/{collaborationId}")
-    public ResponseEntity<?> terminateCollaboration(@PathVariable Long collaborationId, @RequestBody String terminationReason, HttpServletRequest request) {
+    public ResponseEntity<?> terminateCollaboration(@PathVariable Long collaborationId,
+            @RequestBody String terminationReason, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!helperFunctions.isUserPermitted(authenticatedUser, collaborationId)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to terminate this collaboration");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Unauthorized: You must be logged in to terminate this collaboration");
         }
 
         collaborationService.terminateCollaboration(collaborationId, terminationReason);
@@ -177,11 +194,13 @@ public class CollaborationController {
     }
 
     @PostMapping("/feedback/{collaborationId}/{tuteeId}")
-    public ResponseEntity<?> submitFeedback(@PathVariable Long collaborationId, @PathVariable Long tuteeId, @RequestBody Feedback feedback, HttpServletRequest request) {
+    public ResponseEntity<?> submitFeedback(@PathVariable Long collaborationId, @PathVariable Long tuteeId,
+            @RequestBody Feedback feedback, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!helperFunctions.isUserPermitted(authenticatedUser, collaborationId)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to submit feedback for this collaboration");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Unauthorized: You must be logged in to submit feedback for this collaboration");
         }
 
         collaborationService.submitFeedback(collaborationId, tuteeId, feedback);
