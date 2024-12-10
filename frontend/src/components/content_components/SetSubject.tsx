@@ -6,6 +6,36 @@ import { useTheme, Theme } from "@mui/material/styles";
 import SubjectIcon from "./SubjectIcon";
 import CustomButton from "./CustomButton";
 
+type SetSubjectProps = {
+  variant: string;
+};
+
+export default function SetSubject({ variant }: SetSubjectProps) {
+  const { getValues } = useFormContext();
+  const borderColor = useTheme<Theme>().customColors.boxBorderColor;
+  return (
+    <Box sx={{ display: "flex", flexDirection: "row", width: "100%", gap: "1em", alignItems: "center" }}>
+      <SelectSubject variant={variant} />
+      {getValues("subject").length > 0 && (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            border: "1px solid" + borderColor,
+            borderRadius: "0.5em",
+            width: "fit-content",
+            height: "fit-content",
+            overflowX: "auto",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {getValues("subject").map((subject: SubjectType) => {
+            return <SubjectCard subject={subject} />;
+          })}
+        </Box>
+      )}
+    </Box>
+  );
 export default function SetSubject() {
 	const { getValues } = useFormContext();
 	const borderColor = useTheme<Theme>().customColors.boxBorderColor;
@@ -15,8 +45,8 @@ export default function SetSubject() {
 			data-testid="setsubjectcontainer"
 			sx={{ display: "flex", flexDirection: "row", width: "100%", gap: "1em", alignItems: "center" }}
 		>
-			<SelectSubject />
-			{getValues("subjects").length > 0 && (
+      <SelectSubject variant={variant} />
+	  {getValues("subjects").length > 0 && (
 				<Box
 					sx={{
 						display: "flex",
@@ -71,22 +101,46 @@ function SubjectCard({ subject }: { subject: SubjectType }) {
 	);
 }
 
-function SelectSubject() {
-	const { setValue, getValues } = useFormContext();
-	const borderColor = useTheme<Theme>().customColors.boxBorderColor;
-	const [newSubject, setNewSubject] = useState<SubjectType | null>(null);
+function SelectSubject({ variant }: { variant: string }) {
+  const { setValue, getValues } = useFormContext();
+  const borderColor = useTheme<Theme>().customColors.boxBorderColor;
+  const [newSubject, setNewSubject] = useState<SubjectType | null>(null);
 
-	const handleAdd = () => {
-		const selectedSubjects: SubjectType[] = getValues("subjects");
-		if (selectedSubjects.length !== 0 && newSubject) {
-			if (!selectedSubjects.includes(newSubject)) {
-				setValue("subjects", [...selectedSubjects, newSubject]);
-			}
-		} else {
-			setValue("subjects", [newSubject]);
-		}
-	};
+  const handleAdd = () => {
+    const selectedSubjects: SubjectType[] = getValues("subject");
+    if (selectedSubjects.length !== 0 && newSubject) {
+      if (!selectedSubjects.includes(newSubject)) {
+        setValue("subject", [...selectedSubjects, newSubject]);
+      }
+    } else {
+      setValue("subject", [newSubject]);
+    }
+  };
 
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        border: "1px solid" + borderColor,
+        borderRadius: "0.5em",
+        padding: "0.5em",
+        gap: "1em",
+        width: "40%",
+      }}
+    >
+      <Typography variant="h4" align="center">
+        {variant == "edit" ? "Select new subject" : "Edit subject"}
+      </Typography>
+      <Autocomplete
+        disablePortal
+        onChange={(_, newValue) => setNewSubject(newValue)}
+        options={Object.values(Subject.enum)}
+        renderInput={(params) => <TextField {...params} label="Select subject" />}
+      />
+      {newSubject && <Button onClick={handleAdd}>Add</Button>}
+    </Box>
+  );
 	return (
 		<Box
 			sx={{

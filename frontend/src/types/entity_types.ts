@@ -16,12 +16,12 @@ import {
 } from "./data_types";
 
 export const zodPostSchema = z.object({
-	id: zodUUID,
-	title: z.string(),
-	description: z.string(),
-	subject: Subject,
-	duration: z.string(),
-	state: z.string(),
+  id: zodUUID,
+  title: z.string(),
+  description: z.string(),
+  subject: Subject,
+  duration: z.array(z.number()).optional(),
+  state: z.string(),
 });
 
 export const zodTutorProfileSchema = z.object({
@@ -65,112 +65,112 @@ export const zodCollaborationSchema = z.object({
 });
 
 export const zodFeedbackSchema = z.object({
-	id: zodUUID,
-	feedback: z.string(),
+  id: zodUUID,
+  feedback: z.string(),
 });
 
 export const zodNotificationSchema = z.object({
-	id: zodUUID.nullable(),
-	sender_id: zodUUID,
-	sender_type: NotificationParticipant,
-	receiver_id: zodUUID,
-	receiver_type: NotificationParticipant,
-	context_id: zodUUID,
-	context_type: NotificationContext,
-	state: NotificationState,
+  id: zodUUID.nullable(),
+  sender_id: zodUUID,
+  sender_type: NotificationParticipant,
+  receiver_id: zodUUID,
+  receiver_type: NotificationParticipant,
+  context_id: zodUUID,
+  context_type: NotificationContext,
+  state: NotificationState,
 });
 
 export const zodAccountRegisterSchema = z.object({
-	fullName: z
-		.string({
-			required_error: "You must provide a name", // Required field error
-		})
-		.min(1, "You must provide a full name"), // Minimum length validation
+  fullName: z
+    .string({
+      required_error: "You must provide a name", // Required field error
+    })
+    .min(1, "You must provide a full name"), // Minimum length validation
 
-	email: z
-		.string({
-			required_error: "You must provide an email", // Required field error
-		})
-		.email("You must provide a valid email address"), // Email format validation
+  email: z
+    .string({
+      required_error: "You must provide an email", // Required field error
+    })
+    .email("You must provide a valid email address"), // Email format validation
 
-	password: z
-		.string({
-			required_error: "You must provide a password", // Required field error
-		})
-		.min(6, "Password must be at least 6 characters long"), // Minimum length validation
+  password: z
+    .string({
+      required_error: "You must provide a password", // Required field error
+    })
+    .min(6, "Password must be at least 6 characters long"), // Minimum length validation
 
-	confirmPassword: z
-		.string({
-			required_error: "You must confirm your password", // Required field error
-		})
-		.min(6, "Password confirmation must match the password"), // Minimum length validation
-	// Password match check should be handled elsewhere (e.g., in `refine`)
+  confirmPassword: z
+    .string({
+      required_error: "You must confirm your password", // Required field error
+    })
+    .min(6, "Password confirmation must match the password"), // Minimum length validation
+  // Password match check should be handled elsewhere (e.g., in `refine`)
 
-	yearGroup: z
-		.string({
-			required_error: "You must select a year group", // Optional field validation
-		}) // Optional field, no required error
-		.min(1, "You must select a year group"),
+  yearGroup: z
+    .string({
+      required_error: "You must select a year group", // Optional field validation
+    }) // Optional field, no required error
+    .min(1, "You must select a year group"),
 
-	languages: z
-		.array(Language, {
-			required_error: "You must select at least one language", // Required array error
-		})
-		.min(1, "You must select at least one language") // Minimum array length validation
-		.optional(), // Optional field, validation applies if provided
+  languages: z
+    .array(Language, {
+      required_error: "You must select at least one language", // Required array error
+    })
+    .min(1, "You must select at least one language") // Minimum array length validation
+    .optional(), // Optional field, validation applies if provided
 
-	roles: z
-		.array(Role, {
-			required_error: "You must select at least one role", // Required array error
-		})
-		.min(1, "You must select at least one role"), // Minimum array length validation
+  roles: z
+    .array(Role, {
+      required_error: "You must select at least one role", // Required array error
+    })
+    .min(1, "You must select at least one role"), // Minimum array length validation
 
-	subjects: z
-		.array(Subject, {
-			required_error: "You must select at least one subject", // Optional field validation
-		})
-		.optional(), // Optional field
+  subjects: z
+    .array(Subject, {
+      required_error: "You must select at least one subject", // Optional field validation
+    })
+    .optional(), // Optional field
 
-	tutorProfileDescription: z
-		.string({
-			required_error: "You must provide a description", // Optional field validation
-		})
-		.optional(), // Optional field
+  tutorProfileDescription: z
+    .string({
+      required_error: "You must provide a description", // Optional field validation
+    })
+    .optional(), // Optional field
 
-	time_availability: z
-		.array(
-			z.object({
-				day: Day,
-				time: z.array(TimeSlot),
-			})
-		)
-		.optional(), // Optional field
+  time_availability: z
+    .array(
+      z.object({
+        day: Day,
+        time: z.array(TimeSlot),
+      })
+    )
+    .optional(), // Optional field
 });
 
 export const zodUserStateSchema = z.object({
-	id: zodUUID.nullable(),
-	name: z.string().nullable(),
-	role: z.array(Role).nullable(),
-	email: z.string().email().nullable(),
-	year_group: YearGroup.nullable(),
-	tutoring_subjects: z.array(Subject).nullable(),
-	is_administrator: z.boolean().nullable(),
+  id: zodUUID.nullable(),
+  name: z.string().nullable(),
+  role: z.array(Role).nullable(),
+  email: z.string().email().nullable(),
+  year_group: YearGroup.nullable(),
+  tutoring_subjects: z.array(Subject).nullable(),
+  is_administrator: z.boolean().nullable(),
 });
 
 export const zodLoginSuccessDataType = z.object({
-	token: z.string(),
-	id: zodUUID.nullable(),
-	name: z.string().nullable(),
-	role: z.array(Role).nullable(),
-	email: z.string().email().nullable(),
-	year_group: YearGroup.nullable(),
-	tutoring_subjects: z.array(Subject).nullable(),
-	is_administrator: z.boolean().nullable(),
+  token: z.string(),
+  id: zodUUID.nullable(),
+  name: z.string().nullable(),
+  role: z.array(Role).nullable(),
+  email: z.string().email().nullable(),
+  year_group: YearGroup.nullable(),
+  tutoring_subjects: z.array(Subject).nullable(),
+  is_administrator: z.boolean().nullable(),
 });
 
 export const zodLoginSchema = z.object({
-	email: z.string().email(),
-	password: z.string(),
+  email: z.string().email(),
+  password: z.string(),
 });
 
 export const zodTerminationSchema = z.object({

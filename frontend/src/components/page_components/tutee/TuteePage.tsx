@@ -14,7 +14,19 @@ import { usePostService } from "~/api/services/post-service";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useAuth } from "~/api/authentication/useAuth";
 import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
+import EditPostDialog from "../dialogs/EditPostDialog";
+import { PostState, Subject } from "~/types/data_types";
+import { PostType } from "~/types/entity_types";
+const post: PostType = {
+  id: 1,
+  title: "hjælp mig",
+  description: "iosjdsiaojdaojdasdiasdjsaod jsadj iasojdasd",
+  subject: Subject.Enum.DANISH,
+  duration: [2, 8],
+  state: PostState.Enum.VISIBLE,
+};
 export default function TuteePage() {
+<<<<<<< HEAD
   const theme = useCurrentTheme();
   const { isMobile } = useBreakpoints();
   const [view, setView] = useState<"list" | "calender">("list");
@@ -50,6 +62,45 @@ export default function TuteePage() {
           {/* Header with Title and Buttons */}
           <Box sx={{ display: "flex", alignItems: "center", gap: isMobile ? 2 : 17 }}>
             <Typography variant="h6">{view === "calender" ? "Calendar" : "Meeting List"}</Typography>
+=======
+	const theme = useCurrentTheme();
+	const { isMobile } = useBreakpoints();
+	const [view, setView] = useState<"list" | "calender">("list");
+	const [showCollabDialog, setShowCollabDialog] = useState(false);
+	const [showEditPostDialog, setShowEditPostDialog] = useState(true);
+	const { userState } = useAuth();
+	const { data: posts, isLoading: postsLoading, isError: postsError } = usePostService().useGetTuteePosts();
+	const {
+		data: collaborations,
+		isLoading: collabLoading,
+		isError: collabError,
+	} = useCollaborationService().useGetCollaborationsWithTutee(userState?.id || null);
+
+	return (
+		<ThemeProvider theme={theme}>
+			<ViewCollaborationsDialog
+				open={showCollabDialog}
+				setOpen={setShowCollabDialog}
+				collaborations={collaborations}
+				isLoading={collabLoading}
+			/>
+			<EditPostDialog open={showEditPostDialog} setOpen={setShowEditPostDialog} post={post}/>
+			<MediumShortOnShortBoxLayout>
+				<Box
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						border: "1px solid #white",
+						borderRadius: "8px",
+						overflow: "hidden",
+						p: isMobile ? 1 : 2,
+						position: "relative",
+					}}
+				>
+					{/* Header with Title and Buttons */}
+					<Box sx={{ display: "flex", alignItems: "center", gap: isMobile ? 2 : 17 }}>
+						<Typography variant="h6">{view === "calender" ? "Calendar" : "Meeting List"}</Typography>
+>>>>>>> c52096ebdce62a603476aefed2fc5dee7bd7f664
 
             {/* Button group for toggling between calendar and meeting */}
             <ButtonGroup variant="outlined" aria-label="outlined primary button group">
