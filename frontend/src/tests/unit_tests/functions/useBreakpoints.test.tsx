@@ -33,7 +33,6 @@ describe("useBreakpoints", () => {
 	it("should return isLaptop as true for large screen widths", () => {
 		window.matchMedia = createMatchMedia(2400);
 		const { result } = renderHook(() => useBreakpoints());
-		console.log(result.current);
 
 		expect(result.current.isLaptop).toBe(true);
 	});
@@ -41,7 +40,6 @@ describe("useBreakpoints", () => {
 	it("should return isLaptop as false for small screen widths", () => {
 		window.matchMedia = createMatchMedia(400);
 		const { result } = renderHook(() => useBreakpoints());
-		console.log(result.current);
 		expect(result.current.isLaptop).toBe(false);
 	});
 

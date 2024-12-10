@@ -29,8 +29,8 @@ export default function SetSubject() {
 						whiteSpace: "nowrap",
 					}}
 				>
-					{getValues("subjects").map((subject: SubjectType) => {
-						return <SubjectCard subject={subject} />;
+					{subjects.map((subject: SubjectType) => {
+						return <SubjectCard key={subject} subject={subject} />;
 					})}
 				</Box>
 			)}
@@ -110,7 +110,7 @@ function SelectSubject() {
 				renderInput={(params) => <TextField {...params} label="Select subject" />}
 			/>
 			{newSubject && (
-				<Button data-testid="subjectaddbutton" onClick={handleAdd}>
+				<Button key={newSubject} data-testid="subjectaddbutton" onClick={handleAdd}>
 					Add
 				</Button>
 			)}

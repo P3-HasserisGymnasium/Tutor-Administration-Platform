@@ -41,7 +41,6 @@ export function useHeading(): string {
 
 export const useRolePrefix = (): string => {
 	const rolePrefix = useLocation().pathname;
-	console.log("rolePrefix", rolePrefix);
 	switch (true) {
 		case rolePrefix.startsWith("/tutee"):
 			return "/tutee";
@@ -65,7 +64,6 @@ export const useRolePrefix = (): string => {
  */
 export function useCurrentTheme(): Theme {
 	const firstPathPart = useRolePrefix();
-	console.log("firstPathPart", firstPathPart);
 	if (firstPathPart == null) {
 		return baseTheme;
 	}
