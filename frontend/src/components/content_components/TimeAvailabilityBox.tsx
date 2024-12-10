@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
-import { TimeAvailabilitiesType } from "~/types/data_types";
+import { TimeAvailabilityType, TimeSlotType } from "~/types/data_types";
 
-export default function TimeAvailabilityBox({ timeAvailability }: { timeAvailability: TimeAvailabilitiesType }) {
+export default function TimeAvailabilityBox({ timeAvailability }: { timeAvailability: TimeAvailabilityType }) {
 	return (
 		<Box
 			sx={{
@@ -19,7 +19,7 @@ export default function TimeAvailabilityBox({ timeAvailability }: { timeAvailabi
 			}}
 		>
 			<Typography variant="h4">{timeAvailability?.day}</Typography>
-			{timeAvailability.time.map((timeSlot, index) => (
+			{timeAvailability.time.map((timeSlot:TimeSlotType, index:number) => (
 				<Typography key={`${timeSlot.start_time}-${index}`} variant="body1" id={String(index)} sx={{ color: "black" }}>
 					{timeSlot.start_time}-{timeSlot.end_time}
 				</Typography>

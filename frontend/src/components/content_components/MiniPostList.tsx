@@ -33,14 +33,15 @@ export default function MiniPostList({ posts, isLoading, isError }: MiniPostList
 		<Box
 			sx={{
 				display: "flex",
-				flexWrap: "wrap",
-				gap: "16px",
+				gap: "1em",
 				justifyContent: "start",
 				padding: 2,
+				overflowY: "auto",
+				height: "10em",
 			}}
 		>
 			{posts.length > 0 ? (
-				posts.map((post) => <MiniPost key={post.id} postData={post} />)
+				posts.slice(0, 3).map((post) => <MiniPost key={post.id} postData={post} />)
 			) : (
 				<Typography variant="h6">No posts found.</Typography>
 			)}
