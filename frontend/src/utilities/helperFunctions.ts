@@ -99,8 +99,14 @@ export const useVariableWidth = (value: string | number) => {
 	}
 
 	if (typeof value === "number") {
+
+		if (100 > value && value > 1) {
+			return `${value}%`;
+		}
 		return `${(value * 100).toFixed(2)}%`;
 	}
+
+	return value;
 };
 
 /**

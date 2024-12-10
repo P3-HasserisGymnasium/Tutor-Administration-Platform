@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 import SetSubject from "~/components/content_components/SetSubject";
 import { Subject } from "~/types/data_types";
@@ -22,9 +22,16 @@ describe("SetSubject", () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+    cleanup();
   });
 
   it("should render the SetSubject component", () => {
+    render(<SetSubject />);
+
+    expect(screen.getByTestId("setsubjectcontainer")).toBeInTheDocument();
+  });
+
+  it("should render the SetSubject component with 'X' subjects", () => {
     render(<SetSubject />);
 
     expect(screen.getByTestId("setsubjectcontainer")).toBeInTheDocument();
