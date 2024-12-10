@@ -1,5 +1,5 @@
 import { afterEach } from "vitest";
-import { render, screen, cleanup, fireEvent } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 import { PostType } from "~/types/entity_types";
 import { Subject } from "~/types/data_types";
 import { BrowserRouter } from "react-router-dom";
@@ -56,16 +56,16 @@ describe("MiniPost", () => {
 	});
 
 	/*   it("should open the editPostDialog component", () => {
-    render(
-      <ThemeProvider theme={tuteeTheme}>
-        <BrowserRouter>
-          <MiniPost postData={mockPost} />
-        </BrowserRouter>
-      </ThemeProvider>
-    );
+	render(
+	  <ThemeProvider theme={tuteeTheme}>
+		<BrowserRouter>
+		  <MiniPost postData={mockPost} />
+		</BrowserRouter>
+	  </ThemeProvider>
+	);
 
-    const postContainer = screen.getByTestId("minipostcontainer");
-    fireEvent.click(postContainer);
-    expect(screen.getByTestId("editpostdialog")).toBeInTheDocument();
+	const postContainer = screen.getByTestId("minipostcontainer");
+	fireEvent.click(postContainer);
+	expect(screen.getByTestId("editpostdialog")).toBeInTheDocument();
   }); */
 });
