@@ -1,5 +1,8 @@
 package project.backend.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -56,24 +59,18 @@ public class MeetingController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to view this meeting");
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<?> getMeetings(HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-    
-        if (!authenticatedUser.isTutor() && authenticatedUser.isTutee()) {
-            return ResponseEntity.status(HttpStatus.OK).body(meetingService.getMeetingsByTuteeId(authenticatedUser.getTuteeId()));
-        }
+        Iterable<Meeting> tuteeMetings = meetingService.getMeetingsByTuteeId(authenticatedUser.getTuteeId());
+        Iterable<Meeting> tutorMeetings = meetingService.getMeetingsByTutorId(authenticatedUser.getTutorId());
 
-        if (authenticatedUser.isTutor() && !authenticatedUser.isTutee()) {
-            return ResponseEntity.status(HttpStatus.OK).body(meetingService.getMeetingsByTutorId(authenticatedUser.getTutorId()));
-        }
+        List<Meeting> joinedMeetings = new ArrayList<>();
+        tuteeMetings.forEach(joinedMeetings::add);
+        tutorMeetings.forEach(joinedMeetings::add);
 
-        if (!authenticatedUser.isAdministrator()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to view these meetings");
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(meetingService.getMeetingsById(authenticatedUser.getUserId()));
+        return ResponseEntity.status(HttpStatus.OK).body(joinedMeetings);
     }
 
     @GetMapping("/tutee")

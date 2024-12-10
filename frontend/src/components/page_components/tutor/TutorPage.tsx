@@ -2,9 +2,9 @@ import MediumShortOnShortBoxLayout from "components/layout_components/MediumShor
 import { useState } from "react";
 import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip, ThemeProvider } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-import MiniCollabList from "src/components/content_components/HomePageComponents/MiniCollabList";
-import MiniPostList from "src/components/content_components/HomePageComponents/MiniPostList";
-import MiniCalendar from "src/components/content_components/HomePageComponents/MiniCalendar";
+import MiniCollabList from "src/components/content_components/MiniCollabList";
+import MiniPostList from "src/components/content_components/MiniPostList";
+import MiniCalendar from "src/components/content_components/MiniCalendar";
 import MeetingsList from "src/components/content_components/MeetingsList";
 import { useCurrentTheme, useBreakpoints } from "~/utilities/helperFunctions";
 import CustomButton from "~/components/content_components/CustomButton";
@@ -12,7 +12,7 @@ import { usePostService } from "~/api/services/post-service";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useAuth } from "~/api/authentication/useAuth";
 import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
-export default function TuteePage() {
+export default function TutorPage() {
   const theme = useCurrentTheme();
   const { isMobile } = useBreakpoints();
   const [view, setView] = useState<"list" | "calender">("list");
