@@ -12,7 +12,10 @@ import {
 	NotificationContext,
 	NotificationParticipant,
 	NotificationState,
+	ComunicationMedium,
+	zodTimeAvailabilitySchema,
 } from "./data_types";
+
 
 export const zodPostSchema = z.object({
 	id: zodUUID,
@@ -48,6 +51,16 @@ export const zodCollaborationSchema = z.object({
 	tutor_id: zodUUID,
 	state: CollaborationState,
 	subject: Subject,
+});
+
+export const tutorProfileSchema = z.object({
+	contact_info: z.array(z.object({username: z.string(), ComunicationMedium})),
+	description: z.string(),
+	full_name: z.string(),
+	time_availability: z.array(zodTimeAvailabilitySchema),
+	tutoring_subjects: z.array(Subject),
+	yearGroup: YearGroup,
+	languages: z.array(Language),
 });
 
 export const zodFeedbackSchema = z.object({
@@ -169,3 +182,4 @@ export type CollaborationType = z.infer<typeof zodCollaborationSchema>;
 export type Feedback = z.infer<typeof zodFeedbackSchema>;
 export type AccountRegisterType = z.infer<typeof zodAccountRegisterSchema>;
 export type NotificationType = z.infer<typeof zodNotificationSchema>;
+export type TutorProfileType = z.infer<typeof tutorProfileSchema>;

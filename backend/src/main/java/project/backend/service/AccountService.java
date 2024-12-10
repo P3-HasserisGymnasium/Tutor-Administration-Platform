@@ -84,9 +84,9 @@ public class AccountService {
         newStudent.setPasswordHash(passwordHash);
         newStudent.setLanguages(body.languages);
         newStudent.setYearGroup(body.yearGroup);
-        
+        System.out.println("Roles: " + body.roles);
         Student savedStudent = studentRepository.save(newStudent);
-
+        System.out.println("Saved Staaaaaaaudent: " + savedStudent);
         if (body.roles.contains(RoleEnum.Tutor)) {
             Tutor newTutor = new Tutor();
 
@@ -95,7 +95,7 @@ public class AccountService {
             newTutor.setProfileDescription(body.tutorProfileDescription);
 
             tutorRepository.save(newTutor);
-
+            System.out.println("TimssssseSlots: " + body.time_availability);
             List<TutorTimeSlot> timeSlots = new LinkedList<>();
             for (TimeSlotCreateBody timeSlotBody : body.time_availability) {
                 
@@ -113,10 +113,11 @@ public class AccountService {
                     timeSlots.add(newTimeSlot);
                 }                
             }
-
+            System.out.println("TimeSlots: " + timeSlots);
             newTutor.setFreeTimeSlots(timeSlots);
             savedStudent.setTutor(newTutor);
         }
+        System.out.println("Saved Studensadadasdt: " + savedStudent);
         if (body.roles.contains(RoleEnum.Tutee)) {
             Tutee newTutee = new Tutee();
 
@@ -125,7 +126,7 @@ public class AccountService {
             savedStudent.setTutee(newTutee);  
             tuteeRepository.save(newTutee);
         }
-
+        System.out.println("Saved Student: " + savedStudent);
         return savedStudent;
     }
 

@@ -24,8 +24,9 @@ public class Student extends User {
     @Enumerated(EnumType.STRING)
     YearGroupEnum yearGroup;
 
-    @Embedded
-    StudentContactInfo contactInfo;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    List<StudentCommunicatioInfo> contactInfo;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
@@ -58,11 +59,11 @@ public class Student extends User {
         this.yearGroup = yearGroup;
     }
 
-    public StudentContactInfo getContactInfo() {
+    public List<StudentCommunicatioInfo> getContactInfo() {
         return contactInfo;
     }
 
-    public void setContactInfo(StudentContactInfo contactInfo) {
+    public void setContactInfo(List<StudentCommunicatioInfo> contactInfo) {
         this.contactInfo = contactInfo;
     }
 

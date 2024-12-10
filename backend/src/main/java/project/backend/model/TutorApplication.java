@@ -18,7 +18,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 
 
-
 @Entity
 public class TutorApplication {
 

@@ -14,8 +14,8 @@ const TutorTimeAvailabilityPage: React.FC<TutorTimeAvailabilityProps> = ({ setPa
   const formMethods = useFormContext<AccountRegisterType>();
   const { control } = formMethods;
 
-  useWatch({ control });
-
+  const values = useWatch({ control });
+  console.log("values", values);
   return (
     <Box sx={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
       <Box

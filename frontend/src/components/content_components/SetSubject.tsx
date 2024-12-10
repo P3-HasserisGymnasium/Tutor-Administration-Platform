@@ -53,14 +53,19 @@ function SelectSubject() {
 
     const handleAdd = () => {
         const selectedSubjects: SubjectType[] = getValues("subjects");
+        console.log("selectedSubjects", selectedSubjects);
         if (selectedSubjects.length !== 0 && newSubject) {
+            console.log("inherefirst")
             if (!selectedSubjects.includes(newSubject)) {
+                console.log("inhere")
                 setValue("subjects", [...selectedSubjects, newSubject]);
             }
         } else {
+            console.log("inhere2")
             setValue("subjects", [newSubject]);
         }
     };
+    console.log("newSubject", newSubject);
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", border: "1px solid" + borderColor, borderRadius: "0.5em", padding: "0.5em", gap: "1em", width: "40%" }}>
