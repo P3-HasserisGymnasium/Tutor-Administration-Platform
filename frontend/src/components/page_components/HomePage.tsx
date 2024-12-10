@@ -15,6 +15,7 @@ import tuteeTheme from "~/themes/tuteeTheme";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { usePostService } from "~/api/services/post-service";
 import { useNavigate } from "react-router-dom";
+import { useNotificationService } from "~/api/services/notification-service";
 
 //import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
 
@@ -27,6 +28,7 @@ export default function HomePage() {
 	const { isMobile } = useBreakpoints();
 	const [view, setView] = useState<"list" | "calender">("list");
 	const { userState } = useAuth();
+	
 	// Fetching posts
 	const { data: posts,
 		isError: postsError } = usePostService().useGetTuteePosts();
@@ -45,17 +47,21 @@ export default function HomePage() {
 
 
 	// Fetching notifications
-	/*const {
-		 data: notifications,
-		 isLoading: notifLoading,
-		 isError: notifError,
-	 } = useNotificationService().useGetNotifications();*/
-	//const [showCollabDialog, setShowCollabDialog] = useState(false);
+	const {
+		 data: tuteeNotifications,
+		 isError: tuteeNotifError,
+	 } = useNotificationService().useGetTuteeNotifications(userState?.id || null);
+
+	 const {
+		data: tutorNotifications,
+		isError: tutorNotifError,
+	} = useNotificationService().useGetTutorNotifications(userState?.id || null);
+
 
 	//  Error States
 
 
-	if (postsError || TuteeCollabError || tutorCollabError) {
+	if (postsError || TuteeCollabError || tutorCollabError || tuteeNotifError || tutorNotifError) {
 		return (
 			<Box p={3}>
 				<Typography color="error">
@@ -68,12 +74,7 @@ export default function HomePage() {
 
 	return (
 		<ThemeProvider theme={theme}>
-			{/*<ViewCollaborationsDialog
-				open={showCollabDialog}
-				setOpen={setShowCollabDialog}
-				collaborations={collaborations}
-				isLoading={collabLoading}
-			/>*/}
+			
 			<MediumShortOnShortBoxLayout>
 				<Box
 					sx={{
@@ -183,10 +184,10 @@ export default function HomePage() {
 						</Box>
 
 						{/* Notifications */}
-						<Box sx={{ display: "flex", textAlign: "center", flexDirection: "column", alignItems: "center", justifyContent: 'flex-start', width: 1 / 3, height: "80%", marginTop: 10 }}>
+						<Box sx={{ display: "flex", textAlign: "center", flexDirection: "column", alignItems: "center", justifyContent: 'flex-start', width: 1 / 3, height: "80%", marginTop: 5 }}>
 							<NotificationsIcon sx={{ fontSize: 100, color: "#000" }} />
 							<Typography variant="h6" sx={{ fontWeight: "bold" }}>
-								{/*notifications?.length || 0*/}
+								{tuteeNotifications?.length || 0}
 							</Typography>
 							<Typography variant="body1">Notifications</Typography>
 						</Box>
@@ -236,7 +237,7 @@ export default function HomePage() {
 						<Box sx={{ display: "flex", textAlign: "center", flexDirection: "column", alignItems: "center", justifyContent: 'flex-end', width: 1 / 2, height: "80%" }}>
 							<NotificationsIcon sx={{ fontSize: 100, color: "#000" }} />
 							<Typography variant="h6" sx={{ fontWeight: "bold" }}>
-								{/*notifications?.length || 0*/}
+								{tutorNotifications?.length || 0}
 							</Typography>
 							<Typography variant="body1">Notifications</Typography>
 						</Box>
