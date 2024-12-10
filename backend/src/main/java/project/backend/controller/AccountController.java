@@ -55,7 +55,7 @@ public class AccountController {
     @PostMapping("/")
     public ResponseEntity<?> createUser(@RequestBody AccountRegisterBody body) {        
         try {
-            User savedUser = accountService.saveNewUser(body);
+            User savedUser = accountService.saveNewStudent(body);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
         }
         catch (EmailAlreadyExistsException | PasswordMismatchException e) {

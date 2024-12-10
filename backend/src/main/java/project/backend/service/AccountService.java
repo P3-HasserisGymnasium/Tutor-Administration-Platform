@@ -1,5 +1,6 @@
 package project.backend.service;
 
+import java.lang.StackWalker.Option;
 import java.sql.Time;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,6 +8,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.http.ResponseEntity;
 import java.util.List;
 import static project.backend.utilities.JWTUtil.generateToken;
@@ -67,11 +71,16 @@ public class AccountService {
         return accountRepository.findByEmail(email) != null;
     }
 
+    public Optional<User> getUserByEmail(String email) {
+        return Optional.of(accountRepository.findByEmail(email));
+    }
+
     public Optional<User> getUserById(Long id) {
         return accountRepository.findById(id);
     }
 
-    public User saveNewUser(AccountRegisterBody body) {
+    @Transactional
+    public User saveNewStudent(AccountRegisterBody body) {
 
         if (emailExists(body.email)) throw new EmailAlreadyExistsException("Email Already Exists");
         if (!body.password.equals(body.confirmPassword)) throw new PasswordMismatchException("Passwords do not match");
@@ -84,18 +93,22 @@ public class AccountService {
         newStudent.setPasswordHash(passwordHash);
         newStudent.setLanguages(body.languages);
         newStudent.setYearGroup(body.yearGroup);
-        System.out.println("Roles: " + body.roles);
         Student savedStudent = studentRepository.save(newStudent);
-        System.out.println("Saved Staaaaaaaudent: " + savedStudent);
+        System.out.println("@AccountService, saved student with id: " + savedStudent.getId());
         if (body.roles.contains(RoleEnum.Tutor)) {
+            System.out.println("@AccountService, adding tutor");
             Tutor newTutor = new Tutor();
 
             newTutor.setTutoringSubjects(body.subjects);
             newTutor.setStudent(savedStudent);
             newTutor.setProfileDescription(body.tutorProfileDescription);
 
+            savedStudent.setTutor(newTutor);
+            System.out.println("@AccountService, added new tutor to student " + savedStudent.getId());
+            
             tutorRepository.save(newTutor);
-            System.out.println("TimssssseSlots: " + body.time_availability);
+            System.out.println("@AccountService, saved tutor with id: " + newTutor.getId());
+
             List<TutorTimeSlot> timeSlots = new LinkedList<>();
             for (TimeSlotCreateBody timeSlotBody : body.time_availability) {
                 
@@ -113,25 +126,32 @@ public class AccountService {
                     timeSlots.add(newTimeSlot);
                 }                
             }
-            System.out.println("TimeSlots: " + timeSlots);
+
             newTutor.setFreeTimeSlots(timeSlots);
-            savedStudent.setTutor(newTutor);
         }
-        System.out.println("Saved Studensadadasdt: " + savedStudent);
         if (body.roles.contains(RoleEnum.Tutee)) {
+            System.out.println("@AccountService, adding tutee");
             Tutee newTutee = new Tutee();
 
             newTutee.setStudent(savedStudent);
 
-            savedStudent.setTutee(newTutee);  
+            savedStudent.setTutee(newTutee); 
+            System.out.println("@AccountService, added tutee to student " + savedStudent.getId());
+            
             tuteeRepository.save(newTutee);
+            System.out.println("@AccountService, saved tutee with id: " + newTutee.getId());
         }
-        System.out.println("Saved Student: " + savedStudent);
+
+        studentRepository.save(savedStudent);
         return savedStudent;
     }
 
     public void deleteUserById(Long id) {
         accountRepository.deleteById(id);
+    }
+
+    public void deleteUser(User user) {
+        accountRepository.delete(user);
     }
 
     public ResponseEntity<AccountLoginSuccessBody> handleStudentLogin(Student student) {

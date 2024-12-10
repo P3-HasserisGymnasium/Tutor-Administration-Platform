@@ -27,10 +27,10 @@ public class TutorApplication {
 
     @ManyToOne
     private Student student; 
-
-    @ElementCollection
-    @CollectionTable(name = "tutor_application_subjects", joinColumns = @JoinColumn(name = "application_id"))
+    
     @Column(name = "tutoring_subject")
+    @ElementCollection(targetClass = SubjectEnum.class)
+    @CollectionTable(name = "tutor_application_subjects", joinColumns = @JoinColumn(name = "application_id"))
     @Enumerated(EnumType.STRING)
     List<SubjectEnum> subjects;
 
