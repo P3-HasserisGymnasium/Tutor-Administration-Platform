@@ -46,7 +46,9 @@ export default function SpeedDialMenu() {
       { icon: <AccountBoxIcon />, name: "Edit Profile", route: `${rolePrefix}/profile` },
       { icon: <CircleNotificationsIcon />, name: "View Notifications", route: `${rolePrefix}/notifications` },
       { icon: <SupervisedUserCircleIcon />, name: "Apply for more subjects", route: `${rolePrefix}/tutor-application` },
-      userState.role?.includes(Role.Enum.Tutee) ? { icon: <PersonIcon />, name: "Go to Tutee page", route: "/tutee" } : null,
+      userState.role?.includes(Role.Enum.Tutee)
+        ? { icon: <PersonIcon />, name: "Go to Tutee page", route: "/tutee" }
+        : { icon: <PersonIcon />, name: "Become a tutee", route: "/tutee" },
       { icon: <LogoutIcon />, name: "Log out", route: "/", logout: true }
     );
   } else {
