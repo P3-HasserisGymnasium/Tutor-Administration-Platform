@@ -31,7 +31,6 @@ export default function AuthenticatedApp() {
 	const isTutee = userState.role?.includes(Role.Enum.Tutee);
 	const isTutor = userState.role?.includes(Role.Enum.Tutor);
 	//const isAdmin = userState.is_administrator;
-	console.log("isAuthenticated is equal to: ", isAuthenticated);
 	return (
 		<Box
 			sx={{
