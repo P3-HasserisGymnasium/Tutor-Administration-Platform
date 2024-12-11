@@ -27,15 +27,15 @@ public class AccountRegisterBody {
     }
 
     public AccountRegisterBody(AccountRegisterBody body) {
-        this.fullName = body.fullName;
+        this.full_name = body.full_name;
         this.email = body.email;
         this.password = body.password;
-        this.confirmPassword = body.confirmPassword;
+        this.confirm_password = body.confirm_password;
         this.roles = body.roles;
-        this.yearGroup = body.yearGroup;
+        this.year_group = body.year_group;
         this.languages = body.languages;
         this.subjects = body.subjects;
-        this.tutorProfileDescription = body.tutorProfileDescription;
+        this.tutor_profile_description = body.tutor_profile_description;
         this.time_availability = body.time_availability;
     }
 }

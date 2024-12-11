@@ -39,9 +39,9 @@ public class AccountServiceTests {
     void createStudentTest() {
         AccountRegisterBody body = new AccountRegisterBody();
         body.email = "createAccountTest@test.com";
-        body.fullName = "Test User";
+        body.full_name = "Test User";
         body.password = "password";
-        body.confirmPassword = "password";
+        body.confirm_password = "password";
 
 
         body.roles = new ArrayList<>();
@@ -52,13 +52,13 @@ public class AccountServiceTests {
         body.languages.add(LanguageEnum.English);
         body.languages.add(LanguageEnum.Danish);
 
-        body.tutorProfileDescription = "I am a test user";
+        body.tutor_profile_description = "I am a test user";
 
         body.subjects = new ArrayList<>();
         body.subjects.add(SubjectEnum.Math);
         body.subjects.add(SubjectEnum.English);
 
-        body.yearGroup = YearGroupEnum.IB_2;
+        body.year_group = YearGroupEnum.IB_2;
 
         body.time_availability = new ArrayList<>();
 
@@ -96,13 +96,13 @@ public class AccountServiceTests {
             assert(retrievedStudent != null);
 
             assert(retrievedStudent.getEmail().equals(body.email));
-            assert(retrievedStudent.getFullName().equals(body.fullName));
+            assert(retrievedStudent.getFullName().equals(body.full_name));
 
             assert(retrievedStudent.getTutor() != null);
             assert(retrievedStudent.getTutee() != null);
 
             assert(retrievedStudent.getTutor().getTutoringSubjects().containsAll(body.subjects));
-            assert(retrievedStudent.getTutor().getProfileDescription().equals(body.tutorProfileDescription));
+            assert(retrievedStudent.getTutor().getProfileDescription().equals(body.tutor_profile_description));
 
             assert(retrievedStudent.getTutor().getFreeTimeSlots().size() == 3);
             assert(retrievedStudent.getTutor().getFreeTimeSlots().get(0).getWeekDay().equals(WeekDayEnum.Monday));
@@ -128,9 +128,9 @@ public class AccountServiceTests {
 
         AccountRegisterBody body = new AccountRegisterBody();
         body.email = "emailExistsTest@test.com";
-        body.fullName = "Test User";
+        body.full_name = "Test User";
         body.password = "password";
-        body.confirmPassword = "password";
+        body.confirm_password = "password";
 
         User savedUser = accountService.saveNewStudent(body);
         try {
@@ -147,16 +147,16 @@ public class AccountServiceTests {
         
         AccountRegisterBody body = new AccountRegisterBody();
         body.email = "getByEmailTest@test.com";
-        body.fullName = "Test User";
+        body.full_name = "Test User";
         body.password = "password";
-        body.confirmPassword = "password";
+        body.confirm_password = "password";
 
         User savedUser = accountService.saveNewStudent(body);
         try {
             User retrievedUser = accountService.getUserByEmail(body.email).orElse(null);
             assert(retrievedUser != null);
             assert(retrievedUser.getEmail().equals(body.email));
-            assert(retrievedUser.getFullName().equals(body.fullName));
+            assert(retrievedUser.getFullName().equals(body.full_name));
         }
         finally {
             accountService.deleteUser(savedUser);
@@ -169,9 +169,9 @@ public class AccountServiceTests {
         
         AccountRegisterBody body = new AccountRegisterBody();
         body.email = "getIfCorrectPasswordTest@test.com";
-        body.fullName = "Test User";
+        body.full_name = "Test User";
         body.password = "superSecurePassword";
-        body.confirmPassword = "superSecurePassword";
+        body.confirm_password = "superSecurePassword";
 
         User savedUser = accountService.saveNewStudent(body);
         try {
@@ -182,7 +182,7 @@ public class AccountServiceTests {
             User retrievedUser = accountService.getUserIfCorrectPassword(loginBodyWork);
             assert(retrievedUser != null);
             assert(retrievedUser.getEmail().equals(body.email));
-            assert(retrievedUser.getFullName().equals(body.fullName));
+            assert(retrievedUser.getFullName().equals(body.full_name));
 
             AccountLoginBody loginBodyFail = new AccountLoginBody(loginBodyWork);
             loginBodyFail.email = "d=====(￣▽￣*)b";
