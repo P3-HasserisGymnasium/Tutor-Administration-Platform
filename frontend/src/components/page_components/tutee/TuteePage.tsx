@@ -18,6 +18,8 @@ import EditPostDialog from "../dialogs/EditPostDialog";
 import { PostState, Subject } from "~/types/data_types";
 import { PostType } from "~/types/entity_types";
 import ViewPostsDialog from "../dialogs/ViewPostsDialog";
+import CreateCollaborationDialog from "../dialogs/CreateCollaborationDialog";
+
 const post: PostType = {
   id: 1,
   title: "hjælp mig",
@@ -35,12 +37,16 @@ export default function TuteePage() {
   const [showCollabDialog, setShowCollabDialog] = useState(false);
   const [showPostDialog, setShowPostDialog] = useState(false);
   const [showEditPostDialog, setShowEditPostDialog] = useState(false);
+  const [showCreateCollabDialog, setshowCreateCollabDialog] = useState(false);
   const { userState } = useAuth();
   const { data: posts, isLoading: postsLoading, isError: postsError } = useGetTuteePosts();
   const { data: collaborations, isLoading: collabLoading, isError: collabError } = useGetCollaborationsWithTutee(userState?.id || null);
 
   return (
     <ThemeProvider theme={theme}>
+      <CreateCollaborationDialog open={showCreateCollabDialog} setOpen={setshowCreateCollabDialog}
+      />
+
       <ViewCollaborationsDialog open={showCollabDialog} setOpen={setShowCollabDialog} collaborations={collaborations} isLoading={collabLoading} />
       <EditPostDialog open={showEditPostDialog} setOpen={setShowEditPostDialog} post={post} />
       <ViewPostsDialog open={showPostDialog} setOpen={setShowPostDialog} posts={posts} isLoading={postsLoading} />
