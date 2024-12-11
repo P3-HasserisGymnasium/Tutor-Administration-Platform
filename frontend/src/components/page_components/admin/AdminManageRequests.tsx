@@ -1,7 +1,9 @@
 
 
 export default function AdminRequests() {
-    return (<></>
+    return (
+        <Box>
 
+        </Box>
     );
 }
