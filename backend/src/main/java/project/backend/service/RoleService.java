@@ -75,7 +75,32 @@ public class RoleService {
             response.full_name = student.getFullName();
             response.languages = student.getLanguages();
             response.year_group = student.getYearGroup();
-            response.time_availability = student.getTutor().getFreeTimeSlots();
+
+            List<TimeSlotCreateBody> timeSlotRepsonses = new LinkedList<>();
+            for (TutorTimeSlot timeSlot : student.getTutor().getFreeTimeSlots()) {
+                TimeSlotCreateBody timeSlotResponse = new TimeSlotCreateBody();
+
+                WeekDayEnum weekDay = timeSlot.getWeekDay();
+                for (WeekDayEnum day : WeekDayEnum.values()) {
+                    for (TimeSlotCreateBody timeSlotCreateBody : timeSlotRepsonses) {
+                        if (timeSlotCreateBody.day == day) {
+                            timeSlotResponse = timeSlotCreateBody;
+                            break;
+                        }
+                    }
+                }
+
+                timeSlotResponse.day = weekDay;
+
+                TimeCreateBody timeCreateBody = new TimeCreateBody();
+                timeCreateBody.start_time = timeSlot.getStartTime();
+                timeCreateBody.end_time = timeSlot.getEndTime();
+                timeSlotResponse.time.add(timeCreateBody);
+
+                timeSlotRepsonses.add(timeSlotResponse);
+            }
+            response.time_availability = timeSlotRepsonses;
+
             response.tutoring_subjects = student.getTutor().getTutoringSubjects();
             response.description = student.getTutor().getProfileDescription();
 
