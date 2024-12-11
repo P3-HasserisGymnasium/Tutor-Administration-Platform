@@ -25,7 +25,6 @@ import project.backend.service.MeetingService;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.meeting_controller.MeetingBody;
-import project.backend.utilities.HelperFunctions;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -34,11 +33,9 @@ public class MeetingController {
 
     final MeetingService meetingService;
     final CollaborationService collaborationService;
-    private final HelperFunctions helperFunctions;
 
-    public MeetingController(MeetingService meetingService, HelperFunctions helperFunctions, CollaborationService collaborationService) {
+    public MeetingController(MeetingService meetingService, CollaborationService collaborationService) {
         this.meetingService = meetingService;
-        this.helperFunctions = helperFunctions;
         this.collaborationService = collaborationService;
     }
 
@@ -73,6 +70,26 @@ public class MeetingController {
         return ResponseEntity.status(HttpStatus.OK).body(joinedMeetings);
     }
 
+    @GetMapping("/self/all")
+    public ResponseEntity<?> getAllMeetings(HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        ArrayList<Meeting> tutorMeetings = new ArrayList<>();
+        ArrayList<Meeting> tuteeMeetings = new ArrayList<>();
+        if (authenticatedUser.isTutor()) {
+            tutorMeetings = (ArrayList<Meeting>) meetingService.getMeetingsByTutorId(authenticatedUser.getTutorId());
+        }
+        if (authenticatedUser.isTutee()) {
+            tuteeMeetings = (ArrayList<Meeting>) meetingService.getMeetingsByTuteeId(authenticatedUser.getTuteeId());
+        }
+
+        ArrayList<Meeting> meetings = new ArrayList<>();
+        meetings.addAll(tutorMeetings);
+        meetings.addAll(tuteeMeetings);
+
+        return ResponseEntity.status(HttpStatus.OK).body(meetings);
+    }
+
     @GetMapping("/tutee")
     public ResponseEntity<?> getTuteeMeetings(HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
@@ -100,28 +117,24 @@ public class MeetingController {
     }
 
     @PostMapping("/request")
-    public ResponseEntity<String> requestMeeting(@RequestBody MeetingBody meeting, HttpServletRequest request) {
+    public ResponseEntity<String> requestMeeting(@RequestBody MeetingBody body, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        System.out.println(meeting);
+        System.out.println(body);
         System.out.println("ussr" + authenticatedUser);
 
-        Collaboration collaboration = collaborationService.getCollaborationById(meeting.id);
+        Collaboration collaboration = collaborationService.getCollaborationById(body.collaboration_id);
 
         if (collaboration == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Collaboration not found");
         }
 
-        if (!helperFunctions.isUserPermitted(authenticatedUser, collaboration.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to create this meeting");
-        }
-
         Meeting newMeeting = new Meeting();
         newMeeting.setCollaboration(collaboration);
-        newMeeting.setMeetingState(meeting.state);
-        newMeeting.setStartTimestamp(meeting.start_date);
-        newMeeting.setEndTimestamp(meeting.end_date);
-        newMeeting.setMeetingDescription(meeting.meeting_description);
+        newMeeting.setMeetingState(body.state);
+        newMeeting.setStartTimestamp(body.start_date);
+        newMeeting.setEndTimestamp(body.end_date);
+        newMeeting.setMeetingDescription(body.meeting_description);
 
         String message = "Meeting request sent";
 
@@ -174,11 +187,8 @@ public class MeetingController {
     @PutMapping("/cancel/{id}")
     public ResponseEntity<?> cancelMeeting(@PathVariable Long id, HttpServletRequest request) {
 
-        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        //AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        if (!helperFunctions.isUserPermitted(authenticatedUser, id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to cancel this meeting");
-        }
         meetingService.cancelMeeting(id);
 
         return ResponseEntity.status(HttpStatus.OK).body("Meeting cancelled");

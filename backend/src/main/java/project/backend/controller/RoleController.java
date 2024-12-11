@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
-import project.backend.controller_bodies.AuthUser;
-import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
 import project.backend.controller_bodies.role_controller.TutorProfileResponse;
 import project.backend.model.RoleEnum;
@@ -28,9 +26,8 @@ public class RoleController {
 
     @Autowired
     final RoleService roleService;
-    private final HelperFunctions helperFunctions;
 
-    public RoleController(RoleService roleService, HelperFunctions helperFunctions) {
+    public RoleController(RoleService roleService) {
         this.roleService = roleService;
         this.helperFunctions = helperFunctions;
     }

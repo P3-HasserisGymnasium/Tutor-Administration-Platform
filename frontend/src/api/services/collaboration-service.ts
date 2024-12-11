@@ -3,6 +3,8 @@ import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
 import { PostType, CollaborationType, Feedback, TerminationType } from "~/types/entity_types";
+import { Role } from "~/types/data_types";
+import { z } from "zod";
 
 export const useCollaborationService = () => {
 	//Admin requests a collaboration
@@ -20,10 +22,11 @@ export const useCollaborationService = () => {
 		},
 	});
 
+	type RoleType = z.infer<typeof Role>;
 	const acceptCollaboration = useMutation({
 		mutationKey: ["acceptCollaboration"],
-		mutationFn: async (id: number) => {
-			const { data } = await apiClient.post<number>("/api/collaboration", id);
+		mutationFn: async ({ id, role }: { id: number, role: RoleType }) => {
+			const { data } = await apiClient.post(`/api/collaboration/accept/${id}/${role}`);
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -36,15 +39,15 @@ export const useCollaborationService = () => {
 
 	const rejectCollaboration = useMutation({
 		mutationKey: ["rejectCollaboration"],
-		mutationFn: async (id: number) => {
-			const { data } = await apiClient.post<number>("/api/collaboration", id);
+		mutationFn: async ({ id, role }: { id: number, role: RoleType }) => {
+			const { data } = await apiClient.post(`/api/collaboration/reject/${id}/${role}`);
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
 			toast.error(e?.response?.data?.detail);
 		},
 		onSuccess: () => {
-			toast.success("Collaboration rejected");
+			toast.info("Collaboration rejected");
 		},
 	});
 
@@ -127,9 +130,8 @@ export const useCollaborationService = () => {
 	const useGetCollaborationsWithTutee = (id: number | null) => {
 		return useQuery({
 			queryKey: ["getCollaborationsWithTutee", id],
-			queryFn: async ({ queryKey }) => {
-				const id = queryKey[1];
-				const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/with_tutee/${id}`);
+			queryFn: async () => {
+				const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/as_tutee`);
 				return data;
 			},
 			refetchOnWindowFocus: false,
@@ -141,15 +143,26 @@ export const useCollaborationService = () => {
 	const useGetCollaborationsWithTutor = (id: number | null) => {
 		return useQuery({
 			queryKey: ["getCollaborationsWithTutee", id],
-			queryFn: async ({ queryKey }) => {
-				const id = queryKey[1];
-				const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/with_tutor/${id}`);
+			queryFn: async () => {
+				const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/as_tutor`);
 				return data;
 			},
 			refetchOnWindowFocus: false,
 			placeholderData: [],
 			enabled: !!id,
 		});
+	};
+
+	const useGetCollaborationById = (id: number | null) => {
+		return useQuery({
+			queryKey: ["getCollaborationById", id],
+			queryFn: async () => {
+				const { data } = await apiClient.get<CollaborationType>(`/api/collaboration/${id}`);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			enabled: !!id,
+		})
 	};
 
 	return {
@@ -162,6 +175,7 @@ export const useCollaborationService = () => {
 		requestCollaborationSuggestion,
 		requestCollaboration,
 		useTerminateCollaboration,
+		useGetCollaborationById,
 		submitFeedback,
 	};
 };

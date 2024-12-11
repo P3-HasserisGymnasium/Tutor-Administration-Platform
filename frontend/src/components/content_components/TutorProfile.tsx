@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useAuth } from "~/api/authentication/useAuth";
-import { useRoleService } from "~/api/services/roleService";
+import { useRoleService } from "~/api/services/role-service";
 import InitialsAvatar from "./InitialsAvatar";
 import { useTheme } from "@mui/system";
 import { Theme } from "@mui/material/styles";
