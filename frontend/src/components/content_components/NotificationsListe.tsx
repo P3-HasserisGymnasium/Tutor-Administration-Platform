@@ -1,12 +1,13 @@
 //import { useNotificationService } from "~/api/services/notification-service";
-import { Box, Typography, Paper, Divider } from "@mui/material";
+import { Box, Typography, Paper, Divider, CircularProgress } from "@mui/material";
 
 //import { NotificationState } from "~/types/data_types";
 //import { useAuth } from "~/api/authentication/useAuth";
 import { useTheme, Theme } from "@mui/material/styles";
-import { NotificationResponseType } from "~/types/entity_types";
+import { useAuth } from "~/api/authentication/useAuth";
+import { useNotificationService } from "~/api/services/notification-service";
 import { generateNotificationMessage } from "~/utilities/helperFunctions";
-
+/* 
 const mockNotification: NotificationResponseType[] = [
   {
     id: 1,
@@ -188,22 +189,17 @@ const mockNotification: NotificationResponseType[] = [
     context_type: "Meeting",
     state: "Read",
   },
-];
+]; */
 
 export default function NotificationsList() {
   const theme = useTheme<Theme>();
-  //const { userState } = useAuth();
+  const { useNotifications } = useNotificationService();
+  const { userState } = useAuth();
 
-  /*const { data: Notifications, isLoading, error } = useNotificationService().useGetNotifications(userState?.id || null);
-	
+  const { data: notifications, isLoading, isError } = useNotifications()(userState.id);
 
-	const userNotifications = Notifications?.filter((Notifications) => {
-		return Notifications.state === NotificationState.Enum.Unread;
-	});
-
-if (isLoading) return <CircularProgress />;
-if (error) return <Typography color="error">Failed to load Notifications.</Typography>;
-if (userNotifications?.length === 0) return <Typography>No New Notifications.</Typography>;*/
+  if (isLoading) return <CircularProgress />;
+  if (isError || !notifications) return <Typography color="error">Failed to load Notifications.</Typography>;
 
   return (
     <Box
@@ -218,7 +214,7 @@ if (userNotifications?.length === 0) return <Typography>No New Notifications.</T
       }}
     >
       <Paper sx={{ width: "100%", height: "100%" }}>
-        {mockNotification.map((notification) => (
+        {notifications.map((notification) => (
           <Box
             key={notification.id}
             sx={{
