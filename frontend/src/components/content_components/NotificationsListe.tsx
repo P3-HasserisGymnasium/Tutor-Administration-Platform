@@ -2,7 +2,7 @@
 import { Box, Typography, Paper, CircularProgress, Divider } from "@mui/material";
 
 //import { NotificationState } from "~/types/data_types";
-import { useAuth } from "~/api/authentication/useAuth";
+//import { useAuth } from "~/api/authentication/useAuth";
 import { useTheme, Theme } from "@mui/material/styles";
 import { NotificationType } from "~/types/entity_types";
 
@@ -40,7 +40,7 @@ const mockNotification: NotificationType[] = [
 
 export default function NotificationsList() {
 	const theme = useTheme<Theme>();
-    const { userState } = useAuth();
+    //const { userState } = useAuth();
 
 	/*const { data: Notifications, isLoading, error } = useNotificationService().useGetNotifications(userState?.id || null);
 	
