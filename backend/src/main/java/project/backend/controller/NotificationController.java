@@ -80,6 +80,27 @@ public class NotificationController {
         return ResponseEntity.status(HttpStatus.OK).body(notificationResponseBodies);
     }
 
+    @GetMapping("/sentToBoth/{userId}")
+    public ResponseEntity<?> getNotificationsSentToBothByUserId(@PathVariable Long userId, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (userId != authenticatedUser.getUserId() && !authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to view notifications for this user");
+        }
+
+        List<Notification> notifications = notificationService.getAllNotificationsSentToUserId(userId);
+        List<NotificationResponseBody> notificationResponseBodies = new ArrayList<>();
+        for (Notification notification : notifications) {
+            notificationResponseBodies.add(createNotificationResponseBody(notification));
+        }
+
+        if (notificationResponseBodies.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(notificationResponseBodies);
+    }
+
     @GetMapping("/sentToTutee/{id}")
     public ResponseEntity<?> getNotificationsSentToTuteeByUserId(@PathVariable Long id, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);

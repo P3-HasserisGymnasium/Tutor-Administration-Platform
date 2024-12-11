@@ -6,7 +6,6 @@ import TutorPage from "components/page_components/tutor/TutorPage";
 // import TuteePage from "components/page_components/tutee/TuteePage";
 import CreatePostPage from "components/page_components/tutee/CreatePostPage";
 import TutorListPage from "components/page_components/tutee/TutorListPage";
-import TuteeNotificationsPage from "components/page_components/tutee/TuteeNotificationsPage";
 import TuteeProfilePage from "./components/page_components/tutee/TuteeProfilePage";
 import TutorProfilePage from "./components/page_components/tutor/TutorProfilePage";
 import RequestAdminPage from "components/page_components/tutee/RequestAdminPage";
@@ -44,7 +43,7 @@ export default function AuthenticatedApp() {
         <Routes>
           {/* Common routes */}
           <Route path="/login" element={<HomePage />} />
-          <Route path="/notifications" element={<TuteeNotificationsPage />} />
+          <Route path="/notifications" element={<NotificationsList />} />
           <Route
             path="/"
             element={

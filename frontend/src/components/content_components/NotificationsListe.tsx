@@ -7,6 +7,10 @@ import { useTheme, Theme } from "@mui/material/styles";
 import { useAuth } from "~/api/authentication/useAuth";
 import { useNotificationService } from "~/api/services/notification-service";
 import { generateNotificationMessage } from "~/utilities/helperFunctions";
+import { useState } from "react";
+import AcceptInvitationFromTutorDialog from "../page_components/dialogs/AcceptInvitationFromTutorDialog";
+import AcceptInvitationFromTuteeDialog from "../page_components/dialogs/AcceptInvitationFromTuteeDialog";
+import { NotificationResponseType } from "~/types/entity_types";
 /* 
 const mockNotification: NotificationResponseType[] = [
   {
@@ -195,8 +199,27 @@ export default function NotificationsList() {
   const theme = useTheme<Theme>();
   const { useNotifications } = useNotificationService();
   const { userState } = useAuth();
+  const [isAcceptDialogOpen, setIsAcceptDialogOpen] = useState(false);
+  const [collaboration_id, setCollaboration_id] = useState<number | null>(null);
+  const [tutor_id, setTutor_id] = useState<number | null>(null);
+  const [tutee_id, setTutee_id] = useState<number | null>(null);
 
   const { data: notifications, isLoading, isError } = useNotifications()(userState.id);
+
+  const handleNotificationClick = (notification: NotificationResponseType) => {
+    if (notification.context_type === "Collaboration" && notification.state === "Unread" && notification.sender_type === "Tutor") {
+      setCollaboration_id(notification.context_id);
+      setTutor_id(notification.sender_id);
+      setIsAcceptDialogOpen(true);
+      return;
+    }
+    if (notification.context_type === "Collaboration" && notification.state === "Unread" && notification.sender_type === "Tutee") {
+      setCollaboration_id(notification.context_id);
+      setTutee_id(notification.sender_id);
+      setIsAcceptDialogOpen(true);
+      return;
+    }
+  };
 
   if (isLoading) return <CircularProgress />;
   if (isError || !notifications) return <Typography color="error">Failed to load Notifications.</Typography>;
@@ -213,9 +236,22 @@ export default function NotificationsList() {
         margin: "auto",
       }}
     >
+      <AcceptInvitationFromTutorDialog
+        open={isAcceptDialogOpen}
+        setOpen={setIsAcceptDialogOpen}
+        collaboration_id={collaboration_id}
+        tutor_id={tutor_id}
+      />
+      <AcceptInvitationFromTuteeDialog
+        open={isAcceptDialogOpen}
+        setOpen={setIsAcceptDialogOpen}
+        collaboration_id={collaboration_id}
+        tutee_id={tutee_id}
+      />
       <Paper sx={{ width: "100%", height: "100%" }}>
         {notifications.map((notification) => (
           <Box
+            onClick={() => handleNotificationClick(notification)}
             key={notification.id}
             sx={{
               display: "flex",

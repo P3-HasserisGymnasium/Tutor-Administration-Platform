@@ -47,7 +47,6 @@ export default function TuteePage() {
   return (
     <ThemeProvider theme={theme}>
       <CreateCollaborationDialog open={showCreateCollabDialog} setOpen={setshowCreateCollabDialog} />
-
       <ViewCollaborationsDialog open={showCollabDialog} setOpen={setShowCollabDialog} collaborations={collaborations} isLoading={collabLoading} />
       <EditPostDialog open={showEditPostDialog} setOpen={setShowEditPostDialog} post={post} />
       <ViewPostsDialog open={showPostDialog} setOpen={setShowPostDialog} posts={posts} isLoading={postsLoading} />

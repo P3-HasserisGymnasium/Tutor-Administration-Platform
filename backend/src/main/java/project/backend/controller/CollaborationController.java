@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -106,20 +107,37 @@ public class CollaborationController {
         return ResponseEntity.status(HttpStatus.OK).body("Collaboration suggestion submitted");
         }
 
-    @PostMapping("/accept/{collaborationId}")
-    public ResponseEntity<?> acceptCollaboration(@PathVariable Long collaborationId, @RequestBody RoleEnum role, HttpServletRequest request) {
+    @PostMapping("/accept/{collaborationId}/{role}")
+    public ResponseEntity<?> acceptCollaboration(@PathVariable Long collaborationId, @PathVariable RoleEnum role, HttpServletRequest request) {
         //AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        collaborationService.acceptCollaboration(collaborationId, role);
-        return ResponseEntity.status(HttpStatus.OK).body("Collaboration accepted");
+        if (collaborationService.getCollaborationById(collaborationId) == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Collaboration does not exist");
+        }
+
+        try {
+            collaborationService.acceptCollaboration(collaborationId, role);
+            return ResponseEntity.status(HttpStatus.OK).body("Collaboration accepted");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
-    @PostMapping("reject/{collaborationId}")
-    public ResponseEntity<?> rejectCollaboration(@PathVariable Long collaborationId, @RequestBody RoleEnum role, HttpServletRequest request) {
+    @PostMapping("reject/{collaborationId}/{role}")
+    public ResponseEntity<?> rejectCollaboration(@PathVariable Long collaborationId, @PathVariable RoleEnum role, HttpServletRequest request) {
         //AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        collaborationService.rejectCollaboration(collaborationId, role);
-        return ResponseEntity.status(HttpStatus.OK).body("Collaboration rejected");
+        if (collaborationService.getCollaborationById(collaborationId) == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Collaboration does not exist");
+        }
+
+        try {
+            collaborationService.rejectCollaboration(collaborationId, role);
+            return ResponseEntity.status(HttpStatus.OK).body("Collaboration rejected");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
     }
 
     @PostMapping("/terminate/{collaborationId}")
