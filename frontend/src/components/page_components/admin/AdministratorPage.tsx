@@ -2,11 +2,11 @@ import { Box, ThemeProvider, Typography } from "@mui/material";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useRoleService } from "~/api/services/roleService";
 import ShortOnShortShortOnShortBoxLayout from "~/components/layout_components/ShortOnShortShortOnShortBoxLayout";
-import AdminOverview from "./AdminOverview";
 import AdminRequests from "./AdminManageRequests";
 import AdminManageTutees from "./AdminManageTutees";
-import AdminManageTutors from "./AdminManageTutors";
 import { useCurrentTheme } from "~/utilities/helperFunctions";
+import AdminOverview from "./AdminOverview";
+import AdminManageTutors from "./AdminManageTutors";
 
 export default function AdministratorPage() {
 	const theme = useCurrentTheme();

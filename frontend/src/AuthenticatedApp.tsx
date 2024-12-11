@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { Box } from "@mui/material";
 import HomePage from "components/page_components/HomePage";
 import TutorPage from "components/page_components/tutor/TutorPage";
-// import TuteePage from "components/page_components/tutee/TuteePage";
 import CreatePostPage from "components/page_components/tutee/CreatePostPage";
 import TutorListPage from "components/page_components/tutee/TutorListPage";
 import TuteeNotificationsPage from "components/page_components/tutee/TuteeNotificationsPage";
@@ -18,11 +17,10 @@ import { Role } from "./types/data_types";
 import NotFound from "./api/authentication/NotFound";
 import Forbidden from "./api/authentication/Forbidden";
 import { useAuth } from "./api/authentication/useAuth";
-//import AdministratorPage from "./components/page_components/dialogs/AdministratorPage";
 import CollaborationPage from "./components/page_components/CollaborationPage";
 import TuteePage from "./components/page_components/tutee/TuteePage";
 import NotificationsList from "./components/content_components/NotificationsListe";
-import AdministratorPage from "./components/page_components/dialogs/AdministratorPage";
+import AdministratorPage from "./components/page_components/admin/AdministratorPage";
 
 export default function AuthenticatedApp() {
 	const { isMobile, hasScrollbar } = useBreakpoints();

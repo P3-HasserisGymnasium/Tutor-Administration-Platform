@@ -17,15 +17,13 @@ export default function AdminManageTutors({ tutors, isLoading }: AdminOverviewPr
 
     if (isLoading) return <CircularProgress />
     return (
-        <Box sx={{ display: "flow", height: "100%", width: "100%" }}>
-            <Box sx={{ height: "100%", width: "100%" }}>
+        <Box sx={{ display: "flow", position: "relative", height: "calc(100% - 5em)", width: "100%" }}>
+            <Box sx={{ height: "90%", width: "100%", paddingLeft: 3, paddingTop: 2 }}>
                 {tutors?.map((tutor) => {
                     return <Typography>{tutor.full_name}</Typography>
                 })}
             </Box >
-            <Box sx={{ height: "100%", width: "100%", alignItems: "flex-end", justifyItems: "flex-end" }}>
-                <Button sx={{ background: "black" }}>View All Tutors</Button>
-            </Box>
+            <Button sx={{ background: "black", position: "absolute", bottom: "5px", right: "15px" }}>View All Tutors</Button>
         </Box>
     );
 }
