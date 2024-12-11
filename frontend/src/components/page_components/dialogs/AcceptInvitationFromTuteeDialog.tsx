@@ -23,7 +23,7 @@ export default function AcceptInvitationFromTuteeDialog({ open, setOpen, collabo
     if (collaboration.id) {
     
       acceptCollaboration.mutate(
-        { id: collaboration.id, role: Role.Enum.Tutee },
+        { id: collaboration.id, role: Role.Enum.Tutor},
         {
           onSuccess: () => {
             setOpen(false);
@@ -42,7 +42,7 @@ export default function AcceptInvitationFromTuteeDialog({ open, setOpen, collabo
     if (collaboration.id) {
     
       rejectCollaboration.mutate(
-        { id: collaboration.id, role: Role.Enum.Tutee },
+        { id: collaboration.id, role: Role.Enum.Tutor },
         {
           onSuccess: () => {
             setOpen(false);
