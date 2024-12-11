@@ -18,6 +18,9 @@ import EditPostDialog from "../dialogs/EditPostDialog";
 import { PostState, Subject } from "~/types/data_types";
 import { PostType } from "~/types/entity_types";
 import ViewPostsDialog from "../dialogs/ViewPostsDialog";
+import { useNavigate } from "react-router-dom";
+
+
 const post: PostType = {
   id: 1,
   title: "hjælp mig",
@@ -27,6 +30,7 @@ const post: PostType = {
   state: PostState.Enum.VISIBLE,
 };
 export default function TuteePage() {
+  const navigate = useNavigate();
   const { useGetTuteePosts } = usePostService();
   const { useGetCollaborationsWithTutee } = useCollaborationService();
   const theme = useCurrentTheme();
@@ -160,7 +164,7 @@ export default function TuteePage() {
             <CustomButton onClick={() => setShowPostDialog(true)} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
               View all
             </CustomButton>
-            <CustomButton variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+            <CustomButton onClick={()=> navigate("/tutee/create-post")} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
               Create a post
             </CustomButton>
           </Box>

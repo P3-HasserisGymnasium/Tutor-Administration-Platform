@@ -52,14 +52,14 @@ export default function MiniPost({ postData }: MiniPostProp) {
   );
 }
 
-function getDuration(duration: number[]|undefined) {
-  if (duration === undefined) {
+function getDuration(duration: number[] | undefined | null) {
+  if (duration === undefined || duration === null) {
     return "Duration not specified";
   }
   else if (duration[0] === duration[1]) {
     return `Duration: ${duration[0]} months`;
   }
-  else {
+  else{
     return `Duration: ${duration[0]}-${duration[1]} months`;
   }
 }

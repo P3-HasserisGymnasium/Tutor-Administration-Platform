@@ -12,13 +12,15 @@ import { usePostService } from "~/api/services/post-service";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useAuth } from "~/api/authentication/useAuth";
 import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
+import { useNavigate } from "react-router-dom";
 export default function TutorPage() {
+  const navigate = useNavigate();
   const theme = useCurrentTheme();
   const { isMobile } = useBreakpoints();
   const [view, setView] = useState<"list" | "calender">("list");
   const [showCollabDialog, setShowCollabDialog] = useState(false);
   const { userState } = useAuth();
-  const { data: posts, isLoading: postsLoading, isError: postsError } = usePostService().useGetPosts();
+  const { data: posts, isLoading: postsLoading, isError: postsError } = usePostService().useGetPosts({duration:[0,12], subjects: userState?.tutoring_subjects || []});
   const {
     data: collaborations,
     isLoading: collabLoading,
@@ -141,7 +143,7 @@ export default function TutorPage() {
             <MiniPostList posts={posts} isLoading={postsLoading} isError={postsError} />
           </Box>
           <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
-            <CustomButton onClick={() => setShowCollabDialog(true)} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+            <CustomButton onClick={() => navigate("posts-list")} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
               View all
             </CustomButton>
           </Box>

@@ -1,19 +1,27 @@
 import { Box, Stack, Typography } from "@mui/material";
 import PostCard from "./PostCard";
-import { PostType } from "~/types/entity_types";
-import { PostState, Subject } from "~/types/data_types";
+import { SubjectType } from "~/types/data_types";
+import { usePostService } from "~/api/services/post-service";
+import { CircularProgress } from "@mui/material";
 
-const mockPost: PostType = {
-  id: 1,
-  title: "Sample Post",
-  description: "This is a sample post description.",
-  subject: Subject.Enum.Math,
-  duration: [2, 4],
-  state: PostState.Enum.VISIBLE,
-};
+export default function PostList({filters}:{filters:{duration: number[]; subjects: SubjectType[];}}) {
+  const {data: posts, isLoading, isError} = usePostService().useGetPosts(filters);
+  if (isLoading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", marginTop: 4, width: "100%" }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
-export default function PostList() {
-  return (
+  if (isError) {
+    return (
+      <Typography variant="h6" color="red">
+        Error fetching posts. Please refresh the page.
+      </Typography>
+    );
+  }
+  else return(
     <Box
       sx={{
         display: "flex",
@@ -24,6 +32,8 @@ export default function PostList() {
     >
       <Typography variant="h2">Filtered Posts</Typography>
 
+      {posts?.length === 0 && <Typography variant="h2">No posts found</Typography>}
+
       <Stack
         spacing={1}
         sx={{
@@ -31,8 +41,8 @@ export default function PostList() {
           marginTop: "0.5em",
         }}
       >
-        <PostCard data-testid="postcard1" key={1} post={mockPost} />
+        {posts?.map((post) => {return <PostCard key={post.id} post={post} />})}
       </Stack>
     </Box>
-  );
+  )
 }

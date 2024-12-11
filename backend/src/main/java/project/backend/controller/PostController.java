@@ -1,8 +1,10 @@
 package project.backend.controller;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 
@@ -23,6 +26,7 @@ import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.model.Post;
 import project.backend.model.PostState;
 import project.backend.model.Student;
+import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.service.PostService;
 import project.backend.service.RoleService;
@@ -41,12 +45,37 @@ public class PostController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getPosts(HttpServletRequest request) {
+    public ResponseEntity<?> getPosts(HttpServletRequest request,  
+        @RequestParam(required = false) String subjects,
+        @RequestParam(required = false) String duration) {
+
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!authenticatedUser.isTutor() && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to view these posts");
         }
+
+        if(subjects != null && !subjects.isEmpty() && duration != null && !duration.isEmpty()){
+            // Parse subjects
+            List<SubjectEnum> subjectList = null;
+            subjectList = Arrays.stream(subjects.split(","))
+                            .map(SubjectEnum::valueOf) // Convert to SubjectEnum
+                            .collect(Collectors.toList());
+        
+            // Parse durtion
+            Integer minDuration = null, maxDuration = null;
+            String[] durationParts = duration.split(",");
+            if (durationParts.length == 2) {
+                try {
+                    minDuration = Integer.parseInt(durationParts[0]);
+                    maxDuration = Integer.parseInt(durationParts[1]);
+                } catch (NumberFormatException e) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid duration format");
+                }
+            }
+            List<Post> posts = postService.getPostsByFilters(minDuration, maxDuration, subjectList, authenticatedUser.getTuteeId());
+            return ResponseEntity.status(HttpStatus.OK).body(posts);
+        }                       
 
         List<Post> posts = postService.getAllPosts();
 
@@ -84,12 +113,11 @@ public class PostController {
         System.out.println("tuteeId" + authenticatedUser.getTuteeId());
 
         Post[] posts = postService.getPostsByTuteeId(authenticatedUser.getTuteeId());
-
-        System.out.println("posts" + posts);
+        System.out.println("postsSMIL1" + posts);
         if (posts == null) {
             return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
         }
-
+        System.out.println("postsSMIL2" + posts);
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
