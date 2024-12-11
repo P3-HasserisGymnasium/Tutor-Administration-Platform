@@ -5,7 +5,6 @@ import HomePage from "components/page_components/HomePage";
 import TutorPage from "components/page_components/tutor/TutorPage";
 import CreatePostPage from "components/page_components/tutee/CreatePostPage";
 import TutorListPage from "components/page_components/tutee/TutorListPage";
-import TuteeNotificationsPage from "components/page_components/tutee/TuteeNotificationsPage";
 import TuteeProfilePage from "./components/page_components/tutee/TuteeProfilePage";
 import TutorProfilePage from "./components/page_components/tutor/TutorProfilePage";
 import RequestAdminPage from "components/page_components/tutee/RequestAdminPage";
@@ -52,24 +51,6 @@ export default function AuthenticatedApp() {
 							(!isTutee && isTutor && <Navigate to="/tutor" />)
 						}
 					/>
-					<Route path="/login" element={<HomePage />} />
-					{/* Tutee routes */}
-					{isTutee ? (
-						<>
-							<Route path="/tutor/*" element={<Forbidden />} />
-							<Route path="/tutee/*">
-								<Route path="" element={<TuteePage />} />
-								<Route path="profile" element={<TuteeProfilePage />} />
-								<Route path="notifications" element={<TuteeNotificationsPage />} />
-								<Route path="create-post" element={<CreatePostPage />} />
-								<Route path="request-admin" element={<RequestAdminPage />} />
-								<Route path="tutor-list" element={<TutorListPage />} />
-								<Route path="tutor-application" element={<TutorApplicationPage />} />
-								<Route path="collaboration/*" element={<CollaborationPage />} />
-							</Route>
-							<Route path="*" element={<NotFound />} />
-						</>
-					) : null}
 
 					{/* Tutee routes */}
 					{isTutee ? (

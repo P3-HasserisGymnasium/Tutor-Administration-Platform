@@ -28,7 +28,7 @@ export default function AdministratorPage() {
 					</Typography>
 					<AdminRequests />
 				</Box>
-				<Box sx={{ height: "100%", width: "100%" }}>
+				<Box sx={{ height: "100%", width: "95%" }}>
 					<Typography variant="h1" sx={{ paddingTop: 3, paddingLeft: 3 }}>
 						Manage tutees
 					</Typography>
