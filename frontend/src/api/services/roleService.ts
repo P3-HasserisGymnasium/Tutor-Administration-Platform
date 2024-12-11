@@ -6,15 +6,13 @@ import { TutorProfileType } from "~/types/entity_types";
 
 // tutee/tutor:role_id -> role:student_id -> student:id
 
-
-
 export const useRoleService = () => {
 
 	const assignTuteeRole = useMutation({
 		mutationKey: ["assignTuteeRole"],
 		mutationFn: async (studentId: number) => {
 			const { data } = await apiClient.post<number>(
-				"/api/role_service",
+				"/api/role",
 				studentId
 			);
 			return data;
@@ -31,7 +29,7 @@ export const useRoleService = () => {
 		mutationKey: ["removeRole"],
 		mutationFn: async (roleId: number) => {
 			const { data } = await apiClient.post<number>(
-				"/api/role_service",
+				"/api/role",
 				roleId
 			);
 			return data;
@@ -74,22 +72,33 @@ export const useRoleService = () => {
 		})
 	};
 
-	const getProfile = useQuery({
-		queryKey: ["getProfile"],
-		queryFn: async () => {
-			const { data } = await apiClient.get<TutorProfileType>(
-				`/api/role_service`
-			);
-			return data;
-		},
-		refetchOnWindowFocus: false,
-	});
+	const useGetTutorProfile = (id: number) => {
+		return useQuery({
+			queryKey: ["getProfile", id],
+			queryFn: async () => {
+				const { data } = await apiClient.get<TutorProfileType>(
+					`/api/role/${id}/Tutor`,
+				);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			placeholderData: {
+				contact_info: [],
+				description: "",
+				full_name: "",
+				time_availability: [],
+				tutoring_subjects: [],
+				year_group: "PRE_IB",
+				languages: []
+			},
+		})
+	};
 
 	const editProfile = useMutation({
 		mutationKey: ["editProfile"],
 		mutationFn: async (profile: TutorProfileType) => {
 			const { data } = await apiClient.post<TutorProfileType>(
-				"/api/role_service",
+				"/api/role",
 				profile
 			);
 			return data;
@@ -107,7 +116,7 @@ export const useRoleService = () => {
 		removeRole,
 		getTutees,
 		getTutors,
-		getProfile,
+		useGetTutorProfile,
 		editProfile
 	};
 };

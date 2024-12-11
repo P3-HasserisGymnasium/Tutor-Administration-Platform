@@ -1,6 +1,10 @@
 import { renderHook } from "@testing-library/react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { useRolePrefix } from "~/utilities/helperFunctions";
+
+const router = ({ children }: { children: React.ReactNode }) => (
+	<BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</BrowserRouter>
+);
 
 describe("useRolePrefix", () => {
 	it("/tutee/collaborations should return /tutee", () => {
@@ -10,7 +14,7 @@ describe("useRolePrefix", () => {
 			},
 			writable: true,
 		});
-		const { result } = renderHook(() => useRolePrefix(), { wrapper: Router });
+		const { result } = renderHook(() => useRolePrefix(), { wrapper: router });
 		expect(result.current).toBe("/tutee");
 	});
 
@@ -21,7 +25,7 @@ describe("useRolePrefix", () => {
 			},
 			writable: true,
 		});
-		const { result } = renderHook(() => useRolePrefix(), { wrapper: Router });
+		const { result } = renderHook(() => useRolePrefix(), { wrapper: router });
 		expect(result.current).toBe("/tutor");
 	});
 
@@ -32,7 +36,7 @@ describe("useRolePrefix", () => {
 			},
 			writable: true,
 		});
-		const { result } = renderHook(() => useRolePrefix(), { wrapper: Router });
+		const { result } = renderHook(() => useRolePrefix(), { wrapper: router });
 		expect(result.current).toBe("/tutee");
 	});
 
@@ -43,7 +47,7 @@ describe("useRolePrefix", () => {
 			},
 			writable: true,
 		});
-		const { result } = renderHook(() => useRolePrefix(), { wrapper: Router });
+		const { result } = renderHook(() => useRolePrefix(), { wrapper: router });
 		expect(result.current).toBe("/tutor");
 	});
 
@@ -54,7 +58,7 @@ describe("useRolePrefix", () => {
 			},
 			writable: true,
 		});
-		const { result } = renderHook(() => useRolePrefix(), { wrapper: Router });
+		const { result } = renderHook(() => useRolePrefix(), { wrapper: router });
 		expect(result.current).toBe("/tutee");
 	});
 
@@ -65,7 +69,7 @@ describe("useRolePrefix", () => {
 			},
 			writable: true,
 		});
-		const { result } = renderHook(() => useRolePrefix(), { wrapper: Router });
+		const { result } = renderHook(() => useRolePrefix(), { wrapper: router });
 		expect(result.current).toBe("/tutor");
 	});
 });

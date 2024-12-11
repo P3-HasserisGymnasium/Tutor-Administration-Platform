@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -14,6 +15,7 @@ import jakarta.persistence.OneToOne;
 public class Tutee extends Role {
 
     @OneToMany(mappedBy = "tutee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     List<Post> posts = new LinkedList<>();
 
     @OneToMany(mappedBy = "tutee", cascade = CascadeType.ALL, orphanRemoval = true)

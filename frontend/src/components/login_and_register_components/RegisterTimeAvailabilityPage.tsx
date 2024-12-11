@@ -1,7 +1,5 @@
 import { Box, Button, Theme, Typography, useTheme } from "@mui/material";
 import TutorlyLogoBlue from "src/assets/TutorlyLogoBlue.svg";
-import { useFormContext, useWatch } from "react-hook-form";
-import { AccountRegisterType } from "~/types/entity_types";
 import SetSubject from "../content_components/SetSubject";
 import SetTimeAvailability from "../content_components/SetTimeAvailability";
 
@@ -11,10 +9,6 @@ interface TutorTimeAvailabilityProps {
 
 const TutorTimeAvailabilityPage: React.FC<TutorTimeAvailabilityProps> = ({ setPage }) => {
   const theme = useTheme<Theme>();
-  const formMethods = useFormContext<AccountRegisterType>();
-  const { control } = formMethods;
-
-  useWatch({ control });
 
   return (
     <Box sx={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -39,7 +33,7 @@ const TutorTimeAvailabilityPage: React.FC<TutorTimeAvailabilityProps> = ({ setPa
             alignItems: "center",
           }}
         >
-          <SetSubject />
+          <SetSubject variant="create" />
 
           <SetTimeAvailability />
 

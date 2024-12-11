@@ -84,7 +84,7 @@ export const useCollaborationService = () => {
 		return useMutation({
 			mutationKey: ["terminateCollaboration"],
 			mutationFn: async ({ id, terminationReason }: TerminationType) => {
-				const { data } = await apiClient.post<string>("/api/collaboration/terminate/" + id, terminationReason);
+				const { data } = await apiClient.post<string>("/api/collaboration/terminate" + id, terminationReason);
 				return data;
 			},
 			onError: (e: AxiosError<{ detail: string }>) => {
@@ -138,9 +138,24 @@ export const useCollaborationService = () => {
 		});
 	};
 
+	const useGetCollaborationsWithTutor = (id: number | null) => {
+		return useQuery({
+			queryKey: ["getCollaborationsWithTutee", id],
+			queryFn: async ({ queryKey }) => {
+				const id = queryKey[1];
+				const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/with_tutor/${id}`);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			placeholderData: [],
+			enabled: !!id,
+		});
+	};
+
 	return {
 		useGetCollaborationsWithTutee,
 		getCollabortations,
+		useGetCollaborationsWithTutor,
 		submitCollaborationSuggestion,
 		acceptCollaboration,
 		rejectCollaboration,

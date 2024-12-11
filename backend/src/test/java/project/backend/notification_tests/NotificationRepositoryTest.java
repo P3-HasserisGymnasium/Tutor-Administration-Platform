@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import project.backend.model.EntityType;
 import project.backend.model.Notification;
@@ -11,6 +12,7 @@ import project.backend.model.NotificationState;
 import project.backend.repository.NotificationRepository;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class NotificationRepositoryTest {
 
     @Autowired

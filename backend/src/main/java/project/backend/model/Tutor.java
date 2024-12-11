@@ -28,13 +28,14 @@ public class Tutor extends Role {
     @Enumerated(EnumType.STRING)
     List<SubjectEnum> tutoringSubjects = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tutor")
+    @OneToMany(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Feedback> feedbacks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tutor")
+    @OneToMany(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     List<TutorTimeSlot> freeTimeSlots = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tutor")
+    @OneToMany(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     List<Collaboration> collaborations = new ArrayList<>();
 

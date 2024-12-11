@@ -25,9 +25,7 @@ export const useAccountService = () => {
 					toast.success("Your account has been created and you can log in as a tutee!");
 				}
 				if (data.tutor) {
-					toast.info(
-						"When an administrator accepts your tutor application, you will be granted access to the system as a tutor"
-					);
+					toast.info("When an administrator accepts your tutor application, you will be granted access to the system as a tutor");
 				}
 			},
 		});
@@ -43,10 +41,14 @@ export const useAccountService = () => {
 				toast.error("Failed to remove account: " + e?.response?.data);
 			},
 			onSuccess: () => {
-				toast.success("Bruger slettet");
 				deleteCookie("Bearer");
 				deleteCookie("user");
 				deleteCookie("isAuthenticated");
+				setTimeout(() => {
+					navigate("/login");
+					window.location.reload();
+					toast.info("Bruger slettet");
+				}, 1000);
 			},
 		});
 	};
