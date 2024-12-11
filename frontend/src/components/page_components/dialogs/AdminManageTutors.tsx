@@ -1,5 +1,4 @@
 import { CircularProgress, Typography, Box, Button } from "@mui/material";
-import CustomButton from "~/components/content_components/CustomButton";
 import { TutorProfileType } from "~/types/entity_types";
 
 type AdminOverviewProps = {

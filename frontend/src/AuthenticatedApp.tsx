@@ -22,6 +22,7 @@ import { useAuth } from "./api/authentication/useAuth";
 import CollaborationPage from "./components/page_components/CollaborationPage";
 import TuteePage from "./components/page_components/tutee/TuteePage";
 import NotificationsList from "./components/content_components/NotificationsListe";
+import AdministratorPage from "./components/page_components/dialogs/AdministratorPage";
 
 export default function AuthenticatedApp() {
 	const { isMobile, hasScrollbar } = useBreakpoints();
@@ -105,6 +106,8 @@ export default function AuthenticatedApp() {
 							</Route>
 						</>
 					) : null}
+
+					{isAdmin ? <Route path="/admin/*" element={<AdministratorPage />} /> : null}
 
 					{/* Catch-all for invalid roles */}
 					<Route path="*" element={<NotFound />} />
