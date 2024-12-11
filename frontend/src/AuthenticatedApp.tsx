@@ -29,7 +29,9 @@ export default function AuthenticatedApp() {
 
   const isTutee = userState.role?.includes(Role.Enum.Tutee);
   const isTutor = userState.role?.includes(Role.Enum.Tutor);
-  const isAdmin = userState.is_administrator;
+  console.log("isTutee", isTutee);
+  console.log("isTutor", isTutor);
+  console.log("userState", userState);
   const rolePrefix = useRolePrefix();
   return (
     <Box
@@ -47,12 +49,14 @@ export default function AuthenticatedApp() {
           <Route
             path="/"
             element={
-              (isAdmin && <Navigate to="/admin" />) ||
               (isTutee && isTutor && <HomePage />) ||
               (isTutee && !isTutor && <Navigate to="/tutee" />) ||
               (!isTutee && isTutor && <Navigate to="/tutor" />)
             }
           />
+
+          {/* Admin routes */}
+          {userState.is_administrator ? <Route path="/admin/*" element={<AdministratorPage />} /> : <Route path="/admin/*" element={<Forbidden />} />}
 
           {/* Tutee routes */}
           {isTutee ? (
@@ -87,8 +91,6 @@ export default function AuthenticatedApp() {
               </Route>
             </>
           ) : null}
-
-          {isAdmin ? <Route path="/admin/*" element={<AdministratorPage />} /> : null}
 
           {/* Catch-all for invalid roles */}
           <Route path="*" element={<NotFound />} />

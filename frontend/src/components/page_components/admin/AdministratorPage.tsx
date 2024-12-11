@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@mui/material";
 import { useCollaborationService } from "~/api/services/collaboration-service";
-import { useRoleService } from "~/api/services/roleService";
+import { useRoleService } from "~/api/services/role-service";
 import ShortOnShortShortOnShortBoxLayout from "~/components/layout_components/ShortOnShortShortOnShortBoxLayout";
 import AdminRequests from "./AdminManageRequests";
 import AdminManageTutees from "./AdminManageTutees";
@@ -11,8 +11,8 @@ import AdminManageTutors from "./AdminManageTutors";
 export default function AdministratorPage() {
   const theme = useCurrentTheme();
 
-  const { data: tutors, isLoading: isTutorsLoading } = useRoleService().getTutors();
-  const { data: tutees, isLoading: isTuteesLoading } = useRoleService().getTutees();
+  const { data: tutors, isLoading: isTutorsLoading } = useRoleService().useGetTutors();
+  const { data: tutees, isLoading: isTuteesLoading } = useRoleService().useGetTutees();
   const { data: collaborations } = useCollaborationService().getCollabortations();
 
   return (
