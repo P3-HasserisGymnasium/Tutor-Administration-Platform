@@ -14,7 +14,7 @@ import project.backend.model.YearGroupEnum;
 public class TutorProfileResponse {
     public String full_name;
     public String description;
-    public YearGroupEnum yearGroup;
+    public YearGroupEnum year_group;
     public List<SubjectEnum> tutoring_subjects;
     public List<StudentCommunicatioInfo> contact_info;
     public List<TimeSlotCreateBody> time_availability;

@@ -72,11 +72,11 @@ public class NotificationController {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
         Long userId = authenticatedUser.getUserId();
 
-        if (id != userId && !authenticatedUser.isAdministrator()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to view notifications sent to this user");
+        if (id != userId || !authenticatedUser.isTutee()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to view notifications for this tutee");
         }
 
-        List<Notification> notifications = notificationService.getAllNotificationsSentToTuteeId(userId);
+        List<Notification> notifications = notificationService.getAllNotificationsSentToTuteeId(authenticatedUser.getTuteeId());
         if (notifications == null || notifications.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
         }
@@ -86,14 +86,17 @@ public class NotificationController {
 
     @GetMapping("/sentToTutor/{id}")
     public ResponseEntity<?> getNotificationsSentToTutorByUserId(@PathVariable Long id, HttpServletRequest request) {
+        System.out.println("id" + id);
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
         Long userId = authenticatedUser.getUserId();
-
-        if (id != userId && !authenticatedUser.isAdministrator()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to view notifications sent to this user");
+        System.out.println("userId" + userId);
+        System.out.println("authenticatedUser" + authenticatedUser);
+        System.out.println("authenticatedUser.getTutorId()" + authenticatedUser.getTutorId());
+        if (id != userId || !authenticatedUser.isTutor()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to view notifications for this tutor");
         }
+        List<Notification> notifications = notificationService.getAllNotificationsSentToTutorId(authenticatedUser.getTutorId());
 
-        List<Notification> notifications = notificationService.getAllNotificationsSentToTutorId(userId);
         if (notifications == null || notifications.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
         }
@@ -105,7 +108,7 @@ public class NotificationController {
     public ResponseEntity<?> getNotificationsSentByUserId(@PathVariable Long id, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        if (id != authenticatedUser.getUserId() && !authenticatedUser.isAdministrator()) {
+        if (id != authenticatedUser.getUserId()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to view notifications sent by this user");
         }
 

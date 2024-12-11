@@ -83,16 +83,17 @@ public class AccountService {
     public User saveNewStudent(AccountRegisterBody body) {
 
         if (emailExists(body.email)) throw new EmailAlreadyExistsException("Email Already Exists");
-        if (!body.password.equals(body.confirmPassword)) throw new PasswordMismatchException("Passwords do not match");
+        if (!body.password.equals(body.confirm_password)) throw new PasswordMismatchException("Passwords do not match");
 
 
         Student newStudent = new Student();
         String passwordHash = PasswordUtility.encodePassword(body.password);
-        newStudent.setFullName(body.fullName);
+        newStudent.setFullName(body.full_name);
         newStudent.setEmail(body.email);
         newStudent.setPasswordHash(passwordHash);
         newStudent.setLanguages(body.languages);
-        newStudent.setYearGroup(body.yearGroup);
+        newStudent.setYearGroup(body.year_group);
+        System.out.println("Roles: " + body.roles);
         Student savedStudent = studentRepository.save(newStudent);
         System.out.println("@AccountService, saved student with id: " + savedStudent.getId());
         if (body.roles.contains(RoleEnum.Tutor)) {
@@ -101,7 +102,7 @@ public class AccountService {
 
             newTutor.setTutoringSubjects(body.subjects);
             newTutor.setStudent(savedStudent);
-            newTutor.setProfileDescription(body.tutorProfileDescription);
+            newTutor.setProfileDescription(body.tutor_profile_description);
 
             savedStudent.setTutor(newTutor);
             System.out.println("@AccountService, added new tutor to student " + savedStudent.getId());
@@ -188,11 +189,18 @@ public class AccountService {
 
     private AccountLoginSuccessBody createStudentResponse(Student student) {
         AccountLoginSuccessBody responseBody = new AccountLoginSuccessBody();
+        System.out.println("Student: " + student);
+        Tutor tutor = student.getTutor();
+     
         responseBody.token = generateToken(student.getId().toString());
         responseBody.id = student.getId();
         responseBody.name = student.getFullName();
         responseBody.email = student.getEmail();
         responseBody.role = List.of(roleService.getRolesByUserId(student.getId()));
+        if (tutor != null) {
+            System.out.println("Tutorinhere: " + tutor);
+            responseBody.tutoring_subjects = tutor.getTutoringSubjects();
+        }
         responseBody.year_group = student.getYearGroup();
         responseBody.is_administrator = false;
         return responseBody;

@@ -1,17 +1,17 @@
 import { Dialog, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 import Loading from "~/api/authentication/Loading";
-import MiniCollab from "~/components/content_components/MiniCollab";
-import { CollaborationType } from "~/types/entity_types";
+import MiniPost from "~/components/content_components/MiniPost";
+import { PostType } from "~/types/entity_types";
 
-type ViewCollaborationsDialogProps = {
+type ViewPostsDialogProps = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  collaborations: CollaborationType[] | undefined;
+  posts: PostType[] | undefined;
   isLoading: boolean;
 };
 
-export default function RequestMeetingDialog({ open, setOpen, collaborations, isLoading }: ViewCollaborationsDialogProps) {
+export default function RequestMeetingDialog({ open, setOpen, posts, isLoading }: ViewPostsDialogProps) {
   return (
     <Dialog
       open={open}
@@ -31,13 +31,13 @@ export default function RequestMeetingDialog({ open, setOpen, collaborations, is
         <Loading size={100} />
       ) : (
         <>
-          <DialogTitle sx={{ fontWeight: "bold", fontSize: "1.5rem", textAlign: "center", pb: 0 }}>Your active collaborations</DialogTitle>
+          <DialogTitle sx={{ fontWeight: "bold", fontSize: "1.5rem", textAlign: "center", pb: 0 }}>Your active posts</DialogTitle>
           <DialogContentText textAlign={"center"} pt={0}>
-            Click on a collaboration to go the respective collaboration page
+            Click on a post to edit it
           </DialogContentText>
           <DialogContent sx={{ display: "flex", flexWrap: "wrap", gap: 2, pr: 0, justifyContent: "center" }}>
-            {collaborations?.map((collaboration) => (
-              <MiniCollab key={collaboration.tutor_id + collaboration.tutee_name} collaboration={collaboration} />
+            {posts?.map((post) => (
+              <MiniPost key={post.id} postData={post} />
             ))}
           </DialogContent>
         </>

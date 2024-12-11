@@ -87,9 +87,10 @@ public class PostService {
     public Post createPost(Post post, Long tuteeId){
         
         Optional<Tutee> tuteeOpt = tuteeRepository.findById(tuteeId);
-
+        System.out.println("tuteeId" + tuteeId);
+        System.out.println("tuteeOpt" + tuteeOpt);
         if(!tuteeOpt.isPresent()){
-        throw new IllegalArgumentException("Tutee not found with ID: " + tuteeId);
+            throw new IllegalArgumentException("Tutee not found with ID: " + tuteeId);
         }
 
         Tutee tutee = tuteeOpt.get();

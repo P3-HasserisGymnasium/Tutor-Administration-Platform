@@ -4,7 +4,11 @@ import tuteeTheme from "~/themes/tuteeTheme";
 import tutorTheme from "~/themes/tutorTheme";
 import unauthenticatedAppTheme from "~/themes/unauthenticatedAppTheme";
 import { useCurrentTheme } from "~/utilities/helperFunctions";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
+
+const router = ({ children }: { children: React.ReactNode }) => (
+	<BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</BrowserRouter>
+);
 
 describe("useCurrentTheme", () => {
 	it("should return tutee theme for tutee path", () => {
@@ -14,7 +18,7 @@ describe("useCurrentTheme", () => {
 			},
 			writable: true,
 		});
-		const { result } = renderHook(() => useCurrentTheme(), { wrapper: Router });
+		const { result } = renderHook(() => useCurrentTheme(), { wrapper: router });
 		expect(result.current).toBe(tuteeTheme);
 	});
 
@@ -25,7 +29,7 @@ describe("useCurrentTheme", () => {
 			},
 			writable: true,
 		});
-		const { result } = renderHook(() => useCurrentTheme(), { wrapper: Router });
+		const { result } = renderHook(() => useCurrentTheme(), { wrapper: router });
 		expect(result.current).toBe(tutorTheme);
 	});
 
@@ -36,7 +40,7 @@ describe("useCurrentTheme", () => {
 			},
 			writable: true,
 		});
-		const { result } = renderHook(() => useCurrentTheme(), { wrapper: Router });
+		const { result } = renderHook(() => useCurrentTheme(), { wrapper: router });
 		expect(result.current).toBe(baseTheme);
 	});
 
@@ -47,7 +51,7 @@ describe("useCurrentTheme", () => {
 			},
 			writable: true,
 		});
-		const { result } = renderHook(() => useCurrentTheme(), { wrapper: Router });
+		const { result } = renderHook(() => useCurrentTheme(), { wrapper: router });
 		expect(result.current).toBe(baseTheme);
 	});
 
@@ -58,7 +62,7 @@ describe("useCurrentTheme", () => {
 			},
 			writable: true,
 		});
-		const { result } = renderHook(() => useCurrentTheme(), { wrapper: Router });
+		const { result } = renderHook(() => useCurrentTheme(), { wrapper: router });
 		expect(result.current).toBe(unauthenticatedAppTheme);
 	});
 
@@ -69,7 +73,7 @@ describe("useCurrentTheme", () => {
 			},
 			writable: true,
 		});
-		const { result } = renderHook(() => useCurrentTheme(), { wrapper: Router });
+		const { result } = renderHook(() => useCurrentTheme(), { wrapper: router });
 		expect(result.current).toBe(unauthenticatedAppTheme);
 	});
 });

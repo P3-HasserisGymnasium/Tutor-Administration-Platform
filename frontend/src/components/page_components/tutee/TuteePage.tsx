@@ -3,9 +3,9 @@ import { useState } from "react";
 import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip, ThemeProvider } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 // import tutorTheme from "~/themes/tutorTheme";
-import MiniCollabList from "~/components/content_components/MiniCollabList";
-import MiniPostList from "~/components/content_components/MiniPostList";
-import MiniCalendar from "~/components/content_components/MiniCalendar";
+import MiniCollabList from "src/components/content_components/MiniCollabList";
+import MiniPostList from "src/components/content_components/MiniPostList";
+import MiniCalendar from "src/components/content_components/MiniCalendar";
 import MeetingsList from "src/components/content_components/MeetingsList";
 //import { useNavigate } from "react-router-dom";
 import { useCurrentTheme, useBreakpoints } from "~/utilities/helperFunctions";
@@ -14,27 +14,36 @@ import { usePostService } from "~/api/services/post-service";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useAuth } from "~/api/authentication/useAuth";
 import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
+import EditPostDialog from "../dialogs/EditPostDialog";
+import { PostState, Subject } from "~/types/data_types";
+import { PostType } from "~/types/entity_types";
+import ViewPostsDialog from "../dialogs/ViewPostsDialog";
+const post: PostType = {
+  id: 1,
+  title: "hjælp mig",
+  description: "iosjdsiaojdaojdasdiasdjsaod jsadj iasojdasd",
+  subject: Subject.Enum.Danish,
+  duration: [2, 8],
+  state: PostState.Enum.VISIBLE,
+};
 export default function TuteePage() {
+  const { useGetTuteePosts } = usePostService();
+  const { useGetCollaborationsWithTutee } = useCollaborationService();
   const theme = useCurrentTheme();
   const { isMobile } = useBreakpoints();
   const [view, setView] = useState<"list" | "calender">("list");
   const [showCollabDialog, setShowCollabDialog] = useState(false);
+  const [showPostDialog, setShowPostDialog] = useState(false);
+  const [showEditPostDialog, setShowEditPostDialog] = useState(false);
   const { userState } = useAuth();
-  const { data: posts, isLoading: postsLoading, isError: postsError } = usePostService().useGetTuteePosts();
-  const {
-    data: collaborations,
-    isLoading: collabLoading,
-    isError: collabError,
-  } = useCollaborationService().useGetCollaborationsWithTutee(userState?.id || null);
+  const { data: posts, isLoading: postsLoading, isError: postsError } = useGetTuteePosts();
+  const { data: collaborations, isLoading: collabLoading, isError: collabError } = useGetCollaborationsWithTutee(userState?.id || null);
 
   return (
     <ThemeProvider theme={theme}>
-      <ViewCollaborationsDialog
-        open={showCollabDialog}
-        setOpen={setShowCollabDialog}
-        collaborations={collaborations}
-        isLoading={collabLoading}
-      />
+      <ViewCollaborationsDialog open={showCollabDialog} setOpen={setShowCollabDialog} collaborations={collaborations} isLoading={collabLoading} />
+      <EditPostDialog open={showEditPostDialog} setOpen={setShowEditPostDialog} post={post} />
+      <ViewPostsDialog open={showPostDialog} setOpen={setShowPostDialog} posts={posts} isLoading={postsLoading} />
       <MediumShortOnShortBoxLayout>
         <Box
           sx={{
@@ -148,7 +157,7 @@ export default function TuteePage() {
             <MiniPostList posts={posts} isLoading={postsLoading} isError={postsError} />
           </Box>
           <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
-            <CustomButton onClick={() => setShowCollabDialog(true)} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+            <CustomButton onClick={() => setShowPostDialog(true)} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
               View all
             </CustomButton>
             <CustomButton variant="contained" color="primary" sx={{ fontSize: "18px" }}>
