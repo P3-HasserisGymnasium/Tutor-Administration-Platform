@@ -1,6 +1,6 @@
 import MediumShortOnShortBoxLayout from "components/layout_components/MediumShortOnShortBoxLayout";
 import { useState } from "react";
-import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip, ThemeProvider } from "@mui/material";
+import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip, ThemeProvider, Paper } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import PeopleIcon from "@mui/icons-material/People";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -129,7 +129,8 @@ export default function HomePage() {
           </Box>
         </Box>
 
-        <Box
+        <Paper
+          elevation={8}
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -138,7 +139,7 @@ export default function HomePage() {
             justifyContent: "space-between",
             height: "100%",
             width: "100%",
-            backgroundColor: tuteeColors.customColors.postBackGroundColor,
+            backgroundColor: "#fff6ed",
           }}
         >
           <Box
@@ -230,9 +231,10 @@ export default function HomePage() {
               <Typography variant="body1">collaborations</Typography>
             </Box>
           </Box>
-        </Box>
+        </Paper>
 
-        <Box
+        <Paper
+          elevation={8}
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -241,7 +243,7 @@ export default function HomePage() {
             justifyContent: "space-between",
             height: "100%",
             width: "100%",
-            backgroundColor: tutorColors.customColors.postBackGroundColor,
+            backgroundColor: "#e5e8ef",
           }}
         >
           <Box
@@ -313,7 +315,7 @@ export default function HomePage() {
               <Typography variant="body1">collaborations</Typography>
             </Box>
           </Box>
-        </Box>
+        </Paper>
       </MediumShortOnShortBoxLayout>
     </ThemeProvider>
   );
