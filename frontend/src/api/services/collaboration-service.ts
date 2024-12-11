@@ -3,6 +3,8 @@ import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
 import { PostType, CollaborationType, Feedback, TerminationType } from "~/types/entity_types";
+import { Role } from "~/types/data_types";
+import { z } from "zod";
 
 export const useCollaborationService = () => {
 	//Admin requests a collaboration
@@ -20,13 +22,15 @@ export const useCollaborationService = () => {
 		},
 	});
 
+	type RoleType = z.infer<typeof Role>;
+
 	const acceptCollaboration = useMutation({
 		mutationKey: ["acceptCollaboration"],
-		mutationFn: async (id: number) => {
-			const { data } = await apiClient.post<number>("/api/collaboration", id);
-			return data;
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
+		mutationFn: async ({ id, role }: { id: number, role: RoleType}) => {
+			const { data } = await apiClient.post<number>(`/api/collaboration/accept/${id}`, {role});
+		return data;
+	},
+	onError: (e: AxiosError<{ detail: string }>) => {
 			toast.error(e?.response?.data?.detail);
 		},
 		onSuccess: () => {
@@ -36,8 +40,8 @@ export const useCollaborationService = () => {
 
 	const rejectCollaboration = useMutation({
 		mutationKey: ["rejectCollaboration"],
-		mutationFn: async (id: number) => {
-			const { data } = await apiClient.post<number>("/api/collaboration", id);
+		mutationFn: async ({ id, role }: { id: number, role: RoleType}) => {
+			const { data } = await apiClient.post<number>(`/api/collaboration/reject/${id}`, {role});
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
