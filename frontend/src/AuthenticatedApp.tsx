@@ -7,17 +7,18 @@ import TutorPage from "components/page_components/tutor/TutorPage";
 import CreatePostPage from "components/page_components/tutee/CreatePostPage";
 import TutorListPage from "components/page_components/tutee/TutorListPage";
 import TuteeNotificationsPage from "components/page_components/tutee/TuteeNotificationsPage";
-import TuteeProfilePage from "components/page_components/tutee/TuteeProfilePage";
+import TuteeProfilePage from "./components/page_components/tutee/TuteeProfilePage";
+import TutorProfilePage from "./components/page_components/tutor/TutorProfilePage";
 import RequestAdminPage from "components/page_components/tutee/RequestAdminPage";
 import PostsListPage from "components/page_components/tutor/PostsListPage";
-import { useBreakpoints } from "./utilities/helperFunctions";
+import { useBreakpoints, useRolePrefix } from "./utilities/helperFunctions";
 import TutorApplicationPage from "./components/page_components/TutorApplicationPage";
 import Navbar from "./components/layout_components/navbar/Navbar";
 import { Role } from "./types/data_types";
 import NotFound from "./api/authentication/NotFound";
 import Forbidden from "./api/authentication/Forbidden";
 import { useAuth } from "./api/authentication/useAuth";
-import AdministratorPage from "./components/page_components/dialogs/AdministratorPage";
+//import AdministratorPage from "./components/page_components/dialogs/AdministratorPage";
 import CollaborationPage from "./components/page_components/CollaborationPage";
 import TuteePage from "./components/page_components/tutee/TuteePage";
 import NotificationsList from "./components/content_components/NotificationsListe";
@@ -26,12 +27,11 @@ export default function AuthenticatedApp() {
   const { isMobile, hasScrollbar } = useBreakpoints();
   const widthRightOffset = hasScrollbar ? "16px" : "0px";
 
-  const { userState, isAuthenticated } = useAuth();
+  const { userState } = useAuth();
 
   const isTutee = userState.role?.includes(Role.Enum.Tutee);
   const isTutor = userState.role?.includes(Role.Enum.Tutor);
-  const isAdmin = userState.is_administrator;
-  console.log("isAuthenticated is equal to: ", isAuthenticated);
+  const rolePrefix = useRolePrefix();
   return (
     <Box
       sx={{
@@ -43,6 +43,8 @@ export default function AuthenticatedApp() {
       <Box sx={{ height: "calc(100% - 5em)", width: "100%" }}>
         <Routes>
           {/* Common routes */}
+          <Route path="/login" element={<HomePage />} />
+          <Route path="/notifications" element={<TuteeNotificationsPage />} />
           <Route
             path="/"
             element={
@@ -51,7 +53,7 @@ export default function AuthenticatedApp() {
               (!isTutee && isTutor && <Navigate to="/tutor" />)
             }
           />
-          <Route path="/login" element={<HomePage />} />
+
           {/* Tutee routes */}
           {isTutee ? (
             <>
@@ -63,10 +65,10 @@ export default function AuthenticatedApp() {
                 <Route path="create-post" element={<CreatePostPage />} />
                 <Route path="request-admin" element={<RequestAdminPage />} />
                 <Route path="tutor-list" element={<TutorListPage />} />
-                <Route path="tutor-application" element={<TutorApplicationPage />} />
+                {rolePrefix == "/tutee" && <Route path="tutor-application" element={<TutorApplicationPage />} />}
                 <Route path="collaboration/*" element={<CollaborationPage />} />
+                <Route path="*" element={<NotFound />} />
               </Route>
-              <Route path="*" element={<NotFound />} />
             </>
           ) : null}
 
@@ -77,14 +79,14 @@ export default function AuthenticatedApp() {
               <Route path="/tutor/*">
                 <Route path="" element={<TutorPage />} />
                 <Route path="posts-list" element={<PostsListPage />} />
-                <Route path="tutor-application" element={<TutorApplicationPage />} />
-                <Route path="*" element={<NotFound />} />
+                <Route path="notifications" element={<NotificationsList />} />
+                {rolePrefix == "/tutor" && <Route path="tutor-application" element={<TutorApplicationPage />} />}
+                <Route path="profile" element={<TutorProfilePage />} />
                 <Route path="collaboration/*" element={<CollaborationPage />} />
+                <Route path="*" element={<NotFound />} />
               </Route>
             </>
           ) : null}
-
-          {isAdmin ? <Route path="/admin/*" element={<AdministratorPage />} /> : null}
 
           {/* Catch-all for invalid roles */}
           <Route path="*" element={<NotFound />} />

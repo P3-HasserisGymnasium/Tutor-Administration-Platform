@@ -1,6 +1,8 @@
 package project.backend.controller;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,6 +21,8 @@ import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.model.Post;
+import project.backend.model.PostState;
+import project.backend.model.Student;
 import project.backend.model.Tutee;
 import project.backend.service.PostService;
 import project.backend.service.RoleService;
@@ -34,6 +38,23 @@ public class PostController {
     public PostController(PostService postService, RoleService roleService) {
         this.postService = postService;
         this.roleService = roleService;
+    }
+
+    @GetMapping("")
+    public ResponseEntity<?> getPosts(HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isTutor() && !authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to view these posts");
+        }
+
+        List<Post> posts = postService.getAllPosts();
+
+        System.out.println("posts" + posts);
+        if (posts == null) {
+            return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
     @GetMapping("/{id}")
@@ -60,9 +81,11 @@ public class PostController {
         if (authenticatedUser.getTuteeId() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to view your posts");
         }
+        System.out.println("tuteeId" + authenticatedUser.getTuteeId());
 
         Post[] posts = postService.getPostsByTuteeId(authenticatedUser.getTuteeId());
 
+        System.out.println("posts" + posts);
         if (posts == null) {
             return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
         }
@@ -70,28 +93,34 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
+  
+
     @PostMapping("/")
     public ResponseEntity<?> createPost(@RequestBody PostBody postBody, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        Student student = roleService.getStudentById(authenticatedUser.getUserId());
+        Tutee tutee = student.getTutee();
 
-        if (authenticatedUser.getTuteeId() != postBody.userId || !authenticatedUser.isAdministrator()) {
+        System.out.println("firstprint" + authenticatedUser.getTuteeId());
+        System.out.println("secondprint" + tutee.getId());
+        System.out.println("thirdprint" + authenticatedUser.isAdministrator());
+
+        if (authenticatedUser.getTuteeId() != tutee.getId() && !authenticatedUser.isAdministrator()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to create a post");
         }
-        Tutee tutee = roleService.getTuteeById(postBody.userId);
+
         Post post = new Post();
         post.setTutee(tutee);
         post.setSubject(postBody.subject);
         post.setTitle(postBody.title);
         post.setDescription(postBody.description);
         post.setDuration(postBody.duration);
-        post.setState(postBody.state);    
+        post.setState(PostState.VISIBLE);    
+        System.out.println("post1" + post);
 
-        postService.createPost(post, postBody.userId);
-
+        postService.createPost(post, tutee.getId());
+        System.out.println("post2" + post);
         return ResponseEntity.status(HttpStatus.CREATED).body(post);
-
-
-
     }
 
     @DeleteMapping("/{id}")
@@ -109,18 +138,24 @@ public class PostController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> editPost(@PathVariable Long id, @RequestBody PostBody postBody, HttpServletRequest request) {
+        System.out.println("before authuser");
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        System.out.println("after authuser");
 
-        if (authenticatedUser.getTuteeId() != postService.getPostById(id).get().getTutee().getId() || !authenticatedUser.isAdministrator()) {
+        if (!Objects.equals(authenticatedUser.getTuteeId(), postService.getPostById(id).get().getTutee().getId()) || !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You do not have permission to update this post");
         }
-
         Post post = postService.getPostById(id).get();
         post.setSubject(postBody.subject);
         post.setTitle(postBody.title);
         post.setDescription(postBody.description);
         post.setDuration(postBody.duration);
-        post.setState(postBody.state);
+        post.setState(PostState.VISIBLE);
+
+        System.out.println("PostController subject" + postBody.subject);
+        System.out.println("PostController title" + postBody.title);
+        System.out.println("PostController description" + postBody.description);
+        System.out.println("PostController duration" + postBody.duration);
 
         postService.editPost(id, post);
 

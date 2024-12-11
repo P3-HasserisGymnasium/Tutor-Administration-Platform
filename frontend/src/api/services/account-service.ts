@@ -13,7 +13,6 @@ export const useAccountService = () => {
 		return useMutation({
 			mutationKey: ["registerAccount"],
 			mutationFn: async (account: AccountRegisterType) => {
-				console.log(account);
 				const { data } = await apiClient.post<AccountRegisterResponseType>("/api/account/", account);
 				return data;
 			},
@@ -26,9 +25,7 @@ export const useAccountService = () => {
 					toast.success("Your account has been created and you can log in as a tutee!");
 				}
 				if (data.tutor) {
-					toast.info(
-						"When an administrator accepts your tutor application, you will be granted access to the system as a tutor"
-					);
+					toast.info("When an administrator accepts your tutor application, you will be granted access to the system as a tutor");
 				}
 			},
 		});
@@ -44,10 +41,14 @@ export const useAccountService = () => {
 				toast.error("Failed to remove account: " + e?.response?.data);
 			},
 			onSuccess: () => {
-				toast.success("Bruger slettet");
 				deleteCookie("Bearer");
 				deleteCookie("user");
 				deleteCookie("isAuthenticated");
+				setTimeout(() => {
+					navigate("/login");
+					window.location.reload();
+					toast.info("Bruger slettet");
+				}, 1000);
 			},
 		});
 	};
@@ -63,7 +64,6 @@ export const useAccountService = () => {
 				if (e.message === "Network Error") {
 					toast.error("Login failed: Network Error: connection to server not established");
 				} else {
-					console.log("error", e);
 					toast.error("Login failed" + (e?.response?.data ? ": " + e.response.data : ""));
 				}
 			},

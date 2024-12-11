@@ -14,6 +14,7 @@ declare module "@mui/material/styles" {
 			tutorColor: string;
 			darkTuteeColor: string;
 			darkTutorColor: string;
+			greyButtonColor: string,
 		};
 	}
 
@@ -30,6 +31,7 @@ declare module "@mui/material/styles" {
 			tutorColor?: string;
 			darkTuteeColor?: string;
 			darkTutorColor?: string;
+			greyButtonColor?: string,
 		};
 	}
 }

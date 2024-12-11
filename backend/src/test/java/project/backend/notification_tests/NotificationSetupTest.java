@@ -3,12 +3,14 @@ package project.backend.notification_tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import project.backend.model.EntityType;
 import project.backend.model.Notification;
 import project.backend.model.NotificationState;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class NotificationSetupTest {
 
     @Test

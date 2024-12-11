@@ -35,22 +35,54 @@ export function useHeading(): string {
 			return "Tutor Application";
 		case "/tutor/posts-list":
 			return "List of Posts";
+		case "/tutee/notifications":
+		case "/tutor/notifications":
+		case "/notifications":
+			return "Notifications";
 		default:
 			return "";
 	}
 }
 
+export const useRolePrefix = (): string => {
+	const rolePrefix = useLocation().pathname;
+	switch (true) {
+		case rolePrefix.startsWith("/tutee"):
+			return "/tutee";
+		case rolePrefix.startsWith("/tutor"):
+			return "/tutor";
+		case rolePrefix.startsWith("/login"):
+			return "/login";
+		case rolePrefix.startsWith("/register"):
+			return "/register";
+		case rolePrefix === null:
+			return "";
+		default:
+			return "";
+	}
+};
+
+/**
+ *
+ * @returns The current theme based on the first part of the pathname.
+ *
+ */
 export function useCurrentTheme(): Theme {
-	const [firstPathPart] = useLocation().pathname.split("/").filter(Boolean);
+	const firstPathPart = useRolePrefix();
+	if (firstPathPart == null) {
+		return baseTheme;
+	}
+
 	switch (firstPathPart) {
-		case "tutee":
+		case "/tutee":
 			return tuteeTheme;
-		case "tutor":
+		case "/tutor":
 			return tutorTheme;
-		case "login":
+		case "/login":
 			return unauthenticatedAppTheme;
-		case "register":
+		case "/register":
 			return unauthenticatedAppTheme;
+
 		default:
 			return baseTheme;
 	}
@@ -60,6 +92,7 @@ export function useCurrentTheme(): Theme {
  * Custom hook to determine whether or not the screen is mobile or laptop.
  *
  * @returns {Object} a boolean value for a given condition
+ *
  */
 export const useBreakpoints = (): {
 	isMobile: boolean;
@@ -68,7 +101,7 @@ export const useBreakpoints = (): {
 	hasScrollbar: boolean;
 } => {
 	const isMobile = useMediaQuery("(max-width:664px)"); // 664 because of scrollbar appearance
-	const isLaptop = useMediaQuery("(max-width:1920px)");
+	const isLaptop = useMediaQuery("(min-width:1919px)");
 	const isShort = useMediaQuery("(max-height: 900px)");
 	const [hasScrollbar, setHasScrollbar] = useState(false);
 
@@ -100,8 +133,13 @@ export const useVariableWidth = (value: string | number) => {
 	}
 
 	if (typeof value === "number") {
+		if (100 > value && value > 1) {
+			return `${value}%`;
+		}
 		return `${(value * 100).toFixed(2)}%`;
 	}
+
+	return value;
 };
 
 /**

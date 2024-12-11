@@ -1,6 +1,6 @@
 package project.backend.model;
 
-import java.sql.Timestamp;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,13 +17,17 @@ public class TutorTimeSlot {
     Long id;
 
     @ManyToOne
+    @JsonManagedReference
     Tutor tutor;
 
+    @Column(name = "week_day")
+    WeekDayEnum weekDay;
+
     @Column(name = "start")
-    Timestamp startTimestamp;
+    String startTime;
 
     @Column(name = "end")
-    Timestamp endTimestamp;
+    String endTime;
 
     public TutorTimeSlot() {}
 
@@ -39,19 +43,27 @@ public class TutorTimeSlot {
         this.tutor = tutor;
     }
 
-    public Timestamp getStartTimestamp() {
-        return startTimestamp;
+    public WeekDayEnum getWeekDay() {
+        return weekDay;
     }
 
-    public void setStartTimestamp(Timestamp startTimestamp) {
-        this.startTimestamp = startTimestamp;
+    public void setWeekDay(WeekDayEnum weekDay) {
+        this.weekDay = weekDay;
     }
 
-    public Timestamp getEndTimestamp() {
-        return endTimestamp;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setEndTimestamp(Timestamp endTimestamp) {
-        this.endTimestamp = endTimestamp;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

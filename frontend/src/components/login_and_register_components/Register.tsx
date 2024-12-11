@@ -2,7 +2,7 @@ import { useState } from "react";
 import PrimaryRegisterPage from "./RegisterInformationPage";
 import { AccountRegisterType, zodAccountRegisterSchema } from "~/types/entity_types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import TutorTimeAvailabilityPage from "./RegisterTimeAvailabilityPage";
 import TutorApplicationPage from "./RegisterApplicationPage";
 import { Language, Role, YearGroup } from "~/types/data_types";
@@ -15,12 +15,14 @@ export default function RegisterPageHandler() {
     defaultValues: {
       subjects: [],
       time_availability: [],
-      tutorProfileDescription: "",
-      yearGroup: YearGroup.Enum.PRE_IB,
+      tutor_profile_description: "",
+      year_group: YearGroup.Enum.PRE_IB,
       languages: [Language.Enum.English],
       roles: [Role.Enum.Tutor],
     },
   });
+
+  useWatch({ control: registerFormMethods.control });
 
   return (
     <FormProvider {...registerFormMethods}>
