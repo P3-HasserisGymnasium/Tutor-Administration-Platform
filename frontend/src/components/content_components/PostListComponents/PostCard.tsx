@@ -1,10 +1,9 @@
 import { Box, Button } from "@mui/material";
-import { CollaborationType, PostType } from "~/types/entity_types";
+import { PostType } from "~/types/entity_types";
 import { useTheme } from "@mui/system";
 import { Theme } from "@mui/material/styles";
 import { Typography } from "@mui/material";
 import SubjectChip from "../SubjectChip";
-import { useCollaborationService } from "~/api/services/collaboration-service";
 
 export default function PostCard({ post }: { post: PostType }) {
 	
