@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../api-client";
-import { NotificationType } from "~/types/entity_types";
+import { NotificationResponseType } from "~/types/entity_types";
 
 export const useNotificationService = () => {
 	const useGetNotifications = (id: number | null) => {
 		return useQuery({
 			queryKey: ["getNotifications", id],
 			queryFn: async () => {
-				const { data } = await apiClient.get<NotificationType[]>(`/api/notifications/sentTo/${id}`);
+				const { data } = await apiClient.get<NotificationResponseType[]>(`/api/notifications/sentTo/${id}`);
 				return data;
 			},
 			refetchOnWindowFocus: false,
@@ -22,7 +22,7 @@ export const useNotificationService = () => {
 		return useQuery({
 			queryKey: ["getTuteeNotifications", id],
 			queryFn: async () => {
-				const { data } = await apiClient.get<NotificationType[]>(`/api/notifications/sentToTutee/${id}`);
+				const { data } = await apiClient.get<NotificationResponseType[]>(`/api/notifications/sentToTutee/${id}`);
 				return data;
 			},
 			refetchOnWindowFocus: false,
@@ -37,7 +37,7 @@ export const useNotificationService = () => {
 		return useQuery({
 			queryKey: ["getTutorNotifications", id],
 			queryFn: async () => {
-				const { data } = await apiClient.get<NotificationType[]>(`/api/notifications/sentToTutor/${id}`);
+				const { data } = await apiClient.get<NotificationResponseType[]>(`/api/notifications/sentToTutor/${id}`);
 				return data;
 			},
 			refetchOnWindowFocus: false,
