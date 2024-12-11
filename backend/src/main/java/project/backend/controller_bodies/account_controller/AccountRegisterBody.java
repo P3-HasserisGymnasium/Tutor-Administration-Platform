@@ -22,4 +22,20 @@ public class AccountRegisterBody {
     public List<SubjectEnum> subjects = new LinkedList<>();
     public String tutor_profile_description;
     public List<TimeSlotCreateBody> time_availability = new LinkedList<>();
+
+    public AccountRegisterBody() {
+    }
+
+    public AccountRegisterBody(AccountRegisterBody body) {
+        this.full_name = body.full_name;
+        this.email = body.email;
+        this.password = body.password;
+        this.confirm_password = body.confirm_password;
+        this.roles = body.roles;
+        this.year_group = body.year_group;
+        this.languages = body.languages;
+        this.subjects = body.subjects;
+        this.tutor_profile_description = body.tutor_profile_description;
+        this.time_availability = body.time_availability;
+    }
 }
