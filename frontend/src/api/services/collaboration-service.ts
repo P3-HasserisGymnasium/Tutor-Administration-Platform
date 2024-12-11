@@ -113,9 +113,8 @@ export const useCollaborationService = () => {
 	const useGetCollaborationsWithTutee = (id: number | null) => {
 		return useQuery({
 			queryKey: ["getCollaborationsWithTutee", id],
-			queryFn: async ({ queryKey }) => {
-				const id = queryKey[1];
-				const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/with_tutee/${id}`);
+			queryFn: async ({ }) => {
+				const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/as_tutee`);
 				return data;
 			},
 			refetchOnWindowFocus: false,
@@ -127,9 +126,8 @@ export const useCollaborationService = () => {
 	const useGetCollaborationsWithTutor = (id: number | null) => {
 		return useQuery({
 			queryKey: ["getCollaborationsWithTutee", id],
-			queryFn: async ({ queryKey }) => {
-				const id = queryKey[1];
-				const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/with_tutor/${id}`);
+			queryFn: async ({ }) => {
+				const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/as_tutor`);
 				return data;
 			},
 			refetchOnWindowFocus: false,

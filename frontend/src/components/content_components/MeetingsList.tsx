@@ -12,17 +12,17 @@ export default function MeetingsList() {
 	const { data: meetings, isLoading, error } = useMeetingService().useGetMeetings();
 	const { userState } = useAuth();
 
-	const userMeetings = meetings?.filter((meeting) => {
+	const acceptedMeetings = meetings?.filter((meeting) => {
 		return meeting.state === MeetingState.Enum.ACCEPTED;
 	});
 
 	if (error) return <Typography color="error">Failed to load meetings.</Typography>;
-	if (userMeetings?.length === 0) return <Typography>No accepted meetings available.</Typography>;
+	if (acceptedMeetings?.length === 0) return <Typography>No accepted meetings available.</Typography>;
 	if (isLoading) return <CircularProgress />;
 
 	return (
 		<Paper elevation={3} sx={{ padding: 2, borderRadius: 2 }}>
-			{userMeetings?.map((meeting) => (
+			{acceptedMeetings?.map((meeting) => (
 				<Box
 					key={meeting.id + meeting.partner_name}
 					sx={{

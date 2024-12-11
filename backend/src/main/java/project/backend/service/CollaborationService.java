@@ -1,6 +1,7 @@
 package project.backend.service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,11 +53,11 @@ public class CollaborationService {
         return collaboratOpt.orElse(null);
     }
 
-    public List<Collaboration> getCollaborationsWithTutor(Long tutorId){
+    public ArrayList<Collaboration> getCollaborationsWithTutor(Long tutorId){
         return collaborationRepository.findCollaborationsWithTutorId(tutorId);
     }
 
-    public List<Collaboration> getCollaborationsWithTutee(Long tuteeId){
+    public ArrayList<Collaboration> getCollaborationsWithTutee(Long tuteeId){
         return collaborationRepository.findCollaborationsWithTuteeId(tuteeId);
     }
 
