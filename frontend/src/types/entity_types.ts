@@ -22,7 +22,7 @@ export const zodPostSchema = z.object({
 	title: z.string(),
 	description: z.string(),
 	subject: Subject,
-	duration: z.string(),
+	duration: z.array(z.number()).optional(),
 	state: z.string(),
 });
 
@@ -31,7 +31,7 @@ export const zodTutorProfileSchema = z.object({
 	year_group: YearGroup,
 	languages: z.array(Language),
 	tutoring_subjects: z.array(Subject),
-	contact_info: z.array(z.object({username: z.string(), ComunicationMedium})),
+	contact_info: z.array(z.object({ username: z.string(), ComunicationMedium })),
 	time_availability: z.array(zodTimeAvailabilitySchema),
 	description: z.string().optional(),
 });
@@ -68,7 +68,7 @@ export const zodCollaborationSchema = z.object({
 });
 
 export const tutorProfileSchema = z.object({
-	contact_info: z.array(z.object({username: z.string(), ComunicationMedium})),
+	contact_info: z.array(z.object({ username: z.string(), ComunicationMedium })),
 	description: z.string(),
 	full_name: z.string(),
 	time_availability: z.array(zodTimeAvailabilitySchema),
@@ -93,8 +93,21 @@ export const zodNotificationSchema = z.object({
 	state: NotificationState,
 });
 
+export const zodNotificationResponseSchema = z.object({
+	id: zodUUID.nullable(),
+	sender_id: zodUUID,
+	sender_name: z.string(),
+	sender_type: NotificationParticipant,
+	receiver_id: zodUUID,
+	receiver_name: z.string(),
+	receiver_type: NotificationParticipant,
+	context_id: zodUUID,
+	context_type: NotificationContext,
+	state: NotificationState,
+});
+
 export const zodAccountRegisterSchema = z.object({
-	fullName: z
+	full_name: z
 		.string({
 			required_error: "You must provide a name", // Required field error
 		})
@@ -112,14 +125,14 @@ export const zodAccountRegisterSchema = z.object({
 		})
 		.min(6, "Password must be at least 6 characters long"), // Minimum length validation
 
-	confirmPassword: z
+	confirm_password: z
 		.string({
 			required_error: "You must confirm your password", // Required field error
 		})
 		.min(6, "Password confirmation must match the password"), // Minimum length validation
 	// Password match check should be handled elsewhere (e.g., in `refine`)
 
-	yearGroup: z
+	year_group: z
 		.string({
 			required_error: "You must select a year group", // Optional field validation
 		}) // Optional field, no required error
@@ -144,7 +157,7 @@ export const zodAccountRegisterSchema = z.object({
 		})
 		.optional(), // Optional field
 
-	tutorProfileDescription: z
+	tutor_profile_description: z
 		.string({
 			required_error: "You must provide a description", // Optional field validation
 		})
@@ -202,4 +215,5 @@ export type CollaborationType = z.infer<typeof zodCollaborationSchema>;
 export type Feedback = z.infer<typeof zodFeedbackSchema>;
 export type AccountRegisterType = z.infer<typeof zodAccountRegisterSchema>;
 export type NotificationType = z.infer<typeof zodNotificationSchema>;
+export type NotificationResponseType = z.infer<typeof zodNotificationResponseSchema>;
 export type TerminationType = z.infer<typeof zodTerminationSchema>

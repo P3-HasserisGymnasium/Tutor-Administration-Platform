@@ -1,29 +1,26 @@
-import { Avatar, Box, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, Typography } from "@mui/material";
+import { Avatar, Box, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, Typography } from "@mui/material";
 import { SetStateAction } from "react";
 import CustomButton from "~/components/content_components/CustomButton";
-import { zodCollaborationSchema, zodTuteeProfileSchema } from "~/types/entity_types";
-import { z } from "zod";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { Role } from "~/types/data_types";
-type Collaboration = z.infer<typeof zodCollaborationSchema>;
-type TuteeProfile = z.infer<typeof zodTuteeProfileSchema>;
+import { useRoleService } from "~/api/services/role-service";
 
 type AcceptInviteDialogProps = {
   open: boolean;
   setOpen: React.Dispatch<SetStateAction<boolean>>;
-  collaboration: Collaboration;
-  tuteeProfile: TuteeProfile;
+  collaboration_id: number | null;
+  tutee_id: number | null;
 };
 
-export default function AcceptInvitationFromTuteeDialog({ open, setOpen, collaboration, tuteeProfile }: AcceptInviteDialogProps) {
-  const { acceptCollaboration } = useCollaborationService();
-  const {rejectCollaboration} = useCollaborationService();
+export default function AcceptInvitationFromTuteeDialog({ open, setOpen, collaboration_id, tutee_id }: AcceptInviteDialogProps) {
+  const { acceptCollaboration, rejectCollaboration } = useCollaborationService();
+  const { data: collaboration, isLoading: isCollaborationLoading } = useCollaborationService().useGetCollaborationById(collaboration_id);
+  const { data: tuteeProfile, isLoading: isTuteeProfileLoading } = useRoleService().useGetTuteeProfile(tutee_id);
 
   const acceptCollab = () => {
-    if (collaboration.id) {
-    
+    if (collaboration?.id) {
       acceptCollaboration.mutate(
-        { id: collaboration.id, role: Role.Enum.Tutor},
+        { id: collaboration.id, role: Role.Enum.Tutor },
         {
           onSuccess: () => {
             setOpen(false);
@@ -39,8 +36,7 @@ export default function AcceptInvitationFromTuteeDialog({ open, setOpen, collabo
   };
 
   const rejectCollab = () => {
-    if (collaboration.id) {
-    
+    if (collaboration?.id) {
       rejectCollaboration.mutate(
         { id: collaboration.id, role: Role.Enum.Tutor },
         {
@@ -55,8 +51,9 @@ export default function AcceptInvitationFromTuteeDialog({ open, setOpen, collabo
     } else {
       console.error("Collaboration ID not found");
     }
-
   };
+
+  if (isCollaborationLoading || isTuteeProfileLoading) return <CircularProgress />;
 
   return (
     <Dialog
@@ -84,7 +81,7 @@ export default function AcceptInvitationFromTuteeDialog({ open, setOpen, collabo
           justifyContent: "center",
         }}
       >
-        {tuteeProfile.full_name} has sent an invite
+        {tuteeProfile?.full_name} has sent an invite
       </DialogTitle>
 
       <DialogContent sx={{ display: "flex", flexDirection: "column", gap: "1em" }}>
@@ -96,7 +93,7 @@ export default function AcceptInvitationFromTuteeDialog({ open, setOpen, collabo
             borderRadius: 2,
           }}
         >
-          <Typography variant="h4">Receving help in: {collaboration.subject}</Typography>
+          <Typography variant="h4">Receving help in: {collaboration?.subject}</Typography>
         </Box>
 
         <Box
@@ -110,19 +107,18 @@ export default function AcceptInvitationFromTuteeDialog({ open, setOpen, collabo
           {/* Picture and Name Row */}
           <Grid2 container spacing={2} alignItems="center" sx={{ marginBottom: 2 }}>
             <Avatar alt="User Name" src="/path-to-image.jpg" sx={{ width: 80, height: 80 }} />
-            <Typography variant="h5">{tuteeProfile.full_name}</Typography>
+            <Typography variant="h5">{tuteeProfile?.full_name}</Typography>
           </Grid2>
 
           {/* Info Row */}
           <Box sx={{ marginBottom: 2 }}>
             <Typography variant="body1">
-              <strong>Year group:</strong> {tuteeProfile.year_group}
+              <strong>Year group:</strong> {tuteeProfile?.year_group}
             </Typography>
             <Typography variant="body1">
-              <strong>Languages:</strong> {tuteeProfile.languages.join(", ")}
+              <strong>Languages:</strong> {tuteeProfile?.languages.join(", ")}
             </Typography>
           </Box>
-
         </Box>
       </DialogContent>
 
@@ -134,9 +130,7 @@ export default function AcceptInvitationFromTuteeDialog({ open, setOpen, collabo
           gap: "2em",
         }}
       >
-        <CustomButton sx={{ width: "10em" }} customType="warning"
-        onClick={rejectCollab}
-        >
+        <CustomButton sx={{ width: "10em" }} customType="warning" onClick={rejectCollab}>
           Reject
         </CustomButton>
 

@@ -1,30 +1,24 @@
-import { Avatar, Box, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, Typography } from "@mui/material";
+import { Avatar, Box, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, Typography } from "@mui/material";
 import { SetStateAction } from "react";
 import CustomButton from "~/components/content_components/CustomButton";
-import { zodCollaborationSchema, tutorProfileSchema } from "~/types/entity_types";
-import { z } from "zod";
 import TimeAvailabilityBox from "~/components/content_components/TimeAvailabilityBox";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { Role } from "~/types/data_types";
-
-
-type Collaboration = z.infer<typeof zodCollaborationSchema>;
-type TutorProfile = z.infer<typeof tutorProfileSchema>;
-
+import { useRoleService } from "~/api/services/role-service";
 type AcceptInviteDialogProps = {
   open: boolean;
   setOpen: React.Dispatch<SetStateAction<boolean>>;
-  collaboration: Collaboration;
-  tutorProfile: TutorProfile;
+  collaboration_id: number | null;
+  tutor_id: number | null;
 };
 
-export default function AcceptInvitationFromTutorDialog({ open, setOpen, collaboration, tutorProfile }: AcceptInviteDialogProps) {
-  const { acceptCollaboration } = useCollaborationService();
-  const {rejectCollaboration} = useCollaborationService();
+export default function AcceptInvitationFromTutorDialog({ open, setOpen, collaboration_id, tutor_id }: AcceptInviteDialogProps) {
+  const { acceptCollaboration, rejectCollaboration } = useCollaborationService();
+  const { data: collaboration, isLoading: isCollaborationLoading } = useCollaborationService().useGetCollaborationById(collaboration_id);
+  const { data: tutorProfile, isLoading: isTutorProfileLoading } = useRoleService().useGetTutorProfile(tutor_id);
 
   const acceptCollab = () => {
-    if (collaboration.id) {
-    
+    if (collaboration?.id) {
       acceptCollaboration.mutate(
         { id: collaboration.id, role: Role.Enum.Tutee },
         {
@@ -42,8 +36,7 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, collabo
   };
 
   const rejectCollab = () => {
-    if (collaboration.id) {
-    
+    if (collaboration?.id) {
       rejectCollaboration.mutate(
         { id: collaboration.id, role: Role.Enum.Tutee },
         {
@@ -58,8 +51,9 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, collabo
     } else {
       console.error("Collaboration ID not found");
     }
-
   };
+
+  if (isCollaborationLoading || isTutorProfileLoading) return <CircularProgress />;
 
   return (
     <Dialog
@@ -87,7 +81,7 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, collabo
           justifyContent: "center",
         }}
       >
-        {tutorProfile.full_name} has sent an invite
+        {tutorProfile?.full_name} has sent an invite
       </DialogTitle>
 
       <DialogContent sx={{ display: "flex", flexDirection: "column", gap: "1em" }}>
@@ -99,7 +93,7 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, collabo
             borderRadius: 2,
           }}
         >
-          <Typography variant="h4">Receving help in: {collaboration.subject}</Typography>
+          <Typography variant="h4">Receving help in: {collaboration?.subject}</Typography>
         </Box>
 
         <Box
@@ -113,19 +107,19 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, collabo
           {/* Picture and Name Row */}
           <Grid2 container spacing={2} alignItems="center" sx={{ marginBottom: 2 }}>
             <Avatar alt="User Name" src="/path-to-image.jpg" sx={{ width: 80, height: 80 }} />
-            <Typography variant="h5">{tutorProfile.full_name}</Typography>
+            <Typography variant="h5">{tutorProfile?.full_name}</Typography>
           </Grid2>
 
           {/* Info Row */}
           <Box sx={{ marginBottom: 2 }}>
             <Typography variant="body1">
-              <strong>Year group:</strong> {tutorProfile.yearGroup}
+              <strong>Year group:</strong> {tutorProfile?.year_group}
             </Typography>
             <Typography variant="body1">
-              <strong>Languages:</strong> {tutorProfile.languages.join(", ")}
+              <strong>Languages:</strong> {tutorProfile?.languages.join(", ")}
             </Typography>
             <Typography variant="body1">
-              <strong>Subjects:</strong> {tutorProfile.tutoring_subjects.join(", ")}
+              <strong>Subjects:</strong> {tutorProfile?.tutoring_subjects.join(", ")}
             </Typography>
           </Box>
 
@@ -135,7 +129,7 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, collabo
               Time Availability:
             </Typography>
             <Grid2 container spacing={2}>
-              {tutorProfile.time_availability.map((availability) => (
+              {tutorProfile?.time_availability.map((availability) => (
                 <TimeAvailabilityBox timeAvailability={availability} />
               ))}
             </Grid2>
@@ -143,7 +137,7 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, collabo
 
           {/* Description Row */}
           <Box>
-            <Typography variant="body1">{tutorProfile.description}</Typography>
+            <Typography variant="body1">{tutorProfile?.description}</Typography>
           </Box>
         </Box>
       </DialogContent>
@@ -156,9 +150,7 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, collabo
           gap: "2em",
         }}
       >
-        <CustomButton sx={{ width: "10em" }} customType="warning"
-        onClick={rejectCollab}
-        >
+        <CustomButton sx={{ width: "10em" }} customType="warning" onClick={rejectCollab}>
           Reject
         </CustomButton>
 

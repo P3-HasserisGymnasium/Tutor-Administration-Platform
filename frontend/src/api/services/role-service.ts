@@ -2,12 +2,12 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { tutorListFilterType } from '~/types/data_types';
-import { TutorProfileType } from "~/types/entity_types";
+import { tutorListFilterType, YearGroup } from '~/types/data_types';
+import { TuteeProfileType, TutorProfileType } from "~/types/entity_types";
 
 // tutee/tutor:role_id -> role:student_id -> student:id
 
-export const useRoleService =()=> {
+export const useRoleService = () => {
 
 	const assignTuteeRole = useMutation({
 		mutationKey: ["assignTuteeRole"],
@@ -42,20 +42,20 @@ export const useRoleService =()=> {
 			toast.success("Tutee assigned");
 		},
 	});
-
-	// Assuming student id array gets returned
-	const getTutees = useQuery({
-		queryKey: ["getTutees"],
-		queryFn: async () => {
-			const { data } = await apiClient.get<number[]>(
-				`/api/role`
-			);
-			return data;
-		},
-		refetchOnWindowFocus: false,
-		placeholderData: [],
-	});
-
+	/* 
+		// Assuming student id array gets returned
+		const getTutees = useQuery({
+			queryKey: ["getTutees"],
+			queryFn: async () => {
+				const { data } = await apiClient.get<number[]>(
+					`/api/role`
+				);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			placeholderData: [],
+		});
+	 */
 	// tutor information gets returned
 	const getTutors = useMutation({
 		mutationKey: ["getTutors"],
@@ -73,7 +73,8 @@ export const useRoleService =()=> {
 		},
 	});
 
-	const useGetTutorProfile = (id: number) => { return useQuery({
+	const useGetTutorProfile = (id: number | null) => {
+		return useQuery({
 			queryKey: ["getProfile", id],
 			queryFn: async () => {
 				const { data } = await apiClient.get<TutorProfileType>(
@@ -82,6 +83,7 @@ export const useRoleService =()=> {
 				return data;
 			},
 			refetchOnWindowFocus: false,
+			enabled: id !== null,
 			placeholderData: {
 				contact_info: [],
 				description: "",
@@ -91,7 +93,27 @@ export const useRoleService =()=> {
 				year_group: "PRE_IB",
 				languages: []
 			},
-	})};
+		})
+	};
+
+	const useGetTuteeProfile = (id: number | null) => {
+		return useQuery({
+			queryKey: ["getProfile", id],
+			queryFn: async () => {
+				const { data } = await apiClient.get<TuteeProfileType>(
+					`/api/role/${id}/Tutee`,
+				);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			enabled: id !== null,
+			placeholderData: {
+				full_name: "",
+				year_group: YearGroup.Enum.IB_1,
+				languages: []
+			},
+		})
+	}
 
 	const editProfile = useMutation({
 		mutationKey: ["editProfile"],
@@ -113,9 +135,8 @@ export const useRoleService =()=> {
 	return {
 		assignTuteeRole,
 		removeRole,
-		getTutees,
 		getTutors,
-		useGetTutorProfile,
+		useGetTutorProfile, useGetTuteeProfile,
 		editProfile
 	};
 };

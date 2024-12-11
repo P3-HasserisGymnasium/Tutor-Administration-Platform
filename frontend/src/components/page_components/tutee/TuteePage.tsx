@@ -3,9 +3,9 @@ import { useState } from "react";
 import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip, ThemeProvider } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 // import tutorTheme from "~/themes/tutorTheme";
-import MiniCollabList from "~/components/content_components/MiniCollabList";
-import MiniPostList from "~/components/content_components/MiniPostList";
-import MiniCalendar from "~/components/content_components/MiniCalendar";
+import MiniCollabList from "src/components/content_components/MiniCollabList";
+import MiniPostList from "src/components/content_components/MiniPostList";
+import MiniCalendar from "src/components/content_components/MiniCalendar";
 import MeetingsList from "src/components/content_components/MeetingsList";
 //import { useNavigate } from "react-router-dom";
 import { useCurrentTheme, useBreakpoints } from "~/utilities/helperFunctions";
@@ -14,27 +14,42 @@ import { usePostService } from "~/api/services/post-service";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useAuth } from "~/api/authentication/useAuth";
 import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
+import EditPostDialog from "../dialogs/EditPostDialog";
+import { PostState, Subject } from "~/types/data_types";
+import { PostType } from "~/types/entity_types";
+import ViewPostsDialog from "../dialogs/ViewPostsDialog";
+import CreateCollaborationDialog from "../dialogs/CreateCollaborationDialog";
+import { useNavigate } from "react-router-dom";
+
+const post: PostType = {
+  id: 1,
+  title: "hjælp mig",
+  description: "iosjdsiaojdaojdasdiasdjsaod jsadj iasojdasd",
+  subject: Subject.Enum.Danish,
+  duration: [2, 8],
+  state: PostState.Enum.VISIBLE,
+};
 export default function TuteePage() {
+  const navigate = useNavigate();
+  const { useGetTuteePosts } = usePostService();
+  const { useGetCollaborationsWithTutee } = useCollaborationService();
   const theme = useCurrentTheme();
   const { isMobile } = useBreakpoints();
-  const [view, setView] = useState<"list" | "calender">("list");
+  const [view, setView] = useState<"list" | "calender">("calender");
   const [showCollabDialog, setShowCollabDialog] = useState(false);
+  const [showPostDialog, setShowPostDialog] = useState(false);
+  const [showEditPostDialog, setShowEditPostDialog] = useState(false);
+  const [showCreateCollabDialog, setshowCreateCollabDialog] = useState(false);
   const { userState } = useAuth();
-  const { data: posts, isLoading: postsLoading, isError: postsError } = usePostService().useGetTuteePosts();
-  const {
-    data: collaborations,
-    isLoading: collabLoading,
-    isError: collabError,
-  } = useCollaborationService().useGetCollaborationsWithTutee(userState?.id || null);
+  const { data: posts, isLoading: postsLoading, isError: postsError } = useGetTuteePosts();
+  const { data: collaborations, isLoading: collabLoading, isError: collabError } = useGetCollaborationsWithTutee(userState?.id || null);
 
   return (
     <ThemeProvider theme={theme}>
-      <ViewCollaborationsDialog
-        open={showCollabDialog}
-        setOpen={setShowCollabDialog}
-        collaborations={collaborations}
-        isLoading={collabLoading}
-      />
+      <CreateCollaborationDialog open={showCreateCollabDialog} setOpen={setshowCreateCollabDialog} />
+      <ViewCollaborationsDialog open={showCollabDialog} setOpen={setShowCollabDialog} collaborations={collaborations} isLoading={collabLoading} />
+      <EditPostDialog open={showEditPostDialog} setOpen={setShowEditPostDialog} post={post} />
+      <ViewPostsDialog open={showPostDialog} setOpen={setShowPostDialog} posts={posts} isLoading={postsLoading} />
       <MediumShortOnShortBoxLayout>
         <Box
           sx={{
@@ -43,23 +58,24 @@ export default function TuteePage() {
             border: "1px solid #white",
             borderRadius: "8px",
             overflow: "hidden",
+            height: "95%",
             p: isMobile ? 1 : 2,
             position: "relative",
           }}
         >
           {/* Header with Title and Buttons */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: isMobile ? 2 : 17 }}>
-            <Typography variant="h6">{view === "calender" ? "Calendar" : "Meeting List"}</Typography>
+          <Box sx={{ display: "flex", justifyContent: "space-between", gap: isMobile ? 2 : 17, width: "100%", height: "5%" }}>
+            <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1, width: 1 / 3 }}>
+              {view === "calender" ? "Calendar" : "Meeting List"}{" "}
+            </Typography>
 
             {/* Button group for toggling between calendar and meeting */}
-            <ButtonGroup variant="outlined" aria-label="outlined primary button group">
+            <ButtonGroup sx={{ width: 1 / 3 }} variant="outlined" aria-label="outlined primary button group">
               <Button
                 sx={{
+                  width: "160px",
                   color: theme.palette.text.primary, // Dynamically use the theme's text color
-                  backgroundColor: view === "list" ? theme.palette.primary.main : theme.palette.background.paper,
-                  "&:hover": {
-                    backgroundColor: view === "list" ? theme.palette.primary.light : theme.palette.action.hover,
-                  },
+                  backgroundColor: view === "calender" ? theme.palette.primary.main : theme.palette.background.paper,
                 }}
                 onClick={() => setView("calender")}
               >
@@ -68,42 +84,43 @@ export default function TuteePage() {
 
               <Button
                 sx={{
+                  width: "160px",
+
                   color: theme.palette.text.primary,
-                  backgroundColor: view === "calender" ? theme.palette.primary.main : theme.palette.background.paper,
-                  "&:hover": {
-                    backgroundColor: view === "calender" ? theme.palette.primary.light : theme.palette.action.hover,
-                  },
+                  backgroundColor: view === "list" ? theme.palette.primary.main : theme.palette.background.paper,
                 }}
                 onClick={() => setView("list")}
               >
                 Show Meetings
               </Button>
             </ButtonGroup>
-
-            <Tooltip
-              title="Your schedule showcases all of your meetings across all your collaborations, as a tutee. Click on a meeting to go to the specific collaboration."
-              arrow
-            >
-              <IconButton
-                sx={{
-                  position: "absolute",
-                  top: 8,
-                  right: 8,
-                  alignItems: "right",
-                }}
-                aria-label="info"
+            <Box sx={{ width: 1 / 3 }}>
+              <Tooltip
+                title="Your schedule showcases all of your meetings across all your collaborations, as a tutee. Click on a meeting to go to the specific collaboration."
+                arrow
               >
-                <InfoIcon />
-              </IconButton>
-            </Tooltip>
+                <IconButton
+                  sx={{
+                    position: "absolute",
+                    top: 8,
+                    right: 8,
+                    alignItems: "right",
+                  }}
+                  aria-label="info"
+                >
+                  <InfoIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
           <Box
             sx={{
-              position: "flex",
-              alignContent: "center",
-              alignItems: "center",
+              height: "100%",
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "flex-end",
               border: "white 1px",
-              overflow: "hidden",
             }}
           >
             {view === "calender" ? <MiniCalendar /> : <MeetingsList />}
@@ -123,7 +140,7 @@ export default function TuteePage() {
           <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, ml: 2, mt: 2, mr: 2 }}>
             <Box sx={{ display: "flex", alignItems: "flex-end" }}>
               <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>
-                List of posts
+                Your active posts
               </Typography>
               <Typography variant="body2" sx={{ color: "#555", marginBottom: 1.3, ml: 1 }}>
                 Click on a post to view details
@@ -148,10 +165,10 @@ export default function TuteePage() {
             <MiniPostList posts={posts} isLoading={postsLoading} isError={postsError} />
           </Box>
           <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
-            <CustomButton onClick={() => setShowCollabDialog(true)} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+            <CustomButton onClick={() => setShowPostDialog(true)} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
               View all
             </CustomButton>
-            <CustomButton variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+            <CustomButton onClick={() => navigate("/tutee/create-post")} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
               Create a post
             </CustomButton>
           </Box>
@@ -195,7 +212,10 @@ export default function TuteePage() {
             <MiniCollabList collaborations={collaborations} isLoading={collabLoading} isError={collabError} />
           </Box>
           <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
-            <CustomButton variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+            <CustomButton onClick={() => setshowCreateCollabDialog(true)} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+              Create Collaboration
+            </CustomButton>
+            <CustomButton onClick={() => setShowCollabDialog(true)} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
               View more
             </CustomButton>
           </Box>

@@ -2,6 +2,8 @@ package project.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,6 +20,7 @@ public class StudentCommunicatioInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Column(name = "username")
     @JsonProperty("username")
     private String username;
 
@@ -25,7 +28,7 @@ public class StudentCommunicatioInfo {
     @Enumerated(EnumType.STRING)
     private CommunicationMediumEnum communicationMedium;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Student student;
 
     public StudentCommunicatioInfo() {

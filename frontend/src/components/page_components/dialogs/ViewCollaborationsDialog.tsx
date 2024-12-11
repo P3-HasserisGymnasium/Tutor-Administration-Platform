@@ -12,8 +12,6 @@ type ViewCollaborationsDialogProps = {
 };
 
 export default function RequestMeetingDialog({ open, setOpen, collaborations, isLoading }: ViewCollaborationsDialogProps) {
-  console.log("collaborations", collaborations);
-
   return (
     <Dialog
       open={open}
@@ -33,9 +31,7 @@ export default function RequestMeetingDialog({ open, setOpen, collaborations, is
         <Loading size={100} />
       ) : (
         <>
-          <DialogTitle sx={{ fontWeight: "bold", fontSize: "1.5rem", textAlign: "center", pb: 0 }}>
-            Your active collaborations
-          </DialogTitle>
+          <DialogTitle sx={{ fontWeight: "bold", fontSize: "1.5rem", textAlign: "center", pb: 0 }}>Your active collaborations</DialogTitle>
           <DialogContentText textAlign={"center"} pt={0}>
             Click on a collaboration to go the respective collaboration page
           </DialogContentText>

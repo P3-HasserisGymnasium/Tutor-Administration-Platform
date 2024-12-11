@@ -6,6 +6,7 @@ import baseTheme from "~/themes/baseTheme";
 import tuteeTheme from "~/themes/tuteeTheme";
 import tutorTheme from "~/themes/tutorTheme";
 import unauthenticatedAppTheme from "~/themes/unauthenticatedAppTheme";
+import { NotificationResponseType } from "~/types/entity_types";
 
 /**
  * @returns {string} the heading of the current page based on the pathname.
@@ -34,6 +35,10 @@ export function useHeading(): string {
 			return "Tutor Application";
 		case "/tutor/posts-list":
 			return "List of Posts";
+		case "/tutee/notifications":
+		case "/tutor/notifications":
+		case "/notifications":
+			return "Notifications";
 		default:
 			return "";
 	}
@@ -41,7 +46,6 @@ export function useHeading(): string {
 
 export const useRolePrefix = (): string => {
 	const rolePrefix = useLocation().pathname;
-	console.log("rolePrefix", rolePrefix);
 	switch (true) {
 		case rolePrefix.startsWith("/tutee"):
 			return "/tutee";
@@ -65,7 +69,6 @@ export const useRolePrefix = (): string => {
  */
 export function useCurrentTheme(): Theme {
 	const firstPathPart = useRolePrefix();
-	console.log("firstPathPart", firstPathPart);
 	if (firstPathPart == null) {
 		return baseTheme;
 	}
@@ -196,3 +199,42 @@ export const getCookie = (name: string) => {
 export const deleteCookie = (name: string) => {
 	document.cookie = `${name}=; path=/; max-age=0`;
 };
+
+
+
+export const generateNotificationMessage = (notification: NotificationResponseType): string => {
+	switch (notification.context_type) {
+		case "TutorApplication":
+			if (notification.sender_type === "Admin") {
+				return `You have received an update on your tutor application from an administrator`;
+			}
+			return `You have received a new tutor application request from ${notification.sender_name}`;
+
+
+		case "Meeting":
+			if (notification.sender_type === "Tutee") {
+				return `You have received a new meeting request from ${notification.sender_name}`;
+			}
+			if (notification.sender_type === "Tutor") {
+				return `You have received an update on your meeting request for ${notification.sender_name}`;
+			}
+			return `You have received an update on a meeting`;
+
+
+		case "Collaboration":
+			if (notification.sender_type === "Tutee") {
+				return `You have received a new collaboration request from tutee ${notification.sender_name}`;
+			}
+			if (notification.sender_type === "Tutor") {
+				return `You have received an update on your collaboration request for ${notification.sender_name}`;
+			}
+			return `You have received an update on a collaboration`;
+
+
+		case "Feedback":
+			return `You have received feedback from ${notification.sender_name} for tutor ${notification.receiver_name}`;
+
+		default:
+			return "You have received a new notification";
+	}
+}

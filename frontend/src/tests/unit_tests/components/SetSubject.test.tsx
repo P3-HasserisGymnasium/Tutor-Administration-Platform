@@ -6,7 +6,7 @@ describe("SetSubject", () => {
   beforeEach(() => {
     vi.mock("react-hook-form", () => ({
       useFormContext: () => ({
-        getValues: () => [Subject.Enum.MATH, Subject.Enum.ENGLISH, Subject.Enum.SS, Subject.Enum.ECON],
+        getValues: () => [Subject.Enum.Math, Subject.Enum.English, Subject.Enum.Ss, Subject.Enum.Econ],
       }),
     }));
 
@@ -26,13 +26,13 @@ describe("SetSubject", () => {
   });
 
   it("should render the SetSubject component", () => {
-    render(<SetSubject />);
+    render(<SetSubject variant="create" />);
 
     expect(screen.getByTestId("setsubjectcontainer")).toBeInTheDocument();
   });
 
   it("should render the SetSubject component with 'X' subjects", () => {
-    render(<SetSubject />);
+    render(<SetSubject variant="edit" />);
 
     expect(screen.getByTestId("setsubjectcontainer")).toBeInTheDocument();
     const removalXs = screen.getAllByTestId("removesubjectx");
