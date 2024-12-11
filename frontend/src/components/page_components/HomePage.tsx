@@ -26,7 +26,7 @@ export default function HomePage() {
   const tutorColors = tutorTheme;
 
   const { isMobile } = useBreakpoints();
-  const [view, setView] = useState<"list" | "calender">("list");
+  const [view, setView] = useState<"list" | "calender">("calender");
   const { userState } = useAuth();
 
   // Fetching posts
@@ -62,22 +62,26 @@ export default function HomePage() {
             border: "1px solid #white",
             borderRadius: "8px",
             overflow: "hidden",
+            height: "95%",
             p: isMobile ? 1 : 2,
             position: "relative",
           }}
         >
           {/* Header with Title and Buttons */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: isMobile ? 2 : 17 }}>
-            <Typography variant="h6">{view === "calender" ? "Calendar" : "Meeting List"}</Typography>
+          <Box sx={{ display: "flex", justifyContent: "space-between", gap: isMobile ? 2 : 17, width: "100%", height: "5%" }}>
+            <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1, width: 1 / 3 }}>
+              {view === "calender" ? "Calendar" : "Meeting List"}{" "}
+            </Typography>
 
             {/* Button group for toggling between calendar and meeting */}
-            <ButtonGroup variant="outlined" aria-label="outlined primary button group">
+            <ButtonGroup sx={{ width: 1 / 3 }} variant="outlined" aria-label="outlined primary button group">
               <Button
                 sx={{
-                  color: theme.palette.text.primary, // Dynamically use the theme's text color
-                  backgroundColor: view === "list" ? theme.palette.primary.main : theme.palette.background.paper,
+                  width: "160px",
+                  color: view === "calender" ? "white" : theme.palette.text.primary,
+                  backgroundColor: view === "calender" ? theme.palette.primary.main : "white",
                   "&:hover": {
-                    backgroundColor: view === "list" ? theme.palette.primary.light : theme.palette.action.hover,
+                    color: "black",
                   },
                 }}
                 onClick={() => setView("calender")}
@@ -87,10 +91,11 @@ export default function HomePage() {
 
               <Button
                 sx={{
-                  color: theme.palette.text.primary,
-                  backgroundColor: view === "calender" ? theme.palette.primary.main : theme.palette.background.paper,
+                  width: "160px",
+                  color: view === "list" ? "white" : theme.palette.text.primary,
+                  backgroundColor: view === "list" ? theme.palette.primary.main : "white",
                   "&:hover": {
-                    backgroundColor: view === "calender" ? theme.palette.primary.light : theme.palette.action.hover,
+                    color: "black",
                   },
                 }}
                 onClick={() => setView("list")}
@@ -98,37 +103,38 @@ export default function HomePage() {
                 Show Meetings
               </Button>
             </ButtonGroup>
-
-            <Tooltip
-              title="Your schedule showcases all of your meetings across all your collaborations, as a tutee. Click on a meeting to go to the specific collaboration."
-              arrow
-            >
-              <IconButton
-                sx={{
-                  position: "absolute",
-                  top: 8,
-                  right: 8,
-                  alignItems: "right",
-                }}
-                aria-label="info"
+            <Box sx={{ width: 1 / 3 }}>
+              <Tooltip
+                title="Your schedule showcases all of your meetings across all your collaborations, as a tutee. Click on a meeting to go to the specific collaboration."
+                arrow
               >
-                <InfoIcon />
-              </IconButton>
-            </Tooltip>
+                <IconButton
+                  sx={{
+                    position: "absolute",
+                    top: 8,
+                    right: 8,
+                    alignItems: "right",
+                  }}
+                  aria-label="info"
+                >
+                  <InfoIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
           <Box
             sx={{
-              position: "flex",
-              alignContent: "center",
-              alignItems: "center",
+              height: "100%",
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "flex-end",
               border: "white 1px",
-              overflow: "hidden",
             }}
           >
             {view === "calender" ? <MiniCalendar /> : <MeetingsList />}
           </Box>
         </Box>
-
         <Paper
           elevation={8}
           sx={{
