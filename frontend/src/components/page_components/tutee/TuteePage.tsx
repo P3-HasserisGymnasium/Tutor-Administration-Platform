@@ -35,7 +35,7 @@ export default function TuteePage() {
   const [showCollabDialog, setShowCollabDialog] = useState(false);
   const [showPostDialog, setShowPostDialog] = useState(false);
   const [showEditPostDialog, setShowEditPostDialog] = useState(false);
-  const { userState } = useAuth();
+  const { userState } = useAuth();  
   const { data: posts, isLoading: postsLoading, isError: postsError } = useGetTuteePosts();
   const { data: collaborations, isLoading: collabLoading, isError: collabError } = useGetCollaborationsWithTutee(userState?.id || null);
 

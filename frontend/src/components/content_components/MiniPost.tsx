@@ -3,6 +3,8 @@ import SubjectChip from "./SubjectChip";
 import { PostType } from "~/types/entity_types";
 import { useTheme } from "@mui/system";
 import { Theme } from "@mui/material/styles";
+import EditPostDialog from "components/page_components/dialogs/EditPostDialog";
+import { useState } from "react";
 
 type MiniPostProp = {
   postData: PostType;
@@ -10,9 +12,12 @@ type MiniPostProp = {
 
 export default function MiniPost({ postData }: MiniPostProp) {
   const theme = useTheme<Theme>();
+  const [showEditPostDialog, setShowEditPostDialog] = useState(false);
+
   return (
     <Box
       data-testid="minipostcontainer"
+      onClick={() => setShowEditPostDialog(true)}
       sx={{
         backgroundColor: theme.customColors.collaborationBackgroundColor,
         border: "1px solid rgba(173, 92, 0, 1)",
@@ -25,6 +30,7 @@ export default function MiniPost({ postData }: MiniPostProp) {
         padding: 1,
       }}
     >
+      <EditPostDialog open={showEditPostDialog} setOpen={setShowEditPostDialog} post={postData} />
       <Typography
         data-testid="posttitle"
         variant="h4"
@@ -39,9 +45,21 @@ export default function MiniPost({ postData }: MiniPostProp) {
          
           data-testid="postduration"
         >
-          Duration:{postData?.duration ? postData.duration : "No duration"}
+          {getDuration(postData.duration)}
         </Typography>
       </Box>
     </Box>
   );
+}
+
+function getDuration(duration: number[]|undefined) {
+  if (duration === undefined) {
+    return "Duration not specified";
+  }
+  else if (duration[0] === duration[1]) {
+    return `Duration: ${duration[0]} months`;
+  }
+  else {
+    return `Duration: ${duration[0]}-${duration[1]} months`;
+  }
 }

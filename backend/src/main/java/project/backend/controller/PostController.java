@@ -142,7 +142,7 @@ public class PostController {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
         System.out.println("after authuser");
 
-        if (!Objects.equals(authenticatedUser.getTuteeId(), postService.getPostById(id).get().getTutee().getId()) || !authenticatedUser.isAdministrator()) {
+        if (!Objects.equals(authenticatedUser.getTuteeId(), postService.getPostById(id).get().getTutee().getId()) && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You do not have permission to update this post");
         }
         Post post = postService.getPostById(id).get();
