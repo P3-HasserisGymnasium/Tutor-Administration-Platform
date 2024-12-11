@@ -27,6 +27,7 @@ export const zodPostSchema = z.object({
 });
 
 export const zodTutorProfileSchema = z.object({
+  id: z.number(),
   full_name: z.string(),
   year_group: YearGroup,
   languages: z.array(Language),
@@ -37,6 +38,7 @@ export const zodTutorProfileSchema = z.object({
 });
 
 export const zodTuteeProfileSchema = z.object({
+  id: z.number(),
   full_name: z.string(),
   year_group: YearGroup,
   languages: z.array(Language),

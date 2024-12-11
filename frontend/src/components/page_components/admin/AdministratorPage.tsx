@@ -12,7 +12,7 @@ export default function AdministratorPage() {
 	const theme = useCurrentTheme();
 
 	const { data: tutors, isLoading: isTutorsLoading } = useRoleService().getTutors();
-	const { data: tutees } = useRoleService().getTutees();
+	const { data: tutees, isLoading: isTuteesLoading } = useRoleService().getTutees();
 	const { data: collaborations } = useCollaborationService().getCollabortations();
 
 	let tutorCount = tutors?.length;
@@ -32,7 +32,7 @@ export default function AdministratorPage() {
 					<Typography variant="h1" sx={{ paddingTop: 3, paddingLeft: 3 }}>
 						Manage tutees
 					</Typography>
-					<AdminManageTutees />
+					<AdminManageTutees tutees={tutees} isLoading={isTuteesLoading} />
 				</Box>
 				<Box sx={{ height: "100%", width: "100%" }}>
 					<Typography variant="h1" sx={{ paddingTop: 3, paddingLeft: 3 }}>

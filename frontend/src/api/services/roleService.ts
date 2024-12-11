@@ -2,7 +2,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { TutorProfileType } from "~/types/entity_types";
+import { TuteeProfileType, TutorProfileType } from "~/types/entity_types";
 
 // tutee/tutor:role_id -> role:student_id -> student:id
 
@@ -47,7 +47,7 @@ export const useRoleService = () => {
 		return useQuery({
 			queryKey: ["getTutees"],
 			queryFn: async () => {
-				const { data } = await apiClient.get<number[]>(
+				const { data } = await apiClient.get<TuteeProfileType[]>(
 					`/api/role/tutees`
 				);
 				return data;
@@ -83,6 +83,7 @@ export const useRoleService = () => {
 			},
 			refetchOnWindowFocus: false,
 			placeholderData: {
+				id: 0,
 				contact_info: [],
 				description: "",
 				full_name: "",

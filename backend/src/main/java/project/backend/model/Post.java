@@ -39,12 +39,13 @@ public class Post {
 
     @Column(name = "creation_date")
     Timestamp creationTimestamp;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
     PostState state;
 
-    public Post(){}
+    public Post() {
+    }
 
     public Long getId() {
         return id;

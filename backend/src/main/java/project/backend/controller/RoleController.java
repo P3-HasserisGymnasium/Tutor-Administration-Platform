@@ -43,7 +43,7 @@ public class RoleController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to view all tutees");
         }
 
-        List<Tutee> tutees = roleService.getTutees();
+        List<TuteeProfileResponse> tutees = roleService.getTutees();
 
         return ResponseEntity.status(HttpStatus.OK).body(tutees);
     }

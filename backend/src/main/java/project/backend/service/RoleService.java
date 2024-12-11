@@ -55,11 +55,17 @@ public class RoleService {
         this.accountRepository = accountRepository;
     }
 
-    public List<Tutee> getTutees() {
+    public List<TuteeProfileResponse> getTutees() {
         List<Student> students = studentRepository.getTutees();
-        List<Tutee> tutees = new ArrayList<Tutee>();
+        List<TuteeProfileResponse> tutees = new ArrayList<TuteeProfileResponse>();
         for (Student student : students) {
-            Tutee tutee = student.getTutee();
+            TuteeProfileResponse tutee = new TuteeProfileResponse();
+            tutee.id = student.getTutee().getId();
+            tutee.full_name = student.getFullName();
+            System.out.println("@RoleService, full_name: " + student.getFullName() + ", id: " + student.getId());
+            tutee.year_group = student.getYearGroup();
+            tutee.languages = student.getLanguages();
+            // We don't care about the rest of the values, surely
             tutees.add(tutee);
         }
         return tutees;
@@ -70,7 +76,7 @@ public class RoleService {
         List<TutorProfileResponse> tutors = new ArrayList<>();
         for (Student student : students) {
             TutorProfileResponse response = new TutorProfileResponse();
-
+            response.id = student.getTutor().getId();
             response.contact_info = student.getContactInfo();
             response.full_name = student.getFullName();
             response.languages = student.getLanguages();

@@ -7,6 +7,7 @@ export default function TutorList() {
   // const [tutors, setTutors] = useState<Tutor[]>([]);
 
   const profile: TutorProfileType = {
+    id: 0,
     full_name: "Lukas Saltenis",
     year_group: YearGroup.Enum["PRE_IB"],
     languages: [Language.Enum.Danish, Language.Enum.English],
