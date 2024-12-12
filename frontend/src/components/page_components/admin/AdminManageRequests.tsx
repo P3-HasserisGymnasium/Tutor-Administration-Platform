@@ -25,6 +25,7 @@ export default function AdminRequests({ collaborations, isLoading }: AdminReques
                     if (i > 2 || collaboration == undefined) return null;
                     return <CollaborationBox collaboration={collaboration} />;
                 })}
+                {allCollaborations[0] == undefined && <Typography>No requests</Typography>}
             </Box>
             <Box sx={{ display: "flex", height: "20%", justifyContent: "flex-end", alignItems: "center", mr: 1 }}>
                 <Button sx={{ height: "50px", fontSize: 18 }} variant="contained" color="primary">

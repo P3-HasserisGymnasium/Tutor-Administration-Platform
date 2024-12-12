@@ -35,7 +35,7 @@ public class CollaborationController {
         this.collaborationService = collaborationService;
     }
 
-    @GetMapping("/requests")
+    @GetMapping("/pairing_requests")
     public ResponseEntity<?> getCollaborationSuggestions(HttpServletRequest request) {
         List<Collaboration> requests = collaborationService.getAllRequestedPairingCollaborations();
 

@@ -10,7 +10,7 @@ export const useCollaborationService = () => {
 	//Admin wants to get pairing help requests
 	const getCollaborationSuggestionRequests = () => {
 		return useQuery({
-			queryKey: ["getCollaborationSuggestionRequests"],
+			queryKey: ["getCollaborationSuggestions"],
 			queryFn: async () => {
 				const { data } = await apiClient.get<CollaborationType[]>(
 					`/api/collaboration/pairing_requests`
