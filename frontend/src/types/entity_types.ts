@@ -40,6 +40,7 @@ export const zodTuteeProfileSchema = z.object({
 	full_name: z.string(),
 	year_group: YearGroup,
 	languages: z.array(Language),
+	contact_info: z.array(z.object({ username: z.string(), ComunicationMedium }))
 });
 
 export const zodMeetingSchema = z.object({

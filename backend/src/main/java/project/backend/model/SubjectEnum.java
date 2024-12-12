@@ -1,7 +1,7 @@
 package project.backend.model;
 
 public enum SubjectEnum {
-    Music,
+  Music,
 	Math,
 	Ess,
 	English,

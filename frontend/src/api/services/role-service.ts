@@ -110,7 +110,8 @@ export const useRoleService = () => {
 			placeholderData: {
 				full_name: "",
 				year_group: YearGroup.Enum.IB_1,
-				languages: []
+				languages: [],
+				contact_info: [],
 			},
 		})
 	}
