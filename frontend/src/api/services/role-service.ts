@@ -57,21 +57,17 @@ export const useRoleService = () => {
 		});
 	 */
 	// tutor information gets returned
-	const getTutors = useMutation({
-		mutationKey: ["getTutors"],
-		mutationFn: async (filters: tutorListFilterType) => {
-			const { data } = await apiClient.post<TutorProfileType[]>(
-				`/api/role`, filters
-			);
-			return data;
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
-		},
-		onSuccess: () => {
-			//
-		},
-	});
+	const getTutors = (filters: tutorListFilterType) => {
+		return useQuery({
+			queryKey: ["getTutors", filters],
+			queryFn: async () => {
+				const { data } = await apiClient.post<TutorProfileType[]>(`/api/role/tutorsFiltered`, filters);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			placeholderData: [],
+		});
+	};
 
 	const useGetTutorProfile = (id: number | null) => {
 		return useQuery({
