@@ -5,7 +5,7 @@ import { useAuth } from "~/api/authentication/useAuth";
 
 import {useWrap, useVariableWidth, useVariableHeight } from "~/utilities/helperFunctions";
 import { useRoleService } from "~/api/services/role-service";
-import { usePostService } from "~/api/services/post-service";
+//import { usePostService } from "~/api/services/post-service";
 
 
 
@@ -18,7 +18,7 @@ export default function TuteeProfilePage() {
 
   const { data: tuteeProfile, isLoading: isTuteeProfileLoading, error } = useRoleService().useGetTuteeProfile(tuteeId);
 
-  const {data: posts, isLoading: isProfileLoading} = usePostService().useGetTuteePosts();
+  //const {data: posts, isLoading: isProfileLoading} = usePostService().useGetTuteePosts();
 
 
 
