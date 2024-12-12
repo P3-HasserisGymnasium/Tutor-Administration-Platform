@@ -52,7 +52,7 @@ export const zodMeetingTime = z.object({
 
 export const zodContactInfo = z.object({
   username: z.string(),
-  medium: CommunicationMedium,
+  communicationMedium: CommunicationMedium,
 });
 
 export const zodTutorApplicationSchema = z.object({

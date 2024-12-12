@@ -11,7 +11,7 @@ export default function TutorList() {
     year_group: YearGroup.Enum["PRE_IB"],
     languages: [Language.Enum.Danish, Language.Enum.English],
     tutoring_subjects: [Subject.Enum.Math, Subject.Enum.Physics],
-    contact_info: [{ username: "Saltenis", ComunicationMedium: "Discord" }],
+    contact_info: [{ username: "Saltenis", communicationMedium: "Discord" }],
     description: "I am a tutor :)",
     time_availability: [
       {

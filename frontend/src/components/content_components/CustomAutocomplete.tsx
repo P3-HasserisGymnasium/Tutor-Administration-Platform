@@ -102,7 +102,7 @@ function YearGroupAutocomplete({
 				<Autocomplete
 					multiple={multiple}
 					options={Object.values(YearGroup.enum)}
-					defaultValue={initialValue}
+					value={field.value || initialValue}
 					onChange={(_, newValue) => {
 						field.onChange(newValue);
 					}}

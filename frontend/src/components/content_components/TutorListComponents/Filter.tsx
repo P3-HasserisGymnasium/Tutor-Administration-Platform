@@ -18,7 +18,6 @@ export default function Filter() {
   });
 
   const { control } = filterMethods;
-
   const filter = () => {};
   return (
     <FormProvider {...filterMethods}>

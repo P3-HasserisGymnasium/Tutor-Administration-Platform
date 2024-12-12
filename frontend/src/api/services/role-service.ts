@@ -115,7 +115,8 @@ export const useRoleService = () => {
 		})
 	}
 
-	const editProfile = useMutation({
+	const useEditProfile = ()=>{ return (
+		useMutation({
 		mutationKey: ["editProfile"],
 		mutationFn: async (profile: TutorProfileType) => {
 			const { data } = await apiClient.post<TutorProfileType>(
@@ -130,13 +131,13 @@ export const useRoleService = () => {
 		onSuccess: () => {
 			toast.success("Profile saved");
 		},
-	});
+	}))}
 
 	return {
 		assignTuteeRole,
 		removeRole,
 		getTutors,
 		useGetTutorProfile, useGetTuteeProfile,
-		editProfile
+		useEditProfile
 	};
 };
