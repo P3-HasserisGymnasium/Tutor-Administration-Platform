@@ -36,7 +36,7 @@ export default function TuteeProfilePage() {
     },
   }
   const formMethods = useForm<TuteeProfile>(useFormProvider);
-  const { handleSubmit, setValue, register } = formMethods;
+  //const { handleSubmit, setValue, register } = formMethods;
 
 
 
