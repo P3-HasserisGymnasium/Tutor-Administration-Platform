@@ -17,9 +17,7 @@ import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
 import project.backend.controller_bodies.role_controller.TutorProfileResponse;
 import project.backend.model.RoleEnum;
-import project.backend.model.Tutee;
 import project.backend.service.RoleService;
-import project.backend.utilities.HelperFunctions;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -28,11 +26,9 @@ public class RoleController {
 
     @Autowired
     final RoleService roleService;
-    private final HelperFunctions helperFunctions;
 
-    public RoleController(RoleService roleService, HelperFunctions helperFunctions) {
+    public RoleController(RoleService roleService) {
         this.roleService = roleService;
-        this.helperFunctions = helperFunctions;
     }
 
     @GetMapping("/tutees")
@@ -61,12 +57,6 @@ public class RoleController {
     @GetMapping("/{id}/{role}")
     public ResponseEntity<?> getProfile(@PathVariable long id, @PathVariable RoleEnum role,
             HttpServletRequest request) {
-        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
-
-        if (!helperFunctions.isUserPermitted(authenticatedUser, id)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Unauthorized: You do not have access to this profile");
-        }
 
         if (role == RoleEnum.Tutor) {
             try {

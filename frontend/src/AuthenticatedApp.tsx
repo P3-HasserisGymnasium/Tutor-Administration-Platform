@@ -42,6 +42,8 @@ export default function AuthenticatedApp() {
 			<Box sx={{ height: "calc(100% - 5em)", width: "100%" }}>
 				<Routes>
 					{/* Common routes */}
+					<Route path="/login" element={<HomePage />} />
+					<Route path="/notifications" element={<NotificationsList />} />
 					<Route
 						path="/"
 						element={

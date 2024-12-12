@@ -95,6 +95,19 @@ export const zodNotificationSchema = z.object({
   state: NotificationState,
 });
 
+export const zodNotificationResponseSchema = z.object({
+  id: zodUUID.nullable(),
+  sender_id: zodUUID,
+  sender_name: z.string(),
+  sender_type: NotificationParticipant,
+  receiver_id: zodUUID,
+  receiver_name: z.string(),
+  receiver_type: NotificationParticipant,
+  context_id: zodUUID,
+  context_type: NotificationContext,
+  state: NotificationState,
+});
+
 export const zodAccountRegisterSchema = z.object({
   full_name: z
     .string({
@@ -204,4 +217,5 @@ export type CollaborationType = z.infer<typeof zodCollaborationSchema>;
 export type Feedback = z.infer<typeof zodFeedbackSchema>;
 export type AccountRegisterType = z.infer<typeof zodAccountRegisterSchema>;
 export type NotificationType = z.infer<typeof zodNotificationSchema>;
+export type NotificationResponseType = z.infer<typeof zodNotificationResponseSchema>;
 export type TerminationType = z.infer<typeof zodTerminationSchema>

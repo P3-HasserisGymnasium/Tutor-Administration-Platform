@@ -82,6 +82,7 @@ export const useRoleService = () => {
 				return data;
 			},
 			refetchOnWindowFocus: false,
+			enabled: id !== null,
 			placeholderData: {
 				id: 0,
 				contact_info: [],
@@ -94,6 +95,26 @@ export const useRoleService = () => {
 			},
 		})
 	};
+
+	const useGetTuteeProfile = (id: number | null) => {
+		return useQuery({
+			queryKey: ["getProfile", id],
+			queryFn: async () => {
+				const { data } = await apiClient.get<TuteeProfileType>(
+					`/api/role/${id}/Tutee`,
+				);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			enabled: id !== null,
+			placeholderData: {
+				id: 0,
+				full_name: "string",
+				year_group: "IB_1",
+				languages: ["Danish"]
+			},
+		})
+	}
 
 	const editProfile = useMutation({
 		mutationKey: ["editProfile"],
@@ -115,9 +136,10 @@ export const useRoleService = () => {
 	return {
 		assignTuteeRole,
 		removeRole,
-		getTutees,
 		getTutors,
+		getTutees,
 		useGetTutorProfile,
+		useGetTuteeProfile,
 		editProfile
 	};
 };

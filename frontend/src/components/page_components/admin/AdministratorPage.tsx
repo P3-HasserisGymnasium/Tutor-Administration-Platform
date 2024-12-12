@@ -1,6 +1,6 @@
 import { Box, ThemeProvider, Typography } from "@mui/material";
 import { useCollaborationService } from "~/api/services/collaboration-service";
-import { useRoleService } from "~/api/services/roleService";
+import { useRoleService } from "~/api/services/role-service";
 import ShortOnShortShortOnShortBoxLayout from "~/components/layout_components/ShortOnShortShortOnShortBoxLayout";
 import AdminRequests from "./AdminManageRequests";
 import AdminManageTutees from "./AdminManageTutees";
