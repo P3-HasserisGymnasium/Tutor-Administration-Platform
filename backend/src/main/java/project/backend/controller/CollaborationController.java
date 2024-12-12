@@ -35,6 +35,13 @@ public class CollaborationController {
         this.collaborationService = collaborationService;
     }
 
+    @GetMapping("/requests")
+    public ResponseEntity<?> getCollaborationSuggestions(HttpServletRequest request) {
+        List<Collaboration> requests = collaborationService.getAllRequestedPairingCollaborations();
+
+        return ResponseEntity.status(HttpStatus.OK).body(requests);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getCollaboration(@PathVariable Long id, HttpServletRequest request) {
         // AuthenticatedUserBody authenticatedUser =

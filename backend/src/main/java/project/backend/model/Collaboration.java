@@ -63,6 +63,9 @@ public class Collaboration {
     @Column(name = "adminState")
     CollaborationState adminState;
 
+    @Column(name = "requested_pairing")
+    boolean requestedPairing = false;
+
     @OneToMany(mappedBy = "collaboration")
     List<Meeting> meetings = new ArrayList<>();
 
@@ -159,6 +162,14 @@ public class Collaboration {
 
     public void setAdminState(CollaborationState adminState) {
         this.adminState = adminState;
+    }
+
+    public void setRequestedPairing(boolean requestedPairing) {
+        this.requestedPairing = requestedPairing;
+    }
+
+    public boolean getRequestedPairing() {
+        return requestedPairing;
     }
 
     public CollaborationState getAdminState() {

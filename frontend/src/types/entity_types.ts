@@ -65,6 +65,7 @@ export const zodCollaborationSchema = z.object({
   tutor_name: z.string(),
   state: CollaborationState,
   subject: Subject,
+  requestedPairing: z.boolean(),
   end_date: z.union([z.date(), z.string()]).optional(),
   start_date: z.union([z.date(), z.string()]).optional(),
 });

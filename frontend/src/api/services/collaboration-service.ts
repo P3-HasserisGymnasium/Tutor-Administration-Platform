@@ -7,6 +7,21 @@ import { Role } from "~/types/data_types";
 import { z } from "zod";
 
 export const useCollaborationService = () => {
+	//Admin wants to get pairing help requests
+	const getCollaborationSuggestionRequests = () => {
+		return useQuery({
+			queryKey: ["getCollaborationSuggestionRequests"],
+			queryFn: async () => {
+				const { data } = await apiClient.get<CollaborationType[]>(
+					`/api/collaboration/pairing_requests`
+				);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			placeholderData: [],
+		})
+	};
+
 	//Admin requests a collaboration
 	const submitCollaborationSuggestion = useMutation({
 		mutationKey: ["submitCollaborationSuggestion"],
@@ -87,7 +102,7 @@ export const useCollaborationService = () => {
 		return useMutation({
 			mutationKey: ["terminateCollaboration"],
 			mutationFn: async ({ id, terminationReason }: TerminationType) => {
-				const { data } = await apiClient.post<string>("/api/collaboration/terminate" + id, terminationReason);
+				const { data } = await apiClient.post<string>("/api/collaboration/terminate/" + id, terminationReason);
 				return data;
 			},
 			onError: (e: AxiosError<{ detail: string }>) => {
@@ -166,6 +181,7 @@ export const useCollaborationService = () => {
 	};
 
 	return {
+		getCollaborationSuggestionRequests,
 		useGetCollaborationsWithTutee,
 		getCollabortations,
 		useGetCollaborationsWithTutor,

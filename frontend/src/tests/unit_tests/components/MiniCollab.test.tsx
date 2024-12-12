@@ -19,6 +19,7 @@ const mockCollaboration: CollaborationType = {
   tutee_id: 2,
   start_date: "2021-10-10",
   end_date: "2021-10-10",
+  requestedPairing: false
 };
 
 describe("MiniCollab", () => {

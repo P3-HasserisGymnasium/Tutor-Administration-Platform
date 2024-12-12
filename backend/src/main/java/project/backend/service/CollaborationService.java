@@ -22,10 +22,9 @@ import project.backend.model.Administrator;
 import project.backend.repository.CollaborationRepository;
 import project.backend.repository.AdministratorRepository;
 
-
 @Service
 public class CollaborationService {
-    
+
     @Autowired
     final CollaborationRepository collaborationRepository;
 
@@ -38,31 +37,40 @@ public class CollaborationService {
     @Autowired
     final RoleService roleService;
 
-
-
-    public CollaborationService(CollaborationRepository collaborationRepository, RoleService roleService, NotificationService notificationService, AdministratorRepository administratorRepository) {
+    public CollaborationService(CollaborationRepository collaborationRepository, RoleService roleService,
+            NotificationService notificationService, AdministratorRepository administratorRepository) {
         this.collaborationRepository = collaborationRepository;
         this.roleService = roleService;
         this.notificationService = notificationService;
         this.administratorRepository = administratorRepository;
     }
 
-    public Collaboration getCollaborationById(Long id){
+    public Collaboration getCollaborationById(Long id) {
         Optional<Collaboration> collaboratOpt = collaborationRepository.findById(id);
 
         return collaboratOpt.orElse(null);
     }
 
-    public ArrayList<Collaboration> getCollaborationsWithTutor(Long tutorId){
+    public ArrayList<Collaboration> getCollaborationsWithTutor(Long tutorId) {
         return collaborationRepository.findCollaborationsWithTutorId(tutorId);
     }
 
-    public ArrayList<Collaboration> getCollaborationsWithTutee(Long tuteeId){
+    public ArrayList<Collaboration> getCollaborationsWithTutee(Long tuteeId) {
         return collaborationRepository.findCollaborationsWithTuteeId(tuteeId);
     }
 
-    public List<Collaboration> getAllCollaborations(){
+    public List<Collaboration> getAllCollaborations() {
         return collaborationRepository.findAll();
+    }
+
+    public ArrayList<Collaboration> getAllRequestedPairingCollaborations() {
+        List<Collaboration> all = getAllCollaborations();
+        ArrayList<Collaboration> pairingRequests = new ArrayList<>();
+        for (int i = 0; i < all.size(); i++) {
+            if (all.get(i).getRequestedPairing())
+                pairingRequests.add(all.get(i));
+        }
+        return pairingRequests;
     }
 
     public Collaboration createCollaboration(CollaborationCreateBody body) {
@@ -86,22 +94,23 @@ public class CollaborationService {
         collaborationRepository.deleteById(id);
     }
 
-    // this is very weird implemented, should receive a post body, and correctly fill out all the options.
-     public void requestCollaborationSuggestion(Long studentId, PostBody requestBody){
+    // this is very weird implemented, should receive a post body, and correctly
+    // fill out all the options.
+    public void requestCollaborationSuggestion(Long studentId, PostBody requestBody) {
         Collaboration collaboration = new Collaboration();
         collaboration.setSubject(requestBody.subject);
         collaboration.setState(CollaborationState.PENDING);
         collaboration.setTutee(roleService.getTuteeById(studentId));
+        collaboration.setRequestedPairing(true);
         collaborationRepository.save(collaboration);
-    } 
-
+    }
 
     // admin provides collaboration suggestion
-    public void submitCollaborationSuggestion(Long collaborationId, Long tutorId){
+    public void submitCollaborationSuggestion(Long collaborationId, Long tutorId) {
         Tutor tutor = roleService.getStudentById(tutorId).getTutor();
 
         Collaboration collaboration = getCollaborationById(collaborationId);
-        
+
         collaboration.setTutor(tutor);
         collaboration.setAdminState(CollaborationState.ACCEPTED);
         collaboration.setTutorState(CollaborationState.PENDING);
@@ -110,18 +119,19 @@ public class CollaborationService {
         Long tuteeId = collaboration.getTutee().getId();
 
         // notify tutor and tutee of the collaboration suggestion
-        notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId, EntityType.COLLABORATION);
-        notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId, EntityType.COLLABORATION);
+        notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId,
+                EntityType.COLLABORATION);
+        notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId,
+                EntityType.COLLABORATION);
 
-        collaborationRepository.save(collaboration);  
+        collaborationRepository.save(collaboration);
     }
 
-   
-    public void acceptCollaboration(Long collaborationId, RoleEnum role){
+    public void acceptCollaboration(Long collaborationId, RoleEnum role) {
 
         Collaboration collaboration = getCollaborationById(collaborationId);
 
-        switch(role){
+        switch (role) {
             case Tutee:
                 collaboration.setTuteeState(CollaborationState.ACCEPTED);
                 break;
@@ -132,73 +142,77 @@ public class CollaborationService {
                 throw new IllegalArgumentException("Invalid role specified.");
         }
 
-    
-        if(collaboration.getTutorState() == CollaborationState.ACCEPTED && 
-            collaboration.getTuteeState() == CollaborationState.ACCEPTED){
-            
+        if (collaboration.getTutorState() == CollaborationState.ACCEPTED &&
+                collaboration.getTuteeState() == CollaborationState.ACCEPTED) {
 
             collaboration.setState(CollaborationState.WAITING_FOR_ADMIN);
 
-             // Dynamically determine the sender based on the role
-            Long senderId = (role == RoleEnum.Tutee) ? collaboration.getTutee().getId() : collaboration.getTutor().getId();
+            // Dynamically determine the sender based on the role
+            Long senderId = (role == RoleEnum.Tutee) ? collaboration.getTutee().getId()
+                    : collaboration.getTutor().getId();
             EntityType senderType = (role == RoleEnum.Tutee) ? EntityType.TUTEE : EntityType.TUTOR;
 
-            Administrator admin = administratorRepository.findFirstBy().orElseThrow(() -> new IllegalStateException("Administrator not found"));
+            Administrator admin = administratorRepository.findFirstBy()
+                    .orElseThrow(() -> new IllegalStateException("Administrator not found"));
 
-            notificationService.sendNotification(senderId, senderType, admin.getId(), EntityType.ADMIN,collaborationId, EntityType.COLLABORATION);
+            notificationService.sendNotification(senderId, senderType, admin.getId(), EntityType.ADMIN, collaborationId,
+                    EntityType.COLLABORATION);
         }
 
         collaborationRepository.save(collaboration);
     }
 
-    public void rejectCollaboration(Long collaborationId, RoleEnum role){
+    public void rejectCollaboration(Long collaborationId, RoleEnum role) {
         Collaboration collaboration = getCollaborationById(collaborationId);
 
-        Long tuteeId =  collaboration.getTutee().getId();
+        Long tuteeId = collaboration.getTutee().getId();
         Long tutorId = collaboration.getTutor().getId();
 
-
-        if(collaboration.getAdminState() == CollaborationState.REJECTED){
+        if (collaboration.getAdminState() == CollaborationState.REJECTED) {
             collaboration.setState(CollaborationState.REJECTED);
 
-            notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId, EntityType.COLLABORATION);
-            notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId, EntityType.COLLABORATION);
+            notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId,
+                    EntityType.COLLABORATION);
+            notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId,
+                    EntityType.COLLABORATION);
 
-        } else if (role == RoleEnum.Tutee){
+        } else if (role == RoleEnum.Tutee) {
             collaboration.setTuteeState(CollaborationState.REJECTED);
             collaboration.setState(CollaborationState.REJECTED);
 
-            notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId, EntityType.COLLABORATION);
+            notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId,
+                    EntityType.COLLABORATION);
 
-        } else if (role == RoleEnum.Tutor){
+        } else if (role == RoleEnum.Tutor) {
             collaboration.setTutorState(CollaborationState.REJECTED);
             collaboration.setState(CollaborationState.REJECTED);
 
-            notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId, EntityType.COLLABORATION);
-        }else{
+            notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId,
+                    EntityType.COLLABORATION);
+        } else {
             throw new IllegalArgumentException("Invalid role specified.");
-        } 
+        }
 
         deleteCollaborationById(collaborationId);
     }
 
-    
     // request specififc tutor or tutor request tutee through a post
-    public void requestCollaboration(Long tuteeId, Long tutorId, RoleEnum collabRequester, SubjectEnum subject){
+    public void requestCollaboration(Long tuteeId, Long tutorId, RoleEnum collabRequester, SubjectEnum subject) {
 
         Collaboration collaboration = new Collaboration();
         collaboration.setSubject(subject);
         collaboration.setState(CollaborationState.PENDING);
         Long collaborationId = collaboration.getId();
 
-        switch(collabRequester){
+        switch (collabRequester) {
             case Tutee -> {
                 Tutee tutee = roleService.getTuteeById(tuteeId);
                 collaboration.setTuteeState(CollaborationState.ACCEPTED);
                 collaboration.setTutee(tutee);
                 collaboration.setTutorState(CollaborationState.WAITING_FOR_TUTOR);
 
-                notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId, EntityType.COLLABORATION);
+                notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR,
+                        collaborationId, EntityType.COLLABORATION);
 
             }
             case Tutor -> {
@@ -207,7 +221,8 @@ public class CollaborationService {
                 collaboration.setTutor(tutor);
                 collaboration.setTuteeState(CollaborationState.WAITING_FOR_TUTEE);
 
-                notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId, EntityType.COLLABORATION);
+                notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE,
+                        collaborationId, EntityType.COLLABORATION);
             }
             default -> throw new IllegalArgumentException("Invalid role specified.");
         }
@@ -215,7 +230,7 @@ public class CollaborationService {
         collaborationRepository.save(collaboration);
     }
 
-    public void terminateCollaboration(Long collaborationId, String terminationReason){
+    public void terminateCollaboration(Long collaborationId, String terminationReason) {
         Collaboration collaboration = getCollaborationById(collaborationId);
 
         // Remove the collaboration for tutee and tutor
@@ -232,17 +247,18 @@ public class CollaborationService {
         collaborationRepository.save(collaboration);
     }
 
-    public void submitFeedback(Long collaborationId, Long tuteeId, Feedback feedback){
+    public void submitFeedback(Long collaborationId, Long tuteeId, Feedback feedback) {
         Collaboration collaboration = getCollaborationById(collaborationId);
 
         Tutor tutor = collaboration.getTutor();
 
-        tutor.getFeedbacks().add(feedback); 
+        tutor.getFeedbacks().add(feedback);
 
-        Administrator admin = administratorRepository.findFirstBy().orElseThrow(() -> new IllegalStateException("Administrator not found"));
-    
-        notificationService.sendNotification(tuteeId, EntityType.TUTEE, admin.getId(), EntityType.ADMIN, feedback.getId(), EntityType.FEEDBACK);
+        Administrator admin = administratorRepository.findFirstBy()
+                .orElseThrow(() -> new IllegalStateException("Administrator not found"));
+
+        notificationService.sendNotification(tuteeId, EntityType.TUTEE, admin.getId(), EntityType.ADMIN,
+                feedback.getId(), EntityType.FEEDBACK);
     }
-
 
 }
