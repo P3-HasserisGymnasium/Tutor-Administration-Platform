@@ -18,10 +18,12 @@ export default function SpeedDialMenu() {
   const rolePrefix = useRolePrefix();
   const viewingTutor = useLocation().pathname.includes("tutor");
   const viewingTutee = useLocation().pathname.includes("tutee");
-
+  console.log("viewingTutor", viewingTutor);
+  console.log("viewingTutee", viewingTutee);
   const { data: tuteeNotifications } = useNotificationService().useGetTuteeNotifications(viewingTutee ? userState.id : null);
   const { data: tutorNotifications } = useNotificationService().useGetTutorNotifications(viewingTutor ? userState.id : null);
-
+  console.log("tuteeNotifications", tuteeNotifications);
+  console.log("tutorNotifications", tutorNotifications);
   const notifications =
     !viewingTutor && !viewingTutee
       ? [...(tuteeNotifications || []), ...(tutorNotifications || [])]
