@@ -50,6 +50,11 @@ export const zodMeetingTime = z.object({
   time: zodTimeSlotSchema,
 });
 
+export const zodContactInfo = z.object({
+  username: z.string(),
+  medium: ComunicationMedium,
+});
+
 export const zodTutorApplicationSchema = z.object({
   subjects: z.array(Subject),
   time_availability: z.array(zodTimeAvailabilitySchema),
@@ -100,6 +105,7 @@ export type DayType = z.infer<typeof Day>;
 export type SubjectType = z.infer<typeof Subject>;
 export type CollaborationStateType = z.infer<typeof CollaborationState>;
 export type ComunicationMediumType = z.infer<typeof ComunicationMedium>;
+export type ContactInfoType = z.infer<typeof zodContactInfo>;
 export type UUIDType = z.infer<typeof zodUUID>;
 export type AccountRegisterResponseType = {
   tutor: boolean;
