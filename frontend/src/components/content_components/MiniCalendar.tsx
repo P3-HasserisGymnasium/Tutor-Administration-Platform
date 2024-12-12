@@ -14,9 +14,8 @@ interface MeetingType {
     end?: string; // ISO format end time (optional)
   }
 */
-export default function MiniCalendar(){
-
-    /*const {getMeetings} = useMeetingService();
+export default function MiniCalendar() {
+	/*const {getMeetings} = useMeetingService();
     console.log("getMeetings data:", getMeetings.data);
 
 
@@ -33,38 +32,36 @@ export default function MiniCalendar(){
     useEffect(() => {
         console.log(getMeetings.data);
     }, [getMeetings.data]);*/
-    
 
-   
-    return(
-        
-     
-      <Paper
-        elevation={3}
-        sx={{
-          width: "95%",
-          padding: 2,
-          borderRadius: 2,
-        }}
-      >
-        <FullCalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView="dayGridMonth"
-          initialDate="2024-12-01" 
-          //events = {event}     
-          headerToolbar={{
-            start: "today prev,next", // Left side buttons
-            center: "title", // Centered title
-            end: "dayGridMonth,timeGridWeek,timeGridDay", // Right side buttons
-          }}
-          
-          height="75vh"
-          
-        />
-      </Paper>
-  
-    
-
-    );
-
+	return (
+		<Paper
+			elevation={0}
+			sx={{
+				width: "100%",
+				padding: 0,
+				height: "100%",
+				maxHeight: "100%",
+				maxWidth: "100%",
+			}}
+		>
+			<FullCalendar
+				plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+				initialView={"timeGridWeek"}
+				initialDate={new Date()}
+				height={"100%"}
+				//events = {event}
+				views={{
+					timeGridFourDay: {
+						type: "timeGrid",
+						duration: { days: 4 },
+					},
+				}}
+				headerToolbar={{
+					start: "today prev,next", // Left side buttons
+					center: "title", // Centered title
+					end: "dayGridMonth,timeGridWeek,timeGridDay", // Right side buttons
+				}}
+			/>
+		</Paper>
+	);
 }

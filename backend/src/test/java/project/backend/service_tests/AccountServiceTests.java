@@ -8,10 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import jakarta.transaction.Transactional;
+import project.backend.controller_bodies.account_controller.AccountLoginBody;
 import project.backend.controller_bodies.account_controller.AccountRegisterBody;
 import project.backend.controller_bodies.account_controller.TimeCreateBody;
 import project.backend.controller_bodies.account_controller.TimeSlotCreateBody;
-import project.backend.exceptions.EmailAlreadyExistsException;
+import project.backend.exceptions.PasswordMismatchException;
+import project.backend.exceptions.UserNotFoundException;
 import project.backend.model.LanguageEnum;
 import project.backend.model.RoleEnum;
 import project.backend.model.Student;
@@ -37,9 +39,9 @@ public class AccountServiceTests {
     void createStudentTest() {
         AccountRegisterBody body = new AccountRegisterBody();
         body.email = "createAccountTest@test.com";
-        body.fullName = "Test User";
+        body.full_name = "Test User";
         body.password = "password";
-        body.confirmPassword = "password";
+        body.confirm_password = "password";
 
 
         body.roles = new ArrayList<>();
@@ -50,13 +52,13 @@ public class AccountServiceTests {
         body.languages.add(LanguageEnum.English);
         body.languages.add(LanguageEnum.Danish);
 
-        body.tutorProfileDescription = "I am a test user";
+        body.tutor_profile_description = "I am a test user";
 
         body.subjects = new ArrayList<>();
         body.subjects.add(SubjectEnum.Math);
         body.subjects.add(SubjectEnum.English);
 
-        body.yearGroup = YearGroupEnum.IB_2;
+        body.year_group = YearGroupEnum.IB_2;
 
         body.time_availability = new ArrayList<>();
 
@@ -89,22 +91,19 @@ public class AccountServiceTests {
 
         User savedUser = accountService.saveNewStudent(body);
         try {
-            Long id = savedUser.getId();
-            System.out.println("@first: " + id);
             Student retrievedStudent = studentService.getStudentById(savedUser.getId()).orElse(null);
-            System.out.println("@test: " + retrievedStudent);
 
             assert(retrievedStudent != null);
 
             assert(retrievedStudent.getEmail().equals(body.email));
-            assert(retrievedStudent.getFullName().equals(body.fullName));
-
-            System.out.println("@test: " + retrievedStudent.getTutor());
+            assert(retrievedStudent.getFullName().equals(body.full_name));
 
             assert(retrievedStudent.getTutor() != null);
             assert(retrievedStudent.getTutee() != null);
+
             assert(retrievedStudent.getTutor().getTutoringSubjects().containsAll(body.subjects));
-            assert(retrievedStudent.getTutor().getProfileDescription().equals(body.tutorProfileDescription));
+            assert(retrievedStudent.getTutor().getProfileDescription().equals(body.tutor_profile_description));
+
             assert(retrievedStudent.getTutor().getFreeTimeSlots().size() == 3);
             assert(retrievedStudent.getTutor().getFreeTimeSlots().get(0).getWeekDay().equals(WeekDayEnum.Monday));
             assert(retrievedStudent.getTutor().getFreeTimeSlots().get(0).getStartTime().equals("10:00"));
@@ -122,4 +121,95 @@ public class AccountServiceTests {
             accountService.deleteUser(savedUser);
         }
     }
+
+    @Test
+    @Transactional
+    void emailExistsTest() {
+
+        AccountRegisterBody body = new AccountRegisterBody();
+        body.email = "emailExistsTest@test.com";
+        body.full_name = "Test User";
+        body.password = "password";
+        body.confirm_password = "password";
+
+        User savedUser = accountService.saveNewStudent(body);
+        try {
+            assert(accountService.emailExists(body.email));
+        }
+        finally {
+            accountService.deleteUser(savedUser);
+        }
+    }
+
+    @Test
+    @Transactional
+    void getUserByEmailTest() {
+        
+        AccountRegisterBody body = new AccountRegisterBody();
+        body.email = "getByEmailTest@test.com";
+        body.full_name = "Test User";
+        body.password = "password";
+        body.confirm_password = "password";
+
+        User savedUser = accountService.saveNewStudent(body);
+        try {
+            User retrievedUser = accountService.getUserByEmail(body.email).orElse(null);
+            assert(retrievedUser != null);
+            assert(retrievedUser.getEmail().equals(body.email));
+            assert(retrievedUser.getFullName().equals(body.full_name));
+        }
+        finally {
+            accountService.deleteUser(savedUser);
+        } 
+    }
+
+    @Test
+    @Transactional
+    void getUserIfCorrectPasswordTest() {
+        
+        AccountRegisterBody body = new AccountRegisterBody();
+        body.email = "getIfCorrectPasswordTest@test.com";
+        body.full_name = "Test User";
+        body.password = "superSecurePassword";
+        body.confirm_password = "superSecurePassword";
+
+        User savedUser = accountService.saveNewStudent(body);
+        try {
+            AccountLoginBody loginBodyWork = new AccountLoginBody();
+            loginBodyWork.email = body.email;
+            loginBodyWork.password = body.password;
+
+            User retrievedUser = accountService.getUserIfCorrectPassword(loginBodyWork);
+            assert(retrievedUser != null);
+            assert(retrievedUser.getEmail().equals(body.email));
+            assert(retrievedUser.getFullName().equals(body.full_name));
+
+            AccountLoginBody loginBodyFail = new AccountLoginBody(loginBodyWork);
+            loginBodyFail.email = "d=====(￣▽￣*)b";
+
+            try {
+                retrievedUser = accountService.getUserIfCorrectPassword(loginBodyFail);
+                assert(false);
+            }
+            catch (Exception e) {
+                assert(e instanceof UserNotFoundException);
+            }
+
+            loginBodyFail = new AccountLoginBody(loginBodyWork);
+            loginBodyFail.password = "wrongPassword";
+
+            try {
+                retrievedUser = accountService.getUserIfCorrectPassword(loginBodyFail);
+                assert(false);
+            }
+            catch (Exception e) {
+                assert(e instanceof PasswordMismatchException);
+            }
+        }
+        finally {
+            accountService.deleteUser(savedUser);
+        }
+    }
+
+
 }
