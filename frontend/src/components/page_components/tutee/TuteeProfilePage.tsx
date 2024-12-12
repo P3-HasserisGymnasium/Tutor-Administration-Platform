@@ -5,8 +5,12 @@ import { useAuth } from "~/api/authentication/useAuth";
 
 import {useWrap, useVariableWidth, useVariableHeight } from "~/utilities/helperFunctions";
 import { useRoleService } from "~/api/services/role-service";
-//import { usePostService } from "~/api/services/post-service";
+import { usePostService } from "~/api/services/post-service";
+import { zodPostCreationSchema } from "~/types/data_types";
+import { z } from "zod";
 
+
+type Post = z.infer<typeof zodPostCreationSchema>;
 
 
 export default function TuteeProfilePage() {
@@ -18,7 +22,7 @@ export default function TuteeProfilePage() {
 
   const { data: tuteeProfile, isLoading: isTuteeProfileLoading, error } = useRoleService().useGetTuteeProfile(tuteeId);
 
-  //const {data: posts, isLoading: isProfileLoading} = usePostService().useGetTuteePosts();
+  const {data: posts, isLoading: isPostsLoading, error: postsError} = usePostService().useGetTuteePosts();
 
 
 
@@ -62,22 +66,28 @@ export default function TuteeProfilePage() {
             <Typography variant="body1"><strong>Subjects:</strong> </Typography>
 
 
-            <Typography variant="body1"><strong>Communication:</strong> </Typography>
+            {isPostsLoading && <CircularProgress />}
+            {postsError && <Alert severity="error">Failed to load posts!</Alert>}
 
+            {posts && posts.map((post: Post, index: number) => (
+              <Typography key={index} variant="body2"> 
+              {post.subject}
+              </Typography>
+
+            ))}
+
+            
+
+            
+
+
+            <Typography variant="body1"><strong>Communication:</strong> </Typography>
+            
 
 
 
           </Box>
         )}
-
-
-
-         
-        
-
-
-
-        
       </Paper>
 
       <DeleteAccountDialog open={isDeleteAcountDialogOpen} setOpen={setIsDeleteAcountDialogOpen} />
