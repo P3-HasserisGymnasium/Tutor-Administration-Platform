@@ -6,6 +6,7 @@ import { Theme } from "@mui/material/styles";
 import EditPostDialog from "components/page_components/dialogs/EditPostDialog";
 import { useState } from "react";
 import { useRolePrefix } from "~/utilities/helperFunctions";
+import AcceptPostDialog from "../page_components/dialogs/AcceptPostDialog";
 
 type MiniPostProp = {
   postData: PostType;
@@ -14,24 +15,25 @@ type MiniPostProp = {
 export default function MiniPost({ postData }: MiniPostProp) {
   const theme = useTheme<Theme>();
   const [showEditPostDialog, setShowEditPostDialog] = useState(false);
+  const [showAcceptPostDialog, setShowAcceptPostDialog] = useState(false);
 
   const rolePrefix = useRolePrefix();
 
-  const handleOpenEditPostDialog = () => {
+  const handleOpenMiniPost = () => {
     if (rolePrefix !== "/tutor") {
       setShowEditPostDialog(true);
     } else {
-      return;
+      setShowAcceptPostDialog(true);
     }
   };
 
   return (
     <Box
       data-testid="minipostcontainer"
-      onClick={handleOpenEditPostDialog}
+      onClick={handleOpenMiniPost}
       sx={{
         "&:hover": {
-          cursor: rolePrefix === "/tutor" ? "default" : "pointer",
+          cursor: "pointer",
           backgroundColor: theme.palette.augmentColor({ color: { main: theme.customColors.postBackGroundColor } }).dark,
         },
         backgroundColor: theme.customColors.postBackGroundColor,
@@ -46,6 +48,7 @@ export default function MiniPost({ postData }: MiniPostProp) {
       }}
     >
       <EditPostDialog open={showEditPostDialog} setOpen={setShowEditPostDialog} post={postData} />
+      <AcceptPostDialog open={showAcceptPostDialog} setOpen={setShowAcceptPostDialog} post={postData} />
       <Typography data-testid="posttitle" variant="h4">
         {postData.title || "No Title"}
       </Typography>
