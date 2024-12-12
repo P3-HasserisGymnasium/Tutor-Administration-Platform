@@ -1,6 +1,7 @@
 package project.backend.service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,17 +10,17 @@ import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.collaboration_bodies.CollaborationCreateBody;
 import project.backend.controller_bodies.post_controller.PostBody;
+import project.backend.model.Administrator;
 import project.backend.model.Collaboration;
-import project.backend.model.EntityType;
 import project.backend.model.CollaborationState;
+import project.backend.model.EntityType;
 import project.backend.model.Feedback;
 import project.backend.model.RoleEnum;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.model.Tutor;
-import project.backend.model.Administrator;
-import project.backend.repository.CollaborationRepository;
 import project.backend.repository.AdministratorRepository;
+import project.backend.repository.CollaborationRepository;
 
 
 @Service
@@ -52,11 +53,11 @@ public class CollaborationService {
         return collaboratOpt.orElse(null);
     }
 
-    public List<Collaboration> getCollaborationsWithTutor(Long tutorId){
+    public ArrayList<Collaboration> getCollaborationsWithTutor(Long tutorId){
         return collaborationRepository.findCollaborationsWithTutorId(tutorId);
     }
 
-    public List<Collaboration> getCollaborationsWithTutee(Long tuteeId){
+    public ArrayList<Collaboration> getCollaborationsWithTutee(Long tuteeId){
         return collaborationRepository.findCollaborationsWithTuteeId(tuteeId);
     }
 

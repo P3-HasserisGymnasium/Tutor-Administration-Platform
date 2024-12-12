@@ -1,14 +1,17 @@
 package project.backend.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -21,14 +24,19 @@ public class Student extends User {
     @Enumerated(EnumType.STRING)
     YearGroupEnum yearGroup;
 
-    @Embedded
-    StudentContactInfo contactInfo;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    List<StudentCommunicatioInfo> contactInfo = new ArrayList<>();
 
-    @OneToOne
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    List<TutorApplication> tutorApplications = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     Tutee tutee;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     Tutor tutor;
 
@@ -51,12 +59,20 @@ public class Student extends User {
         this.yearGroup = yearGroup;
     }
 
-    public StudentContactInfo getContactInfo() {
+    public List<StudentCommunicatioInfo> getContactInfo() {
         return contactInfo;
     }
 
-    public void setContactInfo(StudentContactInfo contactInfo) {
+    public void setContactInfo(List<StudentCommunicatioInfo> contactInfo) {
         this.contactInfo = contactInfo;
+    }
+
+    public List<TutorApplication> getTutorApplications() {
+        return tutorApplications;
+    }
+
+    public void setTutorApplications(List<TutorApplication> tutorApplications) {
+        this.tutorApplications = tutorApplications;
     }
 
     public Tutee getTutee() {
