@@ -8,13 +8,6 @@ type AdminManageTutorProps = {
 };
 
 export default function AdminManageTutors({ tutors, isLoading }: AdminManageTutorProps) {
-  console.log("tutors", tutors);
-  console.log(isLoading);
-
-  tutors?.forEach((tutor) => {
-    console.log("tutor name: ", tutor.full_name);
-  });
-
   if (isLoading) return <CircularProgress />;
   return (
     <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
