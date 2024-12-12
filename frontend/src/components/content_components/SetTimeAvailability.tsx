@@ -117,7 +117,7 @@ export default function SetTimeAvailability() {
 function SelectedTimeAvailabilities({ timeAvailabilities, borderColor }: { timeAvailabilities: TimeAvailabilityType[]; borderColor: string }) {
   return (
     <>
-      {timeAvailabilities.length != 0 && (
+      {timeAvailabilities?.length != 0 && (
         <Box
           sx={{
             border: "1px solid" + borderColor,
@@ -130,7 +130,7 @@ function SelectedTimeAvailabilities({ timeAvailabilities, borderColor }: { timeA
             maxHeight: "6em",
           }}
         >
-          {timeAvailabilities.map((timeAvailability, i) => (
+          {timeAvailabilities?.map((timeAvailability, i) => (
             <TimeAvailability key={"time-availability-" + i} timeAvailability={timeAvailability} />
           ))}
         </Box>
