@@ -5,7 +5,7 @@ import { usePostService } from "~/api/services/post-service";
 import { CircularProgress } from "@mui/material";
 
 export default function PostList({filters, loading}:{filters:{duration: number[]; subjects: SubjectType[];}, loading:boolean}) {
-  const {data: posts, isLoading, isError, isFetching} = usePostService().useGetPosts(filters);
+  const {data: posts, isError} = usePostService().useGetPosts(filters);
 
 
   if (loading) {
