@@ -12,12 +12,12 @@ export default function PostsListPage() {
   const { userState } = useAuth();
 
   const [filters, setFilters] = useState<PostListFilterType>({ subjects: userState.tutoring_subjects?userState.tutoring_subjects:[], duration: [0, 12] });
-
+  const [loading, setLoading] = useState(false);
   return (
     <ThemeProvider theme={tutorTheme}>
       <ShortLongBoxLayout>
-        <PostFilter setFilters={setFilters}/>
-        <PostList filters={filters}/>
+        <PostFilter setLoading={setLoading} setFilters={setFilters}/>
+        <PostList loading={loading} filters={filters}/>
       </ShortLongBoxLayout>
 
     

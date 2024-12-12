@@ -6,7 +6,7 @@ import { SubjectType, zodPostListFilterSchema } from "../../../types/data_types"
 import CustomAutocomplete from "../CustomAutocomplete";
 import { useAuth } from "~/api/authentication/useAuth";
 
-export default function PostFilter({setFilters}: {setFilters:React.Dispatch<React.SetStateAction<{duration: number[], subjects: SubjectType[]}>>}) {
+export default function PostFilter({setFilters, setLoading}: {setFilters:React.Dispatch<React.SetStateAction<{duration: number[], subjects: SubjectType[]}>>, setLoading: React.Dispatch<React.SetStateAction<boolean> >}) {
   const { userState } = useAuth();
   const filterMethods = useForm({
     resolver: zodResolver(zodPostListFilterSchema),
@@ -18,12 +18,18 @@ export default function PostFilter({setFilters}: {setFilters:React.Dispatch<Reac
   const { control, handleSubmit, getValues} = filterMethods;
   useWatch({ control });
   const filter = () => {
+    setLoading(true);
+    setTimeout(() => {
+      
     const chosenSubjects = getValues("subjects");
     if (chosenSubjects.length === 0 && userState.tutoring_subjects) {
       setFilters({duration: getValues("duration"), subjects: userState.tutoring_subjects});
+      setLoading(false);
     } else{
       setFilters(filterMethods.getValues());
+      setLoading(false);
     }
+  }, 500);
   };
 
   return (
