@@ -20,6 +20,7 @@ import { PostType } from "~/types/entity_types";
 import ViewPostsDialog from "../dialogs/ViewPostsDialog";
 import CreateCollaborationDialog from "../dialogs/CreateCollaborationDialog";
 import { useNavigate } from "react-router-dom";
+import { useMeetingService } from "~/api/services/meeting-service";
 
 const post: PostType = {
 	id: 1,
@@ -43,6 +44,11 @@ export default function TuteePage() {
 	const { userState } = useAuth();
 	const { data: posts, isLoading: postsLoading, isError: postsError } = useGetTuteePosts();
 	const { data: collaborations, isLoading: collabLoading, isError: collabError } = useGetCollaborationsWithTutee(userState?.id || null);
+	const { data: meetings } = useMeetingService().useGetMeetings();
+
+	meetings?.filter((meeting) => {
+		return meeting.tutee_user_id === userState.id;
+	});
 
 	return (
 		<ThemeProvider theme={theme}>
