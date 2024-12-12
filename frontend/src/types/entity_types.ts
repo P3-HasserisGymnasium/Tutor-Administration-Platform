@@ -14,6 +14,7 @@ import {
 	NotificationState,
 	ComunicationMedium,
 	zodTimeAvailabilitySchema,
+	zodContactInfo,
 } from "./data_types";
 
 
@@ -68,7 +69,7 @@ export const zodCollaborationSchema = z.object({
 });
 
 export const tutorProfileSchema = z.object({
-	contact_info: z.array(z.object({ username: z.string(), ComunicationMedium })),
+	contact_info: zodContactInfo,
 	description: z.string(),
 	full_name: z.string(),
 	time_availability: z.array(zodTimeAvailabilitySchema),
