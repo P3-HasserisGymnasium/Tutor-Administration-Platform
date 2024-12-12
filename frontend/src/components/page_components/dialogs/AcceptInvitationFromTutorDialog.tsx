@@ -16,10 +16,6 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, collabo
   const { acceptCollaboration, rejectCollaboration } = useCollaborationService();
   const { data: collaboration, isLoading: isCollaborationLoading } = useCollaborationService().useGetCollaborationById(collaboration_id);
   const { data: tutorProfile, isLoading: isTutorProfileLoading } = useRoleService().useGetTutorProfile(tutor_id);
-
-  console.log("Collaboration:", collaboration);
-  console.log("Tutor Profile:", tutorProfile);
-  console.log("collaboration id and tutor id", collaboration_id, tutor_id);
   const acceptCollab = () => {
     if (collaboration?.id) {
       acceptCollaboration.mutate(

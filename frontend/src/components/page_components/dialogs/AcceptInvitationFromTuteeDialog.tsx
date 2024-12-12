@@ -16,10 +16,6 @@ export default function AcceptInvitationFromTuteeDialog({ open, setOpen, collabo
   const { acceptCollaboration, rejectCollaboration } = useCollaborationService();
   const { data: collaboration, isLoading: isCollaborationLoading } = useCollaborationService().useGetCollaborationById(collaboration_id);
   const { data: tuteeProfile, isLoading: isTuteeProfileLoading } = useRoleService().useGetTuteeProfile(tutee_id);
-  console.log("tuteeProfile", tuteeProfile);
-  console.log("tuteeid", tutee_id);
-  console.log("collaboration", collaboration);
-  console.log("collaboration_id", collaboration_id);
   const acceptCollab = () => {
     if (collaboration?.id) {
       acceptCollaboration.mutate(

@@ -1,13 +1,9 @@
-//import { useNotificationService } from "~/api/services/notification-service";
 import { Box, Typography, Paper, Divider, CircularProgress } from "@mui/material";
-
-//import { NotificationState } from "~/types/data_types";
-//import { useAuth } from "~/api/authentication/useAuth";
 import { useTheme, Theme } from "@mui/material/styles";
 import { useAuth } from "~/api/authentication/useAuth";
 import { useNotificationService } from "~/api/services/notification-service";
 import { generateNotificationMessage } from "~/utilities/helperFunctions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AcceptInvitationFromTutorDialog from "../page_components/dialogs/AcceptInvitationFromTutorDialog";
 import AcceptInvitationFromTuteeDialog from "../page_components/dialogs/AcceptInvitationFromTuteeDialog";
 import { NotificationResponseType } from "~/types/entity_types";
@@ -23,9 +19,7 @@ export default function NotificationsList() {
   const [tutor_id, setTutor_id] = useState<number | null>(null);
   const [tutee_id, setTutee_id] = useState<number | null>(null);
   const changeStateMutation = useChangeNotificationState();
-
   const { data: notifications, isLoading, isError } = useNotifications()(userState.id);
-
   const handleNotificationClick = (notification: NotificationResponseType) => {
     if (
       (notification.context_type === NotificationContext.Enum.COLLABORATION || notification.context_type === NotificationContext.Enum.POST) &&
@@ -33,23 +27,29 @@ export default function NotificationsList() {
     ) {
       setCollaboration_id(notification.context_id);
       setTutor_id(notification.sender_id);
-      setTimeout(() => {
-        setIsAcceptTutorDialogOpen(true);
-        changeStateMutation.mutate({ notificationId: notification.notification_id, state: NotificationState.Enum.READ });
-      }, 0);
+
+      changeStateMutation.mutate({ notificationId: notification.notification_id, state: NotificationState.Enum.READ });
       return;
     }
-
-    if (notification.context_type === NotificationContext.Enum.COLLABORATION && notification.sender_type === NotificationParticipant.Enum.TUTEE) {
-      setTutee_id(notification.sender_id);
+    if (
+      (notification.context_type === NotificationContext.Enum.COLLABORATION || notification.context_type === NotificationContext.Enum.POST) &&
+      notification.sender_type === NotificationParticipant.Enum.TUTEE
+    ) {
       setCollaboration_id(notification.context_id);
-      setTimeout(() => {
-        setIsAcceptTuteeDialogOpen(true);
-        changeStateMutation.mutate({ notificationId: notification.notification_id, state: NotificationState.Enum.READ });
-      }, 0);
+      setTutee_id(notification.sender_id);
+
+      changeStateMutation.mutate({ notificationId: notification.notification_id, state: NotificationState.Enum.READ });
       return;
     }
   };
+
+  useEffect(() => {
+    if (collaboration_id && tutor_id) {
+      setIsAcceptTutorDialogOpen(true);
+    } else if (collaboration_id && tutee_id) {
+      setIsAcceptTuteeDialogOpen(true);
+    }
+  }, [collaboration_id, tutor_id, tutee_id]);
 
   // Render the list of notifications
   const renderNotifications = () => {
@@ -69,7 +69,9 @@ export default function NotificationsList() {
           borderRadius: 2,
           marginBottom: 2,
           px: 2,
-          borderLeft: `5px solid ${notification.state === "UNREAD" ? theme.palette.primary.main : theme.palette.grey[400]}`,
+          borderLeftWidth: "5px",
+          borderLeftStyle: "solid",
+          borderLeftColor: notification.state === "UNREAD" ? theme.palette.primary.main : theme.palette.grey[400],
         }}
       >
         <Box sx={{ flex: 1 }}>
@@ -136,12 +138,14 @@ export default function NotificationsList() {
         collaboration_id={collaboration_id}
         tutor_id={tutor_id}
       />
-      <AcceptInvitationFromTuteeDialog
-        open={isAcceptTuteeDialogOpen}
-        setOpen={setIsAcceptTuteeDialogOpen}
-        collaboration_id={collaboration_id}
-        tutee_id={tutee_id}
-      />
+      {collaboration_id && (
+        <AcceptInvitationFromTuteeDialog
+          open={isAcceptTuteeDialogOpen}
+          setOpen={setIsAcceptTuteeDialogOpen}
+          collaboration_id={collaboration_id}
+          tutee_id={tutee_id}
+        />
+      )}
       <Paper sx={{ width: "90%", height: "90%" }}>{renderNotifications()}</Paper>
     </Box>
   );

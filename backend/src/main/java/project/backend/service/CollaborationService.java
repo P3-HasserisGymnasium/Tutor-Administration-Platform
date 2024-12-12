@@ -272,8 +272,8 @@ public class CollaborationService {
         collaboration.setState(CollaborationState.WAITING_FOR_TUTOR);
         collaboration.setAdminAccepted(false);
         collaboration.setStartTimestamp(new Timestamp(System.currentTimeMillis()));
-        collaborationRepository.save(collaboration);
-        notificationService.sendNotification(tutee.getId(), EntityType.TUTEE, tutor.getId(), EntityType.TUTOR, collaboration.getId(), EntityType.COLLABORATION);
+        Collaboration createdCollab = collaborationRepository.save(collaboration);
+        notificationService.sendNotification(tutee.getId(), EntityType.TUTEE, tutor.getId(), EntityType.TUTOR, createdCollab.getId(), EntityType.COLLABORATION);
     }
 
     public void terminateCollaboration(Long collaborationId, String terminationReason){
