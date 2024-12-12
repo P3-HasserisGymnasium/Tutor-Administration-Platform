@@ -6,6 +6,4 @@ import project.backend.model.Role;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
     // Custom queries can be added here
-
-
 }
