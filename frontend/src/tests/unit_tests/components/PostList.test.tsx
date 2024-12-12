@@ -7,37 +7,37 @@ import { Theme } from "@mui/material/styles";
 import { vi } from "vitest";
 
 const Wrapper = ({ children, theme }: { children: React.ReactNode; theme: Theme }) => (
-  <ThemeProvider theme={theme}>
-    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</BrowserRouter>
-  </ThemeProvider>
+	<ThemeProvider theme={theme}>
+		<BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</BrowserRouter>
+	</ThemeProvider>
 );
 
 beforeEach(() => {
-  vi.mock("@mui/system", () => ({
-    useTheme: () => tutorTheme,
-  }));
+	vi.mock("@mui/system", () => ({
+		useTheme: () => tutorTheme,
+	}));
 });
 
 describe("PostList", () => {
-  afterEach(() => {
-    cleanup();
-  });
+	afterEach(() => {
+		cleanup();
+	});
 
-  it("should render the PostList component", () => {
-    render(
-      <ThemeProvider theme={tutorTheme}>
-        <PostList filters={{subjects:[], duration:[0,12]}}/>
-      </ThemeProvider>
-    );
-    expect(screen.getByText("Filtered Posts")).toBeInTheDocument();
-  });
+	it("should render the PostList component", () => {
+		render(
+			<ThemeProvider theme={tutorTheme}>
+				<PostList loading={false} filters={{ subjects: [], duration: [0, 12] }} />
+			</ThemeProvider>
+		);
+		expect(screen.getByText("Filtered Posts")).toBeInTheDocument();
+	});
 
-  it("should render the PostCard component", () => {
-    render(
-      <Wrapper theme={tutorTheme}>
-        <PostList filters={{subjects:[], duration:[0,12]}}/>
-      </Wrapper>
-    );
-    expect(screen.getByTestId("postcard1")).toBeInTheDocument();
-  });
+	it("should render the PostCard component", () => {
+		render(
+			<Wrapper theme={tutorTheme}>
+				<PostList loading={false} filters={{ subjects: [], duration: [0, 12] }} />
+			</Wrapper>
+		);
+		expect(screen.getByTestId("postcard1")).toBeInTheDocument();
+	});
 });

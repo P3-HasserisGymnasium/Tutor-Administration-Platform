@@ -14,32 +14,22 @@ import { useAuth } from "~/api/authentication/useAuth";
 import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
 import { useNavigate } from "react-router-dom";
 export default function TutorPage() {
-<<<<<<< HEAD
-  const navigate = useNavigate();
-  const theme = useCurrentTheme();
-  const { isMobile } = useBreakpoints();
-  const [view, setView] = useState<"list" | "calender">("list");
-  const [showCollabDialog, setShowCollabDialog] = useState(false);
-  const { userState } = useAuth();
-  const { data: posts, isLoading: postsLoading, isError: postsError } = usePostService().useGetPosts({duration:[0,12], subjects: userState?.tutoring_subjects || []});
-  const {
-    data: collaborations,
-    isLoading: collabLoading,
-    isError: collabError,
-  } = useCollaborationService().useGetCollaborationsWithTutor(userState?.id || null);
-=======
+	const navigate = useNavigate();
 	const theme = useCurrentTheme();
 	const { isMobile } = useBreakpoints();
-	const [view, setView] = useState<"list" | "calender">("calender");
+	const [view, setView] = useState<"list" | "calender">("list");
 	const [showCollabDialog, setShowCollabDialog] = useState(false);
 	const { userState } = useAuth();
-	const { data: posts, isLoading: postsLoading, isError: postsError } = usePostService().useGetPosts();
+	const {
+		data: posts,
+		isLoading: postsLoading,
+		isError: postsError,
+	} = usePostService().useGetPosts({ duration: [0, 12], subjects: userState?.tutoring_subjects || [] });
 	const {
 		data: collaborations,
 		isLoading: collabLoading,
 		isError: collabError,
 	} = useCollaborationService().useGetCollaborationsWithTutor(userState?.id || null);
->>>>>>> origin/main
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -205,78 +195,50 @@ export default function TutorPage() {
 							</Typography>
 						</Box>
 
-<<<<<<< HEAD
-            <Tooltip
-              title="Posts are visible to tutors. Tutors can request to help you, in which case you can accept their help. You can create a new post, or edit and delete an existing post."
-              arrow
-            >
-              <IconButton
-                sx={{
-                  alignItems: "right",
-                }}
-                aria-label="info"
-              >
-                <InfoIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <MiniPostList posts={posts} isLoading={postsLoading} isError={postsError} />
-          </Box>
-          <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
-            <CustomButton onClick={() => navigate("posts-list")} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
-              View all
-            </CustomButton>
-          </Box>
-        </Box>
+						<Tooltip
+							title="Posts are visible to tutors. Tutors can request to help you, in which case you can accept their help. You can create a new post, or edit and delete an existing post."
+							arrow
+						>
+							<IconButton
+								sx={{
+									alignItems: "right",
+								}}
+								aria-label="info"
+							>
+								<InfoIcon />
+							</IconButton>
+						</Tooltip>
+					</Box>
+					<Box sx={{ display: "flex", gap: 2 }}>
+						<MiniPostList posts={posts} isLoading={postsLoading} isError={postsError} />
+					</Box>
+					<Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
+						<CustomButton onClick={() => navigate("posts-list")} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+							View all
+						</CustomButton>
+					</Box>
+				</Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            border: "1px solid #white",
-            borderRadius: "8px",
-            justifyContent: "space-between",
-            height: "100%",
-          }}
-        >
-          <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, ml: 2, mt: 2, mr: 2 }}>
-            <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-              <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>
-                Your Active Collaborations
-              </Typography>
-              <Typography variant="body2" sx={{ color: "#555", marginBottom: 1.3, ml: 1 }}>
-                Click to view collaboration page
-              </Typography>
-            </Box>
+				<Box
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						border: "1px solid #white",
+						borderRadius: "8px",
+						justifyContent: "space-between",
+						height: "100%",
+					}}
+				>
+					<Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, ml: 2, mt: 2, mr: 2 }}>
+						<Box sx={{ display: "flex", alignItems: "flex-end" }}>
+							<Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>
+								Your Active Collaborations
+							</Typography>
+							<Typography variant="body2" sx={{ color: "#555", marginBottom: 1.3, ml: 1 }}>
+								Click to view collaboration page
+							</Typography>
+						</Box>
 
-            <Tooltip
-              title="Each collaboration with a tutor has a specific collaboration page. To view this page, simply click on one of the collaborations. When creating a collaboration, you can either find a tutor and request a collaboration with them, create a post which tutors can see, or request help from the administrator to find a fitting tutor."
-              arrow
-            >
-              <IconButton
-                sx={{
-                  alignItems: "right",
-                }}
-                aria-label="info"
-              >
-                <InfoIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <MiniCollabList collaborations={collaborations} isLoading={collabLoading} isError={collabError} />
-          </Box>
-          <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
-            <CustomButton variant="contained" color="primary" sx={{ fontSize: "18px" }}>
-              View more
-            </CustomButton>
-          </Box>
-        </Box>
-      </MediumShortOnShortBoxLayout>
-    </ThemeProvider>
-  );
-=======
 						<Tooltip
 							title="Each collaboration with a tutor has a specific collaboration page. To view this page, simply click on one of the collaborations. When creating a collaboration, you can either find a tutor and request a collaboration with them, create a post which tutors can see, or request help from the administrator to find a fitting tutor."
 							arrow
@@ -303,5 +265,4 @@ export default function TutorPage() {
 			</MediumShortOnShortBoxLayout>
 		</ThemeProvider>
 	);
->>>>>>> origin/main
 }
