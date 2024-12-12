@@ -15,7 +15,7 @@ interface MeetingType {
   }
 */
 export default function MiniCalendar() {
-  /*const {getMeetings} = useMeetingService();
+	/*const {getMeetings} = useMeetingService();
     console.log("getMeetings data:", getMeetings.data);
 
 
@@ -33,31 +33,35 @@ export default function MiniCalendar() {
         console.log(getMeetings.data);
     }, [getMeetings.data]);*/
 
-  return (
-    <Paper
-      elevation={0}
-      sx={{
-        width: "100%",
-        padding: 0,
-      }}
-    >
-      <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView={"timeGridWeek"}
-        initialDate={new Date()}
-        //events = {event}
-        views={{
-          timeGridFourDay: {
-            type: "timeGrid",
-            duration: { days: 4 },
-          },
-        }}
-        headerToolbar={{
-          start: "today prev,next", // Left side buttons
-          center: "title", // Centered title
-          end: "dayGridMonth,timeGridWeek,timeGridDay", // Right side buttons
-        }}
-      />
-    </Paper>
-  );
+	return (
+		<Paper
+			elevation={0}
+			sx={{
+				width: "100%",
+				padding: 0,
+				height: "100%",
+				maxHeight: "100%",
+				maxWidth: "100%",
+			}}
+		>
+			<FullCalendar
+				plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+				initialView={"timeGridWeek"}
+				initialDate={new Date()}
+				height={"100%"}
+				//events = {event}
+				views={{
+					timeGridFourDay: {
+						type: "timeGrid",
+						duration: { days: 4 },
+					},
+				}}
+				headerToolbar={{
+					start: "today prev,next", // Left side buttons
+					center: "title", // Centered title
+					end: "dayGridMonth,timeGridWeek,timeGridDay", // Right side buttons
+				}}
+			/>
+		</Paper>
+	);
 }
