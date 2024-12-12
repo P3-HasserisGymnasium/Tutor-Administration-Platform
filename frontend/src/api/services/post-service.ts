@@ -9,15 +9,16 @@ import { useNavigate } from "react-router-dom";
 export const usePostService = () => {
 	const navigate = useNavigate();
 
-	const useGetPosts = (filters?:PostListFilterType) => {
+	const useGetPosts = (filters?: PostListFilterType) => {
 		return useQuery({
 			queryKey: ["getPosts", filters],
 			queryFn: async () => {
-				const { data } = await apiClient.get<PostType[]>(`/api/post`, { 
+				const { data } = await apiClient.get<PostType[]>(`/api/post`, {
 					params: {
 						subjects: filters?.subjects?.join(","),
-						duration: filters?.duration?.join(",")
-				} });
+						duration: filters?.duration?.join(","),
+					},
+				});
 				return data;
 			},
 			refetchOnWindowFocus: false,
@@ -49,7 +50,7 @@ export const usePostService = () => {
 			},
 			onSuccess: () => {
 				toast.success("Post created");
-				navigate("/tutee")
+				navigate("/tutee");
 			},
 		});
 	};
@@ -79,8 +80,8 @@ export const usePostService = () => {
 				const { data } = await apiClient.put<PostType>(`/api/post/${post.id}`, post);
 				return data;
 			},
-			onError: (e: AxiosError<{ detail: string }>) => {
-				toast.error(e?.response?.data?.detail);
+			onError: (e: AxiosError) => {
+				toast.error("" + e?.response?.data);
 			},
 			onSuccess: () => {
 				toast.success("Post redigeret");

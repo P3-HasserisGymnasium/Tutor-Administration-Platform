@@ -9,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.collaboration_bodies.CollaborationCreateBody;
+import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByPostBody;
+import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByTutorBody;
 import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.model.Collaboration;
 import project.backend.model.EntityType;
 import project.backend.model.CollaborationState;
 import project.backend.model.Feedback;
+import project.backend.model.Post;
 import project.backend.model.RoleEnum;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
@@ -36,15 +39,19 @@ public class CollaborationService {
     final NotificationService notificationService;
 
     @Autowired
+    final PostService postService;
+
+    @Autowired
     final RoleService roleService;
 
 
 
-    public CollaborationService(CollaborationRepository collaborationRepository, RoleService roleService, NotificationService notificationService, AdministratorRepository administratorRepository) {
+    public CollaborationService(CollaborationRepository collaborationRepository, RoleService roleService, NotificationService notificationService, AdministratorRepository administratorRepository, PostService postService) {
         this.collaborationRepository = collaborationRepository;
         this.roleService = roleService;
         this.notificationService = notificationService;
         this.administratorRepository = administratorRepository;
+        this.postService = postService;
     }
 
     public Collaboration getCollaborationById(Long id){
@@ -182,7 +189,36 @@ public class CollaborationService {
         deleteCollaborationById(collaborationId);
     }
 
-    
+
+    public void requestCollaborationByPost(RequestCollaborationByPostBody postBody) {
+        Collaboration collaboration = new Collaboration();
+        Tutor tutor = roleService.getTutorById(postBody.getTutor_id());
+        Post post = postService.getPostById(postBody.getPost_id()).orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        collaboration.setTutee(post.getTutee());
+        collaboration.setTutor(tutor);
+        collaboration.setSubject(post.getSubject());
+        collaboration.setState(CollaborationState.WAITING_FOR_TUTEE);
+        collaboration.setStartTimestamp(new Timestamp(System.currentTimeMillis()));
+        collaborationRepository.save(collaboration);
+        notificationService.sendNotification(post.getTutee().getId(), EntityType.TUTEE, tutor.getId(), EntityType.TUTOR, collaboration.getId(), EntityType.COLLABORATION);
+    }
+
+    public void requestCollaborationByTutor(RequestCollaborationByTutorBody postBody) {
+        Collaboration collaboration = new Collaboration();
+        Tutor tutor = roleService.getTutorById(postBody.getTutor_id());
+        Tutee tutee = roleService.getTuteeById(postBody.getTutee_id());
+
+        collaboration.setTutee(tutee);
+        collaboration.setTutor(tutor);
+        collaboration.setSubject(postBody.getPost().getSubject());
+        collaboration.setState(CollaborationState.WAITING_FOR_TUTOR);
+        collaboration.setStartTimestamp(new Timestamp(System.currentTimeMillis()));
+        collaborationRepository.save(collaboration);
+        notificationService.sendNotification(tutee.getId(), EntityType.TUTEE, tutor.getId(), EntityType.TUTOR, collaboration.getId(), EntityType.COLLABORATION);
+    }
+
+
     // request specififc tutor or tutor request tutee through a post
     public void requestCollaboration(Long tuteeId, Long tutorId, RoleEnum collabRequester, SubjectEnum subject){
 
