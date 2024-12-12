@@ -23,7 +23,7 @@ export const Day = z.enum(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday
 export const Language = z.enum(["Danish", "English"] as const);
 export const Role = z.enum(["Tutor", "Tutee"] as const);
 export const YearGroup = z.enum(["PRE_IB", "IB_1", "IB_2"] as const);
-export const ComunicationMedium = z.enum(["Discord", "Microsoft_teams", "Skype", "Messenger", "Email"] as const);
+export const CommunicationMedium = z.enum(["Discord", "Microsoft_teams", "Skype", "Messenger", "Email"] as const);
 export const zodTimeSlotSchema = z.object({
   start_time: z.string(),
   end_time: z.string(),
@@ -52,7 +52,7 @@ export const zodMeetingTime = z.object({
 
 export const zodContactInfo = z.object({
   username: z.string(),
-  medium: ComunicationMedium,
+  medium: CommunicationMedium,
 });
 
 export const zodTutorApplicationSchema = z.object({
@@ -104,7 +104,7 @@ export type NotificationStateType = z.infer<typeof NotificationState>;
 export type DayType = z.infer<typeof Day>;
 export type SubjectType = z.infer<typeof Subject>;
 export type CollaborationStateType = z.infer<typeof CollaborationState>;
-export type ComunicationMediumType = z.infer<typeof ComunicationMedium>;
+export type CommunicationMediumType = z.infer<typeof CommunicationMedium>;
 export type ContactInfoType = z.infer<typeof zodContactInfo>;
 export type UUIDType = z.infer<typeof zodUUID>;
 export type AccountRegisterResponseType = {
