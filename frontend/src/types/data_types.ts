@@ -72,17 +72,32 @@ export const zodPostCreationSchema = z.object({
 });
 export const PostState = z.enum(["VISIBLE", "INVISIBLE"]);
 export const MeetingState = z.enum(["PENDING", "ACCEPTED", "REJECTED", "TERMINATED"] as const);
-export const NotificationContext = z.enum(["TutorApplication", "Feedback", "Collaboration", "Meeting"] as const);
-export const NotificationParticipant = z.enum(["Tutor", "Tutee", "Admin"] as const);
+export const NotificationContext = z.enum([
+  "TutorApplication",
+  "Feedback",
+  "COLLABORATION",
+  "MEETING",
+  "POST",
+  "NOTIFICATION",
+  "FEEDBACK"
+] as const);
+export const NotificationParticipant = z.enum([
+  "USER",
+  "STUDENT",
+  "ADMIN",
+  "TUTEE",
+  "TUTOR"
+] as const);
 
-export const NotificationState = z.enum(["Unread", "Read", "Deleted"] as const);
+export const NotificationState = z.enum(["UNREAD", "READ", "DELETED"] as const);
 export const CollaborationState = z.enum([
-  "PENDING",
-  "WAITINGFORTUTOR",
-  "WAITINGFORTUTEE",
-  "ACCEPTED",
   "REJECTED",
+  "WAITING_FOR_ADMIN",
+  "WAITING_FOR_TUTOR",
+  "WAITING_FOR_BOTH",
+  "WAITING_FOR_TUTEE",
   "TERMINATED",
+  "ESTABLISHED",
 ] as const);
 
 // Defining types for forms and zod schemas

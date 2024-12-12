@@ -14,7 +14,7 @@ const mockCollaboration: CollaborationType = {
   tutor_name: "John Doe",
   subject: Subject.Enum.Math,
   tutee_name: "Jane Doe",
-  state: CollaborationState.enum.ACCEPTED,
+  state: CollaborationState.Enum.ESTABLISHED,
   tutor_id: 1,
   tutee_id: 2,
   start_date: "2021-10-10",

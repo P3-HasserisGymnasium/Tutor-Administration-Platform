@@ -15,7 +15,7 @@ import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useAuth } from "~/api/authentication/useAuth";
 import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
 import EditPostDialog from "../dialogs/EditPostDialog";
-import { PostState, Subject } from "~/types/data_types";
+import { CollaborationState, PostState, Subject } from "~/types/data_types";
 import { MeetingType, PostType } from "~/types/entity_types";
 import ViewPostsDialog from "../dialogs/ViewPostsDialog";
 import CreateCollaborationDialog from "../dialogs/CreateCollaborationDialog";
@@ -46,14 +46,24 @@ export default function TuteePage() {
   const { data: collaborations, isLoading: collabLoading, isError: collabError } = useGetCollaborationsWithTutee(userState?.id || null);
   const { data: meetings } = useMeetingService().useGetMeetings();
 
-  meetings?.filter((meeting) => {
+  const filteredMeetings = meetings?.filter((meeting) => {
     return meeting.tutee_user_id === userState.id;
+  });
+
+  const filteredCollaborations = collaborations?.filter((collab) => {
+    console.log("collab", collab);
+    return collab.state === CollaborationState.Enum.ESTABLISHED;
   });
 
   return (
     <ThemeProvider theme={theme}>
       <CreateCollaborationDialog open={showCreateCollabDialog} setOpen={setshowCreateCollabDialog} />
-      <ViewCollaborationsDialog open={showCollabDialog} setOpen={setShowCollabDialog} collaborations={collaborations} isLoading={collabLoading} />
+      <ViewCollaborationsDialog
+        open={showCollabDialog}
+        setOpen={setShowCollabDialog}
+        collaborations={filteredCollaborations}
+        isLoading={collabLoading}
+      />
       <EditPostDialog open={showEditPostDialog} setOpen={setShowEditPostDialog} post={post} />
       <ViewPostsDialog open={showPostDialog} setOpen={setShowPostDialog} posts={posts} isLoading={postsLoading} />
       <MediumShortOnShortBoxLayout>
@@ -138,7 +148,7 @@ export default function TuteePage() {
               border: "white 1px",
             }}
           >
-            {view === "calender" ? <MiniCalendar meetings={meetings as MeetingType[]} /> : <MeetingsList />}
+            {view === "calender" ? <MiniCalendar meetings={filteredMeetings as MeetingType[]} /> : <MeetingsList />}
           </Box>
         </Box>
 
@@ -231,11 +241,11 @@ export default function TuteePage() {
             </Tooltip>
           </Box>
           <Box sx={{ display: "flex", gap: 2 }}>
-            <MiniCollabList collaborations={collaborations} isLoading={collabLoading} isError={collabError} />
+            <MiniCollabList collaborations={filteredCollaborations} isLoading={collabLoading} isError={collabError} />
           </Box>
           <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
             <CustomButton
-              style={{ visibility: (collaborations?.length ?? 0) > 3 ? "visible" : "hidden" }}
+              style={{ visibility: (filteredCollaborations?.length ?? 0) > 3 ? "visible" : "hidden" }}
               onClick={() => setShowCollabDialog(true)}
               variant="contained"
               color="primary"

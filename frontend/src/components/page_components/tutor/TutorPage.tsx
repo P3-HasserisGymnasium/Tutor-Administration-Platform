@@ -15,6 +15,7 @@ import ViewCollaborationsDialog from "src/components/page_components/dialogs/Vie
 import { useNavigate } from "react-router-dom";
 import { MeetingType } from "~/types/entity_types";
 import { useMeetingService } from "~/api/services/meeting-service";
+import { CollaborationState } from "~/types/data_types";
 export default function TutorPage() {
   const navigate = useNavigate();
   const theme = useCurrentTheme();
@@ -35,9 +36,16 @@ export default function TutorPage() {
   } = useCollaborationService().useGetCollaborationsWithTutor(userState?.id || null);
   const { data: meetings } = useMeetingService().useGetMeetings();
 
+  const filteredCollaborations = collaborations?.filter((collab) => collab.state == CollaborationState.Enum.ESTABLISHED);
+
   return (
     <ThemeProvider theme={theme}>
-      <ViewCollaborationsDialog open={showCollabDialog} setOpen={setShowCollabDialog} collaborations={collaborations} isLoading={collabLoading} />
+      <ViewCollaborationsDialog
+        open={showCollabDialog}
+        setOpen={setShowCollabDialog}
+        collaborations={filteredCollaborations}
+        isLoading={collabLoading}
+      />
 
       <MediumShortOnShortBoxLayout>
         <Box
@@ -210,11 +218,11 @@ export default function TutorPage() {
             </Tooltip>
           </Box>
           <Box sx={{ display: "flex", gap: 2 }}>
-            <MiniCollabList collaborations={collaborations} isLoading={collabLoading} isError={collabError} />
+            <MiniCollabList collaborations={filteredCollaborations} isLoading={collabLoading} isError={collabError} />
           </Box>
           <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
             <CustomButton
-              style={{ visibility: (collaborations?.length ?? 0) > 3 ? "visible" : "hidden" }}
+              style={{ visibility: (filteredCollaborations?.length ?? 0) > 3 ? "visible" : "hidden" }}
               onClick={() => setShowCollabDialog(true)}
               variant="contained"
               color="primary"

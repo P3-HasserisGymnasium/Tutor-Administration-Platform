@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,13 +18,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.notification_controller.NotificationResponseBody;
-import project.backend.model.Administrator;
 import project.backend.model.EntityType;
 import project.backend.model.Notification;
-import project.backend.model.Tutee;
-import project.backend.model.Tutor;
+import project.backend.model.NotificationState;
 import project.backend.service.NotificationService;
-import project.backend.service.RoleService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -31,11 +29,9 @@ import project.backend.service.RoleService;
 public class NotificationController {
 
     private final NotificationService notificationService;
-    private final RoleService roleService;
 
-    public NotificationController(NotificationService notificationService, RoleService roleService) {
+    public NotificationController(NotificationService notificationService ) {
         this.notificationService = notificationService;
-        this.roleService = roleService;
     }
 
     @GetMapping("/{id}")
@@ -192,35 +188,34 @@ public class NotificationController {
         return ResponseEntity.status(HttpStatus.OK).body("Notification deleted");
     }
 
+    @PostMapping("/{id}/{state}")
+    public ResponseEntity<?> changeNotificationState(@PathVariable Long id, @PathVariable NotificationState state, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        
+        Notification notification = notificationService.getNotificationById(id)
+            .orElse(null);
+
+        if (notification == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notification not found");
+        }
+
+        if (notification.getReceiverId() != authenticatedUser.getUserId() && !authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to change the state of this notification");
+        }
+
+        notificationService.changeNotificationState(id, state);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Notification state changed");
+    }
+
     private NotificationResponseBody createNotificationResponseBody(Notification notification) {
-        String senderName;
-        if (notification.getSenderType() == EntityType.TUTOR) {
-            Tutor tutor = roleService.getTutorById(notification.getSenderId());
-            senderName = tutor != null ? tutor.getStudent().getFullName() : "Unknown";
-        } else if (notification.getSenderType() == EntityType.ADMIN) {
-            Administrator admin = roleService.getAdministratorById(notification.getSenderId());
-            senderName = admin != null ? admin.getFullName() : "Unknown";
-        } else {
-            senderName = "Unknown";
-        }
-
-        String receiverName;
-        if (notification.getReceiverType() == EntityType.TUTEE) {
-            Tutee tutee = roleService.getTuteeById(notification.getReceiverId());
-            receiverName = tutee != null ? tutee.getStudent().getFullName() : "Unknown";
-        } else if (notification.getReceiverType() == EntityType.TUTOR) {
-            Tutor tutor = roleService.getTutorById(notification.getReceiverId());
-            receiverName = tutor != null ? tutor.getStudent().getFullName() : "Unknown";
-        } else {
-            receiverName = "Unknown";
-        }
-
         return new NotificationResponseBody(
+            notification.getId(),
             notification.getSenderId(),
-            senderName,
+            notification.getSenderName(),
             notification.getSenderType(),
             notification.getReceiverId(),
-            receiverName,
+            notification.getReceiverName(),
             notification.getContextId(),
             notification.getContextType(),
             notification.getState()

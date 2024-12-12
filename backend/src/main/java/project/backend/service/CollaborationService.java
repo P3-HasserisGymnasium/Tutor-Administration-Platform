@@ -19,7 +19,6 @@ import project.backend.model.CollaborationState;
 import project.backend.model.Feedback;
 import project.backend.model.Post;
 import project.backend.model.RoleEnum;
-import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.model.Tutor;
 import project.backend.model.Administrator;
@@ -249,7 +248,6 @@ public class CollaborationService {
         collaboration.setAdminAccepted(false);
         collaboration.setStartTimestamp(new Timestamp(System.currentTimeMillis()));
         collaborationRepository.save(collaboration);
-        notificationService.sendNotification(post.getTutee().getId(), EntityType.TUTEE, tutor.getId(), EntityType.TUTOR, collaboration.getId(), EntityType.COLLABORATION);
     }
     
 

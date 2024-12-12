@@ -7,6 +7,7 @@ import tuteeTheme from "~/themes/tuteeTheme";
 import tutorTheme from "~/themes/tutorTheme";
 import unauthenticatedAppTheme from "~/themes/unauthenticatedAppTheme";
 import { NotificationResponseType } from "~/types/entity_types";
+import { NotificationContext, NotificationParticipant } from "~/types/data_types";
 
 /**
  * @returns {string} the heading of the current page based on the pathname.
@@ -204,34 +205,34 @@ export const deleteCookie = (name: string) => {
 
 export const generateNotificationMessage = (notification: NotificationResponseType): string => {
 	switch (notification.context_type) {
-		case "TutorApplication":
-			if (notification.sender_type === "Admin") {
+		case NotificationContext.Enum.POST:
+			if (notification.sender_type === NotificationParticipant.Enum.ADMIN) {
 				return `You have received an update on your tutor application from an administrator`;
+			}
+			if (notification.sender_type === NotificationParticipant.Enum.TUTOR) {
+				return `You have received an invitation to collaborate from ${notification.sender_name}`;
 			}
 			return `You have received a new tutor application request from ${notification.sender_name}`;
 
-
-		case "Meeting":
-			if (notification.sender_type === "Tutee") {
+		case NotificationContext.Enum.MEETING:
+			if (notification.sender_type === NotificationParticipant.Enum.TUTEE) {
 				return `You have received a new meeting request from ${notification.sender_name}`;
 			}
-			if (notification.sender_type === "Tutor") {
+			if (notification.sender_type === NotificationParticipant.Enum.TUTOR) {
 				return `You have received an update on your meeting request for ${notification.sender_name}`;
 			}
 			return `You have received an update on a meeting`;
 
-
-		case "Collaboration":
-			if (notification.sender_type === "Tutee") {
+		case NotificationContext.Enum.COLLABORATION:
+			if (notification.sender_type === NotificationParticipant.Enum.TUTEE) {
 				return `You have received a new collaboration request from tutee ${notification.sender_name}`;
 			}
-			if (notification.sender_type === "Tutor") {
+			if (notification.sender_type === NotificationParticipant.Enum.TUTOR) {
 				return `You have received an update on your collaboration request for ${notification.sender_name}`;
 			}
 			return `You have received an update on a collaboration`;
 
-
-		case "Feedback":
+		case NotificationContext.Enum.FEEDBACK:
 			return `You have received feedback from ${notification.sender_name} for tutor ${notification.receiver_name}`;
 
 		default:

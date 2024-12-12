@@ -44,7 +44,7 @@ public class RoleController {
                 TuteeProfileResponse response = roleService.getTuteeProfile(id);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tutee not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
             }
         }
     }

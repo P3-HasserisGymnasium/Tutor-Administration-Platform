@@ -41,6 +41,8 @@ export const zodTuteeProfileSchema = z.object({
 	full_name: z.string(),
 	year_group: YearGroup,
 	languages: z.array(Language),
+	subjects_receiving_help_in: z.array(Subject),
+	contact_info: z.array(z.object({ username: z.string(), ComunicationMedium })),
 });
 
 export const zodMeetingSchema = z.object({
@@ -58,14 +60,14 @@ export const zodMeetingSchema = z.object({
 
 export const zodCollaborationSchema = z.object({
 	id: zodUUID,
-	tutee_id: zodUUID,
-	tutor_id: zodUUID,
-	tutee_name: z.string(),
-	tutor_name: z.string(),
+	tuteeId: zodUUID,
+	tutorId: zodUUID,
+	tuteeName: z.string(),
+	tutorName: z.string(),
 	state: CollaborationState,
 	subject: Subject,
 	end_date: z.union([z.date(), z.string()]).optional(),
-	start_date: z.union([z.date(), z.string()]).optional(),
+	startDate: z.union([z.date(), z.string()]).optional(),
 });
 
 export const tutorProfileSchema = z.object({
@@ -95,7 +97,7 @@ export const zodNotificationSchema = z.object({
 });
 
 export const zodNotificationResponseSchema = z.object({
-	id: zodUUID.nullable(),
+	notification_id: zodUUID.nullable(),
 	sender_id: zodUUID,
 	sender_name: z.string(),
 	sender_type: NotificationParticipant,

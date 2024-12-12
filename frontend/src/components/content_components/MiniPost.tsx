@@ -5,6 +5,7 @@ import { useTheme } from "@mui/system";
 import { Theme } from "@mui/material/styles";
 import EditPostDialog from "components/page_components/dialogs/EditPostDialog";
 import { useState } from "react";
+import { useRolePrefix } from "~/utilities/helperFunctions";
 
 type MiniPostProp = {
   postData: PostType;
@@ -14,12 +15,26 @@ export default function MiniPost({ postData }: MiniPostProp) {
   const theme = useTheme<Theme>();
   const [showEditPostDialog, setShowEditPostDialog] = useState(false);
 
+  const rolePrefix = useRolePrefix();
+
+  const handleOpenEditPostDialog = () => {
+    if (rolePrefix !== "/tutor") {
+      setShowEditPostDialog(true);
+    } else {
+      return;
+    }
+  };
+
   return (
     <Box
       data-testid="minipostcontainer"
-      onClick={() => setShowEditPostDialog(true)}
+      onClick={handleOpenEditPostDialog}
       sx={{
-        backgroundColor: theme.customColors.collaborationBackgroundColor,
+        "&:hover": {
+          cursor: rolePrefix === "/tutor" ? "default" : "pointer",
+          backgroundColor: theme.palette.augmentColor({ color: { main: theme.customColors.postBackGroundColor } }).dark,
+        },
+        backgroundColor: theme.customColors.postBackGroundColor,
         border: "1px solid rgba(173, 92, 0, 1)",
         width: "200px",
         height: "80%",
@@ -31,22 +46,14 @@ export default function MiniPost({ postData }: MiniPostProp) {
       }}
     >
       <EditPostDialog open={showEditPostDialog} setOpen={setShowEditPostDialog} post={postData} />
-      <Typography
-        data-testid="posttitle"
-        variant="h4"
-      >
+      <Typography data-testid="posttitle" variant="h4">
         {postData.title || "No Title"}
       </Typography>
 
       <Box>
         <SubjectChip Subject={postData.subject} />
 
-        <Typography
-         
-          data-testid="postduration"
-        >
-          {getDuration(postData.duration)}
-        </Typography>
+        <Typography data-testid="postduration">{getDuration(postData.duration)}</Typography>
       </Box>
     </Box>
   );
@@ -55,11 +62,9 @@ export default function MiniPost({ postData }: MiniPostProp) {
 function getDuration(duration: number[] | undefined | null) {
   if (duration === undefined || duration === null) {
     return "Duration not specified";
-  }
-  else if (duration[0] === duration[1]) {
+  } else if (duration[0] === duration[1]) {
     return `Duration: ${duration[0]} months`;
-  }
-  else{
+  } else {
     return `Duration: ${duration[0]}-${duration[1]} months`;
   }
 }

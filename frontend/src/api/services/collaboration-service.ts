@@ -36,8 +36,8 @@ export const useCollaborationService = () => {
 			const { data } = await apiClient.post(`/api/collaboration/accept/${id}/${role}`);
 			return data;
 		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
+		onError: (e: AxiosError) => {
+			toast.error("" + e?.response?.data);
 		},
 		onSuccess: () => {
 			toast.success("Collaboration accepted");

@@ -210,10 +210,11 @@ public class RoleService {
     }
 
     public TuteeProfileResponse getTuteeProfile(Long id) {
-        Student student = studentRepository.getStudentById(id);
+        Tutee tutee = getTuteeByUserId(id);
 
+        Student student = tutee.getStudent();
 
-        List<Collaboration> collaborations = student.getTutee().getCollaborations();
+        List<Collaboration> collaborations = tutee.getCollaborations();
         List<SubjectEnum> subjects = collaborations.stream().map(collab -> collab.getSubject()).toList();
 
         TuteeProfileResponse response = new TuteeProfileResponse();
@@ -221,7 +222,7 @@ public class RoleService {
         response.year_group = student.getYearGroup();
         response.contact_info = student.getContactInfo();
         response.languages = student.getLanguages();
-        response.subjects_taught_in = subjects;
+        response.subjects_receiving_help_in = subjects;
 
         return response;
     }
