@@ -9,7 +9,7 @@ type TutorListProps = {
 };
 
 export default function TutorList({ filters, filterLoading }: TutorListProps) {
-  const { data: listOfTutors, isPending, isError } = useRoleService().getTutors(filters);
+  const { data: listOfTutors, isPending, isError } = useRoleService().useGetTutors(filters);
   console.log("Filters:\n", filters);
   const loading = filterLoading || isPending;
 
@@ -39,15 +39,13 @@ export default function TutorList({ filters, filterLoading }: TutorListProps) {
           overflowY: "auto",
           marginTop: "0.5em",
         }}
-      > 
-        {(listOfTutors === undefined || listOfTutors.length === 0) ? (
+      >
+        {listOfTutors === undefined || listOfTutors.length === 0 ? (
           <>
             <Typography variant="h1">No tutors exist which match your desired filters...</Typography>
           </>
         ) : (
-            listOfTutors.map((tutor, index) => (
-              <TutorCard key={index} profile={tutor} />
-            ))
+          listOfTutors.map((tutor, index) => <TutorCard key={index} profile={tutor} />)
         )}
       </Stack>
     </Box>

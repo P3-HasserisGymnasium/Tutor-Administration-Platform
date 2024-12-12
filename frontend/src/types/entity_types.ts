@@ -28,6 +28,7 @@ export const zodPostSchema = z.object({
 });
 
 export const zodTutorProfileSchema = z.object({
+	id: zodUUID,
 	full_name: z.string(),
 	year_group: YearGroup,
 	languages: z.array(Language),
@@ -208,11 +209,12 @@ export const zodTerminationSchema = z.object({
 });
 
 export const zodRequestCollaborationByTutorType = z.object({
-	tutor_id: zodUUID,
-	tutee_id: zodUUID,
-	post: zodPostSchema,
+	tutorId: zodUUID,
+	title: z.string(),
+	description: z.string(),
+	subject: Subject,
+	duration: z.union([z.array(z.number()), z.undefined()]),
 });
-
 export const zodRequestCollaborationByPostType = z.object({
 	post_id: zodUUID,
 	tutor_id: zodUUID,

@@ -235,7 +235,7 @@ public class CollaborationService {
         Post post = postService.getPostById(postBody.getPost_id()).orElseThrow(() -> new IllegalArgumentException("Post not found"));
         Tutee tutee = post.getTutee();
         Tutor tutor = roleService.getTutorByUserId(postBody.getTutor_id());
-        ArrayList<Collaboration> existingCollaboration = collaborationRepository.findByTutorTuteeAndSubject(tutee.getId(), tutor.getId(), post.getSubject());
+        ArrayList<Collaboration> existingCollaboration = collaborationRepository.findByTuteeTutorAndSubject(tutee.getId(), tutor.getId(), post.getSubject());
         if (existingCollaboration.size() > 0 || existingCollaboration == null) {
             throw new IllegalArgumentException("Collaboration already exists or request is pending");
         }
@@ -251,20 +251,24 @@ public class CollaborationService {
     }
     
 
-    public void requestCollaborationByTutor(RequestCollaborationByTutorBody postBody) {
+    public void requestCollaborationByTutor(RequestCollaborationByTutorBody body, Long tuteeId, Post newPost) {
 
-        Collaboration collaboration = new Collaboration();
-        Tutor tutor = roleService.getTutorById(postBody.getTutor_id());
-        Tutee tutee = roleService.getTuteeById(postBody.getTutee_id());
 
-        ArrayList<Collaboration> existingCollaboration = collaborationRepository.findByTutorTuteeAndSubject(tutee.getId(), tutor.getId(), collaboration.getSubject());
+        ArrayList<Collaboration> existingCollaboration = collaborationRepository.findByTuteeTutorAndSubject(tuteeId, body.tutorId, body.subject);
+        System.out.println("existingCollaboration" + existingCollaboration);
         if (existingCollaboration.size() > 0 || existingCollaboration == null) {
             throw new IllegalArgumentException("Collaboration already exists or request is pending");
         }
+        System.out.println("tuteeIdssssss" + tuteeId);
+        Collaboration collaboration = new Collaboration();
+        Tutor tutor = roleService.getTutorById(body.tutorId);
+        Tutee tutee = roleService.getTuteeById(tuteeId);
 
         collaboration.setTutee(tutee);
         collaboration.setTutor(tutor);
-        collaboration.setSubject(postBody.getPost().getSubject());
+        System.out.println("subject" + body.subject);
+        System.out.println("subjectssss" + newPost.getSubject());
+        collaboration.setSubject(newPost.getSubject());
         collaboration.setState(CollaborationState.WAITING_FOR_TUTOR);
         collaboration.setAdminAccepted(false);
         collaboration.setStartTimestamp(new Timestamp(System.currentTimeMillis()));

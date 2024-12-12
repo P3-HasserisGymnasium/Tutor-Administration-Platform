@@ -38,7 +38,7 @@ const TutorProfileDialog = ({ open, setOpen, tutorProfile }: TutorProfileDialogP
       <DialogContent sx={{ display: "flex", paddingBottom: 0 }}>
         <Box sx={{ width: "100%", padding: 2 }}>
           {/* Picture and Name Row */}
-          <Grid2 container spacing={2} alignItems="center" justifyContent="center" sx={{ marginBottom: 2 }}>
+          <Grid2 container spacing={2} alignItems="center" justifyContent="start" sx={{ marginBottom: 2 }}>
             <Avatar alt="User Name" src="/path-to-image.jpg" sx={{ width: 80, height: 80 }} />
             <Typography variant="h5">{tutorProfile.full_name}</Typography>
           </Grid2>

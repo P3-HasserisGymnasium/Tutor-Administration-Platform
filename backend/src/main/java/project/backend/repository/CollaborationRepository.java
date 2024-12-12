@@ -20,5 +20,5 @@ public interface CollaborationRepository extends JpaRepository<Collaboration, Lo
     public ArrayList<Collaboration> findCollaborationsWithTuteeId(Long tuteeId);
 
     @Query("SELECT c FROM Collaboration c WHERE c.tutee.id = ?1 AND c.tutor.id = ?2 AND c.subject = ?3")
-    public ArrayList<Collaboration> findByTutorTuteeAndSubject(Long tuteeId, Long tutorId, SubjectEnum subject);
+    public ArrayList<Collaboration> findByTuteeTutorAndSubject(Long tuteeId, Long tutorId, SubjectEnum subject);
 }

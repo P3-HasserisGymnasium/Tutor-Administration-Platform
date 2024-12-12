@@ -82,6 +82,12 @@ export const useCollaborationService = () => {
 				const { data } = await apiClient.post<CollaborationType>("/api/collaboration/request/by-tutor", collaboration);
 				return data;
 			},
+			onSuccess: () => {
+				toast.success("Collaboration requested");
+			},
+			onError: (e: AxiosError) => {
+				toast.error("" + e?.response?.data);
+			},
 		});
 	};
 

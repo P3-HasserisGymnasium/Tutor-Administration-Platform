@@ -57,7 +57,7 @@ export const useRoleService = () => {
 		});
 	 */
 	// tutor information gets returned
-	const getTutors = (filters: tutorListFilterType) => {
+	const useGetTutors = (filters: tutorListFilterType) => {
 		return useQuery({
 			queryKey: ["getTutors", filters],
 			queryFn: async () => {
@@ -81,6 +81,7 @@ export const useRoleService = () => {
 			refetchOnWindowFocus: false,
 			enabled: id !== null,
 			placeholderData: {
+				id: 0,
 				contact_info: [],
 				description: "",
 				full_name: "",
@@ -133,7 +134,7 @@ export const useRoleService = () => {
 	return {
 		assignTuteeRole,
 		removeRole,
-		getTutors,
+		useGetTutors,
 		useGetTutorProfile, useGetTuteeProfile,
 		editProfile
 	};

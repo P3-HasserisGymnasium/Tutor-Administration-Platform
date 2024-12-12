@@ -252,10 +252,17 @@ public class RoleService {
         System.out.println("@RoleService, tutors found: " + tutors.size());
 
         System.out.println("@RoleService, filtrering for, subjects: " + filterSubjects + ", timeAvailabilities: " + filterTimeAvailabilities + ", yearGroups: " + filterYearGroups + ", languages: " + filterLanguages);
-        if (filterSubjects != null && filterSubjects.isEmpty() == false) {
+        if (filterSubjects != null && !filterSubjects.isEmpty()) {
             tutors = tutors
             .stream()
-            .filter(tutor -> tutor.getTutoringSubjects().containsAll(filterSubjects))
+            .filter(tutor -> {
+            for (SubjectEnum subject : tutor.getTutoringSubjects()) {
+                if (filterSubjects.contains(subject)) {
+                return true;
+                }
+            }
+            return false;
+            })
             .toList();
         }
         System.out.println("@RoleService, tutors left after first filter: " + tutors.size());
@@ -324,6 +331,7 @@ public class RoleService {
 
         for (Tutor tutor : tutors) {
             TutorProfileResponse response = new TutorProfileResponse();
+            response.id = tutor.getId();
             response.full_name = tutor.getStudent().getFullName();
             response.description = tutor.getProfileDescription();
             response.year_group = tutor.getStudent().getYearGroup();

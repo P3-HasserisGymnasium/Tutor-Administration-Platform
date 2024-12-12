@@ -26,8 +26,8 @@ import project.backend.model.Collaboration;
 import project.backend.model.EntityType;
 import project.backend.model.Feedback;
 import project.backend.model.Post;
+import project.backend.model.PostState;
 import project.backend.model.RoleEnum;
-import project.backend.model.Tutor;
 import project.backend.service.CollaborationService;
 import project.backend.service.NotificationService;
 import project.backend.service.PostService;
@@ -201,7 +201,7 @@ public class CollaborationController {
     }
 
     @PostMapping("/request/by-tutor")
-    public ResponseEntity<?> requestCollaboration(@RequestBody RequestCollaborationByTutorBody postBody, HttpServletRequest request) {
+    public ResponseEntity<?> requestCollaboration(@RequestBody RequestCollaborationByTutorBody body, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
 
@@ -209,17 +209,22 @@ public class CollaborationController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in as a tutor to request a collaboration");
         }
         
-        try {
-            collaborationService.requestCollaborationByTutor(postBody);
+        try { 
+                
+            Post post = new Post();
+            post.setTutee(roleService.getTuteeById(authenticatedUser.getTuteeId()));
+            post.setTitle(body.title);  
+            post.setDescription(body.description);
+            post.setSubject(body.subject);
+            post.setDuration(body.duration);
+            post.setState(PostState.INVISIBLE);
+            postService.createPost(post, authenticatedUser.getTuteeId());
+
+         
+            collaborationService.requestCollaborationByTutor(body, authenticatedUser.getTuteeId(), post);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-
-        Tutor tutor = roleService.getTutorById(postBody.getTutor_id());
-
-        notificationService.sendNotification(authenticatedUser.getTuteeId(), EntityType.TUTEE, tutor.getId(), EntityType.TUTOR, postBody.getPost().getId(), EntityType.POST);
-
         return ResponseEntity.status(HttpStatus.OK).body("Collaboration requested");
     }
 
