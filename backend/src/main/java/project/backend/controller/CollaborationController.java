@@ -19,6 +19,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.collaboration_bodies.CollaborationCreateBody;
+import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByPostBody;
+import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByTutorBody;
 import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.model.Collaboration;
 import project.backend.model.Feedback;
@@ -91,6 +93,45 @@ public class CollaborationController {
         return ResponseEntity.status(HttpStatus.OK).body("Collaboration deleted");
     }
 
+    @PostMapping("/request/by-post")
+    public ResponseEntity<?> requestCollaborationByPost(@RequestBody RequestCollaborationByPostBody postBody, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        System.out.println("authenticatedUser" + authenticatedUser);
+        System.out.println("postBody" + postBody);
+
+        if (authenticatedUser.getTutorId() != postBody.getTutor_id() && !authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in as a tutee to request a collaboration");
+        }
+
+        try {
+            collaborationService.requestCollaborationByPost(postBody);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
+
+        return ResponseEntity.status(HttpStatus.OK).body("Collaboration requested");
+    }
+
+    @PostMapping("/request/by-tutor")
+    public ResponseEntity<?> requestCollaboration(@RequestBody RequestCollaborationByTutorBody postBody, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+
+        if (authenticatedUser.getTuteeId() != postBody.getTutee_id() && !authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in as a tutor to request a collaboration");
+        }
+        
+        try {
+            collaborationService.requestCollaborationByTutor(postBody);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body("Collaboration requested");
+    }
+
+
     @PostMapping("/request-suggestion/{id}")
     public ResponseEntity<?> requestCollaborationSuggestion(@PathVariable Long tuteeId, @RequestBody PostBody requestBody, HttpServletRequest request) {
         //AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
@@ -109,14 +150,14 @@ public class CollaborationController {
 
     @PostMapping("/accept/{collaborationId}/{role}")
     public ResponseEntity<?> acceptCollaboration(@PathVariable Long collaborationId, @PathVariable RoleEnum role, HttpServletRequest request) {
-        //AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (collaborationService.getCollaborationById(collaborationId) == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Collaboration does not exist");
         }
 
         try {
-            collaborationService.acceptCollaboration(collaborationId, role);
+            collaborationService.acceptCollaboration(collaborationId, role, authenticatedUser);
             return ResponseEntity.status(HttpStatus.OK).body("Collaboration accepted");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -125,14 +166,14 @@ public class CollaborationController {
 
     @PostMapping("reject/{collaborationId}/{role}")
     public ResponseEntity<?> rejectCollaboration(@PathVariable Long collaborationId, @PathVariable RoleEnum role, HttpServletRequest request) {
-        //AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (collaborationService.getCollaborationById(collaborationId) == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Collaboration does not exist");
         }
 
         try {
-            collaborationService.rejectCollaboration(collaborationId, role);
+            collaborationService.rejectCollaboration(collaborationId, role, authenticatedUser);
             return ResponseEntity.status(HttpStatus.OK).body("Collaboration rejected");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

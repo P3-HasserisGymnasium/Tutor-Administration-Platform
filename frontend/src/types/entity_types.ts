@@ -17,9 +17,9 @@ import {
 	zodContactInfo,
 } from "./data_types";
 
-
 export const zodPostSchema = z.object({
 	id: zodUUID,
+	tutee_id: zodUUID.optional(),
 	title: z.string(),
 	description: z.string(),
 	subject: Subject,
@@ -205,6 +205,16 @@ export const zodTerminationSchema = z.object({
 	terminationReason: z.string(),
 });
 
+export const zodRequestCollaborationByTutorType = z.object({
+	tutor_id: zodUUID,
+	tutee_id: zodUUID,
+	post: zodPostSchema,
+});
+
+export const zodRequestCollaborationByPostType = z.object({
+	post_id: zodUUID,
+	tutor_id: zodUUID,
+});
 export type LoginSuccessDataType = z.infer<typeof zodLoginSuccessDataType>;
 export type LoginType = z.infer<typeof zodLoginSchema>;
 export type UserState = z.infer<typeof zodUserStateSchema>;
@@ -213,8 +223,10 @@ export type TutorProfileType = z.infer<typeof zodTutorProfileSchema>;
 export type TuteeProfileType = z.infer<typeof zodTuteeProfileSchema>;
 export type MeetingType = z.infer<typeof zodMeetingSchema>;
 export type CollaborationType = z.infer<typeof zodCollaborationSchema>;
+export type RequestCollaborationByTutorType = z.infer<typeof zodRequestCollaborationByTutorType>;
+export type RequestCollaborationByPostType = z.infer<typeof zodRequestCollaborationByPostType>;
 export type Feedback = z.infer<typeof zodFeedbackSchema>;
 export type AccountRegisterType = z.infer<typeof zodAccountRegisterSchema>;
 export type NotificationType = z.infer<typeof zodNotificationSchema>;
 export type NotificationResponseType = z.infer<typeof zodNotificationResponseSchema>;
-export type TerminationType = z.infer<typeof zodTerminationSchema>
+export type TerminationType = z.infer<typeof zodTerminationSchema>;
