@@ -1,5 +1,5 @@
 //import { useNotificationService } from "~/api/services/notification-service";
-import { Box, Typography, Paper, CircularProgress, Divider } from "@mui/material";
+import { Box, Typography, Paper, Divider } from "@mui/material";
 
 //import { NotificationState } from "~/types/data_types";
 //import { useAuth } from "~/api/authentication/useAuth";

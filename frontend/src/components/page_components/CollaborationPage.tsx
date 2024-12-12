@@ -10,6 +10,7 @@ import { Box, Button, ButtonGroup, IconButton, Paper, Tooltip, Typography } from
 import MiniCalendar from "../content_components/HomePageComponents/MiniCalendar";
 import MeetingsList from "../content_components/MeetingsList";
 import InfoIcon from "@mui/icons-material/Info";
+import { useRoleService } from "~/api/services/roleService";
 //import { useMeetingService } from "~/api/services/meeting-service";
 
 
@@ -96,6 +97,7 @@ export default function CollaborationPage() {
 	const [view, setView] = useState<"list" | "calender">("list");
 	const { isMobile } = useBreakpoints();
 	//const { data: meetings, isLoading, error } = useMeetingService().useGetMeetings();
+	const {roleData} = useRoleService().getProfile();
 
 	// Categorize meetings into "Upcoming" and "Finished"
 	const upcomingMeetings = meetings.filter(
@@ -131,7 +133,7 @@ export default function CollaborationPage() {
 				>
 					{/* Header with Title and Buttons */}
 					<Box sx={{ display: "flex", alignItems: "center", gap: isMobile ? 2 : 17 }}>
-						<Typography variant="h6">{view === "calender" ? "Calendar" : "Meeting List"}</Typography>
+						<Typography sx={{fontWeight: 'bold'}} variant="h6">{view === "calender" ? "Calendar" : "Meeting List"}</Typography>
 
 						{/* Button group for toggling between calendar and meeting */}
 						<ButtonGroup variant="outlined" aria-label="outlined primary button group">
@@ -193,75 +195,79 @@ export default function CollaborationPage() {
 				</Box>
 
 				
-			<div>Put tutor communication here</div>
+				<Box sx={{ padding: 2, maxWidth: 600, margin: 'auto', textAlign: 'center' }}>
+				<Typography variant="h6" sx={{ marginBottom: 2, fontWeight: 'bold', display: "flex", alignItems: "left" }}>
+					Communcation
+				</Typography>
+				</Box>
 
 			<Box sx={{ padding: 2, maxWidth: 600, margin: 'auto', textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ marginBottom: 2 }}>
-        Meetings
-      </Typography>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
-        {/* Upcoming Meetings Section */}
-        <Box sx={{ flex: 1, marginRight: 1 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
-            Upcoming
-          </Typography>
-          {upcomingMeetings.map((meeting) => (
-            <Paper
-              key={meeting.id}
-              elevation={2}
-              sx={{
-                padding: 1.5,
-                marginBottom: 1,
-                backgroundColor: '#f5f5dc', // Light beige
-              }}
-            >
-              <Typography>{`${new Date(meeting.start_time).toLocaleDateString('en-US', {
-                weekday: 'long',
-                month: 'long',
-                day: 'numeric',
-              })}`}</Typography>
-              <Typography>{`${new Date(meeting.start_time).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })} - ${new Date(meeting.end_time).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}`}</Typography>
-            </Paper>
-          ))}
-        </Box>
-        {/* Finished Meetings Section */}
-        <Box sx={{ flex: 1, marginLeft: 1 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
-            Finished
-          </Typography>
-          {finishedMeetings.map((meeting) => (
-            <Paper
-              key={meeting.id}
-              elevation={2}
-              sx={{
-                padding: 1.5,
-                marginBottom: 1,
-                backgroundColor: '#f5f5dc', // Light beige
-              }}
-            >
-              <Typography>{`${new Date(meeting.start_time).toLocaleDateString('en-US', {
-                weekday: 'long',
-                month: 'long',
-                day: 'numeric',
-              })}`}</Typography>
-              <Typography>{`${new Date(meeting.start_time).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })} - ${new Date(meeting.end_time).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}`}</Typography>
-            </Paper>
-          ))}
-        </Box>
-      </Box>
-    </Box>
+				<Typography variant="h6" sx={{marginBottom: 2, fontWeight: 'bold', display: "flex", alignItems: "left" }}>
+					Meetings
+				</Typography>
+				<Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
+					{/* Upcoming Meetings Section */}
+					<Box sx={{ flex: 1, marginRight: 1 }}>
+					<Typography variant="subtitle1" sx={{ marginBottom: 1, display: "flex", alignItems: "left"  }}>
+						Upcoming
+					</Typography>
+					{upcomingMeetings.map((meeting) => (
+						<Paper
+						key={meeting.id}
+						elevation={2}
+						sx={{
+							padding: 1.5,
+							marginBottom: 1,
+							backgroundColor: '#f5f5dc', // Light beige
+						}}
+						>
+						<Typography>{`${new Date(meeting.start_time).toLocaleDateString('en-US', {
+							weekday: 'long',
+							month: 'long',
+							day: 'numeric',
+						})}`}</Typography>
+						<Typography>{`${new Date(meeting.start_time).toLocaleTimeString([], {
+							hour: '2-digit',
+							minute: '2-digit',
+						})} - ${new Date(meeting.end_time).toLocaleTimeString([], {
+							hour: '2-digit',
+							minute: '2-digit',
+						})}`}</Typography>
+						</Paper>
+					))}
+					</Box>
+					{/* Finished Meetings Section */}
+					<Box sx={{ flex: 1, marginLeft: 1 }}>
+					<Typography variant="subtitle1" sx={{ marginBottom: 1,  display: "flex", alignItems: "left"  }}>
+						Finished
+					</Typography>
+					{finishedMeetings.map((meeting) => (
+						<Paper
+						key={meeting.id}
+						elevation={2}
+						sx={{
+							padding: 1.5,
+							marginBottom: 1,
+							backgroundColor: '#f5f5dc', // Light beige
+						}}
+						>
+						<Typography>{`${new Date(meeting.start_time).toLocaleDateString('en-US', {
+							weekday: 'long',
+							month: 'long',
+							day: 'numeric',
+						})}`}</Typography>
+						<Typography>{`${new Date(meeting.start_time).toLocaleTimeString([], {
+							hour: '2-digit',
+							minute: '2-digit',
+						})} - ${new Date(meeting.end_time).toLocaleTimeString([], {
+							hour: '2-digit',
+							minute: '2-digit',
+						})}`}</Typography>
+						</Paper>
+					))}
+					</Box>
+				</Box>
+			</Box>
 
 		</MediumShortOnShortBoxLayout>
 		</ThemeProvider>

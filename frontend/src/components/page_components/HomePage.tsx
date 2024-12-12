@@ -1,5 +1,5 @@
 import MediumShortOnShortBoxLayout from "components/layout_components/MediumShortOnShortBoxLayout";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip, ThemeProvider } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import PeopleIcon from '@mui/icons-material/People';
@@ -16,6 +16,9 @@ import { useCollaborationService } from "~/api/services/collaboration-service";
 import { usePostService } from "~/api/services/post-service";
 import { useNavigate } from "react-router-dom";
 import { useNotificationService } from "~/api/services/notification-service";
+//import NotificationsList from "../content_components/NotificationsListe";
+import RequestMeetingDialog from "./dialogs/ViewCollaborationsDialog";
+import CollaborationPage from "./CollaborationPage";
 
 //import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
 
@@ -70,6 +73,10 @@ export default function HomePage() {
 			</Box>
 		);
 	}
+
+	return(
+		<CollaborationPage/>
+	);
 
 
 	return (
