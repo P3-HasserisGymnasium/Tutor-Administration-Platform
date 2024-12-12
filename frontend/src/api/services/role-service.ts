@@ -2,6 +2,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
+import { YearGroup } from '~/types/data_types';
 import { TuteeProfileType, TutorProfileType } from "~/types/entity_types";
 
 // tutee/tutor:role_id -> role:student_id -> student:id
@@ -42,8 +43,7 @@ export const useRoleService = () => {
 		},
 	});
 
-	// Assuming student id array gets returned
-	const getTutees = () => {
+	const useGetTutees = () => {
 		return useQuery({
 			queryKey: ["getTutees"],
 			queryFn: async () => {
@@ -58,7 +58,7 @@ export const useRoleService = () => {
 	}
 
 	// tutor information gets returned
-	const getTutors = () => {
+	const useGetTutors = () => {
 		return useQuery({
 			queryKey: ["getTutors"],
 			queryFn: async () => {
@@ -85,17 +85,17 @@ export const useRoleService = () => {
 			enabled: id !== null,
 			placeholderData: {
 				id: 0,
-				contact_info: [],
-				description: "",
 				full_name: "",
-				time_availability: [],
+				year_group: YearGroup.Enum.IB_1,
+				languages: [],
 				tutoring_subjects: [],
-				year_group: "PRE_IB",
-				languages: []
+				description: "",
+				time_availability: [],
+				contact_info: [],
+
 			},
 		})
 	};
-
 	const useGetTuteeProfile = (id: number | null) => {
 		return useQuery({
 			queryKey: ["getProfile", id],
@@ -109,9 +109,9 @@ export const useRoleService = () => {
 			enabled: id !== null,
 			placeholderData: {
 				id: 0,
-				full_name: "string",
-				year_group: "IB_1",
-				languages: ["Danish"]
+				full_name: "",
+				year_group: YearGroup.Enum.IB_1,
+				languages: [],
 			},
 		})
 	}
@@ -136,10 +136,9 @@ export const useRoleService = () => {
 	return {
 		assignTuteeRole,
 		removeRole,
-		getTutors,
-		getTutees,
-		useGetTutorProfile,
-		useGetTuteeProfile,
+		useGetTutors,
+		useGetTutees,
+		useGetTutorProfile, useGetTuteeProfile,
 		editProfile
 	};
 };

@@ -1,4 +1,4 @@
-import { Box, ThemeProvider, Typography } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useRoleService } from "~/api/services/role-service";
 import ShortOnShortShortOnShortBoxLayout from "~/components/layout_components/ShortOnShortShortOnShortBoxLayout";
@@ -9,47 +9,20 @@ import AdminOverview from "./AdminOverview";
 import AdminManageTutors from "./AdminManageTutors";
 
 export default function AdministratorPage() {
-	const theme = useCurrentTheme();
+  const theme = useCurrentTheme();
 
-	const { data: tutors, isLoading: isTutorsLoading } = useRoleService().getTutors();
-	const { data: tutees, isLoading: isTuteesLoading } = useRoleService().getTutees();
-	const { data: collaborations } = useCollaborationService().getCollabortations();
+  const { data: tutors, isLoading: isTutorsLoading } = useRoleService().useGetTutors();
+  const { data: tutees, isLoading: isTuteesLoading } = useRoleService().useGetTutees();
+  const { data: collaborations } = useCollaborationService().getCollabortations();
 
-	let tutorCount = tutors?.length;
-	let tuteeCount = tutees?.length;
-	let collaborationCount = collaborations?.length;
-	return (
-
-		<ThemeProvider theme={theme}>
-			<ShortOnShortShortOnShortBoxLayout>
-				<Box sx={{ height: "100%", width: "100%" }}>
-					<Typography variant="h1" sx={{ paddingTop: 3, paddingLeft: 3 }}>
-						Requests
-					</Typography>
-					<AdminRequests />
-				</Box>
-				<Box sx={{ height: "100%", width: "95%" }}>
-					<Typography variant="h1" sx={{ paddingTop: 3, paddingLeft: 3 }}>
-						Manage tutees
-					</Typography>
-					<AdminManageTutees tutees={tutees} isLoading={isTuteesLoading} />
-				</Box>
-				<Box sx={{ height: "100%", width: "100%" }}>
-					<Typography variant="h1" sx={{ paddingTop: 3, paddingLeft: 3 }}>
-						Overview
-					</Typography>
-					<AdminOverview
-						tutorCount={tutorCount}
-						tuteeCount={tuteeCount}
-						collaborationCount={collaborationCount} />
-				</Box>
-				<Box sx={{ height: "100%", width: "100%" }}>
-					<Typography variant="h1" sx={{ paddingTop: 3, paddingLeft: 3 }}>
-						Manage tutors
-					</Typography>
-					<AdminManageTutors tutors={tutors} isLoading={isTutorsLoading} />
-				</Box>
-			</ShortOnShortShortOnShortBoxLayout >
-		</ThemeProvider>
-	);
+  return (
+    <ThemeProvider theme={theme}>
+      <ShortOnShortShortOnShortBoxLayout>
+        <AdminRequests />
+        <AdminManageTutees tutees={tutees} isLoading={isTuteesLoading} />
+        <AdminOverview tutorCount={tutors?.length} tuteeCount={tutees?.length} collaborationCount={collaborations?.length} />
+        <AdminManageTutors tutors={tutors} isLoading={isTutorsLoading} />
+      </ShortOnShortShortOnShortBoxLayout>
+    </ThemeProvider>
+  );
 }

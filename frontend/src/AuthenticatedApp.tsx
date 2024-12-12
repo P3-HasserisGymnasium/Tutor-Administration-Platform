@@ -54,6 +54,9 @@ export default function AuthenticatedApp() {
 						}
 					/>
 
+					{/* Admin routes */}
+					{userState.is_administrator ? <Route path="/admin/*" element={<AdministratorPage />} /> : <Route path="/admin/*" element={<Forbidden />} />}
+
 					{/* Tutee routes */}
 					{isTutee ? (
 						<>
@@ -87,8 +90,6 @@ export default function AuthenticatedApp() {
 							</Route>
 						</>
 					) : null}
-
-					{isAdmin ? <Route path="/admin/*" element={<AdministratorPage />} /> : null}
 
 					{/* Catch-all for invalid roles */}
 					<Route path="*" element={<NotFound />} />

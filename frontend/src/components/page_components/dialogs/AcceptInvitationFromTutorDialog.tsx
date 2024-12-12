@@ -15,7 +15,7 @@ type AcceptInviteDialogProps = {
 export default function AcceptInvitationFromTutorDialog({ open, setOpen, collaboration_id, tutor_id }: AcceptInviteDialogProps) {
   const { acceptCollaboration, rejectCollaboration } = useCollaborationService();
   const { data: collaboration, isLoading: isCollaborationLoading } = useCollaborationService().useGetCollaborationById(collaboration_id);
-  const { data: tutorProfile, isLoading: isTutorProfileLoading } = useRoleService().useGetTutorProfile(tutor_id);
+  const { data: tutorProfile, isLoading: isTutorProfileLoading } = useRoleService().useGetTutorProfile(tutor_id != null ? tutor_id : 0);
 
   const acceptCollab = () => {
     if (collaboration?.id) {

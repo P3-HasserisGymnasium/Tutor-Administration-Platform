@@ -1,16 +1,8 @@
 import { Box, Paper } from "@mui/material";
 import { Children } from "react";
-import {
-  useVariableWidth,
-  useWrap,
-  useVariableHeight,
-} from "~/utilities/helperFunctions";
+import { useVariableWidth, useWrap, useVariableHeight } from "~/utilities/helperFunctions";
 
-export default function ShortOnShortShortOnShortBoxLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ShortOnShortShortOnShortBoxLayout({ children }: { children: React.ReactNode }) {
   return (
     <Box
       sx={{

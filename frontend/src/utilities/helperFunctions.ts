@@ -188,7 +188,7 @@ export const useVariableHeight = (value?: string | number) => {
  */
 export const setCookie = (name: string, value: string, hours: number) => {
 	const expires = new Date(Date.now() + hours * 36e5).toUTCString();
-	document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+	document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax; Secure; HttpOnly; `;
 };
 
 /**
