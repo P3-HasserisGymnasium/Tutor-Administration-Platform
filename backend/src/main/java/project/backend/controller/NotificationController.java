@@ -143,4 +143,39 @@ public class NotificationController {
 
         return ResponseEntity.status(HttpStatus.OK).body("Notification deleted");
     }
+
+    private NotificationResponseBody createNotificationResponseBody(Notification notification) {
+        String senderName;
+        if (notification.getSenderType() == EntityType.TUTOR) {
+            Tutor tutor = roleService.getTutorById(notification.getSenderId());
+            senderName = tutor != null ? tutor.getStudent().getFullName() : "Unknown";
+        } else if (notification.getSenderType() == EntityType.ADMIN) {
+            Administrator admin = roleService.getAdministratorById(notification.getSenderId());
+            senderName = admin != null ? admin.getFullName() : "Unknown";
+        } else {
+            senderName = "Unknown";
+        }
+
+        String receiverName;
+        if (notification.getReceiverType() == EntityType.TUTEE) {
+            Tutee tutee = roleService.getTuteeById(notification.getReceiverId());
+            receiverName = tutee != null ? tutee.getStudent().getFullName() : "Unknown";
+        } else if (notification.getReceiverType() == EntityType.TUTOR) {
+            Tutor tutor = roleService.getTutorById(notification.getReceiverId());
+            receiverName = tutor != null ? tutor.getStudent().getFullName() : "Unknown";
+        } else {
+            receiverName = "Unknown";
+        }
+
+        return new NotificationResponseBody(
+            notification.getSenderId(),
+            senderName,
+            notification.getSenderType(),
+            notification.getReceiverId(),
+            receiverName,
+            notification.getContextId(),
+            notification.getContextType(),
+            notification.getState()
+        );
+    }
 }

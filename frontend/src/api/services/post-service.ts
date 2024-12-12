@@ -5,11 +5,18 @@ import { apiClient } from "../api-client";
 import { PostType } from "~/types/entity_types";
 
 export const usePostService = () => {
-	const useGetPosts = () => {
+	const navigate = useNavigate();
+
+	const useGetPosts = (filters?: PostListFilterType) => {
 		return useQuery({
 			queryKey: ["getPosts"],
 			queryFn: async () => {
-				const { data } = await apiClient.get<PostType[]>(`/api/post`);
+				const { data } = await apiClient.get<PostType[]>(`/api/post`, {
+					params: {
+						subjects: filters?.subjects?.join(","),
+						duration: filters?.duration?.join(","),
+					},
+				});
 				return data;
 			},
 			refetchOnWindowFocus: false,
@@ -40,7 +47,8 @@ export const usePostService = () => {
 				toast.error(e?.response?.data?.detail);
 			},
 			onSuccess: () => {
-				toast.success("Post oprettet");
+				toast.success("Post created");
+				navigate("/tutee");
 			},
 		});
 	};
@@ -70,8 +78,8 @@ export const usePostService = () => {
 				const { data } = await apiClient.put<PostType>(`/api/post/`, post);
 				return data;
 			},
-			onError: (e: AxiosError<{ detail: string }>) => {
-				toast.error(e?.response?.data?.detail);
+			onError: (e: AxiosError) => {
+				toast.error("" + e?.response?.data);
 			},
 			onSuccess: () => {
 				toast.success("Post redigeret");

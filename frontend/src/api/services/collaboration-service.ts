@@ -2,7 +2,16 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { PostType, CollaborationType, Feedback, TerminationType } from "~/types/entity_types";
+import {
+	PostType,
+	CollaborationType,
+	Feedback,
+	TerminationType,
+	RequestCollaborationByPostType,
+	RequestCollaborationByTutorType,
+} from "~/types/entity_types";
+import { Role } from "~/types/data_types";
+import { z } from "zod";
 
 export const useCollaborationService = () => {
 	//Admin requests a collaboration
@@ -22,8 +31,8 @@ export const useCollaborationService = () => {
 
 	const acceptCollaboration = useMutation({
 		mutationKey: ["acceptCollaboration"],
-		mutationFn: async (id: number) => {
-			const { data } = await apiClient.post<number>("/api/collaboration", id);
+		mutationFn: async ({ id, role }: { id: number; role: RoleType }) => {
+			const { data } = await apiClient.post(`/api/collaboration/accept/${id}/${role}`);
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -36,8 +45,8 @@ export const useCollaborationService = () => {
 
 	const rejectCollaboration = useMutation({
 		mutationKey: ["rejectCollaboration"],
-		mutationFn: async (id: number) => {
-			const { data } = await apiClient.post<number>("/api/collaboration", id);
+		mutationFn: async ({ id, role }: { id: number; role: RoleType }) => {
+			const { data } = await apiClient.post(`/api/collaboration/reject/${id}/${role}`);
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -65,20 +74,31 @@ export const useCollaborationService = () => {
 	});
 
 	//Tutor or tutee wants a collab
-	const requestCollaboration = useMutation({
-		mutationKey: ["requestCollaboration"],
-		mutationFn: async (collaboration: CollaborationType) => {
-			const { data } = await apiClient.post<CollaborationType>("/api/collaboration", collaboration);
+	const useRequestCollaborationViaTutor = () => {
+		return useMutation({
+			mutationKey: ["requestCollaborationViaTutor"],
+			mutationFn: async (collaboration: RequestCollaborationByTutorType) => {
+				const { data } = await apiClient.post<CollaborationType>("/api/collaboration/request/by-tutor", collaboration);
+				return data;
+			},
+		});
+	};
 
-			return data;
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
-		},
-		onSuccess: () => {
-			toast.success("Collaboration requested");
-		},
-	});
+	const useRequestCollaborationViaPost = () => {
+		return useMutation({
+			mutationKey: ["requestCollaborationViaPost"],
+			mutationFn: async (collaboration: RequestCollaborationByPostType) => {
+				const { data } = await apiClient.post<CollaborationType>("/api/collaboration/request/by-post", collaboration);
+				return data;
+			},
+			onSuccess: () => {
+				toast.success("Collaboration requested");
+			},
+			onError: (e: AxiosError) => {
+				toast.error("" + e?.response?.data);
+			},
+		});
+	};
 
 	const useTerminateCollaboration = () => {
 		return useMutation({
@@ -87,8 +107,8 @@ export const useCollaborationService = () => {
 				const { data } = await apiClient.post<string>("/api/collaboration/terminate/" + id, terminationReason);
 				return data;
 			},
-			onError: (e: AxiosError<{ detail: string }>) => {
-				toast.error(e?.response?.data?.detail);
+			onError: (e: AxiosError) => {
+				toast.error("" + e?.response?.data);
 			},
 			onSuccess: () => {
 				toast.success("Collaboration terminated");
@@ -102,8 +122,8 @@ export const useCollaborationService = () => {
 			const { data } = await apiClient.post<Feedback>("/api/collaboration", feedback);
 			return data;
 		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
+		onError: (e: AxiosError) => {
+			toast.error("" + e?.response?.data);
 		},
 		onSuccess: () => {
 			toast.success("Feedback submitted");
@@ -138,6 +158,18 @@ export const useCollaborationService = () => {
 		});
 	};
 
+	const useGetCollaborationById = (id: number | null) => {
+		return useQuery({
+			queryKey: ["getCollaborationById", id],
+			queryFn: async () => {
+				const { data } = await apiClient.get<CollaborationType>(`/api/collaboration/${id}`);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			enabled: !!id,
+		});
+	};
+
 	return {
 		useGetCollaborationsWithTutee,
 		useGetCollaborationsWithTutor,
@@ -145,7 +177,8 @@ export const useCollaborationService = () => {
 		acceptCollaboration,
 		rejectCollaboration,
 		requestCollaborationSuggestion,
-		requestCollaboration,
+		useRequestCollaborationViaTutor,
+		useRequestCollaborationViaPost,
 		useTerminateCollaboration,
 		submitFeedback,
 	};

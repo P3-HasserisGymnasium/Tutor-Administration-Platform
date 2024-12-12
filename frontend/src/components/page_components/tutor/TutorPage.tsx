@@ -12,19 +12,27 @@ import { usePostService } from "~/api/services/post-service";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useAuth } from "~/api/authentication/useAuth";
 import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
-
+import { useNavigate } from "react-router-dom";
+import { MeetingType } from "~/types/entity_types";
+import { useMeetingService } from "~/api/services/meeting-service";
 export default function TutorPage() {
+	const navigate = useNavigate();
 	const theme = useCurrentTheme();
 	const { isMobile } = useBreakpoints();
 	const [view, setView] = useState<"list" | "calender">("list");
 	const [showCollabDialog, setShowCollabDialog] = useState(false);
 	const { userState } = useAuth();
-	const { data: posts, isLoading: postsLoading, isError: postsError } = usePostService().useGetPosts();
+	const {
+		data: posts,
+		isLoading: postsLoading,
+		isError: postsError,
+	} = usePostService().useGetPosts({ duration: [0, 12], subjects: userState?.tutoring_subjects || [] });
 	const {
 		data: collaborations,
 		isLoading: collabLoading,
 		isError: collabError,
 	} = useCollaborationService().useGetCollaborationsWithTutor(userState?.id || null);
+	const { data: meetings } = useMeetingService().useGetMeetings();
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -105,7 +113,7 @@ export default function TutorPage() {
 							overflow: "hidden",
 						}}
 					>
-						{view === "calender" ? <MiniCalendar /> : <MeetingsList />}
+						{view === "calender" ? <MiniCalendar meetings={meetings as MeetingType[]} /> : <MeetingsList />}
 					</Box>
 				</Box>
 
@@ -147,12 +155,51 @@ export default function TutorPage() {
 						<MiniPostList posts={posts} isLoading={postsLoading} isError={postsError} />
 					</Box>
 					<Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
-						<CustomButton
-							onClick={() => setShowCollabDialog(true)}
-							variant="contained"
-							color="primary"
-							sx={{ fontSize: "18px" }}
+						<CustomButton onClick={() => setShowCollabDialog(true)} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+							View all
+						</CustomButton>
+					</Box>
+				</Box>
+
+				<Box
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						border: "1px solid #white",
+						borderRadius: "8px",
+						justifyContent: "space-between",
+						height: "100%",
+					}}
+				>
+					<Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, ml: 2, mt: 2, mr: 2 }}>
+						<Box sx={{ display: "flex", alignItems: "flex-end" }}>
+							<Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>
+								Your Active Collaborations
+							</Typography>
+							<Typography variant="body2" sx={{ color: "#555", marginBottom: 1.3, ml: 1 }}>
+								Click to view collaboration page
+							</Typography>
+						</Box>
+
+						<Tooltip
+							title="Posts are visible to tutors. Tutors can request to help you, in which case you can accept their help. You can create a new post, or edit and delete an existing post."
+							arrow
 						>
+							<IconButton
+								sx={{
+									alignItems: "right",
+								}}
+								aria-label="info"
+							>
+								<InfoIcon />
+							</IconButton>
+						</Tooltip>
+					</Box>
+					<Box sx={{ display: "flex", gap: 2 }}>
+						<MiniPostList posts={posts} isLoading={postsLoading} isError={postsError} />
+					</Box>
+					<Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
+						<CustomButton onClick={() => navigate("posts-list")} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
 							View all
 						</CustomButton>
 					</Box>

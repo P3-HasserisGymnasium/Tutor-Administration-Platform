@@ -4,7 +4,6 @@ public enum EntityType {
     USER,
     STUDENT,
     ADMIN,
-    ADMINISTRATOR,
     COLLABORATION,
     MEETING,
     POST,

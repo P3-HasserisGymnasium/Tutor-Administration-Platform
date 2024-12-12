@@ -28,7 +28,7 @@ public class Post {
     @Column(name = "title")
     String title;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 1000)
     String description;
 
     @Column(name = "duration", nullable = true)

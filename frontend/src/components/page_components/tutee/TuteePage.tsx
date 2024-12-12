@@ -14,18 +14,35 @@ import { usePostService } from "~/api/services/post-service";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useAuth } from "~/api/authentication/useAuth";
 import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
+import EditPostDialog from "../dialogs/EditPostDialog";
+import { PostState, Subject } from "~/types/data_types";
+import { MeetingType, PostType } from "~/types/entity_types";
+import ViewPostsDialog from "../dialogs/ViewPostsDialog";
+import CreateCollaborationDialog from "../dialogs/CreateCollaborationDialog";
+import { useNavigate } from "react-router-dom";
+import { useMeetingService } from "~/api/services/meeting-service";
+
+const post: PostType = {
+	id: 1,
+	title: "hjælp mig",
+	description: "iosjdsiaojdaojdasdiasdjsaod jsadj iasojdasd",
+	subject: Subject.Enum.Danish,
+	duration: [2, 8],
+	state: PostState.Enum.VISIBLE,
+};
 export default function TuteePage() {
 	const theme = useCurrentTheme();
 	const { isMobile } = useBreakpoints();
 	const [view, setView] = useState<"list" | "calender">("list");
 	const [showCollabDialog, setShowCollabDialog] = useState(false);
 	const { userState } = useAuth();
-	const { data: posts, isLoading: postsLoading, isError: postsError } = usePostService().useGetTuteePosts();
-	const {
-		data: collaborations,
-		isLoading: collabLoading,
-		isError: collabError,
-	} = useCollaborationService().useGetCollaborationsWithTutee(userState?.id || null);
+	const { data: posts, isLoading: postsLoading, isError: postsError } = useGetTuteePosts();
+	const { data: collaborations, isLoading: collabLoading, isError: collabError } = useGetCollaborationsWithTutee(userState?.id || null);
+	const { data: meetings } = useMeetingService().useGetMeetings();
+
+	meetings?.filter((meeting) => {
+		return meeting.tutee_user_id === userState.id;
+	});
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -106,7 +123,7 @@ export default function TuteePage() {
 							overflow: "hidden",
 						}}
 					>
-						{view === "calender" ? <MiniCalendar /> : <MeetingsList />}
+						{view === "calender" ? <MiniCalendar meetings={meetings as MeetingType[]} /> : <MeetingsList />}
 					</Box>
 				</Box>
 
@@ -148,12 +165,7 @@ export default function TuteePage() {
 						<MiniPostList posts={posts} isLoading={postsLoading} isError={postsError} />
 					</Box>
 					<Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
-						<CustomButton
-							onClick={() => setShowCollabDialog(true)}
-							variant="contained"
-							color="primary"
-							sx={{ fontSize: "18px" }}
-						>
+						<CustomButton onClick={() => setShowCollabDialog(true)} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
 							View all
 						</CustomButton>
 						<CustomButton variant="contained" color="primary" sx={{ fontSize: "18px" }}>

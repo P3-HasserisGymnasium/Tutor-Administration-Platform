@@ -5,8 +5,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 export default function MiniCollab({ collaboration }: { collaboration: CollaborationType }) {
 	const navigate = useNavigate();
-	const rolePrefix = useLocation().pathname.includes("tutor") ? "/tutor" : "/tutee";
-
+	const rolePrefix = useRolePrefix();
+	console.log("collaboration", collaboration);
 	return (
 		<Card
 			onClick={() => navigate(`${rolePrefix}/collaboration/${collaboration.id}`)}
@@ -51,7 +51,7 @@ export default function MiniCollab({ collaboration }: { collaboration: Collabora
 				</Box>
 
 				{/* Collaboration Text */}
-				<Typography variant="body2" sx={{ fontSize: 15, color: "black", fontWeight: "bold" }}>
+				<Typography variant="body2" sx={{ fontSize: 15, color: "black", fontWeight: "bold" }} data-testid="collabwithname">
 					Collaboration with {collaboration.tutor_name}
 				</Typography>
 			</CardContent>

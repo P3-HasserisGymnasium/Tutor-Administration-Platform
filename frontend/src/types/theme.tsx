@@ -26,91 +26,91 @@ interface subjectStyling {
 
 // Mapping colors and icons to subjects
 export const SubjectColors: Record<SubjectType, subjectStyling> = {
-	[Subject.Enum.MUSIC]: {
+	[Subject.Enum.Music]: {
 		name: "Music",
 		background: "#b2c9e0",
 		color: "black",
 		icon: <MusicNoteIcon sx={{ fontSize: "2rem" }} />,
 	},
-	[Subject.Enum.MATH]: {
+	[Subject.Enum.Math]: {
 		name: "Math",
 		background: "#b2c9e0",
 		color: "black",
 		icon: <CalculateIcon sx={{ fontSize: "2rem" }} />,
 	},
-	[Subject.Enum.ESS]: {
+	[Subject.Enum.Ess]: {
 		name: "EScience",
 		background: "#c1e1c5",
 		color: "black",
 		icon: <PublicIcon sx={{ fontSize: "2rem" }} />,
 	},
-	[Subject.Enum.ENGLISH]: {
+	[Subject.Enum.English]: {
 		name: "English",
 		background: "#ffd700",
 		color: "black",
 		icon: <LanguageIcon sx={{ fontSize: "2rem" }} />,
 	},
-	[Subject.Enum.DANISH]: {
+	[Subject.Enum.Danish]: {
 		name: "Danish",
 		background: "#FF4141",
 		color: "black",
 		icon: <FlagIcon sx={{ fontSize: "2rem" }} />,
 	},
-	[Subject.Enum.GERMAN]: {
+	[Subject.Enum.German]: {
 		name: "German",
 		background: "#87EB8E",
 		color: "black",
 		icon: <GTranslateIcon sx={{ fontSize: "2rem" }} />,
 	},
-	[Subject.Enum.FRENCH]: {
+	[Subject.Enum.French]: {
 		name: "French",
 		background: "#1B76FF",
 		color: "black",
 		icon: <TranslateIcon sx={{ fontSize: "2rem" }} />,
 	},
-	[Subject.Enum.BIOLOGY]: {
+	[Subject.Enum.Biology]: {
 		name: "Biology",
 		background: "#98fb98",
 		color: "black",
 		icon: <BiotechIcon sx={{ fontSize: "2rem" }} />,
 	},
-	[Subject.Enum.CHEMISTRY]: {
+	[Subject.Enum.Chemistry]: {
 		name: "Chemistry",
 		background: "#dcdcdc",
 		color: "black",
 		icon: <ScienceIcon sx={{ fontSize: "2rem" }} />,
 	},
-	[Subject.Enum.PE]: {
+	[Subject.Enum.Pe]: {
 		name: "PE",
 		background: "#ffa07a",
 		color: "black",
 		icon: <SportsFootballIcon sx={{ fontSize: "2rem" }} />,
 	},
-	[Subject.Enum.VA]: {
+	[Subject.Enum.Va]: {
 		name: "Visual Art",
 		background: "#ffdead",
 		color: "black",
 		icon: <ColorLensIcon sx={{ fontSize: "2rem" }} />,
 	},
-	[Subject.Enum.PSYCHOLOGY]: {
+	[Subject.Enum.Psychology]: {
 		name: "Psychology",
 		background: "#dda0dd",
 		color: "white",
 		icon: <PsychologyAltIcon sx={{ fontSize: "2rem" }} />,
 	},
-	[Subject.Enum.ECON]: {
+	[Subject.Enum.Econ]: {
 		name: "Economy",
 		background: "#add8e6",
 		color: "black",
 		icon: <PaymentsIcon sx={{ fontSize: "2rem" }} />,
 	},
-	[Subject.Enum.SS]: {
+	[Subject.Enum.Ss]: {
 		name: "Social Studies",
 		background: "#f0e68c",
 		color: "black",
 		icon: <Groups2Icon sx={{ fontSize: "2rem" }} />,
 	},
-	[Subject.Enum.PHYSICS]: {
+	[Subject.Enum.Physics]: {
 		name: "Physics",
 		background: "#f0e68c",
 		color: "black",

@@ -1,70 +1,67 @@
-// import React, { useEffect } from "react";
-import FullCalendar from "@fullcalendar/react"; // Correct capitalization
+import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Paper } from "@mui/material";
-// import { useMeetingService } from "~/api/services/meeting-service";
+import { Paper, Theme, useTheme } from "@mui/material";
+import { MeetingType } from "~/types/entity_types";
+import { useAuth } from "~/api/authentication/useAuth";
 
-/*
-interface MeetingType {
-    id: number;
-    title: string; // Name of the meeting
-    start: string; // ISO format start time
-    end?: string; // ISO format end time (optional)
-  }
-*/
-export default function MiniCalendar(){
+type MiniCalenderProps = {
+	meetings: MeetingType[];
+};
 
-    /*const {getMeetings} = useMeetingService();
-    console.log("getMeetings data:", getMeetings.data);
+export default function MiniCalendar({ meetings }: MiniCalenderProps) {
+	const { userState } = useAuth();
+	const theme = useTheme<Theme>();
+	console.log("userState", userState);
+	return (
+		<Paper
+			elevation={0}
+			sx={{
+				width: "100%",
+				padding: 0,
+				height: "100%",
+				maxHeight: "100%",
+				maxWidth: "100%",
+			}}
+		>
+			<FullCalendar
+				plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+				initialView={"timeGridWeek"}
+				initialDate={new Date()}
+				height={"100%"}
+				events={meetings?.map((meeting) => {
+					let backgroundcolor = "";
+					let borderColor = "";
+					if (meeting?.tutor_user_id == userState.id) {
+						backgroundcolor = theme.customColors.tutorColor;
+						borderColor = theme.customColors.tutorColor;
+					} else {
+						backgroundcolor = theme.customColors.tuteeColor;
+						borderColor = theme.customColors.tuteeColor;
+					}
 
-
-    const event = getMeetings.data
-    ? getMeetings.data.map((meeting) => ({
-        id: meeting.id,
-        title: meeting.collaboration_id, 
-        start: new Date(meeting.start_date).toString(), 
-        end: new Date(meeting.end_date).toString(), 
-      }))
-    : [];
-    
-    
-    useEffect(() => {
-        console.log(getMeetings.data);
-    }, [getMeetings.data]);*/
-    
-
-   
-    return(
-        
-     
-      <Paper
-        elevation={3}
-        sx={{
-          width: "95%",
-          padding: 2,
-          borderRadius: 2,
-        }}
-      >
-        <FullCalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView="dayGridMonth"
-          initialDate="2024-12-01" 
-          //events = {event}     
-          headerToolbar={{
-            start: "today prev,next", // Left side buttons
-            center: "title", // Centered title
-            end: "dayGridMonth,timeGridWeek,timeGridDay", // Right side buttons
-          }}
-          
-          height="75vh"
-          
-        />
-      </Paper>
-  
-    
-
-    );
-
+					return {
+						title: "Meeting with " + meeting.partner_name,
+						start: meeting.start_time,
+						end: meeting.end_time,
+						backgroundColor: backgroundcolor,
+						borderColor: borderColor,
+					};
+				})}
+				//events = {event}
+				views={{
+					timeGridFourDay: {
+						type: "timeGrid",
+						duration: { days: 4 },
+					},
+				}}
+				headerToolbar={{
+					start: "today prev,next", // Left side buttons
+					center: "title", // Centered title
+					end: "dayGridMonth,timeGridWeek,timeGridDay", // Right side buttons
+				}}
+			/>
+		</Paper>
+	);
 }
