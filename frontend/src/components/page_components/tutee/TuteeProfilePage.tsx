@@ -1,4 +1,4 @@
-import { Alert, Avatar, Box, CircularProgress, Grid2, Paper, Typography} from "@mui/material";
+import { Alert, Avatar, Box, CircularProgress, Paper, Typography} from "@mui/material";
 import DeleteAccountDialog from "../dialogs/DeleteAccountDialog";
 import { useState } from "react";
 import { useAuth } from "~/api/authentication/useAuth";
@@ -20,7 +20,7 @@ export default function TuteeProfilePage() {
 
   const {data: posts, isLoading: isProfileLoading} = usePostService().useGetTuteePosts();
 
-  
+
 
   return (
 
