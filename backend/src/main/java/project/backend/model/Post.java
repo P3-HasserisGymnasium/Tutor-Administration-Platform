@@ -34,8 +34,11 @@ public class Post {
     @Column(name = "description")
     String description;
 
-    @Column(name = "duration", nullable = true)
-    List<Integer> duration;
+    @Column(name = "min_Duration", nullable = true)
+    Integer minDuration;
+
+    @Column(name = "max_Duration", nullable = true)
+    Integer maxDuration;
 
     @Column(name = "creation_date")
     Timestamp creationTimestamp;
@@ -87,14 +90,6 @@ public class Post {
         this.description = description;
     }
 
-    public List<Integer> getDuration() {
-        return duration;
-    }
-
-    public void setDuration(List<Integer> duration) {
-        this.duration = duration;
-    }
-
     public Timestamp getCreationTimestamp() {
         return creationTimestamp;
     }
@@ -109,5 +104,24 @@ public class Post {
 
     public void setState(PostState state) {
         this.state = state;
+    }
+
+    public void setDuration(List<Integer> duration) {
+        if (duration == null) {
+            this.minDuration = null;
+            this.maxDuration = null;
+        } else {
+            this.minDuration = duration.get(0);
+            this.maxDuration = duration.get(1);
+        }
+    }
+
+    public List<Integer> getDuration() {
+        if (this.minDuration == null && this.maxDuration == null) {
+            return null;
+        } else {
+            return List.of(this.minDuration, this.maxDuration);
+        } 
+       
     }
 }

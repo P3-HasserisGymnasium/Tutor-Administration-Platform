@@ -11,7 +11,7 @@ export default function MeetingsList() {
 	const theme = useTheme<Theme>();
 	const { data: meetings, isLoading, error } = useMeetingService().useGetMeetings();
 	const { userState } = useAuth();
-
+	console.log("meetings", meetings);
 	const acceptedMeetings = meetings?.filter((meeting) => {
 		return meeting.state === MeetingState.Enum.ACCEPTED;
 	});
@@ -42,10 +42,7 @@ export default function MeetingsList() {
 							variant="body1"
 							sx={{
 								fontWeight: "bold",
-								color:
-									meeting.tutee_user_id == userState.id
-										? theme.customColors.darkTuteeColor
-										: theme.customColors.darkTutorColor,
+								color: meeting.tutee_user_id == userState.id ? theme.customColors.darkTuteeColor : theme.customColors.darkTutorColor,
 							}}
 						>
 							{new Date(meeting.end_time).toLocaleTimeString([], {
@@ -68,9 +65,7 @@ export default function MeetingsList() {
 					</Box>
 					<Divider
 						sx={{
-							border: `1px solid ${
-								meeting.tutee_user_id == userState.id ? theme.customColors.tuteeColor : theme.customColors.tutorColor
-							} `,
+							border: `1px solid ${meeting.tutee_user_id == userState.id ? theme.customColors.tuteeColor : theme.customColors.tutorColor} `,
 							mx: 1,
 						}}
 						orientation="vertical"
@@ -80,15 +75,11 @@ export default function MeetingsList() {
 						<Typography
 							sx={{
 								color: `${
-									meeting.tutee_user_id == userState.id
-										? theme.customColors.darkTuteeColor
-										: theme.customColors.darkTutorColor
+									meeting.tutee_user_id == userState.id ? theme.customColors.darkTuteeColor : theme.customColors.darkTutorColor
 								} !important`,
 							}}
 							variant="h6"
-						>{`Meeting with ${meeting.tutee_user_id == userState.id ? "tutor" : "tutee"} ${
-							meeting.partner_name
-						}`}</Typography>
+						>{`Meeting with ${meeting.tutee_user_id == userState.id ? "tutor" : "tutee"} ${meeting.partner_name}`}</Typography>
 					</Box>
 				</Box>
 			))}
