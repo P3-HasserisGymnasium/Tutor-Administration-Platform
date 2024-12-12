@@ -3,6 +3,8 @@ import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
 import { PostType } from "~/types/entity_types";
+import { useNavigate } from "react-router-dom";
+import { PostListFilterType } from "~/types/data_types";
 
 export const usePostService = () => {
 	const navigate = useNavigate();
