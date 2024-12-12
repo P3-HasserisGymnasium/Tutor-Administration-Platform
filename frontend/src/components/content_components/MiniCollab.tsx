@@ -7,7 +7,7 @@ import { useRolePrefix } from "~/utilities/helperFunctions";
 export default function MiniCollab({ collaboration }: { collaboration: CollaborationType }) {
 	const navigate = useNavigate();
 	const rolePrefix = useRolePrefix();
-
+	console.log("collaboration", collaboration);
 	return (
 		<Card
 			data-testid="collabcontainer"
@@ -53,11 +53,7 @@ export default function MiniCollab({ collaboration }: { collaboration: Collabora
 				</Box>
 
 				{/* Collaboration Text */}
-				<Typography
-					variant="body2"
-					sx={{ fontSize: 15, color: "black", fontWeight: "bold" }}
-					data-testid="collabwithname"
-				>
+				<Typography variant="body2" sx={{ fontSize: 15, color: "black", fontWeight: "bold" }} data-testid="collabwithname">
 					Collaboration with {collaboration.tutor_name}
 				</Typography>
 			</CardContent>

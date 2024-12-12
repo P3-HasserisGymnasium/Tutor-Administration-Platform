@@ -96,6 +96,8 @@ public class CollaborationController {
     @PostMapping("/request/by-post")
     public ResponseEntity<?> requestCollaborationByPost(@RequestBody RequestCollaborationByPostBody postBody, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        System.out.println("authenticatedUser" + authenticatedUser);
+        System.out.println("postBody" + postBody);
 
         if (authenticatedUser.getTutorId() != postBody.getTutor_id() && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in as a tutee to request a collaboration");
@@ -148,14 +150,14 @@ public class CollaborationController {
 
     @PostMapping("/accept/{collaborationId}/{role}")
     public ResponseEntity<?> acceptCollaboration(@PathVariable Long collaborationId, @PathVariable RoleEnum role, HttpServletRequest request) {
-        //AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (collaborationService.getCollaborationById(collaborationId) == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Collaboration does not exist");
         }
 
         try {
-            collaborationService.acceptCollaboration(collaborationId, role);
+            collaborationService.acceptCollaboration(collaborationId, role, authenticatedUser);
             return ResponseEntity.status(HttpStatus.OK).body("Collaboration accepted");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -164,14 +166,14 @@ public class CollaborationController {
 
     @PostMapping("reject/{collaborationId}/{role}")
     public ResponseEntity<?> rejectCollaboration(@PathVariable Long collaborationId, @PathVariable RoleEnum role, HttpServletRequest request) {
-        //AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (collaborationService.getCollaborationById(collaborationId) == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Collaboration does not exist");
         }
 
         try {
-            collaborationService.rejectCollaboration(collaborationId, role);
+            collaborationService.rejectCollaboration(collaborationId, role, authenticatedUser);
             return ResponseEntity.status(HttpStatus.OK).body("Collaboration rejected");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

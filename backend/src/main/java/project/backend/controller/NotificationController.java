@@ -197,7 +197,7 @@ public class NotificationController {
         if (notification.getSenderType() == EntityType.TUTOR) {
             Tutor tutor = roleService.getTutorById(notification.getSenderId());
             senderName = tutor != null ? tutor.getStudent().getFullName() : "Unknown";
-        } else if (notification.getSenderType() == EntityType.ADMINISTRATOR) {
+        } else if (notification.getSenderType() == EntityType.ADMIN) {
             Administrator admin = roleService.getAdministratorById(notification.getSenderId());
             senderName = admin != null ? admin.getFullName() : "Unknown";
         } else {
