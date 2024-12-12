@@ -6,6 +6,7 @@ import { Typography } from "@mui/material";
 import SubjectChip from "../SubjectChip";
 
 export default function PostCard({ post }: { post: PostType }) {
+	
 	const theme = useTheme<Theme>();
 	return (
 		<Box
@@ -31,9 +32,9 @@ export default function PostCard({ post }: { post: PostType }) {
 					<SubjectChip Subject={post.subject}></SubjectChip>
 				</Box>
 				<Typography variant="h4">
-					Duration: {post?.duration?.[0]}-{post?.duration?.[1]} months
+					{getDuration(post.duration)}
 				</Typography>
-				<Button variant="contained" sx={{ alignSelf: "flex-start" }}>
+				<Button variant="contained" sx={{ alignSelf: "flex-start" }} onClick={()=>{}}>
 					Request Collaboration
 				</Button>
 			</Box>
@@ -50,3 +51,16 @@ export default function PostCard({ post }: { post: PostType }) {
 		</Box>
 	);
 }
+
+
+function getDuration(duration: number[] | undefined | null) {
+	if (duration === undefined || duration === null) {
+	  return "Duration not specified";
+	}
+	else if (duration[0] === duration[1]) {
+	  return `Duration: ${duration[0]} months`;
+	}
+	else{
+	  return `Duration: ${duration[0]}-${duration[1]} months`;
+	}
+  }

@@ -26,7 +26,7 @@ describe("PostList", () => {
   it("should render the PostList component", () => {
     render(
       <ThemeProvider theme={tutorTheme}>
-        <PostList />
+        <PostList filters={{subjects:[], duration:[0,12]}}/>
       </ThemeProvider>
     );
     expect(screen.getByText("Filtered Posts")).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe("PostList", () => {
   it("should render the PostCard component", () => {
     render(
       <Wrapper theme={tutorTheme}>
-        <PostList />
+        <PostList filters={{subjects:[], duration:[0,12]}}/>
       </Wrapper>
     );
     expect(screen.getByTestId("postcard1")).toBeInTheDocument();
