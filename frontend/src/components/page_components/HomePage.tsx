@@ -16,6 +16,8 @@ import { useCollaborationService } from "~/api/services/collaboration-service";
 import { usePostService } from "~/api/services/post-service";
 import { useNavigate } from "react-router-dom";
 import { useNotificationService } from "~/api/services/notification-service";
+import { useMeetingService } from "~/api/services/meeting-service";
+import { MeetingType } from "~/types/entity_types";
 
 //import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
 
@@ -45,6 +47,9 @@ export default function HomePage() {
 	const { data: tuteeNotifications, isError: tuteeNotifError } = useNotificationService().useGetTuteeNotifications(userState?.id || null);
 
 	const { data: tutorNotifications, isError: tutorNotifError } = useNotificationService().useGetTutorNotifications(userState?.id || null);
+
+	// Fetching meetings
+	const { data: meetings } = useMeetingService().useGetMeetings();
 
 	//  Error States
 
@@ -145,7 +150,7 @@ export default function HomePage() {
 							border: "white 1px",
 						}}
 					>
-						{view === "calender" ? <MiniCalendar /> : <MeetingsList />}
+						{view === "calender" ? <MiniCalendar meetings={meetings as MeetingType[]} /> : <MeetingsList />}
 					</Box>
 				</Box>
 				<Paper

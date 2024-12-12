@@ -13,6 +13,8 @@ import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useAuth } from "~/api/authentication/useAuth";
 import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
 import { useNavigate } from "react-router-dom";
+import { MeetingType } from "~/types/entity_types";
+import { useMeetingService } from "~/api/services/meeting-service";
 export default function TutorPage() {
 	const navigate = useNavigate();
 	const theme = useCurrentTheme();
@@ -30,6 +32,7 @@ export default function TutorPage() {
 		isLoading: collabLoading,
 		isError: collabError,
 	} = useCollaborationService().useGetCollaborationsWithTutor(userState?.id || null);
+	const { data: meetings } = useMeetingService().useGetMeetings();
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -128,7 +131,7 @@ export default function TutorPage() {
 							border: "white 1px",
 						}}
 					>
-						{view === "calender" ? <MiniCalendar /> : <MeetingsList />}
+						{view === "calender" ? <MiniCalendar meetings={meetings as MeetingType[]} /> : <MeetingsList />}
 					</Box>
 				</Box>
 				<Box

@@ -16,7 +16,7 @@ import { useAuth } from "~/api/authentication/useAuth";
 import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
 import EditPostDialog from "../dialogs/EditPostDialog";
 import { PostState, Subject } from "~/types/data_types";
-import { PostType } from "~/types/entity_types";
+import { MeetingType, PostType } from "~/types/entity_types";
 import ViewPostsDialog from "../dialogs/ViewPostsDialog";
 import CreateCollaborationDialog from "../dialogs/CreateCollaborationDialog";
 import { useNavigate } from "react-router-dom";
@@ -143,7 +143,7 @@ export default function TuteePage() {
 							border: "white 1px",
 						}}
 					>
-						{view === "calender" ? <MiniCalendar /> : <MeetingsList />}
+						{view === "calender" ? <MiniCalendar meetings={meetings as MeetingType[]} /> : <MeetingsList />}
 					</Box>
 				</Box>
 
