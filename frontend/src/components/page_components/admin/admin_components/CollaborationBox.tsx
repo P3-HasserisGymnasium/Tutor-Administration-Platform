@@ -10,7 +10,8 @@ export default function CollaborationBox({ collaboration }: CollaborationBoxProp
     return (
         <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
             <Typography>
-                paring?: {collaboration.requestedPairing}
+                paring?: {collaboration.requestedPairing == true ? "yay" : "nay"}<br></br>
+                id: {collaboration.id}
             </Typography>
         </Box>
     );

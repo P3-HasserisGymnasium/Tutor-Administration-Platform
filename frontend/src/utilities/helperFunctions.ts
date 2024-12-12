@@ -187,8 +187,10 @@ export const useVariableHeight = (value?: string | number) => {
  * setCookie sets a cookie with a given name, value and expiration date.
  */
 export const setCookie = (name: string, value: string, hours: number) => {
+	console.log("name", name)
 	const expires = new Date(Date.now() + hours * 36e5).toUTCString();
-	document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax; Secure; HttpOnly; `;
+	document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/;`;
+	console.log("naming")
 };
 
 /**

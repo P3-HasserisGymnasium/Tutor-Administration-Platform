@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, List, Typography } from "@mui/material";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { CollaborationType } from "~/types/entity_types";
 import CollaborationBox from "./admin_components/CollaborationBox";
@@ -11,6 +11,14 @@ type AdminRequestsProps = {
 export default function AdminRequests({ collaborations, isLoading }: AdminRequestsProps) {
     const { data: requests, isLoading: isRequestsLoading } = useCollaborationService().getCollaborationSuggestionRequests();
     if (isLoading || isRequestsLoading) return <CircularProgress />;
+
+    if (collaborations != undefined) {
+        requests?.map((request) => {
+            if (collaborations.findIndex(obj => obj.id === request.id)) {
+
+            }
+        });
+    }
 
     const allCollaborations: CollaborationType[] = collaborations != undefined && requests != undefined ? [...collaborations, ...requests] : [];
 
