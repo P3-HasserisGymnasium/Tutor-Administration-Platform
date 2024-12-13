@@ -18,7 +18,7 @@ const icons = {
   Messenger,
 };
 
-export default function CommunicationChip({ contactInfo, deleteable }: { contactInfo: ContactInfoType; deleteable?: boolean }) {
+export function CommunicationChip({ contactInfo, deleteable }: { contactInfo: ContactInfoType; deleteable?: boolean }) {
   const { setValue, getValues } = useFormContext<TutorProfileType>();
   const deleteChip = () => {
     console.log("delete");
@@ -33,6 +33,16 @@ export default function CommunicationChip({ contactInfo, deleteable }: { contact
       avatar={<Avatar alt={contactInfo.communication_medium} src={icons[contactInfo.communication_medium]} sx={{ borderRadius: "0em" }} />}
       label={contactInfo.username}
       onDelete={deleteable ? deleteChip : undefined}
+      sx={{ color: "black", width: "fit-content" }}
+    />
+  );
+}
+
+export function CommunicationChipRead({ contactInfo }: { contactInfo: ContactInfoType }) {
+  return (
+    <Chip
+      avatar={<Avatar alt={contactInfo.communication_medium} src={icons[contactInfo.communication_medium]} sx={{ borderRadius: "0em" }} />}
+      label={contactInfo.username}
       sx={{ color: "black", width: "fit-content" }}
     />
   );

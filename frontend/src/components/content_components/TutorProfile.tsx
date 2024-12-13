@@ -7,7 +7,7 @@ import { Theme } from "@mui/material/styles";
 import SubjectChip from "./SubjectChip";
 import TimeAvailabilityBox from "./TimeAvailabilityBox";
 import { ContactInfoType, SubjectType, TimeAvailabilityType } from "~/types/data_types";
-import CommunicationChip from "./CommunicationChip";
+import { CommunicationChip } from "./CommunicationChip";
 import React from "react";
 import CustomButton from "./CustomButton";
 import { TutorProfileType } from "~/types/entity_types";
@@ -18,7 +18,6 @@ import { zodTutorProfileSchema } from "~/types/entity_types";
 import { Language } from "~/types/data_types";
 import SetCommunication from "./SetCommunication";
 import SetTimeAvailability from "./SetTimeAvailability";
-
 
 export default function TutorProfile() {
   const theme = useTheme<Theme>();
@@ -55,15 +54,21 @@ export default function TutorProfile() {
             <InitialsAvatar sx={{ width: "2em", height: "2em", fontSize: "2em", bgcolor: theme.palette.primary.main }} fullName="Lukas Saltenis" />
             <Typography variant="h2">Lukas Saltenis</Typography>
           </Box>
-          {state === "preview" && (<Button size="large" sx={{ height: "3em" }} onClick={() => {
-            setState("edit")
-              ;
-          }}>
-            Edit profile
-          </Button>)}
+          {state === "preview" && (
+            <Button
+              size="large"
+              sx={{ height: "3em" }}
+              onClick={() => {
+                setState("edit");
+              }}
+            >
+              Edit profile
+            </Button>
+          )}
 
-          {state === "edit" && (<CustomButton customType="success" size="large" sx={{ height: "3em" }} onClick={() => editProfileMethods.handleSubmit(editProfile)} />)}
-
+          {state === "edit" && (
+            <CustomButton customType="success" size="large" sx={{ height: "3em" }} onClick={() => editProfileMethods.handleSubmit(editProfile)} />
+          )}
         </Box>
         {state === "preview" && <PreviewPage />}
         {state === "edit" && <EditPage />}
@@ -94,12 +99,7 @@ function EditPage() {
               onChange={(_, newValue) => {
                 field.onChange(newValue);
               }}
-              renderInput={(params) =>
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  label="Language"
-                />}
+              renderInput={(params) => <TextField {...params} variant="outlined" label="Language" />}
             />
           )}
         />
@@ -107,7 +107,7 @@ function EditPage() {
         <Typography variant="h3">Communication:</Typography>
         <SetCommunication />
       </Box>
-      <Box sx={{ display: "flex", flecDirection: "row", justifyContent: "space-evenly", flex: 1, }}>
+      <Box sx={{ display: "flex", flecDirection: "row", justifyContent: "space-evenly", flex: 1 }}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: "1em" }}>
           <Typography variant="h3">Description:</Typography>
 
@@ -117,7 +117,6 @@ function EditPage() {
             rows={10}
             variant="outlined"
             placeholder="Description"
-
             {...register("description")}
             slotProps={{
               input: {
@@ -128,13 +127,10 @@ function EditPage() {
                 },
               },
             }}
-
           />
-
         </Box>
 
         <Box sx={{ display: "flex", flexDirection: "column", gap: "1em" }}>
-
           <SetTimeAvailability />
         </Box>
       </Box>
@@ -147,7 +143,7 @@ function PreviewPage() {
   const mockContactInfo: ContactInfoType = {
     communication_medium: "Skype",
     username: "l",
-  }
+  };
   return (
     <Box sx={{ display: "flex", flexDirection: "row", marginTop: "1em", justifyContent: "space-between" }}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: "1em" }}>

@@ -3,7 +3,7 @@ import { CommunicationMediumType, ContactInfoType } from "~/types/data_types";
 import { communication_medium } from "~/types/data_types";
 import TextField from "@mui/material/TextField";
 import React from "react";
-import CommunicationChip from "./CommunicationChip";
+import { CommunicationChip } from "./CommunicationChip";
 import { useFormContext } from "react-hook-form";
 import { TutorProfileType } from "~/types/entity_types";
 
@@ -46,5 +46,3 @@ export default function SetCommunication() {
         </Box>
     );
 }
-
-

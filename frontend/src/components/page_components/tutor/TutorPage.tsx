@@ -20,7 +20,7 @@ export default function TutorPage() {
   const navigate = useNavigate();
   const theme = useCurrentTheme();
   const { isMobile } = useBreakpoints();
-  const [view, setView] = useState<"list" | "calender">("list");
+  const [view, setView] = useState<"list" | "calender">("calender");
   const [showCollabDialog, setShowCollabDialog] = useState(false);
 
   const { userState } = useAuth();
