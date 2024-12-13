@@ -4,7 +4,7 @@ import java.util.List;
 
 import project.backend.model.LanguageEnum;
 import project.backend.model.StudentCommunicatioInfo;
-//import project.backend.model.SubjectEnum;
+import project.backend.model.SubjectEnum;
 import project.backend.model.YearGroupEnum;
 
 

@@ -387,11 +387,12 @@ public class RoleService {
         return responses;
     }
 
-    public void editTuteeProfile(Long id) {
+    public void editTuteeProfile(Long id, TuteeProfileResponse profileRequest ) {
         Student student = getStudentById(id);
         Tutee tutee = student.getTutee();
-        
 
+        tutee.setSubjectsReceivingHelpIn(profileRequest.subjects_receiving_help_in); 
+    
         student.setYearGroup(profileRequest.year_group);
         student.setLanguages(profileRequest.languages);
 
