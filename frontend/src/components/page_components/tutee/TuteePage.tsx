@@ -148,7 +148,11 @@ export default function TuteePage() {
               border: "white 1px",
             }}
           >
-            {view === "calender" ? <MiniCalendar meetings={filteredMeetings as MeetingType[]} /> : <MeetingsList />}
+            {view === "calender" ? (
+              <MiniCalendar meetings={filteredMeetings as MeetingType[]} />
+            ) : (
+              <MeetingsList meetings={meetings as MeetingType[]} />
+            )}
           </Box>
         </Box>
 
