@@ -8,7 +8,6 @@ import { TuteeProfileType, TutorProfileType } from "~/types/entity_types";
 // tutee/tutor:role_id -> role:student_id -> student:id
 
 export const useRoleService = () => {
-
 	const assignTuteeRole = useMutation({
 		mutationKey: ["assignTuteeRole"],
 		mutationFn: async (studentId: number) => {
@@ -114,12 +113,12 @@ export const useRoleService = () => {
 		})
 	}
 
-	const useEditProfile = ()=>{ return (
+	const useEditProfile = () =>{ return (
 		useMutation({
 		mutationKey: ["editProfile"],
-		mutationFn: async (profile: TutorProfileType) => {
+		mutationFn: async ({profile, id}:{profile: TutorProfileType, id:number}) => {
 			const { data } = await apiClient.post<TutorProfileType>(
-				"/api/role",
+				`/api/role/edit/${id}/Tutor`,
 				profile
 			);
 			return data;

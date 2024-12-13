@@ -380,10 +380,44 @@ public class RoleService {
         return responses;
     }
 
-    public void editProfile(Long id) {
-        Student student = getStudentById(id);
+    public void editTutorProfile(Long id, TutorProfileResponse body) {
+        Tutor tutor = getTutorByUserId(id);
+        Student student = tutor.getStudent();
 
-        saveStudent(student);
+        student.setFullName(body.full_name);
+        student.setYearGroup(body.year_group);
+        if (body.contact_info != null) {
+            student.getContactInfo().clear(); // Clear existing references
+            student.getContactInfo().addAll(body.contact_info); // Add new ones
+        }
+        student.setLanguages(body.languages);
+
+        tutor.setProfileDescription(body.description);
+        tutor.setTutoringSubjects(body.tutoring_subjects);
+
+            // Clear and add new freeTimeSlots
+        if (body.time_availability != null) {
+            // Clear the existing time slots and remove orphaned TutorTimeSlot instances
+            List<TutorTimeSlot> timeSlots = tutor.getFreeTimeSlots();
+            timeSlots.clear();  // Clear the collection of time slots
+
+            // Now add the new time slots
+            List<TutorTimeSlot> newTimeSlots = new LinkedList<>();
+            for (TimeSlotCreateBody timeSlot : body.time_availability) {
+                for (TimeCreateBody time : timeSlot.time) {
+                    TutorTimeSlot tutorTimeSlot = new TutorTimeSlot();
+                    tutorTimeSlot.setWeekDay(timeSlot.day);
+                    tutorTimeSlot.setStartTime(time.start_time);
+                    tutorTimeSlot.setEndTime(time.end_time);
+                    newTimeSlots.add(tutorTimeSlot);
+                }
+            }
+            tutor.setFreeTimeSlots(newTimeSlots); // Set the new time slots list
+        }
+
+        // Save the updated tutor
+        tutorRepository.save(tutor);
+    
     }
 
     public void removeRole(Long id, RoleEnum role) {

@@ -12,7 +12,7 @@ import React from "react";
 import CustomButton from "./CustomButton";
 import { TutorProfileType } from "~/types/entity_types";
 import CustomAutocomplete from "./CustomAutocomplete";
-import { FormProvider, useForm, Controller, useFormContext, useWatch } from "react-hook-form";
+import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { zodTutorProfileSchema } from "~/types/entity_types";
 import { Language } from "~/types/data_types";
@@ -30,10 +30,12 @@ export default function TutorProfile() {
     resolver: zodResolver(zodTutorProfileSchema),
     defaultValues: tutorProfile,
   });
- 
-  const { control } = editProfileMethods;
-  const watchedAll = useWatch<TutorProfileType>({control, name: "languages"});
+
+  const { control, getValues } = editProfileMethods;
+  const watchedAll = useWatch<TutorProfileType>({control});
   console.log("useWatch", watchedAll);
+  console.log("tutorProfile", tutorProfile);
+
   if (isLoading) {
     return <Typography>Loading...</Typography>;
   }
@@ -43,10 +45,19 @@ export default function TutorProfile() {
   }
 
   const editProfile = (values: TutorProfileType) => {
-    editPostMutation.mutate(values,{});
+    console.log("values", values);
+    console.log("userState.id", userState.id);
+    editPostMutation.mutate({profile:values, id:userState.id as number}, {
+      onSuccess: () => {
+        console.log("Edit profile succeeded");
+        setState("preview");
+      },
+      onError: (error) => {
+        console.error("Edit profile failed", error);
+      },
+    });
   };
-
-  console.log(watchedAll);
+ 
   return (
     <FormProvider {...editProfileMethods}>
       <Box sx={{ display: "flex", flexDirection: "column", padding: "2em" }}>
@@ -61,7 +72,7 @@ export default function TutorProfile() {
             Edit profile
           </Button>)}
 
-          {state === "edit" && (<CustomButton customType="success" size="large" sx={{ height: "3em" }} onClick={() => editProfileMethods.handleSubmit(editProfile)}/>)}
+          {state === "edit" && (<CustomButton customType="success" size="large" sx={{ height: "3em" }} onClick={()=>{editProfile(getValues())}}>Save</CustomButton>)}
   
         </Box>
         {state === "preview" && <PreviewPage />}
@@ -72,9 +83,8 @@ export default function TutorProfile() {
 }
 
 function EditPage(){
-  const { getValues, register} = useFormContext<TutorProfileType>();
+  const { setValue, getValues, register, watch} = useFormContext<TutorProfileType>();
   
-  const {control} = useForm();
   return (
     <Box sx={{ display: "flex", flexDirection: "row", marginTop: "1em", justifyContent: "space-between" }}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: "1em" }}>
@@ -82,23 +92,18 @@ function EditPage(){
         <CustomAutocomplete variant="yearGroup" multiple={false} initialValue={getValues("year_group")}/>
       
         <Typography variant="h3">{getValues("languages")?.length > 1 ? "Languages:" : "Language:"}</Typography>
-        <Controller
-          name="languages"
-          control={control}
-          render={({ field }) => (
-            <Autocomplete 
-              multiple 
-              options={Object.values(Language.Enum)} 
-              value={field.value }
-              onChange={(_, newValue) => {
-                field.onChange(newValue);
-              }}
-              renderInput={(params) => 
-                <TextField 
-                  {...params}
-                  variant="outlined"
-                  label="Language"
-                />} 
+        <Autocomplete
+          multiple
+          options={Object.values(Language.Enum)} // Assuming Language.Enum contains the valid options
+          value={watch("languages")} // Watch the current value
+          onChange={(_, newValue) => {
+            setValue("languages", newValue); // Update the form state
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="outlined"
+              label="Language"
             />
           )}
         />
