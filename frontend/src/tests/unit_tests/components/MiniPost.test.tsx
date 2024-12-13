@@ -5,7 +5,6 @@ import { Subject } from "~/types/data_types";
 import { BrowserRouter } from "react-router-dom";
 import MiniPost from "~/components/content_components/MiniPost";
 import { ThemeProvider } from "@mui/material";
-import tuteeTheme from "~/themes/tuteeTheme";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "~/api/api-client";
 import { AuthProvider } from "~/api/authentication/AuthProvider";
@@ -73,7 +72,7 @@ describe("MiniPost", () => {
 
   it("should render the subject chip", () => {
     render(
-      <Wrapper theme={tuteeTheme}>
+      <Wrapper>
         <MiniPost postData={mockPost} />
       </Wrapper>
     );
