@@ -8,6 +8,8 @@ import { useState } from "react";
 import { useMediaQuery } from "@mui/material";
 import Button from "@mui/material/Button";
 import { usePostService } from "~/api/services/post-service";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function PostCreation() {
   const createPostMutation = usePostService().useCreatePost();
@@ -21,6 +23,7 @@ export default function PostCreation() {
     },
   };
   const filterMethods = useForm<PostCreationType>(useFormParameter);
+  const navigate = useNavigate();
 
   const { control, register, setValue, getValues } = filterMethods;
   useWatch({ control });
@@ -39,7 +42,12 @@ export default function PostCreation() {
     }
   };
   const createPost = (values: PostCreationType) => {
-    createPostMutation.mutate(values, {});
+    createPostMutation.mutate(values, {
+      onSuccess: () => {
+        toast.success("Post created");
+        navigate("/tutee");
+      },
+    });
   };
 
   return (
