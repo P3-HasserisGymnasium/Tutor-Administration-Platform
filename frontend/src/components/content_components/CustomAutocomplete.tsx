@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import { SubjectType } from "~/types/data_types";
 import { YearGroup } from "~/types/data_types";
 import { SxProps, Theme } from "@mui/system";
-import { CommunicationMedium } from "~/types/data_types";
+import { communication_medium } from "~/types/data_types";
 
 interface CustomAutocompleteProps {
   variant: "subject" | "yearGroup" | "communication";
@@ -16,7 +16,7 @@ interface CustomAutocompleteProps {
   initialValue?: SubjectType | YearGroupType;
 }
 
-const CustomAutocomplete: React.FC<CustomAutocompleteProps> = ({ variant, multiple, sx, initialValue, options }) => {
+const CustomAutocomplete: React.FC<CustomAutocompleteProps> = ({ variant, multiple, sx, initialValue }) => {
   switch (variant) {
     case "subject":
       return <SubjectAutocomplete initialValue={initialValue as SubjectType} multiple={multiple} sx={sx} />;
@@ -99,7 +99,7 @@ function CommunicationAutocomplete({ sx }: { sx?: SxProps<Theme> }) {
       control={control}
       render={({ field }) => (
         <Autocomplete
-          options={Object.values(CommunicationMedium.enum)}
+          options={Object.values(communication_medium.enum)}
           onChange={(_, newValue) => {
             field.onChange(newValue);
           }}
