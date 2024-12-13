@@ -144,7 +144,7 @@ function EditPage(){
 function PreviewPage(){
   const {getValues} = useFormContext<TutorProfileType>();
   const mockContactInfo:ContactInfoType = {
-    communicationMedium: "Skype",
+    communication_medium: "Skype",
     username: "l",
   }
   return (
