@@ -45,6 +45,7 @@ const tutorTheme = createTheme(baseTheme, {
 					"&:hover": {
 						backgroundColor: darken(colors.buttonColor, 0.1),
 					},
+					"&:disabled": { backgroundColor: "lightgray", color: "white"}
 				},
 			},
 		},
