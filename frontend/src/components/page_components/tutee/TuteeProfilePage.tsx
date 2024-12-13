@@ -5,9 +5,9 @@ import { useAuth } from "~/api/authentication/useAuth";
 
 import { useWrap, useVariableWidth, useVariableHeight } from "~/utilities/helperFunctions";
 import { useRoleService } from "~/api/services/role-service";
-import { usePostService } from "~/api/services/post-service";
+
 import SubjectChip from "~/components/content_components/SubjectChip";
-import { PostType } from "~/types/entity_types";
+
 import CustomButton from "~/components/content_components/CustomButton";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodTuteeProfileSchema } from "~/types/entity_types";
@@ -16,6 +16,8 @@ import { z } from "zod";
 import CustomAutocomplete from "~/components/content_components/CustomAutocomplete";
 import InitialsAvatar from "~/components/content_components/InitialsAvatar";
 import { toast } from "react-toastify";
+import CommunicationChip from "~/components/content_components/CommunicationChip";
+import SetCommunication from "~/components/content_components/SetCommunication";
 
 type TuteeProfile = z.infer<typeof zodTuteeProfileSchema>;
 
@@ -23,16 +25,14 @@ export default function TuteeProfilePage() {
   const [isDeleteAcountDialogOpen, setIsDeleteAcountDialogOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const { userState } = useAuth();
-  const tuteeId = userState.id;
+  const userId = userState.id;
 
 
-  const { data: tuteeProfile, isLoading: isTuteeProfileLoading, error } = useRoleService().useGetTuteeProfile(tuteeId);
-  const { data: posts, isLoading: isPostsLoading, error: postsError } = usePostService().useGetTuteePosts();
-
-  const editProfileMutation = useRoleService().editTuteeProfile;
-
-
-
+  const { data: tuteeProfile, isLoading: isTuteeProfileLoading, error } = useRoleService().useGetTuteeProfile(userId);
+  const editProfileMutation = useRoleService().useEditTuteeProfile();
+  
+  
+  
   const useFormProvider = {
     resolver: zodResolver(zodTuteeProfileSchema),
     defaultValues: {
@@ -43,11 +43,10 @@ export default function TuteeProfilePage() {
       subjects_receiving_help_in: tuteeProfile?.subjects_receiving_help_in
     },
   };
+  
   const formMethods = useForm<TuteeProfile>(useFormProvider);
-
-  console.log("contact info", tuteeProfile?.contact_info);
-
   const { handleSubmit} = formMethods;
+
 
    // UseEffect to update form values after fetching tutee profile data
    useEffect(() => {
@@ -170,15 +169,15 @@ export default function TuteeProfilePage() {
                       <strong>Communication:</strong>{" "}
                     </Typography>
 
-                    {tuteeProfile?.contact_info.length ? (
+                      {tuteeProfile?.contact_info?.length > 0 && 
                       tuteeProfile.contact_info.map((contact, index) => (
-                        <Box key={index}>
-                          <Typography>{contact.communication_medium}</Typography>
-                        </Box>
+                        <CommunicationChip key={index} contactInfo={contact} deleteable={true} />
                       ))
-                    ) : (
-                      <Typography>No contact information provided.</Typography>
-                    )}
+                    }
+                    <SetCommunication/>
+
+
+
                   </Box>
 
                   <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
@@ -222,14 +221,22 @@ export default function TuteeProfilePage() {
                   {/* Subjects */}
                   <Box>
                     <Typography variant="body1">
-                      <strong>Subjects:</strong>{" "}
+                      <strong>Subjects tutoring in:</strong>{" "}
                     </Typography>
 
-                   
-                    {isPostsLoading && <CircularProgress />}
-                    {postsError && <Alert severity="error">Failed to load posts!</Alert>}
+                    {tuteeProfile?.subjects_receiving_help_in?.length ? (
+                        <>
+                          {tuteeProfile?.subjects_receiving_help_in.map((subject, index) => (
+                            <SubjectChip key={index} Subject={subject} />
+                          ))}
+                        </>
+                      ) : (
+                        <Typography>No subjects for help listed.</Typography>
+                      )}
 
-                    {posts && posts.map((post: PostType, index: number) => <SubjectChip key={index} Subject={post.subject} />)}
+                
+
+                    
 
                   </Box>
 
@@ -241,9 +248,9 @@ export default function TuteeProfilePage() {
 
                     {tuteeProfile?.contact_info.length ? (
                       tuteeProfile.contact_info.map((contact, index) => (
-                        <Box key={index}>
-                          <Typography>{contact.communication_medium}</Typography>
-                        </Box>
+
+                        <CommunicationChip key={index}  contactInfo={contact} deleteable={false}/>
+
                       ))
                     ) : (
                       <Typography>No contact information provided.</Typography>

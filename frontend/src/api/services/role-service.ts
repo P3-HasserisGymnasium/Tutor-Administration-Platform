@@ -101,19 +101,24 @@ export const useRoleService = () => {
     });
   };
 
-  const editTuteeProfile = useMutation({
-    mutationKey: ["editTuteeProfile"],
-    mutationFn: async ({ id, profile }: { id: number | null; profile: TuteeProfileType }) => {
-      const { data } = await apiClient.put(`/api/role/tutee/${id}`, profile);
-      return data;
-    },
-    onError: (e: AxiosError<{ detail: string }>) => {
-      toast.error(e?.response?.data?.detail || "Failed to save tutee profile.");
-    },
-    onSuccess: () => {
-      toast.success("Tutee profile saved successfully.");
-    },
-  });
+  const useEditTuteeProfile = () => {
+    return useMutation({
+      mutationKey: ["editTuteeProfile"],
+      mutationFn: async ({ id, profile }: { id: number | null; profile: TuteeProfileType }) => {
+        // Send PUT request to the server
+        const { data } = await apiClient.put(`/api/role/tutee/${id}`, profile);
+        return data;  // Return the updated data from the server
+      },
+      onError: (e: AxiosError<{ detail: string }>) => {
+        // Handle error and show toast message
+        toast.error(e?.response?.data?.detail || "Failed to save tutee profile.");
+      },
+      onSuccess: () => {
+        // Show success message after successful update
+        toast.success("Tutee profile saved successfully.");
+      },
+    });
+  };
 
   const editTutorProfile = useMutation({
     mutationKey: ["editTutorProfile"],
@@ -129,13 +134,14 @@ export const useRoleService = () => {
     },
   });
 
+
   return {
     assignTuteeRole,
     removeRole,
     useGetTutors,
     useGetTutorProfile,
     useGetTuteeProfile,
-    editTuteeProfile,
+    useEditTuteeProfile,
     editTutorProfile,
   };
 };
