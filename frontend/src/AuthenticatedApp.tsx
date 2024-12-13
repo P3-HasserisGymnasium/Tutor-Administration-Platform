@@ -55,7 +55,7 @@ export default function AuthenticatedApp() {
 					/>
 
 					{/* Admin routes */}
-					{userState.is_administrator ? <Route path="/admin/*" element={<AdministratorPage />} /> : <Route path="/admin/*" element={<Forbidden />} />}
+					{isAdmin ? <Route path="/admin/*" element={<AdministratorPage />} /> : <Route path="/admin/*" element={<Forbidden />} />}
 
 					{/* Tutee routes */}
 					{isTutee ? (
@@ -70,24 +70,6 @@ export default function AuthenticatedApp() {
 								<Route path="tutor-list" element={<TutorListPage />} />
 								{rolePrefix == "/tutee" && <Route path="tutor-application" element={<TutorApplicationPage />} />}
 								<Route path="collaboration/*" element={<CollaborationPage />} />
-								<Route path="*" element={<NotFound />} />
-							</Route>
-						</>
-					) : null}
-
-					{/* Tutee routes */}
-					{isTutee ? (
-						<>
-							<Route path="/tutor/*" element={<Forbidden />} />
-							<Route path="/tutee/*">
-								<Route path="" element={<TuteePage />} />
-								<Route path="profile" element={<TuteeProfilePage />} />
-								<Route path="notifications" element={<NotificationsList />} />
-								<Route path="create-post" element={<CreatePostPage />} />
-								<Route path="request-admin" element={<RequestAdminPage />} />
-								<Route path="tutor-list" element={<TutorListPage />} />
-								{rolePrefix == "/tutee" && <Route path="tutor-application" element={<TutorApplicationPage />} />}
-								<Route path="collaboration/:org_id:" element={<CollaborationPage />} />
 								<Route path="*" element={<NotFound />} />
 							</Route>
 						</>
