@@ -39,7 +39,15 @@ function SubjectAutocomplete({
   sx,
   initialValue,
   options,
+  multiple,
+  sx,
+  initialValue,
+  options,
 }: {
+  multiple?: boolean;
+  sx?: SxProps<Theme>;
+  initialValue?: SubjectType;
+  options?: SubjectType[];
   multiple?: boolean;
   sx?: SxProps<Theme>;
   initialValue?: SubjectType;

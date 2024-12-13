@@ -20,7 +20,7 @@ export default function MiniCollabList({ collaborations, isLoading, isError }: M
   if (isError) {
     return <Typography variant="h6">Error fetching posts. Please refresh the page.</Typography>;
   }
-  if (!collaborations) return <Typography variant="h6">No collaboration found.</Typography>;
+  if (!collaborations) return <Typography variant="h6">No active collaborations found.</Typography>;
 
   return (
     <Box
@@ -33,9 +33,9 @@ export default function MiniCollabList({ collaborations, isLoading, isError }: M
       }}
     >
       {collaborations.length > 0 ? (
-        collaborations?.map((collab) => <MiniCollab collaboration={collab} />)
+        collaborations?.map((collab, i) => <MiniCollab key={"27389217389123" + i} collaboration={collab} />)
       ) : (
-        <Typography variant="h6">No collaboration found.</Typography>
+        <Typography variant="h6">No active collaborations found.</Typography>
       )}
     </Box>
   );

@@ -1,12 +1,17 @@
 import { Box, Button, Stack, Typography, Checkbox, FormControlLabel } from "@mui/material";
-import { FormProvider, useForm, Controller, ControllerRenderProps } from "react-hook-form";
+import { FormProvider, useForm, Controller, ControllerRenderProps, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Language, LanguageType } from "~/types/data_types";
 import SetTimeAvailability from "~/components/content_components/SetTimeAvailability";
 import { zodTutorListFilterSchema, tutorListFilterType } from "../../../types/data_types";
 import CustomAutocomplete from "../CustomAutocomplete";
 
-export default function Filter() {
+type TutorListFilterProps = {
+  setFilters: React.Dispatch<React.SetStateAction<tutorListFilterType>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export default function TutorListFilter({ setFilters, setLoading }: TutorListFilterProps) {
   const filterMethods = useForm<tutorListFilterType>({
     resolver: zodResolver(zodTutorListFilterSchema),
     defaultValues: {
@@ -18,8 +23,15 @@ export default function Filter() {
   });
 
   const { control } = filterMethods;
+  useWatch({ control });
+  const filter = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setFilters(filterMethods.getValues());
+      setLoading(false);
+    }, 500);
+  };
 
-  const filter = () => {};
   return (
     <FormProvider {...filterMethods}>
       <Stack spacing={1} sx={{ padding: "1em", height: "95%" }}>

@@ -12,18 +12,29 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.collaboration_bodies.CollaborationCreateBody;
+import project.backend.controller_bodies.collaboration_bodies.CollaborationResponseBody;
+import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByPostBody;
+import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByTutorBody;
 import project.backend.controller_bodies.post_controller.PostBody;
+import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
+import project.backend.controller_bodies.role_controller.TutorProfileResponse;
 import project.backend.model.Collaboration;
+import project.backend.model.EntityType;
 import project.backend.model.Feedback;
+import project.backend.model.Post;
+import project.backend.model.PostState;
 import project.backend.model.RoleEnum;
+import project.backend.model.Student;
 import project.backend.service.CollaborationService;
+import project.backend.service.NotificationService;
+import project.backend.service.PostService;
+import project.backend.service.RoleService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -32,8 +43,17 @@ public class CollaborationController {
 
     private final CollaborationService collaborationService;
 
-    public CollaborationController(CollaborationService collaborationService) {
+    private final NotificationService notificationService;
+
+    private final PostService postService;
+
+    private final RoleService roleService;
+
+    public CollaborationController(CollaborationService collaborationService, NotificationService notificationService, PostService postService, RoleService roleService) {
         this.collaborationService = collaborationService;
+        this.notificationService = notificationService;
+        this.postService = postService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/{id}")
@@ -46,7 +66,17 @@ public class CollaborationController {
             return null;
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(collaboration);
+        CollaborationResponseBody collaborationResponseBody = new CollaborationResponseBody();
+        collaborationResponseBody.setId(collaboration.getId());
+        collaborationResponseBody.setTuteeId(collaboration.getTutee().getId());
+        collaborationResponseBody.setTutorId(collaboration.getTutor().getId());
+        collaborationResponseBody.setTuteeName(collaboration.getTutee().getStudent().getFullName());           
+        collaborationResponseBody.setTutorName(collaboration.getTutor().getStudent().getFullName());
+        collaborationResponseBody.setState(collaboration.getState());
+        collaborationResponseBody.setSubject(collaboration.getSubject());
+        collaborationResponseBody.setStartDate(collaboration.getStartTimestamp());
+
+        return ResponseEntity.status(HttpStatus.OK).body(collaborationResponseBody);
     }
 
     @GetMapping("/as_tutor")
@@ -54,7 +84,23 @@ public class CollaborationController {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         ArrayList<Collaboration> collaborations = collaborationService.getCollaborationsWithTutor(authenticatedUser.getTutorId());
-        return ResponseEntity.status(HttpStatus.OK).body(collaborations);
+
+        ArrayList<CollaborationResponseBody> collaborationResponseBodies = new ArrayList<>();
+
+        for (Collaboration collaboration : collaborations) {
+            CollaborationResponseBody collaborationResponseBody = new CollaborationResponseBody();
+            collaborationResponseBody.setId(collaboration.getId());
+            collaborationResponseBody.setTuteeId(collaboration.getTutee().getId());
+            collaborationResponseBody.setTutorId(collaboration.getTutor().getId());
+            collaborationResponseBody.setTuteeName(collaboration.getTutee().getStudent().getFullName());           
+            collaborationResponseBody.setTutorName(collaboration.getTutor().getStudent().getFullName());
+            collaborationResponseBody.setState(collaboration.getState());
+            collaborationResponseBody.setSubject(collaboration.getSubject());
+            collaborationResponseBody.setStartDate(collaboration.getStartTimestamp());
+            collaborationResponseBodies.add(collaborationResponseBody);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(collaborationResponseBodies);
     }
 
     @GetMapping("/as_tutee")
@@ -62,7 +108,34 @@ public class CollaborationController {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         ArrayList<Collaboration> collaborations = collaborationService.getCollaborationsWithTutee(authenticatedUser.getTuteeId());
-        return ResponseEntity.status(HttpStatus.OK).body(collaborations);        
+
+        ArrayList<CollaborationResponseBody> collaborationResponseBodies = new ArrayList<>();
+
+        for (Collaboration collaboration : collaborations) {
+            CollaborationResponseBody collaborationResponseBody = new CollaborationResponseBody();
+            collaborationResponseBody.setId(collaboration.getId());
+            collaborationResponseBody.setTuteeId(collaboration.getTutee().getId());
+            collaborationResponseBody.setTutorId(collaboration.getTutor().getId());
+            collaborationResponseBody.setTuteeName(collaboration.getTutee().getStudent().getFullName());           
+            collaborationResponseBody.setTutorName(collaboration.getTutor().getStudent().getFullName());
+            collaborationResponseBody.setState(collaboration.getState());
+            collaborationResponseBody.setSubject(collaboration.getSubject());
+            collaborationResponseBody.setStartDate(collaboration.getStartTimestamp());
+            collaborationResponseBodies.add(collaborationResponseBody);
+
+            System.out.println(collaborationResponseBody);
+            System.out.println("kraskraskras" + collaborationResponseBody.getId());
+            System.out.println("kraskraskras" + collaborationResponseBody.getTuteeId());
+            System.out.println("kraskraskras" + collaborationResponseBody.getTutorId());
+            System.out.println("kraskraskras" + collaborationResponseBody.getTuteeName());
+            System.out.println("kraskraskras" + collaborationResponseBody.getTutorName());
+            System.out.println("kraskraskras" + collaborationResponseBody.getState());
+            System.out.println("kraskraskras" + collaborationResponseBody.getSubject());
+            System.out.println("kraskraskras" + collaborationResponseBody.getStartDate());
+        }
+        
+        return ResponseEntity.status(HttpStatus.OK).body(new ArrayList<>(collaborationResponseBodies));
+   
     }
 
     @GetMapping("/all")
@@ -71,7 +144,23 @@ public class CollaborationController {
 
         List<Collaboration> collaborations = collaborationService.getAllCollaborations();
 
-        return ResponseEntity.status(HttpStatus.OK).body(collaborations);
+        ArrayList<CollaborationResponseBody> collaborationResponseBodies = new ArrayList<>();
+
+        for (Collaboration collaboration : collaborations) {
+            CollaborationResponseBody collaborationResponseBody = new CollaborationResponseBody();
+            collaborationResponseBody.setId(collaboration.getId());
+            collaborationResponseBody.setTuteeId(collaboration.getTutee().getId());
+            collaborationResponseBody.setTutorId(collaboration.getTutor().getId());
+            collaborationResponseBody.setTuteeName(collaboration.getTutee().getStudent().getFullName());           
+            collaborationResponseBody.setTutorName(collaboration.getTutor().getStudent().getFullName());
+            collaborationResponseBody.setState(collaboration.getState());
+            collaborationResponseBody.setSubject(collaboration.getSubject());
+            collaborationResponseBody.setStartDate(collaboration.getStartTimestamp());
+
+            collaborationResponseBodies.add(collaborationResponseBody);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(collaborationResponseBodies);
     }
 
     @PostMapping("/")
@@ -91,6 +180,80 @@ public class CollaborationController {
         return ResponseEntity.status(HttpStatus.OK).body("Collaboration deleted");
     }
 
+    @GetMapping("/partner/{collaborationId}")
+    public ResponseEntity<?> getPartner(@PathVariable Long collaborationId, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        try {
+            Collaboration collaboration = collaborationService.getCollaborationById(collaborationId);
+            boolean isTutor = collaboration.getTutor().getId() == authenticatedUser.getTutorId();
+            if (isTutor) {
+                Student student = roleService.getStudentByTuteeOrTutorId(collaboration.getTutee().getId());
+                TuteeProfileResponse response = roleService.getTuteeProfile(student.getId());
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            } else {
+                Student student = roleService.getStudentByTuteeOrTutorId(collaboration.getTutor().getId());
+                TutorProfileResponse response = roleService.getTutorProfile(student.getId());
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+        }
+
+
+    }
+
+    @PostMapping("/request/by-post")
+    public ResponseEntity<?> requestCollaborationByPost(@RequestBody RequestCollaborationByPostBody postBody, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        System.out.println("authenticatedUser" + authenticatedUser);
+        System.out.println("postBody" + postBody);
+
+        if (!authenticatedUser.isTutor() && !authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in as a tutee to request a collaboration");
+        }
+
+        try {
+            collaborationService.requestCollaborationByPost(postBody);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
+        Post post = postService.getPostById(postBody.getPost_id()).orElse(null);
+
+        notificationService.sendNotification(authenticatedUser.getTutorId(), EntityType.TUTOR, post.getTutee().getId(), EntityType.TUTEE, post.getId(), EntityType.POST);
+        
+        return ResponseEntity.status(HttpStatus.OK).body("Collaboration requested");
+    }
+
+    @PostMapping("/request/by-tutor")
+    public ResponseEntity<?> requestCollaboration(@RequestBody RequestCollaborationByTutorBody body, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+
+        if (!authenticatedUser.isTutee() && !authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in as a tutor to request a collaboration");
+        }
+        
+        try { 
+                
+            Post post = new Post();
+            post.setTutee(roleService.getTuteeById(authenticatedUser.getTuteeId()));
+            post.setTitle(body.title);  
+            post.setDescription(body.description);
+            post.setSubject(body.subject);
+            post.setDuration(body.duration);
+            post.setState(PostState.INVISIBLE);
+            postService.createPost(post, authenticatedUser.getTuteeId());
+
+         
+            collaborationService.requestCollaborationByTutor(body, authenticatedUser.getTuteeId(), post);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("Collaboration requested");
+    }
+
+
     @PostMapping("/request-suggestion/{id}")
     public ResponseEntity<?> requestCollaborationSuggestion(@PathVariable Long tuteeId, @RequestBody PostBody requestBody, HttpServletRequest request) {
         //AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
@@ -109,14 +272,14 @@ public class CollaborationController {
 
     @PostMapping("/accept/{collaborationId}/{role}")
     public ResponseEntity<?> acceptCollaboration(@PathVariable Long collaborationId, @PathVariable RoleEnum role, HttpServletRequest request) {
-        //AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (collaborationService.getCollaborationById(collaborationId) == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Collaboration does not exist");
         }
 
         try {
-            collaborationService.acceptCollaboration(collaborationId, role);
+            collaborationService.acceptCollaboration(collaborationId, role, authenticatedUser);
             return ResponseEntity.status(HttpStatus.OK).body("Collaboration accepted");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -125,14 +288,14 @@ public class CollaborationController {
 
     @PostMapping("reject/{collaborationId}/{role}")
     public ResponseEntity<?> rejectCollaboration(@PathVariable Long collaborationId, @PathVariable RoleEnum role, HttpServletRequest request) {
-        //AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (collaborationService.getCollaborationById(collaborationId) == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Collaboration does not exist");
         }
 
         try {
-            collaborationService.rejectCollaboration(collaborationId, role);
+            collaborationService.rejectCollaboration(collaborationId, role, authenticatedUser);
             return ResponseEntity.status(HttpStatus.OK).body("Collaboration rejected");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

@@ -10,7 +10,7 @@ import { useAuth } from "~/api/authentication/useAuth";
 import { useNotificationService } from "~/api/services/notification-service";
 import { useRolePrefix } from "~/utilities/helperFunctions";
 import InitialsAvatar from "~/components/content_components/InitialsAvatar";
-import { Role } from "~/types/data_types";
+import { NotificationState, Role } from "~/types/data_types";
 export default function SpeedDialMenu() {
   const { logout, userState } = useAuth();
   const [open, setOpen] = useState(false);
@@ -18,12 +18,8 @@ export default function SpeedDialMenu() {
   const rolePrefix = useRolePrefix();
   const viewingTutor = useLocation().pathname.includes("tutor");
   const viewingTutee = useLocation().pathname.includes("tutee");
-  console.log("viewingTutor", viewingTutor);
-  console.log("viewingTutee", viewingTutee);
   const { data: tuteeNotifications } = useNotificationService().useGetTuteeNotifications(viewingTutee ? userState.id : null);
   const { data: tutorNotifications } = useNotificationService().useGetTutorNotifications(viewingTutor ? userState.id : null);
-  console.log("tuteeNotifications", tuteeNotifications);
-  console.log("tutorNotifications", tutorNotifications);
   const notifications =
     !viewingTutor && !viewingTutee
       ? [...(tuteeNotifications || []), ...(tutorNotifications || [])]
@@ -62,6 +58,7 @@ export default function SpeedDialMenu() {
     );
   }
 
+  const unreadNotifications = notifications?.filter((notification) => notification.state === NotificationState.Enum.UNREAD);
   return (
     <Box sx={{ height: 730, display: "flex", zIndex: { zIndex }, justifyContent: "end", width: "100px", marginRight: 3 }}>
       <Backdrop open={open} />
@@ -104,7 +101,7 @@ export default function SpeedDialMenu() {
                 },
               },
             }}
-            badgeContent={notifications?.length}
+            badgeContent={unreadNotifications?.length}
             color="success"
             onClick={() => navigate(`${rolePrefix}/notifications`)}
           >

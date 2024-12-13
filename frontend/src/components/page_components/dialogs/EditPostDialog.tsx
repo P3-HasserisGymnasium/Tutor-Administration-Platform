@@ -39,7 +39,7 @@ export default function EditPostDialog({ open, setOpen, post }: EditPostDialogPr
       },
       onError: (error) => {
         console.error(error);
-      }
+      },
     });
   };
 

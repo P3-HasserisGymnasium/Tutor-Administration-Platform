@@ -11,13 +11,13 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => (
 
 const mockCollaboration: CollaborationType = {
   id: 1,
-  tutor_name: "John Doe",
+  tutorName: "John Doe",
   subject: Subject.Enum.Math,
-  tutee_name: "Jane Doe",
-  state: CollaborationState.enum.ACCEPTED,
-  tutor_id: 1,
-  tutee_id: 2,
-  start_date: "2021-10-10",
+  tuteeName: "Jane Doe",
+  state: CollaborationState.Enum.ESTABLISHED,
+  tutorId: 1,
+  tuteeId: 2,
+  startDate: "2021-10-10",
   end_date: "2021-10-10",
 };
 

@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,10 +25,12 @@ public class Collaboration {
     Long id;
     
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "tutee_id")
     Tutee tutee;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "tutor_id")
     Tutor tutor;
 
@@ -47,19 +51,12 @@ public class Collaboration {
     @Column(name = "termination_reason", nullable = true)
     String terminationReason;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tuteeState")
-    CollaborationState tuteeState;
+    @Column(name = "admin_accepted")
+    Boolean adminState;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tutorState")
-    CollaborationState tutorState; 
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "adminState")
-    CollaborationState adminState;
-
+    
     @OneToMany(mappedBy = "collaboration")
+    @JsonBackReference
     List<Meeting> meetings = new ArrayList<>();
 
     public Collaboration() {}
@@ -136,28 +133,11 @@ public class Collaboration {
         this.meetings = meetings;
     }
 
-    public void setTutorState(CollaborationState tutorState){
-        this.tutorState =  tutorState;
-    }
-
-    public CollaborationState getTutorState(){
-        return tutorState;
-    }
-
-    public void setTuteeState(CollaborationState tuteeState){
-        this.tuteeState = tuteeState;
-    }
-
-    public CollaborationState getTuteeState(){
-        return tuteeState;
-    }
-
-    public void setAdminState(CollaborationState adminState){
-        this.adminState = adminState;
-    }
-
-    public CollaborationState getAdminState(){
+    public Boolean getAdminAccepted() {
         return adminState;
     }
 
+    public void setAdminAccepted(Boolean adminState) {
+        this.adminState = adminState;
+    }
 }

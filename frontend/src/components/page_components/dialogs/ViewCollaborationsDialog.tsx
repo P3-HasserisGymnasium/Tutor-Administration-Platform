@@ -37,7 +37,7 @@ export default function RequestMeetingDialog({ open, setOpen, collaborations, is
           </DialogContentText>
           <DialogContent sx={{ display: "flex", flexWrap: "wrap", gap: 2, pr: 0, justifyContent: "center" }}>
             {collaborations?.map((collaboration) => (
-              <MiniCollab key={collaboration.tutor_id + collaboration.tutee_name} collaboration={collaboration} />
+              <MiniCollab key={collaboration.tuteeId + collaboration.tuteeName} collaboration={collaboration} />
             ))}
           </DialogContent>
         </>

@@ -18,12 +18,18 @@ public class Notification {
     @Column(name = "sender_id")
     Long senderId;
 
+    @Column(name = "sender_name")
+    String senderName;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "sender_type")
     EntityType senderType;
 
     @Column(name = "receiver_id")
     Long receiverId;
+
+    @Column(name = "receiver_name")
+    String receiverName;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "receiver_type")
@@ -54,6 +60,14 @@ public class Notification {
         this.senderId = id;
     }
 
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String name) {
+        this.senderName = name;
+    }
+
     public EntityType getSenderType() {
         return senderType;
     }
@@ -68,6 +82,14 @@ public class Notification {
 
     public void setReceiverId(Long id) {
         this.receiverId = id;
+    }
+
+    public String getReceiverName() {
+        return receiverName;
+    }
+
+    public void setReceiverName(String name) {
+        this.receiverName = name;
     }
 
     public EntityType getReceiverType() {

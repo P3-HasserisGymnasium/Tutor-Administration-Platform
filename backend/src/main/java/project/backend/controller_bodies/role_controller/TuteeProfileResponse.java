@@ -13,6 +13,6 @@ public class TuteeProfileResponse {
     public String full_name;
     public YearGroupEnum year_group;
     public List<LanguageEnum> languages;
-    //public List<SubjectEnum> subjects_taught_in;
+    public List<SubjectEnum> subjects_receiving_help_in;
     public List<StudentCommunicatioInfo> contact_info;
 }

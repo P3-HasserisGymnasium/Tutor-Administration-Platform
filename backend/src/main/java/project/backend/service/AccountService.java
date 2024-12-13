@@ -1,7 +1,5 @@
 package project.backend.service;
 
-import java.lang.StackWalker.Option;
-import java.sql.Time;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 import org.springframework.http.ResponseEntity;
-import java.util.List;
 import static project.backend.utilities.JWTUtil.generateToken;
 
 import project.backend.controller_bodies.account_controller.AccountLoginBody;
