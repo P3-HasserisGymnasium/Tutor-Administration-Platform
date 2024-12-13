@@ -9,6 +9,7 @@ import {
 	TerminationType,
 	RequestCollaborationByPostType,
 	RequestCollaborationByTutorType,
+	TutorProfileType,
 } from "~/types/entity_types";
 import { Role } from "~/types/data_types";
 import { z } from "zod";
@@ -73,6 +74,18 @@ export const useCollaborationService = () => {
 			toast.success("Collaboration suggestion requested");
 		},
 	});
+
+	const useGetPartnerInformation = (collaborationId: number | null) => {
+		return useQuery({
+			queryKey: ["getPartnerInformation", collaborationId],
+			queryFn: async () => {
+				const { data } = await apiClient.get<TutorProfileType>(`/api/collaboration/partner/${collaborationId}`);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			enabled: !!collaborationId,
+		});
+	}
 
 	//Tutor or tutee wants a collab
 	const useRequestCollaborationViaTutor = () => {
@@ -182,6 +195,7 @@ export const useCollaborationService = () => {
 		acceptCollaboration,
 		rejectCollaboration,
 		requestCollaborationSuggestion,
+		useGetPartnerInformation,
 		useRequestCollaborationViaTutor,
 		useRequestCollaborationViaPost,
 		useTerminateCollaboration,

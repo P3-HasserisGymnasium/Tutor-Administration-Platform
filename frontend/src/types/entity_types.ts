@@ -12,7 +12,7 @@ import {
 	NotificationContext,
 	NotificationParticipant,
 	NotificationState,
-	ComunicationMedium,
+	communication_medium,
 	zodTimeAvailabilitySchema,
 	zodContactInfo,
 } from "./data_types";
@@ -33,7 +33,7 @@ export const zodTutorProfileSchema = z.object({
 	year_group: YearGroup,
 	languages: z.array(Language),
 	tutoring_subjects: z.array(Subject),
-	contact_info: z.array(z.object({ username: z.string(), ComunicationMedium })),
+	contact_info: z.array(z.object({ username: z.string(), communication_medium })),
 	time_availability: z.array(zodTimeAvailabilitySchema),
 	description: z.string().optional(),
 });
@@ -43,20 +43,21 @@ export const zodTuteeProfileSchema = z.object({
 	year_group: YearGroup,
 	languages: z.array(Language),
 	subjects_receiving_help_in: z.array(Subject),
-	contact_info: z.array(z.object({ username: z.string(), ComunicationMedium })),
+	contact_info: z.array(z.object({ username: z.string(), communication_medium })),
 });
 
 export const zodMeetingSchema = z.object({
 	id: zodUUID,
-	collaboration_id: zodUUID,
-	partner_name: z.string(),
-	tutee_user_id: zodUUID,
-	tutor_user_id: zodUUID,
-	start_time: z.string(),
-	end_time: z.string(),
-	state: MeetingState,
+	collaboration: zodUUID,
+	start_timestamp: z.string(),
+	end_timestamp: z.string(),
+	meeting_state: MeetingState,
 	rejection_reason: z.string().optional(),
 	meeting_description: z.string().optional(),
+	tutee_user_id: zodUUID,
+	tutor_user_id: zodUUID,
+	tutee_name: z.string(),
+	tutor_name: z.string(),
 });
 
 export const zodCollaborationSchema = z.object({

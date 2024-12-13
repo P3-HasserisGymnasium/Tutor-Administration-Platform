@@ -18,4 +18,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Student getStudentById(Long userId);
 
+    Student getStudentByTutorId(Long tutorId);
+
+    Student getStudentByTuteeId(Long tuteeId);
+
 }

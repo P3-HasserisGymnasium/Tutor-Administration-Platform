@@ -22,12 +22,15 @@ import project.backend.controller_bodies.collaboration_bodies.CollaborationRespo
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByPostBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByTutorBody;
 import project.backend.controller_bodies.post_controller.PostBody;
+import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
+import project.backend.controller_bodies.role_controller.TutorProfileResponse;
 import project.backend.model.Collaboration;
 import project.backend.model.EntityType;
 import project.backend.model.Feedback;
 import project.backend.model.Post;
 import project.backend.model.PostState;
 import project.backend.model.RoleEnum;
+import project.backend.model.Student;
 import project.backend.service.CollaborationService;
 import project.backend.service.NotificationService;
 import project.backend.service.PostService;
@@ -175,6 +178,28 @@ public class CollaborationController {
 
         collaborationService.deleteCollaborationById(id);
         return ResponseEntity.status(HttpStatus.OK).body("Collaboration deleted");
+    }
+
+    @GetMapping("/partner/{collaborationId}")
+    public ResponseEntity<?> getPartner(@PathVariable Long collaborationId, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+        try {
+            Collaboration collaboration = collaborationService.getCollaborationById(collaborationId);
+            boolean isTutor = collaboration.getTutor().getId() == authenticatedUser.getTutorId();
+            if (isTutor) {
+                Student student = roleService.getStudentByTuteeOrTutorId(collaboration.getTutee().getId());
+                TuteeProfileResponse response = roleService.getTuteeProfile(student.getId());
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            } else {
+                Student student = roleService.getStudentByTuteeOrTutorId(collaboration.getTutor().getId());
+                TutorProfileResponse response = roleService.getTutorProfile(student.getId());
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+        }
+
+
     }
 
     @PostMapping("/request/by-post")

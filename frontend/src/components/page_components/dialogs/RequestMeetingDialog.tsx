@@ -25,8 +25,8 @@ export default function RequestMeetingDialog({ open, setOpen, timeAvailabilities
   const formMethods = useForm<MeetingType>({
     resolver: zodResolver(zodMeetingSchema),
     defaultValues: {
-      collaboration_id: Number(useLocation().pathname.split("/")[3]),
-      state: MeetingState.Enum.PENDING,
+      collaboration: Number(useLocation().pathname.split("/")[3]),
+      meeting_state: MeetingState.Enum.PENDING,
       id: 123,
       rejection_reason: "",
     },
@@ -70,7 +70,7 @@ export default function RequestMeetingDialog({ open, setOpen, timeAvailabilities
             Available time slots
           </Typography>
           <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-            {timeAvailabilities.map((timeAvailability) => (
+            {timeAvailabilities?.map((timeAvailability) => (
               <TimeAvailabilityBox key={timeAvailability.day} timeAvailability={timeAvailability} />
             ))}
           </Box>
@@ -86,7 +86,7 @@ export default function RequestMeetingDialog({ open, setOpen, timeAvailabilities
             </Typography>
             <Box>
               <DateTimePicker
-                {...register("start_time")}
+                {...register("start_timestamp")}
                 label="Start time"
                 value={startTime}
                 ampm={false}
@@ -96,7 +96,7 @@ export default function RequestMeetingDialog({ open, setOpen, timeAvailabilities
                 }}
               />
               <DateTimePicker
-                {...register("end_time")}
+                {...register("end_timestamp")}
                 label="End time"
                 ampm={false}
                 value={endTime}

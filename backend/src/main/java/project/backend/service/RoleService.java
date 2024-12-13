@@ -174,6 +174,15 @@ public class RoleService {
         }
     }
 
+    public Student getStudentByTuteeOrTutorId(Long id) {
+        Tutee tutee = getTuteeById(id);
+        if (tutee == null) {
+            return studentRepository.getStudentByTutorId(id);
+        } else {
+            return studentRepository.getStudentByTuteeId(id);
+        }
+    }
+
     public TutorProfileResponse getTutorProfile(Long id) {
         Tutor tutor = getTutorByUserId(id);
         TutorProfileResponse response = new TutorProfileResponse();
