@@ -14,7 +14,10 @@ export default function SetSubject({ variant }: SetSubjectProps) {
   const { getValues } = useFormContext();
   const borderColor = useTheme<Theme>().customColors.boxBorderColor;
   return (
-    <Box data-testid="setsubjectcontainer" sx={{ display: "flex", flexDirection: "row", width: "100%", gap: "1em", alignItems: "center" }}>
+    <Box
+      data-testid="setsubjectcontainer"
+      sx={{ display: "flex", flexDirection: "row", width: "100%", gap: "1em", alignItems: "center" }}
+    >
       <SelectSubject variant={variant} />
       {getValues("subjects").length > 0 && (
         <Box

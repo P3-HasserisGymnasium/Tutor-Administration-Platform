@@ -16,7 +16,7 @@ import { FormProvider, useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { zodTutorProfileSchema } from "~/types/entity_types";
 import { Language } from "~/types/data_types";
-import SetCommunication from "./SetCommunication";
+
 
 export default function TutorProfile() {
   const theme = useTheme<Theme>();
@@ -92,7 +92,7 @@ function EditPage({tutorProfile}:{tutorProfile:TutorProfileType|undefined}){
         />
 
         <Typography variant="h3">Communication:</Typography>
-        <SetCommunication/>
+    
       </Box>
       <Box sx={{ display: "flex", flecDirection: "row", justifyContent: "space-evenly", flex: 1 }}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: "1em" }}>

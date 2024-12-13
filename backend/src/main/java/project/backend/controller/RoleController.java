@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +30,7 @@ public class RoleController {
         this.roleService = roleService;
     }
 
+
     @GetMapping("/{id}/{role}")
     public ResponseEntity<?> getProfile(@PathVariable long id, @PathVariable RoleEnum role, HttpServletRequest request) {
         //AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
@@ -48,4 +51,34 @@ public class RoleController {
             }
         }
     }
+
+
+    @PutMapping("/tutor/{id}")
+    public ResponseEntity<String> editTutorProfile(
+            @PathVariable Long id, 
+            @RequestBody TutorProfileResponse profileRequest) {
+
+        try {
+            roleService.editTutorProfile(id, profileRequest);
+            return ResponseEntity.ok("Tutor profile updated successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while updating the tutor profile.");
+        }
+    }
+
+
+    @PutMapping("/tutee/{id}")
+    public ResponseEntity<String> editTuteeProfile(
+            @PathVariable Long id, 
+            @RequestBody TuteeProfileResponse profileRequest) {
+
+        try {
+            roleService.editTuteeProfile(id, profileRequest);
+            return ResponseEntity.ok("Tutee profile updated successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while updating the tutee profile.");
+        }
+    }
+
+
 }

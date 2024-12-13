@@ -97,6 +97,7 @@ export enum Language {
     "PRE-IB",
     "IB1",
     "IB2",
+		enum,
 };
 
 export enum MeetingState {

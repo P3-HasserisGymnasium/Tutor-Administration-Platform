@@ -13,18 +13,22 @@ import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
 import project.backend.controller_bodies.role_controller.TutorProfileResponse;
 import project.backend.model.Administrator;
 import project.backend.model.Collaboration;
+import project.backend.model.LanguageEnum;
 import project.backend.model.RoleEnum;
 import project.backend.model.Student;
+import project.backend.model.StudentCommunicatioInfo;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.model.Tutor;
 import project.backend.model.TutorTimeSlot;
 import project.backend.model.WeekDayEnum;
+import project.backend.model.YearGroupEnum;
 import project.backend.repository.AccountRepository;
 import project.backend.repository.AdministratorRepository;
 import project.backend.repository.RoleRepository;
 import project.backend.repository.StudentRepository;
 import project.backend.repository.TutorRepository;
+import project.backend.repository.TuteeRepository;
 
 @Service
 public class RoleService {
@@ -38,18 +42,23 @@ public class RoleService {
     @Autowired
     final TutorRepository tutorRepository;
 
+
+    @Autowired
+    final TuteeRepository tuteeRepository;
+
     @Autowired
     final AccountRepository accountRepository;
 
     @Autowired
     final AdministratorRepository administratorRepository;
 
-    public RoleService(RoleRepository roleRepository, StudentRepository studentRepository, TutorRepository tutorRepository, AdministratorRepository administratorRepository, AccountRepository accountRepository) {
+    public RoleService(RoleRepository roleRepository, StudentRepository studentRepository, TutorRepository tutorRepository,TuteeRepository tuteeRepository, AdministratorRepository administratorRepository, AccountRepository accountRepository) {
         this.roleRepository = roleRepository;
         this.studentRepository = studentRepository;
         this.tutorRepository = tutorRepository;
         this.administratorRepository = administratorRepository;
         this.accountRepository = accountRepository;
+        this.tuteeRepository = tuteeRepository;
     }
 
     public List<Student> getTutees() {
@@ -213,24 +222,87 @@ public class RoleService {
         Student student = studentRepository.getStudentById(id);
 
 
-        List<Collaboration> collaborations = student.getTutee().getCollaborations();
-        List<SubjectEnum> subjects = collaborations.stream().map(collab -> collab.getSubject()).toList();
+        //List<Collaboration> collaborations = student.getTutee().getCollaborations();
+        //List<SubjectEnum> subjects = collaborations.stream().map(collab -> collab.getSubject()).toList();
 
         TuteeProfileResponse response = new TuteeProfileResponse();
         response.full_name = student.getFullName();
         response.year_group = student.getYearGroup();
         response.contact_info = student.getContactInfo();
         response.languages = student.getLanguages();
-        response.subjects_taught_in = subjects;
+        //response.subjects_taught_in = subjects;
 
         return response;
     }
 
-    public void editProfile(Long id) {
+    public void editTuteeProfile(Long id, TuteeProfileResponse profileRequest){
         Student student = getStudentById(id);
+        Tutee tutee = student.getTutee();
+        
 
-        saveStudent(student);
+        student.setYearGroup(profileRequest.year_group);
+        student.setLanguages(profileRequest.languages);
+
+
+        // Check if contact_info is empty before modifying
+        if (profileRequest.contact_info != null && !profileRequest.contact_info.isEmpty()) {
+            student.setContactInfo(profileRequest.contact_info);
+        } else {
+            student.setContactInfo(student.getContactInfo()); // Keeps existing contact info
+        }
+
+
+        try {
+            saveStudent(student);
+            tuteeRepository.save(tutee);
+        } catch (Exception e) {
+            // Log the error for debugging purposes
+            System.out.println("Error while saving data for update profile " + e.getMessage());
+            throw new RuntimeException("An error occurred while updating the profile");
+        }
     }
+
+
+    public void editTutorProfile(Long id, TutorProfileResponse profileRequest){
+
+        Student student = getStudentById(id);
+        Tutor tutor = student.getTutor();
+        
+
+        tutor.getStudent().setYearGroup(profileRequest.year_group);
+        tutor.getStudent().setLanguages(profileRequest.languages);
+        tutor.setTutoringSubjects(profileRequest.tutoring_subjects);
+
+         // Check if contact_info is empty before modifying
+         if (profileRequest.contact_info != null && !profileRequest.contact_info.isEmpty()) {
+            student.setContactInfo(profileRequest.contact_info);
+        } else {
+            // You could leave the existing contact_info intact or set it to an empty array based on your logic.
+            student.setContactInfo(student.getContactInfo()); 
+        }
+
+
+        // Map time_availability (from request) to TutorTimeSlot (model)
+        List<TutorTimeSlot> freeTimeSlots = new LinkedList<>();
+        for (TimeSlotCreateBody timeSlotRequest : profileRequest.time_availability) {
+            TutorTimeSlot timeSlot = new TutorTimeSlot();
+            timeSlot.setWeekDay(timeSlotRequest.day); // Set the day of the week
+            
+            for (TimeCreateBody timeEntry : timeSlotRequest.time) {
+                timeSlot.setStartTime(timeEntry.start_time); 
+                timeSlot.setEndTime(timeEntry.end_time);     
+                freeTimeSlots.add(timeSlot);
+            }
+        }
+
+        tutor.setFreeTimeSlots(freeTimeSlots);
+
+
+        tutorRepository.save(tutor);
+        saveStudent(tutor.getStudent());
+    }
+
+
 
     public void removeRole(Long id, RoleEnum role) {
         Student student = getStudentById(id);
