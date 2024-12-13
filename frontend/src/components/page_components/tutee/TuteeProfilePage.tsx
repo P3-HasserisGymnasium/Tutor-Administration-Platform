@@ -40,6 +40,7 @@ export default function TuteeProfilePage() {
       year_group: tuteeProfile?.year_group,
       languages: tuteeProfile?.languages,
       contact_info: tuteeProfile?.contact_info,
+      subjects_receiving_help_in: tuteeProfile?.subjects_receiving_help_in
     },
   };
   const formMethods = useForm<TuteeProfile>(useFormProvider);
@@ -66,6 +67,7 @@ export default function TuteeProfilePage() {
       year_group: data.year_group,
       languages: data.languages,
       contact_info: data.contact_info,
+      subjects_receiving_help_in: data.subjects_receiving_help_in
     };
 
      // Log the updated profile to the console
@@ -171,7 +173,7 @@ export default function TuteeProfilePage() {
                     {tuteeProfile?.contact_info.length ? (
                       tuteeProfile.contact_info.map((contact, index) => (
                         <Box key={index}>
-                          <Typography>{contact.CommunicationMedium}</Typography>
+                          <Typography>{contact.communication_medium}</Typography>
                         </Box>
                       ))
                     ) : (
@@ -240,7 +242,7 @@ export default function TuteeProfilePage() {
                     {tuteeProfile?.contact_info.length ? (
                       tuteeProfile.contact_info.map((contact, index) => (
                         <Box key={index}>
-                          <Typography>{contact.CommunicationMedium}</Typography>
+                          <Typography>{contact.communication_medium}</Typography>
                         </Box>
                       ))
                     ) : (
