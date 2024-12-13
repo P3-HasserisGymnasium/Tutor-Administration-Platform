@@ -7,11 +7,17 @@ import AdminManageTutees from "./AdminManageTutees";
 import { useCurrentTheme } from "~/utilities/helperFunctions";
 import AdminOverview from "./AdminOverview";
 import AdminManageTutors from "./AdminManageTutors";
+import { tutorListFilterType } from '~/types/data_types';
 
 export default function AdministratorPage() {
 	const theme = useCurrentTheme();
-
-	const { data: tutors, isLoading: isTutorsLoading } = useRoleService().useGetTutors();
+	const emptyFilter: tutorListFilterType = {
+		subjects: [],
+		time_availability: [],
+		year_group: [],
+		languages: [],
+	}
+	const { data: tutors, isLoading: isTutorsLoading } = useRoleService().useGetTutors(emptyFilter);
 	const { data: tutees, isLoading: isTuteesLoading } = useRoleService().useGetTutees();
 	const { data: collaborations, isLoading: isCollaborationsLoading } = useCollaborationService().getCollabortations();
 

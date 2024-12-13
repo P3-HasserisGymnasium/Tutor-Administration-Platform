@@ -54,7 +54,8 @@ public class PostController {
         if (!authenticatedUser.isTutor() && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to view these posts");
         }
-
+        System.out.println("subjects" + subjects);
+        System.out.println("duration" + duration);
         if(subjects != null && !subjects.isEmpty() && duration != null && !duration.isEmpty()){
             // Parse subjects
             List<SubjectEnum> subjectList = null;
@@ -66,6 +67,7 @@ public class PostController {
             Integer minDuration = null, maxDuration = null;
             String[] durationParts = duration.split(",");
             if (durationParts.length == 2) {
+                System.out.println("durationParts" + durationParts);
                 try {
                     minDuration = Integer.parseInt(durationParts[0]);
                     maxDuration = Integer.parseInt(durationParts[1]);
@@ -73,7 +75,14 @@ public class PostController {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid duration format");
                 }
             }
-            List<Post> posts = postService.getPostsByFilters(minDuration, maxDuration, subjectList, authenticatedUser.getTuteeId());
+
+            System.out.println("minDuration" + minDuration);
+            System.out.println("maxDuration" + maxDuration);
+            System.out.println("subjectList" + subjectList);
+
+            Long fakeTuteeId = 0L;
+            List<Post> posts = postService.getPostsByFilters(minDuration, maxDuration, subjectList, authenticatedUser.getTuteeId() != null ? authenticatedUser.getTuteeId() : fakeTuteeId);
+            System.out.println("postssss" + posts);
             return ResponseEntity.status(HttpStatus.OK).body(posts);
         }                       
 

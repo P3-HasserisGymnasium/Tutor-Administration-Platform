@@ -1,12 +1,18 @@
 import ShortLongBoxLayout from "components/layout_components/ShortLongBoxLayout";
-import Filter from "components/content_components/TutorListComponents/Filter";
+import TutorListFilter from "components/content_components/TutorListComponents/Filter";
 import TutorList from "components/content_components/TutorListComponents/TutorList";
+import { useState } from "react";
+import { tutorListFilterType } from "~/types/data_types";
 
 export default function TutorListPage() {
+
+    const [filters, setFilters] = useState<tutorListFilterType>({ subjects: [], time_availability: [], year_group: [], languages: [] });
+    const [loading, setLoading] = useState(false);
+
     return (
             <ShortLongBoxLayout>
-                <Filter/>
-                <TutorList/>
+                <TutorListFilter setFilters={setFilters} setLoading={setLoading}/>
+                <TutorList filters={filters} filterLoading={loading}/>
             </ShortLongBoxLayout>
     );
 };

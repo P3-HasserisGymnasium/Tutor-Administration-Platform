@@ -75,6 +75,24 @@ export default function AuthenticatedApp() {
 						</>
 					) : null}
 
+					{/* Tutee routes */}
+					{isTutee ? (
+						<>
+							<Route path="/tutor/*" element={<Forbidden />} />
+							<Route path="/tutee/*">
+								<Route path="" element={<TuteePage />} />
+								<Route path="profile" element={<TuteeProfilePage />} />
+								<Route path="notifications" element={<NotificationsList />} />
+								<Route path="create-post" element={<CreatePostPage />} />
+								<Route path="request-admin" element={<RequestAdminPage />} />
+								<Route path="tutor-list" element={<TutorListPage />} />
+								{rolePrefix == "/tutee" && <Route path="tutor-application" element={<TutorApplicationPage />} />}
+								<Route path="collaboration/:org_id:" element={<CollaborationPage />} />
+								<Route path="*" element={<NotFound />} />
+							</Route>
+						</>
+					) : null}
+
 					{/* Tutor routes */}
 					{isTutor ? (
 						<>
@@ -90,6 +108,8 @@ export default function AuthenticatedApp() {
 							</Route>
 						</>
 					) : null}
+
+
 
 					{/* Catch-all for invalid roles */}
 					<Route path="*" element={<NotFound />} />

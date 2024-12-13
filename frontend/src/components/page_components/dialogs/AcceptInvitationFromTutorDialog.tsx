@@ -81,7 +81,7 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, collabo
           justifyContent: "center",
         }}
       >
-        {tutorProfile?.full_name} has sent an invite
+        {tutorProfile?.full_name} has sent an invitation to collaborate
       </DialogTitle>
 
       <DialogContent sx={{ display: "flex", flexDirection: "column", gap: "1em" }}>
@@ -93,7 +93,9 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, collabo
             borderRadius: 2,
           }}
         >
-          <Typography variant="h4">Receving help in: {collaboration?.subject}</Typography>
+          <Typography variant="h4">
+            {tutorProfile?.full_name} can help you with {collaboration?.subject}
+          </Typography>
         </Box>
 
         <Box
@@ -116,10 +118,10 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, collabo
               <strong>Year group:</strong> {tutorProfile?.year_group}
             </Typography>
             <Typography variant="body1">
-              <strong>Languages:</strong> {tutorProfile?.languages.join(", ")}
+              <strong>Languages spoken:</strong> {tutorProfile?.languages.join(", ")}
             </Typography>
             <Typography variant="body1">
-              <strong>Subjects:</strong> {tutorProfile?.tutoring_subjects.join(", ")}
+              <strong>Subjects teaching in:</strong> {tutorProfile?.tutoring_subjects.join(", ")}
             </Typography>
           </Box>
 

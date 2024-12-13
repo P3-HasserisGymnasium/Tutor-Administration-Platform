@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, List, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { CollaborationType } from "~/types/entity_types";
 import CollaborationBox from "./admin_components/CollaborationBox";

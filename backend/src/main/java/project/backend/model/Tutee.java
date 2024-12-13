@@ -20,6 +20,7 @@ public class Tutee extends Role {
 
     @OneToMany(mappedBy = "tutee", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
+    @JsonManagedReference
     List<Collaboration> collaborations = new LinkedList<>();
 
     @OneToOne(mappedBy = "tutee", cascade = CascadeType.ALL, orphanRemoval = true)

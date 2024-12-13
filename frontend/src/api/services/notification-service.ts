@@ -1,7 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient } from "../api-client";
 import { NotificationResponseType } from "~/types/entity_types";
 import { useRolePrefix } from "~/utilities/helperFunctions";
+import { NotificationStateType } from "~/types/data_types";
 
 export const useNotificationService = () => {
 
@@ -76,7 +77,16 @@ export const useNotificationService = () => {
 			staleTime: 60000, // Data is considered fresh for 60 seconds
 		});
 	}
+	const useChangeNotificationState = () => {
+		return useMutation({
+			mutationKey: ["changeNotificationState"],
+			mutationFn: async ({ notificationId, state }: { notificationId: number | null, state: NotificationStateType }) => {
+				await apiClient.post<NotificationResponseType>(`/api/notifications/${notificationId}/${state}`);
+			},
 
-	return { useNotifications, useGetTuteeNotifications, useGetNotifications, useGetTutorNotifications };
+		});
+	}
+
+	return { useNotifications, useGetTuteeNotifications, useGetNotifications, useGetTutorNotifications, useChangeNotificationState };
 }
 

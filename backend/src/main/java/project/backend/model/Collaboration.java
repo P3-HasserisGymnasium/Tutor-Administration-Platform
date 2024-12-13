@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,11 +26,13 @@ public class Collaboration {
     Long id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "tutee_id")
     @JsonManagedReference
     Tutee tutee;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "tutor_id")
     @JsonManagedReference
     Tutor tutor;
@@ -67,6 +70,7 @@ public class Collaboration {
     boolean requestedPairing = false;
 
     @OneToMany(mappedBy = "collaboration")
+    @JsonBackReference
     List<Meeting> meetings = new ArrayList<>();
 
     public Collaboration() {
@@ -176,4 +180,7 @@ public class Collaboration {
         return adminState;
     }
 
+    public void setAdminAccepted() {
+        this.adminState = CollaborationState.ESTABLISHED;
+    }
 }

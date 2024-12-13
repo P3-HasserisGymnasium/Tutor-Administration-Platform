@@ -1,4 +1,3 @@
-import * as React from "react";
 import { TutorProfileType } from "~/types/entity_types";
 import { Box, Button, Typography } from "@mui/material";
 import SubjectChip from "components/content_components/SubjectChip.tsx";
@@ -9,12 +8,15 @@ import { Theme } from "@mui/material/styles";
 import TutorProfileDialog from "~/components/page_components/dialogs/ProfileDialog";
 import { useAuth } from "~/api/authentication/useAuth";
 import InitialsAvatar from "../InitialsAvatar";
+import RequestTutorDialog from "~/components/page_components/dialogs/RequestTutorDialog";
+import { useState } from "react";
 
 export default function TutorCard({ profile }: { profile: TutorProfileType }) {
   const theme = useTheme<Theme>();
   const { userState } = useAuth();
 
-  const [open, setOpen] = React.useState(false);
+  const [isTutorProfileDialogOpen, setIsTutorProfileDialogOpen] = useState(false);
+  const [isRequestTutorDialogOpen, setIsRequestTutorDialogOpen] = useState(false);
 
   return (
     <Box
@@ -22,23 +24,20 @@ export default function TutorCard({ profile }: { profile: TutorProfileType }) {
         display: "flex",
         flexDirection: "row",
         backgroundColor: theme.customColors.collaborationBackgroundColor,
-        border: "1px solid "+ theme.customColors.headingTextColor,
+        border: "1px solid " + theme.customColors.headingTextColor,
         padding: "1em",
         borderRadius: "0.5em",
       }}
     >
-      <InitialsAvatar fullName={userState.name}/>
+      <RequestTutorDialog open={isRequestTutorDialogOpen} setOpen={setIsRequestTutorDialogOpen} tutorProfile={profile} />
+      <InitialsAvatar fullName={userState.name} />
       <Box
         sx={{
           marginRight: "1em",
         }}
       >
-        <Typography variant="h3">
-          {profile.full_name}
-        </Typography>
-        <Typography variant="h4">
-          {profile.year_group}
-        </Typography>
+        <Typography variant="h3">{profile.full_name}</Typography>
+        <Typography variant="h4">{profile.year_group}</Typography>
         {profile.tutoring_subjects.map((subject: SubjectType, id: number) => (
           <SubjectChip key={id} Subject={subject} />
         ))}
@@ -52,11 +51,11 @@ export default function TutorCard({ profile }: { profile: TutorProfileType }) {
           justifyContent: "center",
         }}
       >
-        <Button variant="contained" sx={{marginBottom:"0.5em"}} onClick={() => setOpen(true)}>
+        <Button variant="contained" sx={{ marginBottom: "0.5em" }} onClick={() => setIsTutorProfileDialogOpen(true)}>
           View profile
         </Button>
-        <TutorProfileDialog open={open} setOpen={setOpen} tutorProfile={profile} />
-        <CustomButton customType="success">
+        <TutorProfileDialog open={isTutorProfileDialogOpen} setOpen={setIsTutorProfileDialogOpen} tutorProfile={profile} />
+        <CustomButton onClick={() => setIsRequestTutorDialogOpen(true)} customType="success">
           Request collaboration
         </CustomButton>
       </Box>

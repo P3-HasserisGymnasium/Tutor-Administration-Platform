@@ -17,14 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-
+import project.backend.model.Tutee;
+import project.backend.model.Tutor;
 import project.backend.model.Collaboration;
 import project.backend.model.Meeting;
+import project.backend.model.MeetingEnum;
 import project.backend.service.CollaborationService;
 import project.backend.service.MeetingService;
+import project.backend.service.RoleService;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.meeting_controller.MeetingBody;
+import project.backend.controller_bodies.meeting_controller.MeetingResponseBody;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -33,10 +37,14 @@ public class MeetingController {
 
     final MeetingService meetingService;
     final CollaborationService collaborationService;
+    final RoleService roleService;
 
-    public MeetingController(MeetingService meetingService, CollaborationService collaborationService) {
+    public MeetingController(MeetingService meetingService, CollaborationService collaborationService,RoleService roleService ) {
+
         this.meetingService = meetingService;
         this.collaborationService = collaborationService;
+        this.roleService = roleService;
+;
     }
 
     @GetMapping("/{id}")
@@ -67,7 +75,30 @@ public class MeetingController {
         tuteeMetings.forEach(joinedMeetings::add);
         tutorMeetings.forEach(joinedMeetings::add);
 
-        return ResponseEntity.status(HttpStatus.OK).body(joinedMeetings);
+
+         Iterable<MeetingResponseBody> meetingResponses = new ArrayList<>();
+
+        for (Meeting meeting : joinedMeetings) {
+
+            Tutee tutee = meeting.getCollaboration().getTutee();
+            Tutor tutor = meeting.getCollaboration().getTutor();
+
+            MeetingResponseBody meetingResponse = new MeetingResponseBody();
+            meetingResponse.id = meeting.getId();
+            meetingResponse.collaboration_id = meeting.getCollaboration().getId();
+            meetingResponse.start_date = meeting.getStartTimestamp();
+            meetingResponse.end_date = meeting.getEndTimestamp();
+            meetingResponse.state = meeting.getMeetingState().toString();
+            meetingResponse.rejection_reason = meeting.getRejectionReason();
+            meetingResponse.meeting_description = meeting.getMeetingDescription();
+            meetingResponse.tutee_user_id = tutee.getId();
+            meetingResponse.tutor_user_id = tutor.getId();
+            meetingResponse.tutee_name = tutee.getStudent().getFullName();
+            meetingResponse.tutor_name = tutor.getStudent().getFullName();
+            ((ArrayList<MeetingResponseBody>) meetingResponses).add(meetingResponse);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(meetingResponses);
     }
 
     @GetMapping("/self/all")
@@ -87,7 +118,29 @@ public class MeetingController {
         meetings.addAll(tutorMeetings);
         meetings.addAll(tuteeMeetings);
 
-        return ResponseEntity.status(HttpStatus.OK).body(meetings);
+        ArrayList<MeetingResponseBody> meetingResponses = new ArrayList<>();
+
+        for (Meeting meeting : meetings) {
+
+            Tutee tutee = meeting.getCollaboration().getTutee();
+            Tutor tutor = meeting.getCollaboration().getTutor();
+
+            MeetingResponseBody meetingResponse = new MeetingResponseBody();
+            meetingResponse.id = meeting.getId();
+            meetingResponse.collaboration_id = meeting.getCollaboration().getId();
+            meetingResponse.start_date = meeting.getStartTimestamp();
+            meetingResponse.end_date = meeting.getEndTimestamp();
+            meetingResponse.state = meeting.getMeetingState().toString();
+            meetingResponse.rejection_reason = meeting.getRejectionReason();
+            meetingResponse.meeting_description = meeting.getMeetingDescription();
+            meetingResponse.tutee_user_id = tutee.getId();
+            meetingResponse.tutor_user_id = tutor.getId();
+            meetingResponse.tutee_name = tutee.getStudent().getFullName();
+            meetingResponse.tutor_name = tutor.getStudent().getFullName();
+            meetingResponses.add(meetingResponse);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(meetingResponses);
     }
 
     @GetMapping("/tutee")
@@ -100,7 +153,29 @@ public class MeetingController {
 
         Iterable<Meeting> meetings = meetingService.getMeetingsByTuteeId(authenticatedUser.getTuteeId());
 
-        return ResponseEntity.status(HttpStatus.OK).body(meetings);
+        Iterable<MeetingResponseBody> meetingResponses = new ArrayList<>();
+
+        for (Meeting meeting : meetings) {
+
+            Tutee tutee = meeting.getCollaboration().getTutee();
+            Tutor tutor = meeting.getCollaboration().getTutor();
+
+            MeetingResponseBody meetingResponse = new MeetingResponseBody();
+            meetingResponse.id = meeting.getId();
+            meetingResponse.collaboration_id = meeting.getCollaboration().getId();
+            meetingResponse.start_date = meeting.getStartTimestamp();
+            meetingResponse.end_date = meeting.getEndTimestamp() ;
+            meetingResponse.state = meeting.getMeetingState().toString();
+            meetingResponse.rejection_reason = meeting.getRejectionReason();
+            meetingResponse.meeting_description = meeting.getMeetingDescription();
+            meetingResponse.tutee_user_id = tutee.getId();
+            meetingResponse.tutor_user_id = tutor.getId();
+            meetingResponse.tutee_name = tutee.getStudent().getFullName();
+            meetingResponse.tutor_name = tutor.getStudent().getFullName();
+            ((ArrayList<MeetingResponseBody>) meetingResponses).add(meetingResponse);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(meetingResponses);
     }
 
     @GetMapping("/tutor")
@@ -113,7 +188,29 @@ public class MeetingController {
 
         Iterable<Meeting> meetings = meetingService.getMeetingsByTutorId(authenticatedUser.getTutorId());
 
-        return ResponseEntity.status(HttpStatus.OK).body(meetings);
+        Iterable<MeetingResponseBody> meetingResponses = new ArrayList<>();
+
+        for (Meeting meeting : meetings) {
+
+            Tutee tutee = meeting.getCollaboration().getTutee();
+            Tutor tutor = meeting.getCollaboration().getTutor();
+
+            MeetingResponseBody meetingResponse = new MeetingResponseBody();
+            meetingResponse.id = meeting.getId();
+            meetingResponse.collaboration_id = meeting.getCollaboration().getId();
+            meetingResponse.start_date = meeting.getStartTimestamp();
+            meetingResponse.end_date = meeting.getEndTimestamp();
+            meetingResponse.state = meeting.getMeetingState().toString();
+            meetingResponse.rejection_reason = meeting.getRejectionReason();
+            meetingResponse.meeting_description = meeting.getMeetingDescription();
+            meetingResponse.tutee_user_id = tutee.getId();
+            meetingResponse.tutor_user_id = tutor.getId();
+            meetingResponse.tutee_name = tutee.getStudent().getFullName();
+            meetingResponse.tutor_name = tutor.getStudent().getFullName();
+            ((ArrayList<MeetingResponseBody>) meetingResponses).add(meetingResponse);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(meetingResponses);
     }
 
     @PostMapping("/request")
@@ -123,7 +220,7 @@ public class MeetingController {
         System.out.println(body);
         System.out.println("ussr" + authenticatedUser);
 
-        Collaboration collaboration = collaborationService.getCollaborationById(body.collaboration_id);
+        Collaboration collaboration = collaborationService.getCollaborationById(body.collaboration);
 
         if (collaboration == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Collaboration not found");
@@ -131,16 +228,18 @@ public class MeetingController {
 
         Meeting newMeeting = new Meeting();
         newMeeting.setCollaboration(collaboration);
-        newMeeting.setMeetingState(body.state);
-        newMeeting.setStartTimestamp(body.start_date);
-        newMeeting.setEndTimestamp(body.end_date);
+        newMeeting.setMeetingState(MeetingEnum.PENDING);
+        newMeeting.setStartTimestamp(body.start_timestamp);
+        newMeeting.setEndTimestamp(body.end_timestamp);
         newMeeting.setMeetingDescription(body.meeting_description);
 
-        String message = "Meeting request sent";
+        try {
+            meetingService.saveMeeting(newMeeting);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
 
-        meetingService.saveMeeting(newMeeting);
-
-        return ResponseEntity.ok(message);
+        return ResponseEntity.status(HttpStatus.OK).body("Meeting request sent");
     }
 
     @DeleteMapping("/{id}")
