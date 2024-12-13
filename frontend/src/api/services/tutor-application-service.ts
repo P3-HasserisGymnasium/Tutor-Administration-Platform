@@ -9,14 +9,14 @@ export const useTutorApplicationService = () => {
 		return useMutation({
 			mutationKey: ["createTutorApplication"],
 			mutationFn: async (application: TutorApplicationType) => {
-				const { data } = await apiClient.post("/api/tutor-application", application);
+				const { data } = await apiClient.post("/api/tutor-application/", application);
 				return data;
 			},
 			onError: (e: AxiosError) => {
 				toast.error("" + e?.response?.data);
 			},
 			onSuccess: () => {
-				toast.success("Application created");
+				toast.info("When an administrator accepts your application, you will be able to use the system as a tutor.");
 			},
 		});
 	};
@@ -92,7 +92,8 @@ export const useTutorApplicationService = () => {
 			placeholderData: {
 				subjects: [],
 				time_availability: [],
-				application: "",
+				tutor_profile_description: "",
+				user_id: 0,
 			},
 		});
 	};

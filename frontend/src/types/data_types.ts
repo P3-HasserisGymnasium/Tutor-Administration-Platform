@@ -56,9 +56,10 @@ export const zodContactInfo = z.object({
 });
 
 export const zodTutorApplicationSchema = z.object({
+  user_id: zodUUID,
   subjects: z.array(Subject),
   time_availability: z.array(zodTimeAvailabilitySchema),
-  application: z.string(),
+  tutor_profile_description: z.string(),
 });
 export const zodPostListFilterSchema = z.object({
   duration: z.array(z.number()),

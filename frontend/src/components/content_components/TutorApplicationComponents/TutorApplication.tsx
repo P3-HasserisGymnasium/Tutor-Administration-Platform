@@ -4,18 +4,25 @@ import { useForm, FormProvider, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SetTimeAvailability from "components/content_components/SetTimeAvailability";
 import SetSubject from "../SetSubject";
+import { useTutorApplicationService } from "../../../api/services/tutor-application-service";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useAuth } from "~/api/authentication/useAuth";
 
 export default function TutorApplication() {
+  const { userState } = useAuth();
   const filterMethods = useForm<TutorApplicationType>({
     resolver: zodResolver(zodTutorApplicationSchema),
     defaultValues: {
       subjects: [],
       time_availability: [],
-      application: "",
+      tutor_profile_description: "",
+      user_id: userState.id as number,
     },
   });
-
-  const { getValues, register, control } = filterMethods;
+  const createApplicationMutation = useTutorApplicationService().useCreateTutorApplication();
+  const navigate = useNavigate();
+  const { getValues, register, control, handleSubmit } = filterMethods;
   useWatch({ control });
 
   const isMd = useMediaQuery((theme) => theme.breakpoints.down("md"));
@@ -28,6 +35,15 @@ export default function TutorApplication() {
     } else {
       return 20;
     }
+  };
+
+  const handleSend = () => {
+    createApplicationMutation.mutate(getValues(), {
+      onSuccess: () => {
+        toast.success("Application sent!");
+        navigate("/tutee");
+      },
+    });
   };
 
   return (
@@ -57,7 +73,7 @@ export default function TutorApplication() {
                 multiline
                 fullWidth
                 maxRows={getMaxRows()}
-                {...register("application")}
+                {...register("tutor_profile_description")}
                 slotProps={{
                   input: {
                     style: {
@@ -87,6 +103,7 @@ export default function TutorApplication() {
             ))}
           <Button
             variant="contained"
+            onClick={handleSubmit(handleSend)}
             disabled={!(getValues("subjects").length > 0) || !(getValues("time_availability").length > 0)} /*onClick={handleSend}*/
           >
             Send Application
