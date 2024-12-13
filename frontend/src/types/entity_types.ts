@@ -49,8 +49,8 @@ export const zodTuteeProfileSchema = z.object({
 export const zodMeetingSchema = z.object({
 	id: zodUUID,
 	collaboration: zodUUID,
-	start_timestamp: z.string(),
-	end_timestamp: z.string(),
+	start_date: z.string(),
+	end_date: z.string(),
 	meeting_state: MeetingState,
 	rejection_reason: z.string().optional(),
 	meeting_description: z.string().optional(),
