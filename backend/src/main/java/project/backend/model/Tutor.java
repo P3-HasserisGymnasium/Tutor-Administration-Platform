@@ -19,7 +19,7 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class Tutor extends Role {
     
-    @Column(name = "profile_description")
+    @Column(name = "profile_description", length = 1000)
     String profileDescription;
 
     @ElementCollection

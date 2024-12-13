@@ -10,30 +10,30 @@ import Microsoft_teams from "../../assets/Microsoft_teams.png";
 import Skype from "../../assets/Skype.png";
 import Messenger from "../../assets/Messenger.png";
 
-
 const icons = {
-    Discord,
-    Email,
-    Microsoft_teams,
-    Skype,
-    Messenger,
-}
+  Discord,
+  Email,
+  Microsoft_teams,
+  Skype,
+  Messenger,
+};
 
-export default function CommunicationChip({contactInfo, deleteable}: {contactInfo: ContactInfoType, deleteable?: boolean}) {
-    const {setValue, getValues} = useFormContext<TutorProfileType>();
-    const deleteChip = () => {
-        console.log("delete");
-        const currentContactInfo = getValues("contact_info");
-        setValue("contact_info", currentContactInfo.filter((current: ContactInfoType) => current !== contactInfo));
-    };
-    return (
-        <Chip   
-            avatar={<Avatar alt={contactInfo.communicationMedium} src={icons[contactInfo.communicationMedium]} sx={{borderRadius:"0em"}}/>} 
-            label={contactInfo.username}
-            onDelete={deleteable ? deleteChip : undefined}
-            sx={{color:"black", 
-                width: "fit-content",
-            }} 
-        />
+export default function CommunicationChip({ contactInfo, deleteable }: { contactInfo: ContactInfoType; deleteable?: boolean }) {
+  const { setValue, getValues } = useFormContext<TutorProfileType>();
+  const deleteChip = () => {
+    console.log("delete");
+    const currentContactInfo = getValues("contact_info");
+    setValue(
+      "contact_info",
+      currentContactInfo.filter((current: ContactInfoType) => current !== contactInfo)
     );
+  };
+  return (
+    <Chip
+      avatar={<Avatar alt={contactInfo.communication_medium} src={icons[contactInfo.communication_medium]} sx={{ borderRadius: "0em" }} />}
+      label={contactInfo.username}
+      onDelete={deleteable ? deleteChip : undefined}
+      sx={{ color: "black", width: "fit-content" }}
+    />
+  );
 }

@@ -3,17 +3,22 @@ import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
 import { PostType } from "~/types/entity_types";
-import { PostCreationType } from "~/types/data_types";
+import { PostCreationType, PostListFilterType } from "~/types/data_types";
 import { useNavigate } from "react-router-dom";
 
 export const usePostService = () => {
 	const navigate = useNavigate();
 
-	const useGetPosts = () => {
+	const useGetPosts = (filters?: PostListFilterType) => {
 		return useQuery({
-			queryKey: ["getPosts"],
+			queryKey: ["getPosts", filters],
 			queryFn: async () => {
-				const { data } = await apiClient.get<PostType[]>(`/api/post`);
+				const { data } = await apiClient.get<PostType[]>(`/api/post`, {
+					params: {
+						subjects: filters?.subjects?.join(","),
+						duration: filters?.duration?.join(","),
+					},
+				});
 				return data;
 			},
 			refetchOnWindowFocus: false,
@@ -45,7 +50,7 @@ export const usePostService = () => {
 			},
 			onSuccess: () => {
 				toast.success("Post created");
-				navigate("/tutee")
+				navigate("/tutee");
 			},
 		});
 	};
@@ -75,8 +80,8 @@ export const usePostService = () => {
 				const { data } = await apiClient.put<PostType>(`/api/post/${post.id}`, post);
 				return data;
 			},
-			onError: (e: AxiosError<{ detail: string }>) => {
-				toast.error(e?.response?.data?.detail);
+			onError: (e: AxiosError) => {
+				toast.error("" + e?.response?.data);
 			},
 			onSuccess: () => {
 				toast.success("Post redigeret");

@@ -1,12 +1,33 @@
 import { Box, Button } from "@mui/material";
-import { PostType } from "~/types/entity_types";
+import { PostType, RequestCollaborationByPostType } from "~/types/entity_types";
 import { useTheme } from "@mui/system";
 import { Theme } from "@mui/material/styles";
 import { Typography } from "@mui/material";
 import SubjectChip from "../SubjectChip";
+import { useCollaborationService } from "~/api/services/collaboration-service";
+import { useAuth } from "~/api/authentication/useAuth";
 
 export default function PostCard({ post }: { post: PostType }) {
+	const { userState } = useAuth();
+	const requestCollaborationMutation = useCollaborationService().useRequestCollaborationViaPost();
+
 	const theme = useTheme<Theme>();
+
+	const handleRequestCollaboration = () => {
+		const body: RequestCollaborationByPostType = {
+			post_id: post.id,
+			tutor_id: userState?.id || 0,
+		};
+		requestCollaborationMutation.mutate(body, {
+			onSuccess: () => {
+				console.log("Collaboration requested");
+			},
+			onError: (error) => {
+				console.error(error);
+			},
+		});
+	};
+
 	return (
 		<Box
 			sx={{
@@ -30,10 +51,8 @@ export default function PostCard({ post }: { post: PostType }) {
 					<Typography variant="h4">Subject:</Typography>
 					<SubjectChip Subject={post.subject}></SubjectChip>
 				</Box>
-				<Typography variant="h4">
-					Duration: {post?.duration?.[0]}-{post?.duration?.[1]} months
-				</Typography>
-				<Button variant="contained" sx={{ alignSelf: "flex-start" }}>
+				<Typography variant="h4">{getDuration(post.duration)}</Typography>
+				<Button variant="contained" sx={{ alignSelf: "flex-start" }} onClick={handleRequestCollaboration}>
 					Request Collaboration
 				</Button>
 			</Box>
@@ -49,4 +68,14 @@ export default function PostCard({ post }: { post: PostType }) {
 			</Box>
 		</Box>
 	);
+}
+
+function getDuration(duration: number[] | undefined | null) {
+	if (duration === undefined || duration === null) {
+		return "Duration not specified";
+	} else if (duration[0] === duration[1]) {
+		return `Duration: ${duration[0]} months`;
+	} else {
+		return `Duration: ${duration[0]}-${duration[1]} months`;
+	}
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import project.backend.model.Post;
 import project.backend.model.PostState;
+import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.repository.PostRepository;
 import project.backend.repository.TuteeRepository;
@@ -32,6 +33,10 @@ public class PostService {
         this.postRepository = postRepository;
         this.roleService = roleService;
         this.tuteeRepository = tuteeRepository;
+    }
+
+    public List<Post> getPostsByFilters(Integer minDuration, Integer maxDuration, List<SubjectEnum> subjects, Long tuteeId){
+        return postRepository.findByFilters(subjects, minDuration, maxDuration, tuteeId);
     }
 
     public Optional<Post> getPostById(Long id){
@@ -118,10 +123,6 @@ public class PostService {
 
         return savePost(existingPost);        
     }
-
-    
-
-
 }
 
 

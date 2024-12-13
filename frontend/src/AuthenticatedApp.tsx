@@ -65,7 +65,7 @@ export default function AuthenticatedApp() {
                 <Route path="request-admin" element={<RequestAdminPage />} />
                 <Route path="tutor-list" element={<TutorListPage />} />
                 {rolePrefix == "/tutee" && <Route path="tutor-application" element={<TutorApplicationPage />} />}
-                <Route path="collaboration/*" element={<CollaborationPage />} />
+                <Route path="collaboration/:org_id:" element={<CollaborationPage />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </>
@@ -81,7 +81,7 @@ export default function AuthenticatedApp() {
                 <Route path="notifications" element={<NotificationsList />} />
                 {rolePrefix == "/tutor" && <Route path="tutor-application" element={<TutorApplicationPage />} />}
                 <Route path="profile" element={<TutorProfilePage />} />
-                <Route path="collaboration/*" element={<CollaborationPage />} />
+                <Route path="collaboration/:org_id" element={<CollaborationPage />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </>

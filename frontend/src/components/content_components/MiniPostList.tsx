@@ -11,6 +11,7 @@ type MiniPostListProps = {
 };
 
 export default function MiniPostList({ posts, isLoading, isError }: MiniPostListProps) {
+	
 	if (isLoading) {
 		return (
 			<Box sx={{ display: "flex", justifyContent: "center", marginTop: 4, width: "100%" }}>

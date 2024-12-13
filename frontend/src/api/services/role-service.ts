@@ -57,21 +57,17 @@ export const useRoleService = () => {
 		});
 	 */
 	// tutor information gets returned
-	const getTutors = useMutation({
-		mutationKey: ["getTutors"],
-		mutationFn: async (filters: tutorListFilterType) => {
-			const { data } = await apiClient.post<TutorProfileType[]>(
-				`/api/role`, filters
-			);
-			return data;
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
-		},
-		onSuccess: () => {
-			//
-		},
-	});
+	const useGetTutors = (filters: tutorListFilterType) => {
+		return useQuery({
+			queryKey: ["getTutors", filters],
+			queryFn: async () => {
+				const { data } = await apiClient.post<TutorProfileType[]>(`/api/role/tutorsFiltered`, filters);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			placeholderData: [],
+		});
+	};
 
 	const useGetTutorProfile = (id: number | null) => {
 		return useQuery({
@@ -85,6 +81,7 @@ export const useRoleService = () => {
 			refetchOnWindowFocus: false,
 			enabled: id !== null,
 			placeholderData: {
+				id: 0,
 				contact_info: [],
 				description: "",
 				full_name: "",
@@ -110,7 +107,9 @@ export const useRoleService = () => {
 			placeholderData: {
 				full_name: "",
 				year_group: YearGroup.Enum.IB_1,
-				languages: []
+				languages: [],
+				subjects_receiving_help_in: [],
+				contact_info: []
 			},
 		})
 	}
@@ -136,7 +135,7 @@ export const useRoleService = () => {
 	return {
 		assignTuteeRole,
 		removeRole,
-		getTutors,
+		useGetTutors,
 		useGetTutorProfile, useGetTuteeProfile,
 		useEditProfile
 	};

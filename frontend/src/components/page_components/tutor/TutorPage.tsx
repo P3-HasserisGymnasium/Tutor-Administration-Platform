@@ -12,22 +12,41 @@ import { usePostService } from "~/api/services/post-service";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useAuth } from "~/api/authentication/useAuth";
 import ViewCollaborationsDialog from "src/components/page_components/dialogs/ViewCollaborationsDialog";
+import { useNavigate } from "react-router-dom";
+import { MeetingType } from "~/types/entity_types";
+import { useMeetingService } from "~/api/services/meeting-service";
+import { CollaborationState } from "~/types/data_types";
 export default function TutorPage() {
+  const navigate = useNavigate();
   const theme = useCurrentTheme();
   const { isMobile } = useBreakpoints();
-  const [view, setView] = useState<"list" | "calender">("calender");
+  const [view, setView] = useState<"list" | "calender">("list");
   const [showCollabDialog, setShowCollabDialog] = useState(false);
+
   const { userState } = useAuth();
-  const { data: posts, isLoading: postsLoading, isError: postsError } = usePostService().useGetPosts();
+  const {
+    data: posts,
+    isLoading: postsLoading,
+    isError: postsError,
+  } = usePostService().useGetPosts({ duration: [0, 12], subjects: userState?.tutoring_subjects || [] });
   const {
     data: collaborations,
     isLoading: collabLoading,
     isError: collabError,
   } = useCollaborationService().useGetCollaborationsWithTutor(userState?.id || null);
+  const { data: meetings } = useMeetingService().useGetMeetings();
+
+  const filteredCollaborations = collaborations?.filter((collab) => collab.state == CollaborationState.Enum.ESTABLISHED);
 
   return (
     <ThemeProvider theme={theme}>
-      <ViewCollaborationsDialog open={showCollabDialog} setOpen={setShowCollabDialog} collaborations={collaborations} isLoading={collabLoading} />
+      <ViewCollaborationsDialog
+        open={showCollabDialog}
+        setOpen={setShowCollabDialog}
+        collaborations={filteredCollaborations}
+        isLoading={collabLoading}
+      />
+
       <MediumShortOnShortBoxLayout>
         <Box
           sx={{
@@ -42,13 +61,22 @@ export default function TutorPage() {
           }}
         >
           {/* Header with Title and Buttons */}
-          <Box sx={{ display: "flex", justifyContent: "space-between", gap: isMobile ? 2 : 17, width: "100%", height: "5%" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: isMobile ? 2 : 17,
+              width: "100%",
+              height: "5%",
+              minHeight: "40px",
+            }}
+          >
             <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1, width: 1 / 3 }}>
               {view === "calender" ? "Calendar" : "Meeting List"}{" "}
             </Typography>
 
             {/* Button group for toggling between calendar and meeting */}
-            <ButtonGroup sx={{ width: 1 / 3 }} variant="outlined" aria-label="outlined primary button group">
+            <ButtonGroup sx={{ width: 1.2 / 3, minWidth: "267px" }} variant="outlined" aria-label="outlined primary button group">
               <Button
                 sx={{
                   width: "160px",
@@ -101,12 +129,14 @@ export default function TutorPage() {
               height: "100%",
               width: "100%",
               display: "flex",
+              maxHeight: "100%",
+              maxWidth: "100%",
               justifyContent: "center",
-              alignItems: "flex-end",
+              alignItems: "center",
               border: "white 1px",
             }}
           >
-            {view === "calender" ? <MiniCalendar /> : <MeetingsList />}
+            {view === "calender" ? <MiniCalendar meetings={meetings as MeetingType[]} /> : <MeetingsList />}
           </Box>
         </Box>
         <Box
@@ -147,7 +177,7 @@ export default function TutorPage() {
             <MiniPostList posts={posts} isLoading={postsLoading} isError={postsError} />
           </Box>
           <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
-            <CustomButton onClick={() => setShowCollabDialog(true)} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+            <CustomButton onClick={() => navigate("/tutor/posts-list")} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
               View all
             </CustomButton>
           </Box>
@@ -188,10 +218,16 @@ export default function TutorPage() {
             </Tooltip>
           </Box>
           <Box sx={{ display: "flex", gap: 2 }}>
-            <MiniCollabList collaborations={collaborations} isLoading={collabLoading} isError={collabError} />
+            <MiniCollabList collaborations={filteredCollaborations} isLoading={collabLoading} isError={collabError} />
           </Box>
           <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
-            <CustomButton variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+            <CustomButton
+              style={{ visibility: (filteredCollaborations?.length ?? 0) > 3 ? "visible" : "hidden" }}
+              onClick={() => setShowCollabDialog(true)}
+              variant="contained"
+              color="primary"
+              sx={{ fontSize: "18px" }}
+            >
               View more
             </CustomButton>
           </Box>
