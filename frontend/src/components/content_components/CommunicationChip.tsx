@@ -1,5 +1,8 @@
 import { Chip } from "@mui/material";
 import { ContactInfoType } from "~/types/data_types";
+import { TutorProfileType } from "~/types/entity_types";
+import { useFormContext } from "react-hook-form";
+
 import Avatar from "@mui/material/Avatar";
 import Discord from "../../assets/Discord.png";
 import Email from "../../assets/Email.png";
@@ -14,12 +17,23 @@ const icons = {
   Skype,
   Messenger,
 };
-export default function CommunicationChip({ contactInfo }: { contactInfo: ContactInfoType }) {
+
+export default function CommunicationChip({ contactInfo, deleteable }: { contactInfo: ContactInfoType; deleteable?: boolean }) {
+  const { setValue, getValues } = useFormContext<TutorProfileType>();
+  const deleteChip = () => {
+    console.log("delete");
+    const currentContactInfo = getValues("contact_info");
+    setValue(
+      "contact_info",
+      currentContactInfo.filter((current: ContactInfoType) => current !== contactInfo)
+    );
+  };
   return (
     <Chip
       avatar={<Avatar alt={contactInfo.communication_medium} src={icons[contactInfo.communication_medium]} sx={{ borderRadius: "0em" }} />}
       label={contactInfo.username}
-      sx={{ color: "black", fontSize: "1.5rem", p: 2, height: "2em", border: "2px solid black" }}
+      onDelete={deleteable ? deleteChip : undefined}
+      sx={{ color: "black", width: "fit-content" }}
     />
   );
 }

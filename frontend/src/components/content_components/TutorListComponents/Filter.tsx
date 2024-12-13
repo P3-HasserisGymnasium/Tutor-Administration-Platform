@@ -32,12 +32,11 @@ export default function TutorListFilter({ setFilters, setLoading }: TutorListFil
     }, 500);
   };
 
-  
   return (
     <FormProvider {...filterMethods}>
       <Stack spacing={1} sx={{ padding: "1em", height: "95%" }}>
         <Typography variant="h2">Filters</Typography>
-        <CustomAutocomplete  variant="subject" multiple={true} />
+        <CustomAutocomplete variant="subject" multiple={true} />
         <CustomAutocomplete variant="yearGroup" multiple={true} />
         <SetTimeAvailability />
 
