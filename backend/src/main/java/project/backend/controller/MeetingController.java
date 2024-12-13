@@ -220,7 +220,7 @@ public class MeetingController {
         System.out.println(body);
         System.out.println("ussr" + authenticatedUser);
 
-        Collaboration collaboration = collaborationService.getCollaborationById(body.collaboration_id);
+        Collaboration collaboration = collaborationService.getCollaborationById(body.collaboration);
 
         if (collaboration == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Collaboration not found");
@@ -229,8 +229,8 @@ public class MeetingController {
         Meeting newMeeting = new Meeting();
         newMeeting.setCollaboration(collaboration);
         newMeeting.setMeetingState(MeetingEnum.PENDING);
-        newMeeting.setStartTimestamp(body.start_date);
-        newMeeting.setEndTimestamp(body.end_date);
+        newMeeting.setStartTimestamp(body.start_timestamp);
+        newMeeting.setEndTimestamp(body.end_timestamp);
         newMeeting.setMeetingDescription(body.meeting_description);
 
         try {

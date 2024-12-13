@@ -16,7 +16,6 @@ import { useMeetingService } from "~/api/services/meeting-service";
 import { MeetingType } from "~/types/entity_types";
 import CustomButton from "../content_components/CustomButton";
 import CommunicationChip from "../content_components/CommunicationChip";
-import dayjs from "dayjs";
 
 export default function CollaborationPage() {
   const theme = useCurrentTheme();
@@ -38,17 +37,14 @@ export default function CollaborationPage() {
     return date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) + " | " + date.toLocaleDateString("en-GB");
   }; */
   const formatTimestamp = (timestamp: string) => {
-    const date = dayjs(timestamp).toDate();
-    const currentDate = dayjs().toDate();
-    if (dayjs(date).isBefore(dayjs(currentDate))) {
-      console.log("date is after current date");
-    }
-    return date;
+    const date = new Date(Date.parse(timestamp));
+    console.log("date", date);
+    return date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) + " | " + date.toLocaleDateString("en-GB");
   };
   // Categorize meetings into "Upcoming" and "Finished"
-  const upcomingMeetings = meetings?.filter((meeting) => dayjs(formatTimestamp(meeting.start_timestamp)));
-  const finishedMeetings = meetings?.filter((meeting) => dayjs(meeting.end_timestamp).isBefore(dayjs()));
-  console.log("upcomingMeetings", upcomingMeetings);
+  const upcomingMeetings = meetings?.filter((meeting) => new Date(formatTimestamp(meeting.start_timestamp)) > new Date());
+  const finishedMeetings = meetings?.filter((meeting) => new Date(formatTimestamp(meeting.end_timestamp)) < new Date());
+
   return (
     <ThemeProvider theme={theme}>
       {rolePrefix == "/tutee" && partnerInformation && (
@@ -222,7 +218,7 @@ export default function CollaborationPage() {
               {upcomingMeetings?.map((meeting) => (
                 <Paper elevation={4} sx={{ display: "flex", flexDirection: "column", gap: 2, p: 1, mb: 2 }}>
                   <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                    {dayjs(formatTimestamp(meeting.start_timestamp)).format("HH:mm DD/MM/YYYY ")}
+                    {formatTimestamp(meeting.start_timestamp)}
                   </Typography>
                   <Typography variant="body2">{meeting.meeting_description}</Typography>
                 </Paper>
@@ -235,7 +231,7 @@ export default function CollaborationPage() {
               {finishedMeetings?.map((meeting) => (
                 <Paper elevation={4} sx={{ display: "flex", flexDirection: "column", gap: 2, p: 1, mb: 2 }}>
                   <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                    {dayjs(formatTimestamp(meeting.start_timestamp)).format("DD/MM/YYYY HH:mm")}
+                    {formatTimestamp(meeting.start_timestamp)}
                   </Typography>
                   <Typography variant="body2">{meeting.meeting_description}</Typography>
                 </Paper>
