@@ -16,16 +16,17 @@ import { FormProvider, useForm, Controller, useFormContext, useWatch } from "rea
 import { zodResolver } from "@hookform/resolvers/zod";
 import { zodTutorProfileSchema } from "~/types/entity_types";
 import { Language } from "~/types/data_types";
-import SetCommunication from "./SetCommunication";
+
 import SetTimeAvailability from "./SetTimeAvailability";
 
 
 export default function TutorProfile() {
   const theme = useTheme<Theme>();
   const { userState } = useAuth();
+  const userId = userState.id;
   const [state, setState] = React.useState<"preview"|"edit">("preview");
   const { data: tutorProfile, isLoading, isError } = useRoleService().useGetTutorProfile(userState.id as number);
-  const editPostMutation = useRoleService().useEditProfile();
+  const editPostMutation = useRoleService().editTutorProfile;
   const editProfileMethods = useForm<TutorProfileType>({
     resolver: zodResolver(zodTutorProfileSchema),
     defaultValues: tutorProfile,
@@ -42,8 +43,8 @@ export default function TutorProfile() {
     return <Typography>Error...</Typography>;
   }
 
-  const editProfile = (values: TutorProfileType) => {
-    editPostMutation.mutate(values,{});
+  const editProfile = (id: number | null, values: TutorProfileType) => {
+    editPostMutation.mutate({id: id, profile:values});
   };
 
   console.log(watchedAll);
@@ -61,7 +62,7 @@ export default function TutorProfile() {
             Edit profile
           </Button>)}
 
-          {state === "edit" && (<CustomButton customType="success" size="large" sx={{ height: "3em" }} onClick={() => editProfileMethods.handleSubmit(editProfile)}/>)}
+          {state === "edit" && (<CustomButton customType="success" size="large" sx={{ height: "3em" }}  onClick={editProfileMethods.handleSubmit((data) => editProfile(userId, data))}/>)}
   
         </Box>
         {state === "preview" && <PreviewPage />}
@@ -144,7 +145,7 @@ function EditPage(){
 function PreviewPage(){
   const {getValues} = useFormContext<TutorProfileType>();
   const mockContactInfo:ContactInfoType = {
-    communicationMedium: "Skype",
+    communication_medium: "Skype",
     username: "l",
   }
   return (

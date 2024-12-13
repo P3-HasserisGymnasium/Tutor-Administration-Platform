@@ -72,6 +72,7 @@ export const useRoleService = () => {
       refetchOnWindowFocus: false,
       enabled: id !== null,
       placeholderData: {
+				id: id ?? 0,
         contact_info: [],
         description: "",
         full_name: "",
@@ -97,6 +98,7 @@ export const useRoleService = () => {
         year_group: YearGroup.Enum.IB_1,
         languages: [],
         contact_info: [],
+				subjects_receiving_help_in: [],
       },
     });
   };
