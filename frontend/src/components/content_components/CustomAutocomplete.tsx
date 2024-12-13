@@ -7,8 +7,7 @@ import TextField from "@mui/material/TextField";
 import { SubjectType, Language } from "~/types/data_types";
 import { YearGroup } from "~/types/data_types";
 import { SxProps, Theme } from "@mui/system";
-import { CommunicationMedium } from "~/types/data_types";
-
+import { communication_medium } from "~/types/data_types";
 
 interface CustomAutocompleteProps {
   variant: "subject" | "yearGroup" | "communication" | "languages";
@@ -39,15 +38,7 @@ function SubjectAutocomplete({
   sx,
   initialValue,
   options,
-  multiple,
-  sx,
-  initialValue,
-  options,
 }: {
-  multiple?: boolean;
-  sx?: SxProps<Theme>;
-  initialValue?: SubjectType;
-  options?: SubjectType[];
   multiple?: boolean;
   sx?: SxProps<Theme>;
   initialValue?: SubjectType;
@@ -121,7 +112,7 @@ function CommunicationAutocomplete({ sx }: { sx?: SxProps<Theme> }) {
       control={control}
       render={({ field }) => (
         <Autocomplete
-          options={Object.values(CommunicationMedium.enum)}
+          options={Object.values(communication_medium.enum)}
           onChange={(_, newValue) => {
             field.onChange(newValue);
           }}
@@ -159,19 +150,18 @@ function LanguagesAutocomplete({
           onChange={(_, newValue) => {
             field.onChange(newValue);
           }}
-					getOptionLabel={(option) => option} // Display option as plain text
-					renderTags={() => null} // Disable chips
+          getOptionLabel={(option) => option} // Display option as plain text
+          renderTags={() => null} // Disable chips
           renderInput={(params) => (
             <TextField
               {...params}
               variant="outlined"
               label={multiple ? "Languages" : "Language"}
-							InputProps={{
+              InputProps={{
                 ...params.InputProps,
                 startAdornment: (
                   <span>
-                    {Array.isArray(field.value) &&
-                      field.value.join(", ")} {/* Display selected values as plain text */}
+                    {Array.isArray(field.value) && field.value.join(", ")} {/* Display selected values as plain text */}
                   </span>
                 ),
               }}

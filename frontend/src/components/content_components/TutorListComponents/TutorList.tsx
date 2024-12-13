@@ -8,8 +8,9 @@ type TutorListProps = {
   filterLoading: boolean;
 };
 
+
 export default function TutorList({ filters, filterLoading }: TutorListProps) {
-  const { data: listOfTutors, isPending, isError } = useRoleService().useGetTutors(filters);
+  const { data: listOfTutors, isPending, isError } = useRoleService().getTutors(filters);
   console.log("Filters:\n", filters);
   const loading = filterLoading || isPending;
 

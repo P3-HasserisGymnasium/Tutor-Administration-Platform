@@ -1,6 +1,6 @@
 import { Autocomplete, Box, Button,} from "@mui/material";
 import { CommunicationMediumType, ContactInfoType } from "~/types/data_types";
-import { CommunicationMedium } from "~/types/data_types";
+import { communication_medium } from "~/types/data_types";
 import TextField from "@mui/material/TextField";
 import React from "react";
 import CommunicationChip from "./CommunicationChip";
@@ -15,7 +15,7 @@ export default function SetCommunication(){
 
     const addContactInfo = () => {
         const currentContactInfo = getValues("contact_info");
-        setValue("contact_info", [...currentContactInfo, {communicationMedium: communicationMedium as CommunicationMediumType, username: username}]);
+        setValue("contact_info", [...currentContactInfo, {communication_medium: communicationMedium as CommunicationMediumType, username: username}]);
     };
 
     return (
@@ -23,7 +23,7 @@ export default function SetCommunication(){
             <Box sx={{display:"flex", gap:"0.5em"}}>
                 <Autocomplete
                     sx={{width:"60%"}}
-                    options={Object.values(CommunicationMedium.Values)}
+                    options={Object.values(communication_medium.Values)}
                     onChange={(_,newValue) => setCommunicationMedium(newValue as CommunicationMediumType)}
                     renderInput={(params) => (
                         <TextField
