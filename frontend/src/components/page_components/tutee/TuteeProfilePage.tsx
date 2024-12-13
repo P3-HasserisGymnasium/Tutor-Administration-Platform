@@ -1,6 +1,6 @@
 import { Alert, Box, Button, CircularProgress, Paper, Typography } from "@mui/material";
 import DeleteAccountDialog from "../dialogs/DeleteAccountDialog";
-import { useEffect, useState } from "react";
+import {useEffect, useState } from "react";
 import { useAuth } from "~/api/authentication/useAuth";
 
 import { useWrap, useVariableWidth, useVariableHeight } from "~/utilities/helperFunctions";
@@ -32,56 +32,41 @@ export default function TuteeProfilePage() {
   const editProfileMutation = useRoleService().useEditTuteeProfile();
   
   
-  
   const useFormProvider = {
     resolver: zodResolver(zodTuteeProfileSchema),
     defaultValues: {
       full_name: tuteeProfile?.full_name,
       year_group: tuteeProfile?.year_group,
-      languages: tuteeProfile?.languages,
-      contact_info: tuteeProfile?.contact_info,
-      subjects_receiving_help_in: tuteeProfile?.subjects_receiving_help_in
+      languages: tuteeProfile?.languages || [],
+      contact_info: tuteeProfile?.contact_info || [],
+      subjects_receiving_help_in: tuteeProfile?.subjects_receiving_help_in || [],
     },
   };
+
   
   const formMethods = useForm<TuteeProfile>(useFormProvider);
-  const { handleSubmit} = formMethods;
-
-
-   // UseEffect to update form values after fetching tutee profile data
-   useEffect(() => {
+  const { handleSubmit, setValue} = formMethods;
+  useEffect(() => {
     if (tuteeProfile) {
-      formMethods.setValue("full_name", tuteeProfile.full_name);
-      formMethods.setValue("year_group", tuteeProfile.year_group);
-      formMethods.setValue("languages", tuteeProfile.languages);
-      formMethods.setValue("contact_info", tuteeProfile.contact_info);
+      // Manually set values if tuteeProfile is loaded
+      setValue("languages", tuteeProfile.languages || []);
+      setValue("year_group", tuteeProfile.year_group);
+      setValue("full_name", tuteeProfile.full_name);
+      setValue("contact_info", tuteeProfile.contact_info || []);
+      setValue("subjects_receiving_help_in", tuteeProfile.subjects_receiving_help_in || []);
     }
-  }, [tuteeProfile, formMethods]);
+  }, [tuteeProfile, setValue]); // Re-run when tuteeProfile data is available
 
   const onSave = async (data: TuteeProfile) => {
   try {
-    // Construct the profile data to be sent to the mutation
-    const updatedProfile = {
-      full_name: data.full_name,
-      year_group: data.year_group,
-      languages: data.languages,
-      contact_info: data.contact_info,
-      subjects_receiving_help_in: data.subjects_receiving_help_in
-    };
 
      // Log the updated profile to the console
-      console.log("Updated Profile:", updatedProfile);
-
-      // Log each field individually
-      console.log("Full Name:", updatedProfile.full_name);
-      console.log("Year Group:", updatedProfile.year_group);
-      console.log("Languages:", updatedProfile.languages);
-      console.log("Contact Info:", updatedProfile.contact_info);
+      console.log("Updated Profile:", data);
 
 
     // Call the mutation with the required parameters
     editProfileMutation.mutate(
-      { id: tuteeId, profile: updatedProfile },
+      { id: userId, profile: data },
       {
         onSuccess: () => {
           setEditMode(false); // Switch to view mode after successful save
@@ -95,6 +80,13 @@ export default function TuteeProfilePage() {
     console.error("Error saving profile:", error);
     toast.error("Something went wrong. Please try again.");
   }
+
+
+  
+
+
+
+
 };
   return (
     <FormProvider {...formMethods}>
@@ -224,8 +216,9 @@ export default function TuteeProfilePage() {
                       <strong>Subjects tutoring in:</strong>{" "}
                     </Typography>
 
+
                     {tuteeProfile?.subjects_receiving_help_in?.length ? (
-                        <>
+                    <>  
                           {tuteeProfile?.subjects_receiving_help_in.map((subject, index) => (
                             <SubjectChip key={index} Subject={subject} />
                           ))}
@@ -245,6 +238,7 @@ export default function TuteeProfilePage() {
                     <Typography variant="body1">
                       <strong>Communication:</strong>{" "}
                     </Typography>
+
 
                     {tuteeProfile?.contact_info.length ? (
                       tuteeProfile.contact_info.map((contact, index) => (

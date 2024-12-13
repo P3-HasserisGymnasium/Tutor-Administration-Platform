@@ -28,8 +28,8 @@ import project.backend.repository.AccountRepository;
 import project.backend.repository.AdministratorRepository;
 import project.backend.repository.RoleRepository;
 import project.backend.repository.StudentRepository;
-import project.backend.repository.TutorRepository;
 import project.backend.repository.TuteeRepository;
+import project.backend.repository.TutorRepository;
 
 @Service
 public class RoleService {
@@ -397,13 +397,11 @@ public class RoleService {
         student.setLanguages(profileRequest.languages);
 
 
-        // Check if contact_info is empty before modifying
-        if (profileRequest.contact_info != null && !profileRequest.contact_info.isEmpty()) {
-            student.setContactInfo(profileRequest.contact_info);
-        } else {
-            student.setContactInfo(student.getContactInfo()); // Keeps existing contact info
-        }
+                // Get the current contact info
+        List<StudentCommunicatioInfo> currentContactInfo = student.getContactInfo();
 
+        // Add the new contact info without clearing
+        currentContactInfo.addAll(profileRequest.contact_info);
 
         try {
             saveStudent(student);
