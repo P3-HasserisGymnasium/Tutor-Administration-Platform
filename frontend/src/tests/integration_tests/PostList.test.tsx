@@ -21,7 +21,7 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => (
 beforeEach(() => {
   vi.doMock("@mui/material/styles", () => ({
     useTheme: () => tutorTheme,
-    ThemeProvider: ({ children }) => children,
+    ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
   }));
   vi.doMock("~/api/authentication/useAuth", () => ({
     useAuth: () => ({
@@ -30,7 +30,7 @@ beforeEach(() => {
   }));
   vi.mock("~/api/services/post-service", () => ({
     usePostService: () => ({
-      useGetPosts: (filters: any) => {
+      useGetPosts: () => {
         const data = [
           {
             id: 1,
