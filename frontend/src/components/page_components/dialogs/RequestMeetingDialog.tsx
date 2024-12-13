@@ -40,8 +40,8 @@ export default function RequestMeetingDialog({ open, setOpen, timeAvailabilities
     }
 
     const values = getValues();
-    values.start_timestamp = startTime.format("YYYY-MM-DDTHH:mm:ss");
-    values.end_timestamp = endTime.format("YYYY-MM-DDTHH:mm:ss");
+    values.start_date = startTime.format("YYYY-MM-DDTHH:mm:ss");
+    values.end_date = endTime.format("YYYY-MM-DDTHH:mm:ss");
     requestMeeting.mutate(values);
   };
 
@@ -89,7 +89,7 @@ export default function RequestMeetingDialog({ open, setOpen, timeAvailabilities
             </Typography>
             <Box>
               <DateTimePicker
-                {...register("start_timestamp")}
+                {...register("start_date")}
                 label="Start time"
                 value={startTime}
                 ampm={false}
@@ -99,7 +99,7 @@ export default function RequestMeetingDialog({ open, setOpen, timeAvailabilities
                 }}
               />
               <DateTimePicker
-                {...register("end_timestamp")}
+                {...register("end_date")}
                 label="End time"
                 ampm={false}
                 value={endTime}

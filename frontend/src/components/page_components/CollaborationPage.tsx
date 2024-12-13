@@ -15,8 +15,8 @@ import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useMeetingService } from "~/api/services/meeting-service";
 import { MeetingType } from "~/types/entity_types";
 import CustomButton from "../content_components/CustomButton";
-import CommunicationChip from "../content_components/CommunicationChip";
 import dayjs from "dayjs";
+import { CommunicationChipRead } from "../content_components/CommunicationChip";
 
 export default function CollaborationPage() {
   const theme = useCurrentTheme();
@@ -177,7 +177,7 @@ export default function CollaborationPage() {
           <Box sx={{ display: "flex", gap: 2, flexDirection: "column", alignItems: "flex-start", ml: 2 }}>
             {partnerInformation?.contact_info?.map((contact) => {
               console.log("contact", contact);
-              return <CommunicationChip contactInfo={{ username: contact.username, communication_medium: contact.communication_medium }} />;
+              return <CommunicationChipRead contactInfo={{ username: contact.username, communication_medium: contact.communication_medium }} />;
             })}
           </Box>
           <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}></Box>

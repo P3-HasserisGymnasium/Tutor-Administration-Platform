@@ -23,7 +23,7 @@ export default function MeetingsList() {
     <Paper elevation={3} sx={{ padding: 2, borderRadius: 2 }}>
       {acceptedMeetings?.map((meeting) => (
         <Box
-          key={meeting.id + meeting.end_timestamp}
+          key={meeting.id + meeting.end_date}
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -42,18 +42,18 @@ export default function MeetingsList() {
                 color: meeting.tutee_user_id == userState.id ? theme.customColors.darkTuteeColor : theme.customColors.darkTutorColor,
               }}
             >
-              {new Date(meeting.end_timestamp).toLocaleTimeString([], {
+              {new Date(meeting.end_date).toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
               })}{" "}
               -{" "}
-              {new Date(meeting.start_timestamp).toLocaleTimeString([], {
+              {new Date(meeting.start_date).toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
               })}
             </Typography>
             <Typography variant="body2">
-              {new Date(meeting.start_timestamp).toLocaleDateString([], {
+              {new Date(meeting.start_date).toLocaleDateString([], {
                 day: "numeric",
                 month: "short",
                 year: "numeric",

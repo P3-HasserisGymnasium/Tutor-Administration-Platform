@@ -229,8 +229,8 @@ public class MeetingController {
         Meeting newMeeting = new Meeting();
         newMeeting.setCollaboration(collaboration);
         newMeeting.setMeetingState(MeetingEnum.PENDING);
-        newMeeting.setStartTimestamp(body.start_timestamp);
-        newMeeting.setEndTimestamp(body.end_timestamp);
+        newMeeting.setStartTimestamp(body.start_date);
+        newMeeting.setEndTimestamp(body.end_date);
         newMeeting.setMeetingDescription(body.meeting_description);
 
         try {
