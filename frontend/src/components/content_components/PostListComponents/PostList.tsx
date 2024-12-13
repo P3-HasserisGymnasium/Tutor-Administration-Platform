@@ -14,7 +14,7 @@ export default function PostList({ filters, loading }: { filters: { duration: nu
       </Box>
     );
   }
-
+  console.log("posts", posts);
   if (isError) {
     return (
       <Typography variant="h6" color="red">

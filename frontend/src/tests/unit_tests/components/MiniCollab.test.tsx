@@ -4,9 +4,13 @@ import MiniCollab from "~/components/content_components/MiniCollab";
 import { CollaborationState, Subject } from "~/types/data_types";
 import { CollaborationType } from "~/types/entity_types";
 import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from "@mui/material";
+import tutorTheme from "~/themes/tutorTheme";
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</BrowserRouter>
+  <ThemeProvider theme={{ tutorTheme }}>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</BrowserRouter>
+  </ThemeProvider>
 );
 
 const mockCollaboration: CollaborationType = {
