@@ -137,7 +137,7 @@ public class NotificationService {
         } else if (receiverType == EntityType.TUTOR) {
             receiver_name = roleService.getTutorById(receiverId).getStudent().getFullName();
         } else if (receiverType == EntityType.ADMIN) {
-            receiver_name = roleService.getAdministratorById(receiverId).getFullName();
+            receiver_name = "Administrator";
         }
 
         return receiver_name;

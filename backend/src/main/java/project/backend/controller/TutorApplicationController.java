@@ -15,6 +15,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.tutor_application_controller.TutorApplicationCreateBody;
+import project.backend.model.EntityType;
+import project.backend.model.TutorApplication;
+import project.backend.service.NotificationService;
 import project.backend.service.TutorApplicationService;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -24,8 +27,11 @@ public class TutorApplicationController {
     
     final TutorApplicationService tutorApplicationService;
 
-    public TutorApplicationController(TutorApplicationService tutorApplicationService) {
+    final NotificationService notificationService;
+
+    public TutorApplicationController(TutorApplicationService tutorApplicationService, NotificationService notificationService) {
         this.tutorApplicationService = tutorApplicationService;
+        this.notificationService = notificationService;
     }
 
     @GetMapping("/{id}")
@@ -58,8 +64,15 @@ public class TutorApplicationController {
         if (!authenticatedUser.isTutee()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to create a tutor application");
         }
-        
-        return ResponseEntity.status(HttpStatus.OK).body(tutorApplicationService.createTutorApplication(body));
+
+        try {
+            TutorApplication application = tutorApplicationService.createTutorApplication(body);
+            notificationService.sendNotification(authenticatedUser.getTuteeId(), EntityType.TUTEE, 0L, EntityType.ADMIN, application.getId(), EntityType.POST);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body("Tutor application created");
     }
 
     @DeleteMapping("/{id}")

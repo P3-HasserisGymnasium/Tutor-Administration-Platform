@@ -136,7 +136,7 @@ export default function TutorPage() {
               border: "white 1px",
             }}
           >
-            {view === "calender" ? <MiniCalendar meetings={meetings as MeetingType[]} /> : <MeetingsList />}
+            {view === "calender" ? <MiniCalendar meetings={meetings as MeetingType[]} /> : <MeetingsList meetings={meetings as MeetingType[]} />}
           </Box>
         </Box>
         <Box

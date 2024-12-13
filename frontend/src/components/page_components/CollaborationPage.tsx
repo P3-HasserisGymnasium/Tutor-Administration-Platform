@@ -145,7 +145,7 @@ export default function CollaborationPage() {
               border: "white 1px",
             }}
           >
-            {view === "calender" ? <MiniCalendar meetings={meetings as MeetingType[]} /> : <MeetingsList />}
+            {view === "calender" ? <MiniCalendar meetings={meetings as MeetingType[]} /> : <MeetingsList meetings={meetings as MeetingType[]} />}
           </Box>
         </Box>
 

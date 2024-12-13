@@ -1,27 +1,22 @@
 //import { MeetingObjectType } from "~/types/entity_types";
-import { useMeetingService } from "~/api/services/meeting-service";
 //import React from "react";
-import { Box, Typography, Paper, CircularProgress, Divider } from "@mui/material";
+import { Box, Typography, Paper, Divider } from "@mui/material";
 
-import { MeetingState } from "~/types/data_types";
 import { useAuth } from "~/api/authentication/useAuth";
 import { useTheme, Theme } from "@mui/material/styles";
+import { MeetingType } from "~/types/entity_types";
 
-export default function MeetingsList() {
+type MeetingsListProps = {
+  meetings: MeetingType[];
+};
+
+export default function MeetingsList({ meetings }: MeetingsListProps) {
   const theme = useTheme<Theme>();
-  const { data: meetings, isLoading, error } = useMeetingService().useGetMeetings();
   const { userState } = useAuth();
-  console.log("meetings", meetings);
-  const acceptedMeetings = meetings?.filter((meeting) => {
-    return meeting.meeting_state === MeetingState.Enum.ACCEPTED;
-  });
-  if (error) return <Typography color="error">Failed to load meetings.</Typography>;
-  if (acceptedMeetings?.length === 0) return <Typography>No accepted meetings available.</Typography>;
-  if (isLoading) return <CircularProgress />;
 
   return (
-    <Paper elevation={3} sx={{ padding: 2, borderRadius: 2 }}>
-      {acceptedMeetings?.map((meeting) => (
+    <Paper elevation={0} sx={{ padding: 2, borderRadius: 2, overflow: "auto", width: "100%", height: "90%" }}>
+      {meetings?.map((meeting) => (
         <Box
           key={meeting.id + meeting.end_timestamp}
           sx={{
@@ -29,8 +24,9 @@ export default function MeetingsList() {
             flexDirection: "row",
             backgroundColor: "#f5f5f5",
             padding: 1,
+            width: "90%",
             borderRadius: 2,
-            marginBottom: 2,
+            marginBottom: 4,
             borderLeft: `5px solid ${meeting.tutee_user_id == userState.id ? theme.customColors.tuteeColor : theme.customColors.tutorColor}`,
           }}
         >
@@ -74,7 +70,7 @@ export default function MeetingsList() {
                 color: `${meeting.tutee_user_id == userState.id ? theme.customColors.darkTuteeColor : theme.customColors.darkTutorColor} !important`,
               }}
               variant="h6"
-            >{`Meeting with ${meeting.tutee_user_id == userState.id ? "tutor" + meeting.tutor_name : "tutee" + meeting.tutee_name}`}</Typography>
+            >{`Meeting with ${meeting.tutee_user_id == userState.id ? "tutor " + meeting.tutor_name : "tutee " + meeting.tutee_name}`}</Typography>
           </Box>
         </Box>
       ))}

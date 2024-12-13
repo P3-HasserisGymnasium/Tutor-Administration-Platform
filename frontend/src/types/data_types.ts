@@ -56,20 +56,16 @@ export const zodContactInfo = z.object({
 });
 
 export const zodTutorApplicationSchema = z.object({
+  user_id: zodUUID,
   subjects: z.array(Subject),
   time_availability: z.array(zodTimeAvailabilitySchema),
-  application: z.string(),
+  tutor_profile_description: z.string(),
 });
 export const zodPostListFilterSchema = z.object({
   duration: z.array(z.number()),
   subjects: z.array(Subject),
 });
-export const zodPostCreationSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-  subject: Subject,
-  duration: z.union([z.array(z.number()), z.undefined()]),
-});
+
 export const PostState = z.enum(["VISIBLE", "INVISIBLE"]);
 export const MeetingState = z.enum(["PENDING", "ACCEPTED", "REJECTED", "TERMINATED"] as const);
 export const NotificationContext = z.enum([
@@ -99,7 +95,13 @@ export const CollaborationState = z.enum([
   "TERMINATED",
   "ESTABLISHED",
 ] as const);
-
+export const zodPostCreationSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  subject: Subject,
+  state: PostState.optional(),
+  duration: z.union([z.array(z.number()), z.undefined()]),
+});
 // Defining types for forms and zod schemas
 export const TimeSlot = zodTimeSlotSchema;
 export type tutorListFilterType = z.infer<typeof zodTutorListFilterSchema>;

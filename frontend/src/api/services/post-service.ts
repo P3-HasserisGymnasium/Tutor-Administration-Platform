@@ -4,11 +4,8 @@ import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
 import { PostType } from "~/types/entity_types";
 import { PostCreationType, PostListFilterType } from "~/types/data_types";
-import { useNavigate } from "react-router-dom";
 
 export const usePostService = () => {
-	const navigate = useNavigate();
-
 	const useGetPosts = (filters?: PostListFilterType) => {
 		return useQuery({
 			queryKey: ["getPosts", filters],
@@ -49,8 +46,7 @@ export const usePostService = () => {
 				toast.error(e?.response?.data?.detail);
 			},
 			onSuccess: () => {
-				toast.success("Post created");
-				navigate("/tutee");
+
 			},
 		});
 	};

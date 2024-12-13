@@ -52,7 +52,7 @@ public class TutorApplicationService {
         
         TutorApplication tutorApplication = new TutorApplication();
 
-        Student student = roleService.getStudentById(applicationBody.student_id);
+        Student student = roleService.getStudentById(applicationBody.user_id);
         tutorApplication.setStudent(student);
         
         List<TutorApplication> applications = student.getTutorApplications();
