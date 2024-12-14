@@ -23,74 +23,77 @@ import TuteePage from "./components/page_components/tutee/TuteePage";
 import NotificationsList from "./components/content_components/NotificationsListe";
 
 export default function AuthenticatedApp() {
-  const { isMobile, hasScrollbar } = useBreakpoints();
-  const widthRightOffset = hasScrollbar ? "16px" : "0px";
+	const { isMobile, hasScrollbar } = useBreakpoints();
+	const widthRightOffset = hasScrollbar ? "16px" : "0px";
 
-  const { userState } = useAuth();
+	const { userState } = useAuth();
 
-  const isTutee = userState.role?.includes(Role.Enum.Tutee);
-  const isTutor = userState.role?.includes(Role.Enum.Tutor);
-  const rolePrefix = useRolePrefix();
-  return (
-    <Box
-      sx={{
-        height: isMobile ? "auto" : "100vh",
-        width: isMobile ? `calc(100vw - ${widthRightOffset})` : "100vw",
-      }}
-    >
-      <Navbar />
-      <Box sx={{ height: "calc(100% - 5em)", width: "100%" }}>
-        <Routes>
-          {/* Common routes */}
-          <Route path="/login" element={<HomePage />} />
-          <Route path="/notifications" element={<NotificationsList />} />
-          <Route
-            path="/"
-            element={
-              (isTutee && isTutor && <HomePage />) ||
-              (isTutee && !isTutor && <Navigate to="/tutee" />) ||
-              (!isTutee && isTutor && <Navigate to="/tutor" />)
-            }
-          />
+	const isTutee = userState.role?.includes(Role.Enum.Tutee);
+	const isTutor = userState.role?.includes(Role.Enum.Tutor);
+	const rolePrefix = useRolePrefix();
+	console.log("rolePrefix", rolePrefix);
+	console.log("isTutee", isTutee);
+	console.log("isTutor", isTutor);
+	return (
+		<Box
+			sx={{
+				height: isMobile ? "auto" : "100vh",
+				width: isMobile ? `calc(100vw - ${widthRightOffset})` : "100vw",
+			}}
+		>
+			<Navbar />
+			<Box sx={{ height: "calc(100% - 5em)", width: "100%" }}>
+				<Routes>
+					{/* Common routes */}
+					<Route path="/login" element={<HomePage />} />
+					<Route path="/notifications" element={<NotificationsList />} />
+					<Route
+						path="/"
+						element={
+							(isTutee && isTutor && <HomePage />) ||
+							(isTutee && !isTutor && <Navigate to="/tutee" />) ||
+							(!isTutee && isTutor && <Navigate to="/tutor" />)
+						}
+					/>
 
-          {/* Tutee routes */}
-          {isTutee ? (
-            <>
-              <Route path="/tutor/*" element={<Forbidden />} />
-              <Route path="/tutee/*">
-                <Route path="" element={<TuteePage />} />
-                <Route path="profile" element={<TuteeProfilePage />} />
-                <Route path="notifications" element={<NotificationsList />} />
-                <Route path="create-post" element={<CreatePostPage />} />
-                <Route path="request-admin" element={<RequestAdminPage />} />
-                <Route path="tutor-list" element={<TutorListPage />} />
-                {rolePrefix == "/tutee" && <Route path="tutor-application" element={<TutorApplicationPage />} />}
-                <Route path="collaboration/:org_id:" element={<CollaborationPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Route>
-            </>
-          ) : null}
+					{/* Tutee routes */}
+					{isTutee ? (
+						<>
+							<Route path="/tutor/*" element={<Forbidden />} />
+							<Route path="/tutee/*">
+								<Route path="" element={<TuteePage />} />
+								<Route path="profile" element={<TuteeProfilePage />} />
+								<Route path="notifications" element={<NotificationsList />} />
+								<Route path="create-post" element={<CreatePostPage />} />
+								<Route path="request-admin" element={<RequestAdminPage />} />
+								<Route path="tutor-list" element={<TutorListPage />} />
+								{rolePrefix == "/tutee" && <Route path="tutor-application" element={<TutorApplicationPage />} />}
+								<Route path="collaboration/:collabId" element={<CollaborationPage />} />
+								<Route path="*" element={<NotFound />} />
+							</Route>
+						</>
+					) : null}
 
-          {/* Tutor routes */}
-          {isTutor ? (
-            <>
-              <Route path="/tutee/*" element={<Forbidden />} />
-              <Route path="/tutor/*">
-                <Route path="" element={<TutorPage />} />
-                <Route path="posts-list" element={<PostsListPage />} />
-                <Route path="notifications" element={<NotificationsList />} />
-                {rolePrefix == "/tutor" && <Route path="tutor-application" element={<TutorApplicationPage />} />}
-                <Route path="profile" element={<TutorProfilePage />} />
-                <Route path="collaboration/:org_id" element={<CollaborationPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Route>
-            </>
-          ) : null}
+					{/* Tutor routes */}
+					{isTutor ? (
+						<>
+							<Route path="/tutee/*" element={<Forbidden />} />
+							<Route path="/tutor/*">
+								<Route path="" element={<TutorPage />} />
+								<Route path="posts-list" element={<PostsListPage />} />
+								<Route path="notifications" element={<NotificationsList />} />
+								{rolePrefix == "/tutor" && <Route path="tutor-application" element={<TutorApplicationPage />} />}
+								<Route path="profile" element={<TutorProfilePage />} />
+								<Route path="collaboration/:collabId" element={<CollaborationPage />} />
+								<Route path="*" element={<NotFound />} />
+							</Route>
+						</>
+					) : null}
 
-          {/* Catch-all for invalid roles */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Box>
-    </Box>
-  );
+					{/* Catch-all for invalid roles */}
+					<Route path="*" element={<NotFound />} />
+				</Routes>
+			</Box>
+		</Box>
+	);
 }

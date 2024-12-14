@@ -199,7 +199,10 @@ public class NotificationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notification not found");
         }
 
-        if (notification.getReceiverId() != authenticatedUser.getUserId() && !authenticatedUser.isAdministrator()) {
+        if ((notification.getReceiverId() != authenticatedUser.getUserId() && 
+            (authenticatedUser.getTuteeId() == null || notification.getReceiverId() != authenticatedUser.getTuteeId()) && 
+            (authenticatedUser.getTutorId() == null || notification.getReceiverId() != authenticatedUser.getTutorId())) && 
+            !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to change the state of this notification");
         }
 

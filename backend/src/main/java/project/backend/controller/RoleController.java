@@ -36,8 +36,9 @@ public class RoleController {
     @GetMapping("/{id}/{role}")
     public ResponseEntity<?> getProfile(@PathVariable long id, @PathVariable RoleEnum role, HttpServletRequest request) {
         //AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
-
+        System.out.println("Role: " + role);
         if (role == RoleEnum.Tutor) {
+            System.out.println("Tutor");
             try {
                 TutorProfileResponse response = roleService.getTutorProfile(id);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
