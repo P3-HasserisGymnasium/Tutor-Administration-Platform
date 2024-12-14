@@ -1,11 +1,12 @@
 Integration tests: 
     components
-          PostsListPage -> PostList -> Postcard
-          TutorListPage -> TutorList -> Tutorcard
-          SetSubject -> SubjectChip
-          TuteePage -> MiniCollabList | MiniPostList | Minicalender
-          CustomAutocomplete -> SubjectChip
-
+          PostsListPage -> PostList -> Postcard****
+          TutorListPage -> TutorList -> Tutorcard****
+          SetSubject -> SubjectChip****
+          TuteePage -> MiniCollabList | MiniPostList | Minicalender****
+          Register sider 
+          api sider 
+          profile page 
     functions
           usePostService -> useCreatePost | useGetTuteePosts
           useCollaborationService -> useGetCollaborationsWithTutee -> useRequestCollaborationViaTutor

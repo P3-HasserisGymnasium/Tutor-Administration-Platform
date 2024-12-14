@@ -1,5 +1,5 @@
 import MediumShortOnShortBoxLayout from "components/layout_components/MediumShortOnShortBoxLayout";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip, ThemeProvider } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 // import tutorTheme from "~/themes/tutorTheme";
@@ -23,246 +23,251 @@ import { useNavigate } from "react-router-dom";
 import { useMeetingService } from "~/api/services/meeting-service";
 
 const post: PostType = {
-  id: 1,
-  title: "hjælp mig",
-  description: "iosjdsiaojdaojdasdiasdjsaod jsadj iasojdasd",
-  subject: Subject.Enum.Danish,
-  duration: [2, 8],
-  state: PostState.Enum.VISIBLE,
+	id: 1,
+	title: "hjælp mig",
+	description: "iosjdsiaojdaojdasdiasdjsaod jsadj iasojdasd",
+	subject: Subject.Enum.Danish,
+	duration: [2, 8],
+	state: PostState.Enum.VISIBLE,
 };
 export default function TuteePage() {
-  const navigate = useNavigate();
-  const { useGetTuteePosts } = usePostService();
-  const { useGetCollaborationsWithTutee } = useCollaborationService();
-  const theme = useCurrentTheme();
-  const { isMobile } = useBreakpoints();
-  const [view, setView] = useState<"list" | "calender">("calender");
-  const [showCollabDialog, setShowCollabDialog] = useState(false);
-  const [showPostDialog, setShowPostDialog] = useState(false);
-  const [showEditPostDialog, setShowEditPostDialog] = useState(false);
-  const [showCreateCollabDialog, setshowCreateCollabDialog] = useState(false);
-  const { userState } = useAuth();
-  const { data: posts, isLoading: postsLoading, isError: postsError } = useGetTuteePosts();
-  const { data: collaborations, isLoading: collabLoading, isError: collabError } = useGetCollaborationsWithTutee(userState?.id || null);
-  const { data: meetings } = useMeetingService().useGetMeetings();
+	const navigate = useNavigate();
+	const { useGetTuteePosts } = usePostService();
+	const { useGetCollaborationsWithTutee } = useCollaborationService();
+	const theme = useCurrentTheme();
+	const { isMobile } = useBreakpoints();
+	const [view, setView] = React.useState<"list" | "calender">("calender");
+	const [showCollabDialog, setShowCollabDialog] = React.useState(false);
+	const [showPostDialog, setShowPostDialog] = React.useState(false);
+	const [showEditPostDialog, setShowEditPostDialog] = React.useState(false);
+	const [showCreateCollabDialog, setshowCreateCollabDialog] = React.useState(false);
+	const { userState } = useAuth();
+	const { data: posts, isLoading: postsLoading, isError: postsError } = useGetTuteePosts();
+	const { data: collaborations, isLoading: collabLoading, isError: collabError } = useGetCollaborationsWithTutee(userState?.id || null);
+	const { data: meetings } = useMeetingService().useGetMeetings();
+	console.log("meetings", meetings);
+	const filteredMeetings = meetings?.filter((meeting) => {
+		return meeting.tutee_user_id === userState.id;
+	});
 
-  const filteredMeetings = meetings?.filter((meeting) => {
-    return meeting.tutee_user_id === userState.id;
-  });
+	const filteredCollaborations = collaborations?.filter((collab) => {
+		console.log("collab", collab);
+		return collab.state === CollaborationState.Enum.ESTABLISHED;
+	});
 
-  const filteredCollaborations = collaborations?.filter((collab) => {
-    console.log("collab", collab);
-    return collab.state === CollaborationState.Enum.ESTABLISHED;
-  });
+	console.log("showCollabDialog", showCollabDialog);
+	console.log("showPostDialog", showPostDialog);
+	console.log("showEditPostDialog", showEditPostDialog);
+	console.log("showCreateCollabDialog", showCreateCollabDialog);
+	console.log("view", view);
+	return (
+		<ThemeProvider theme={theme}>
+			<CreateCollaborationDialog open={showCreateCollabDialog} setOpen={setshowCreateCollabDialog} />
+			<ViewCollaborationsDialog
+				open={showCollabDialog}
+				setOpen={setShowCollabDialog}
+				collaborations={filteredCollaborations}
+				isLoading={collabLoading}
+			/>
+			<EditPostDialog open={showEditPostDialog} setOpen={setShowEditPostDialog} post={post} />
+			<ViewPostsDialog open={showPostDialog} setOpen={setShowPostDialog} posts={posts} isLoading={postsLoading} />
+			<MediumShortOnShortBoxLayout>
+				<Box
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						border: "1px solid #white",
+						borderRadius: "8px",
+						overflow: "hidden",
+						height: "95%",
+						p: isMobile ? 1 : 2,
+						position: "relative",
+					}}
+				>
+					{/* Header with Title and Buttons */}
+					<Box
+						sx={{
+							display: "flex",
+							justifyContent: "space-between",
+							gap: isMobile ? 2 : 17,
+							width: "100%",
+							height: "5%",
+							minHeight: "40px",
+						}}
+					>
+						<Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1, width: 1 / 3 }}>
+							{view === "calender" ? "Calendar" : "Meeting List"}{" "}
+						</Typography>
 
-  return (
-    <ThemeProvider theme={theme}>
-      <CreateCollaborationDialog open={showCreateCollabDialog} setOpen={setshowCreateCollabDialog} />
-      <ViewCollaborationsDialog
-        open={showCollabDialog}
-        setOpen={setShowCollabDialog}
-        collaborations={filteredCollaborations}
-        isLoading={collabLoading}
-      />
-      <EditPostDialog open={showEditPostDialog} setOpen={setShowEditPostDialog} post={post} />
-      <ViewPostsDialog open={showPostDialog} setOpen={setShowPostDialog} posts={posts} isLoading={postsLoading} />
-      <MediumShortOnShortBoxLayout>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            border: "1px solid #white",
-            borderRadius: "8px",
-            overflow: "hidden",
-            height: "95%",
-            p: isMobile ? 1 : 2,
-            position: "relative",
-          }}
-        >
-          {/* Header with Title and Buttons */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              gap: isMobile ? 2 : 17,
-              width: "100%",
-              height: "5%",
-              minHeight: "40px",
-            }}
-          >
-            <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1, width: 1 / 3 }}>
-              {view === "calender" ? "Calendar" : "Meeting List"}{" "}
-            </Typography>
+						{/* Button group for toggling between calendar and meeting */}
+						<ButtonGroup sx={{ width: 1.2 / 3, minWidth: "267px" }} variant="outlined" aria-label="outlined primary button group">
+							<Button
+								sx={{
+									width: "160px",
+									color: theme.palette.text.primary, // Dynamically use the theme's text color
+									backgroundColor: view === "calender" ? theme.palette.primary.main : theme.palette.background.paper,
+								}}
+								onClick={() => setView("calender")}
+							>
+								Show Calendar
+							</Button>
 
-            {/* Button group for toggling between calendar and meeting */}
-            <ButtonGroup sx={{ width: 1.2 / 3, minWidth: "267px" }} variant="outlined" aria-label="outlined primary button group">
-              <Button
-                sx={{
-                  width: "160px",
-                  color: theme.palette.text.primary, // Dynamically use the theme's text color
-                  backgroundColor: view === "calender" ? theme.palette.primary.main : theme.palette.background.paper,
-                }}
-                onClick={() => setView("calender")}
-              >
-                Show Calendar
-              </Button>
+							<Button
+								sx={{
+									width: "160px",
 
-              <Button
-                sx={{
-                  width: "160px",
+									color: theme.palette.text.primary,
+									backgroundColor: view === "list" ? theme.palette.primary.main : theme.palette.background.paper,
+								}}
+								onClick={() => setView("list")}
+							>
+								Show Meetings
+							</Button>
+						</ButtonGroup>
+						<Box sx={{ width: 1 / 3 }}>
+							<Tooltip
+								title="Your schedule showcases all of your meetings across all your collaborations, as a tutee. Click on a meeting to go to the specific collaboration."
+								arrow
+							>
+								<IconButton
+									sx={{
+										position: "absolute",
+										top: 8,
+										right: 8,
+										alignItems: "right",
+									}}
+									aria-label="info"
+								>
+									<InfoIcon />
+								</IconButton>
+							</Tooltip>
+						</Box>
+					</Box>
+					<Box
+						sx={{
+							height: "100%",
+							width: "100%",
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "flex-end",
+							border: "white 1px",
+						}}
+					>
+						{view === "calender" ? (
+							<MiniCalendar meetings={filteredMeetings as MeetingType[]} />
+						) : (
+							<MeetingsList meetings={meetings as MeetingType[]} />
+						)}
+					</Box>
+				</Box>
 
-                  color: theme.palette.text.primary,
-                  backgroundColor: view === "list" ? theme.palette.primary.main : theme.palette.background.paper,
-                }}
-                onClick={() => setView("list")}
-              >
-                Show Meetings
-              </Button>
-            </ButtonGroup>
-            <Box sx={{ width: 1 / 3 }}>
-              <Tooltip
-                title="Your schedule showcases all of your meetings across all your collaborations, as a tutee. Click on a meeting to go to the specific collaboration."
-                arrow
-              >
-                <IconButton
-                  sx={{
-                    position: "absolute",
-                    top: 8,
-                    right: 8,
-                    alignItems: "right",
-                  }}
-                  aria-label="info"
-                >
-                  <InfoIcon />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              height: "100%",
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "flex-end",
-              border: "white 1px",
-            }}
-          >
-            {view === "calender" ? (
-              <MiniCalendar meetings={filteredMeetings as MeetingType[]} />
-            ) : (
-              <MeetingsList meetings={meetings as MeetingType[]} />
-            )}
-          </Box>
-        </Box>
+				<Box
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						border: "1px solid #white",
+						borderRadius: "8px",
+						justifyContent: "space-between",
+						height: "100%",
+						minHeight: "310px",
+					}}
+				>
+					<Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, ml: 2, mt: 2, mr: 2 }}>
+						<Box sx={{ display: "flex", alignItems: "flex-end" }}>
+							<Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>
+								Your active posts
+							</Typography>
+							<Typography variant="body2" sx={{ color: "#555", marginBottom: 1.3, ml: 1 }}>
+								Click on a post to view details
+							</Typography>
+						</Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            border: "1px solid #white",
-            borderRadius: "8px",
-            justifyContent: "space-between",
-            height: "100%",
-            minHeight: "310px",
-          }}
-        >
-          <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, ml: 2, mt: 2, mr: 2 }}>
-            <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-              <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>
-                Your active posts
-              </Typography>
-              <Typography variant="body2" sx={{ color: "#555", marginBottom: 1.3, ml: 1 }}>
-                Click on a post to view details
-              </Typography>
-            </Box>
+						<Tooltip
+							title="Posts are visible to tutors. Tutors can request to help you, in which case you can accept their help. You can create a new post, or edit and delete an existing post."
+							arrow
+						>
+							<IconButton
+								sx={{
+									alignItems: "right",
+								}}
+								aria-label="info"
+							>
+								<InfoIcon />
+							</IconButton>
+						</Tooltip>
+					</Box>
+					<Box sx={{ display: "flex", gap: 2 }}>
+						<MiniPostList posts={posts} isLoading={postsLoading} isError={postsError} />
+					</Box>
+					<Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
+						<CustomButton
+							style={{ visibility: (posts?.length ?? 0) > 3 ? "visible" : "hidden" }}
+							onClick={() => setShowPostDialog(true)}
+							variant="contained"
+							color="primary"
+							sx={{ fontSize: "18px" }}
+						>
+							View all
+						</CustomButton>
+						<CustomButton onClick={() => navigate("/tutee/create-post")} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+							Create a post
+						</CustomButton>
+					</Box>
+				</Box>
 
-            <Tooltip
-              title="Posts are visible to tutors. Tutors can request to help you, in which case you can accept their help. You can create a new post, or edit and delete an existing post."
-              arrow
-            >
-              <IconButton
-                sx={{
-                  alignItems: "right",
-                }}
-                aria-label="info"
-              >
-                <InfoIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <MiniPostList posts={posts} isLoading={postsLoading} isError={postsError} />
-          </Box>
-          <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
-            <CustomButton
-              style={{ visibility: (posts?.length ?? 0) > 3 ? "visible" : "hidden" }}
-              onClick={() => setShowPostDialog(true)}
-              variant="contained"
-              color="primary"
-              sx={{ fontSize: "18px" }}
-            >
-              View all
-            </CustomButton>
-            <CustomButton onClick={() => navigate("/tutee/create-post")} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
-              Create a post
-            </CustomButton>
-          </Box>
-        </Box>
+				<Box
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						border: "1px solid #white",
+						borderRadius: "8px",
+						justifyContent: "space-between",
+						height: "100%",
+					}}
+				>
+					<Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, ml: 2, mt: 2, mr: 2 }}>
+						<Box sx={{ display: "flex", alignItems: "flex-end" }}>
+							<Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>
+								Your Active Collaborations
+							</Typography>
+							<Typography variant="body2" sx={{ color: "#555", marginBottom: 1.3, ml: 1 }}>
+								Click to view collaboration page
+							</Typography>
+						</Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            border: "1px solid #white",
-            borderRadius: "8px",
-            justifyContent: "space-between",
-            height: "100%",
-          }}
-        >
-          <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, ml: 2, mt: 2, mr: 2 }}>
-            <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-              <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>
-                Your Active Collaborations
-              </Typography>
-              <Typography variant="body2" sx={{ color: "#555", marginBottom: 1.3, ml: 1 }}>
-                Click to view collaboration page
-              </Typography>
-            </Box>
-
-            <Tooltip
-              title="Each collaboration with a tutor has a specific collaboration page. To view this page, simply click on one of the collaborations. When creating a collaboration, you can either find a tutor and request a collaboration with them, create a post which tutors can see, or request help from the administrator to find a fitting tutor."
-              arrow
-            >
-              <IconButton
-                sx={{
-                  alignItems: "right",
-                }}
-                aria-label="info"
-              >
-                <InfoIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <MiniCollabList collaborations={filteredCollaborations} isLoading={collabLoading} isError={collabError} />
-          </Box>
-          <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
-            <CustomButton
-              style={{ visibility: (filteredCollaborations?.length ?? 0) > 3 ? "visible" : "hidden" }}
-              onClick={() => setShowCollabDialog(true)}
-              variant="contained"
-              color="primary"
-              sx={{ fontSize: "18px" }}
-            >
-              View more
-            </CustomButton>
-            <CustomButton onClick={() => setshowCreateCollabDialog(true)} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
-              Create Collaboration
-            </CustomButton>
-          </Box>
-        </Box>
-      </MediumShortOnShortBoxLayout>
-    </ThemeProvider>
-  );
+						<Tooltip
+							title="Each collaboration with a tutor has a specific collaboration page. To view this page, simply click on one of the collaborations. When creating a collaboration, you can either find a tutor and request a collaboration with them, create a post which tutors can see, or request help from the administrator to find a fitting tutor."
+							arrow
+						>
+							<IconButton
+								sx={{
+									alignItems: "right",
+								}}
+								aria-label="info"
+							>
+								<InfoIcon />
+							</IconButton>
+						</Tooltip>
+					</Box>
+					<Box sx={{ display: "flex", gap: 2 }}>
+						<MiniCollabList collaborations={filteredCollaborations} isLoading={collabLoading} isError={collabError} />
+					</Box>
+					<Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}>
+						<CustomButton
+							style={{ visibility: (filteredCollaborations?.length ?? 0) > 3 ? "visible" : "hidden" }}
+							onClick={() => setShowCollabDialog(true)}
+							variant="contained"
+							color="primary"
+							sx={{ fontSize: "18px" }}
+						>
+							View more
+						</CustomButton>
+						<CustomButton onClick={() => setshowCreateCollabDialog(true)} variant="contained" color="primary" sx={{ fontSize: "18px" }}>
+							Create Collaboration
+						</CustomButton>
+					</Box>
+				</Box>
+			</MediumShortOnShortBoxLayout>
+		</ThemeProvider>
+	);
 }
