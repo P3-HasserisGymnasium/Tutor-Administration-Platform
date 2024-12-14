@@ -31,6 +31,7 @@ import project.backend.model.Post;
 import project.backend.model.PostState;
 import project.backend.model.RoleEnum;
 import project.backend.model.Student;
+import project.backend.model.SubjectEnum;
 import project.backend.service.CollaborationService;
 import project.backend.service.NotificationService;
 import project.backend.service.PostService;
@@ -280,6 +281,24 @@ public class CollaborationController {
 
         try {
             collaborationService.acceptCollaboration(collaborationId, role, authenticatedUser);
+            return ResponseEntity.status(HttpStatus.OK).body("Collaboration accepted");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/acceptByPost/{postId}/{tutorId}")
+    public ResponseEntity<?> acceptCollaborationByPost(@PathVariable Long postId, @PathVariable Long tutorId, HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        SubjectEnum post_subject = postService.getPostById(postId).get().getSubject();
+
+        if (post_subject == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post does not exist");
+        }
+
+        try {
+            collaborationService.acceptCollaborationByPost(post_subject, tutorId, authenticatedUser);
             return ResponseEntity.status(HttpStatus.OK).body("Collaboration accepted");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

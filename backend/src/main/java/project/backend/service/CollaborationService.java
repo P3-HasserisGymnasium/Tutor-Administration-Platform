@@ -19,6 +19,7 @@ import project.backend.model.CollaborationState;
 import project.backend.model.Feedback;
 import project.backend.model.Post;
 import project.backend.model.RoleEnum;
+import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.model.Tutor;
 import project.backend.model.Administrator;
@@ -185,6 +186,23 @@ public class CollaborationService {
             throw new IllegalArgumentException("Collaboration does not exist");
         }
 
+    }
+
+    public void acceptCollaborationByPost(SubjectEnum post_subject, Long tutorId, AuthenticatedUserBody authenticatedUser){
+        
+
+        Collaboration collaboration = collaborationRepository.findByTuteeTutorAndSubject(authenticatedUser.getTuteeId(), tutorId, post_subject).get(0);
+
+        if (collaboration.getState() != CollaborationState.WAITING_FOR_TUTEE) {
+            throw new IllegalArgumentException("Collaboration is not waiting for tutee");
+        }
+        if (collaboration.getAdminAccepted()) {
+            collaboration.setState(CollaborationState.ESTABLISHED);
+            notificationService.sendNotification(authenticatedUser.getTuteeId(), EntityType.TUTEE, tutorId, EntityType.TUTOR, collaboration.getId(), EntityType.COLLABORATION);
+        } else {
+            collaboration.setState(CollaborationState.WAITING_FOR_ADMIN);
+            notificationService.sendNotification(authenticatedUser.getTuteeId(), EntityType.TUTEE, 0L, EntityType.ADMIN, collaboration.getId(), EntityType.COLLABORATION);
+        }
     }
 
 

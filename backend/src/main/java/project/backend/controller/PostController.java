@@ -104,8 +104,13 @@ public class PostController {
         if (post == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
         }
+        System.out.println("authenticatedUser" + authenticatedUser);
+        System.out.println("authenticatedUser.getTutorId()" + authenticatedUser.getTutorId());
+        System.out.println("post.getTutee().getId()" + post.getTutee().getId());
+        System.out.println("authenticatedUser.getTuteeId()" + authenticatedUser.getTuteeId());
+        System.out.println("authenticatedUser.isAdministrator()" + authenticatedUser.isAdministrator());
 
-        if (authenticatedUser.getTutorId() == null || authenticatedUser.getTuteeId() != post.getTutee().getId() || !authenticatedUser.isAdministrator()) {
+        if (authenticatedUser.getTutorId() == null && authenticatedUser.getTuteeId() != post.getTutee().getId() && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to view this post");
         }
 

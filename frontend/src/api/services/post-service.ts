@@ -45,9 +45,7 @@ export const usePostService = () => {
 			onError: (e: AxiosError<{ detail: string }>) => {
 				toast.error(e?.response?.data?.detail);
 			},
-			onSuccess: () => {
-
-			},
+			onSuccess: () => {},
 		});
 	};
 
@@ -85,11 +83,24 @@ export const usePostService = () => {
 		});
 	};
 
+	const useGetPostById = (id: number | null) => {
+		return useQuery({
+			queryKey: ["getPostById", id],
+			queryFn: async () => {
+				const { data } = await apiClient.get<PostType>(`/api/post/${id}`);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			enabled: !!id,
+		});
+	};
+
 	return {
 		useGetPosts,
 		useGetTuteePosts,
 		useCreatePost,
 		useDeletePost,
+		useGetPostById,
 		useEditPost,
 	};
 };

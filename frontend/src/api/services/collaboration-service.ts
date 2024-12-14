@@ -45,6 +45,20 @@ export const useCollaborationService = () => {
 		},
 	});
 
+	const acceptCollaborationByPost = useMutation({
+		mutationKey: ["acceptCollaborationByPost"],
+		mutationFn: async ({ postId, tutorId }: { postId: number | null; tutorId: number | null }) => {
+			const { data } = await apiClient.post(`/api/collaboration/acceptByPost/${postId}/${tutorId}`);
+			return data;
+		},
+		onError: (e: AxiosError) => {
+			toast.error("" + e?.response?.data);
+		},
+		onSuccess: () => {
+			toast.success("Collaboration accepted by post");
+		},
+	});
+
 	const rejectCollaboration = useMutation({
 		mutationKey: ["rejectCollaboration"],
 		mutationFn: async ({ id, role }: { id: number; role: RoleType }) => {
@@ -85,7 +99,7 @@ export const useCollaborationService = () => {
 			refetchOnWindowFocus: false,
 			enabled: !!collaborationId,
 		});
-	}
+	};
 
 	//Tutor or tutee wants a collab
 	const useRequestCollaborationViaTutor = () => {
@@ -195,6 +209,7 @@ export const useCollaborationService = () => {
 		acceptCollaboration,
 		rejectCollaboration,
 		requestCollaborationSuggestion,
+		acceptCollaborationByPost,
 		useGetPartnerInformation,
 		useRequestCollaborationViaTutor,
 		useRequestCollaborationViaPost,
