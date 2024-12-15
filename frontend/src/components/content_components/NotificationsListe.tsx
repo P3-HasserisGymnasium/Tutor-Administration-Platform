@@ -43,7 +43,6 @@ export default function NotificationsList() {
 			return;
 		}
 	};
-	console.log("abything");
 	useEffect(() => {
 		if (context_id && tutor_id) {
 			setIsAcceptTutorDialogOpen(true);

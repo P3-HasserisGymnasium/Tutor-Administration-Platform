@@ -31,9 +31,6 @@ export default function AuthenticatedApp() {
 	const isTutee = userState.role?.includes(Role.Enum.Tutee);
 	const isTutor = userState.role?.includes(Role.Enum.Tutor);
 	const rolePrefix = useRolePrefix();
-	console.log("rolePrefix", rolePrefix);
-	console.log("isTutee", isTutee);
-	console.log("isTutor", isTutor);
 	return (
 		<Box
 			sx={{

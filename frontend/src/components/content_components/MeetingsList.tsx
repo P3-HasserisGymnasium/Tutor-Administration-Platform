@@ -13,8 +13,6 @@ type MeetingsListProps = {
 export default function MeetingsList({ meetings }: MeetingsListProps) {
 	const theme = useTheme<Theme>();
 	const { userState } = useAuth();
-	console.log("meeett");
-	console.log("meetings insdei", meetings);
 	return (
 		<Paper elevation={0} sx={{ padding: 2, borderRadius: 2, overflow: "auto", width: "100%", height: "90%" }}>
 			{meetings?.map((meeting) => (

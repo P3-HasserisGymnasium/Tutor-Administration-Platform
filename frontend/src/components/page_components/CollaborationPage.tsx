@@ -10,7 +10,6 @@ import MiniCalendar from "../content_components/MiniCalendar";
 import MeetingsList from "../content_components/MeetingsList";
 import InfoIcon from "@mui/icons-material/Info";
 import { useParams } from "react-router-dom";
-import { useAuth } from "~/api/authentication/useAuth";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useMeetingService } from "~/api/services/meeting-service";
 import { MeetingType } from "~/types/entity_types";
@@ -25,13 +24,9 @@ export default function CollaborationPage() {
 	const [view, setView] = useState<"list" | "calender">("calender");
 	const { isMobile } = useBreakpoints();
 	const params = useParams();
-	const { userState } = useAuth();
 	const rolePrefix = useRolePrefix();
-	console.log("params", params);
-	console.log("userState", userState);
 
 	const { data: partnerInformation } = useCollaborationService().useGetPartnerInformation(Number(params.collabId));
-	console.log("partnerInformation", partnerInformation);
 	const { data: meetings } = useMeetingService().useGetMeetings();
 	/*   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -180,7 +175,6 @@ export default function CollaborationPage() {
 					</Box>
 					<Box sx={{ display: "flex", gap: 2, flexDirection: "column", alignItems: "flex-start", ml: 2 }}>
 						{partnerInformation?.contact_info?.map((contact) => {
-							console.log("contact", contact);
 							return (
 								<CommunicationChipRead contactInfo={{ username: contact.username, communication_medium: contact.communication_medium }} />
 							);

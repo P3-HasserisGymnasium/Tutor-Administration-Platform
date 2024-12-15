@@ -10,9 +10,7 @@ type TutorListProps = {
 
 export default function TutorList({ filters, filterLoading }: TutorListProps) {
 	const { data: listOfTutors, isPending, isError } = useRoleService().useGetTutors(filters);
-	console.log("Filters:\n", filters);
 	const loading = filterLoading || isPending;
-	console.log("tutorlist", listOfTutors);
 	if (isError) {
 		return (
 			<Typography variant="h1" color="red">

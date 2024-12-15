@@ -1,5 +1,5 @@
 import MediumShortOnShortBoxLayout from "components/layout_components/MediumShortOnShortBoxLayout";
-import React, { useState } from "react";
+import React from "react";
 import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip, ThemeProvider } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 // import tutorTheme from "~/themes/tutorTheme";
@@ -45,21 +45,14 @@ export default function TuteePage() {
 	const { data: posts, isLoading: postsLoading, isError: postsError } = useGetTuteePosts();
 	const { data: collaborations, isLoading: collabLoading, isError: collabError } = useGetCollaborationsWithTutee(userState?.id || null);
 	const { data: meetings } = useMeetingService().useGetMeetings();
-	console.log("meetings", meetings);
 	const filteredMeetings = meetings?.filter((meeting) => {
 		return meeting.tutee_user_id === userState.id;
 	});
 
 	const filteredCollaborations = collaborations?.filter((collab) => {
-		console.log("collab", collab);
 		return collab.state === CollaborationState.Enum.ESTABLISHED;
 	});
 
-	console.log("showCollabDialog", showCollabDialog);
-	console.log("showPostDialog", showPostDialog);
-	console.log("showEditPostDialog", showEditPostDialog);
-	console.log("showCreateCollabDialog", showCreateCollabDialog);
-	console.log("view", view);
 	return (
 		<ThemeProvider theme={theme}>
 			<CreateCollaborationDialog open={showCreateCollabDialog} setOpen={setshowCreateCollabDialog} />

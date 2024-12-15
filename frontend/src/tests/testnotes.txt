@@ -4,7 +4,7 @@ Integration tests:
           TutorListPage -> TutorList -> Tutorcard****
           SetSubject -> SubjectChip****
           TuteePage -> MiniCollabList | MiniPostList | Minicalender****
-          Register sider 
+          Register sider  **** 
           api sider 
           profile page 
     functions

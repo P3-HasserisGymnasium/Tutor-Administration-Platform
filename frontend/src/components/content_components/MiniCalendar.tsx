@@ -13,7 +13,6 @@ type MiniCalenderProps = {
 export default function MiniCalendar({ meetings }: MiniCalenderProps) {
 	const { userState } = useAuth();
 	const theme = useTheme<Theme>();
-	console.log("userState", userState);
 	return (
 		<Paper
 			elevation={0}
