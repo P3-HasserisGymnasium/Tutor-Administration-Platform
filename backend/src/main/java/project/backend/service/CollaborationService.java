@@ -205,7 +205,26 @@ public class CollaborationService {
 
     }
 
-    public void rejectCollaboration(Long collaborationId, RoleEnum role, AuthenticatedUserBody authenticatedUser) {
+    public void acceptCollaborationByPost(SubjectEnum post_subject, Long tutorId, AuthenticatedUserBody authenticatedUser){
+        
+
+        Collaboration collaboration = collaborationRepository.findByTuteeTutorAndSubject(authenticatedUser.getTuteeId(), tutorId, post_subject).get(0);
+
+        if (collaboration.getState() != CollaborationState.WAITING_FOR_TUTEE) {
+            throw new IllegalArgumentException("Collaboration is not waiting for tutee");
+        }
+        if (collaboration.getAdminAccepted()) {
+            collaboration.setState(CollaborationState.ESTABLISHED);
+            notificationService.sendNotification(authenticatedUser.getTuteeId(), EntityType.TUTEE, tutorId, EntityType.TUTOR, collaboration.getId(), EntityType.COLLABORATION);
+        } else {
+            collaboration.setState(CollaborationState.WAITING_FOR_ADMIN);
+            notificationService.sendNotification(authenticatedUser.getTuteeId(), EntityType.TUTEE, 0L, EntityType.ADMIN, collaboration.getId(), EntityType.COLLABORATION);
+        }
+    }
+
+
+
+    public void rejectCollaboration(Long collaborationId, RoleEnum role, AuthenticatedUserBody authenticatedUser){
         Collaboration collaboration = getCollaborationById(collaborationId);
 
         Long tuteeId = collaboration.getTutee().getId();

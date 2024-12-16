@@ -63,6 +63,7 @@ public class RoleController {
             HttpServletRequest request) {
 
         if (role == RoleEnum.Tutor) {
+            System.out.println("Tutor");
             try {
                 TutorProfileResponse response = roleService.getTutorProfile(id);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
