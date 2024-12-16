@@ -19,6 +19,7 @@ public class Tutee extends Role {
     List<Post> posts = new LinkedList<>();
 
     @OneToMany(mappedBy = "tutee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     @JsonManagedReference
     List<Collaboration> collaborations = new LinkedList<>();
 
@@ -26,7 +27,8 @@ public class Tutee extends Role {
     @JsonBackReference
     Student student;
 
-    public Tutee() {}
+    public Tutee() {
+    }
 
     public List<Post> getPosts() {
         return posts;
@@ -52,5 +54,4 @@ public class Tutee extends Role {
         this.student = student;
     }
 
-    
 }

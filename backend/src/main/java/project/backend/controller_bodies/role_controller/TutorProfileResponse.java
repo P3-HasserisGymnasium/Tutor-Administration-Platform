@@ -8,9 +8,6 @@ import project.backend.model.StudentCommunicatioInfo;
 import project.backend.model.SubjectEnum;
 import project.backend.model.YearGroupEnum;
 
-
-
-
 public class TutorProfileResponse {
     public Long id;
     public String full_name;

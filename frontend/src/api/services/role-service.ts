@@ -42,20 +42,20 @@ export const useRoleService = () => {
 			toast.success("Tutee assigned");
 		},
 	});
-	/* 
-		// Assuming student id array gets returned
-		const getTutees = useQuery({
+
+	const useGetTutees = () => {
+		return useQuery({
 			queryKey: ["getTutees"],
 			queryFn: async () => {
-				const { data } = await apiClient.get<number[]>(
-					`/api/role`
+				const { data } = await apiClient.get<TuteeProfileType[]>(
+					`/api/role/tutees`
 				);
 				return data;
 			},
 			refetchOnWindowFocus: false,
 			placeholderData: [],
 		});
-	 */
+	}
 	// tutor information gets returned
 	const useGetTutors = (filters: tutorListFilterType) => {
 		return useQuery({
@@ -69,7 +69,7 @@ export const useRoleService = () => {
 		});
 	};
 
-	const useGetTutorProfile = (id: number | null) => {
+	const useGetTutorProfile = (id: number) => {
 		return useQuery({
 			queryKey: ["getProfile", id],
 			queryFn: async () => {
@@ -85,14 +85,14 @@ export const useRoleService = () => {
 				contact_info: [],
 				description: "",
 				full_name: "",
-				time_availability: [],
+				year_group: YearGroup.Enum.IB_1,
+				languages: [],
 				tutoring_subjects: [],
-				year_group: "PRE_IB",
-				languages: []
+				time_availability: [],
+
 			},
 		})
 	};
-
 	const useGetTuteeProfile = (id: number | null) => {
 		return useQuery({
 			queryKey: ["getProfile", id],
@@ -105,6 +105,7 @@ export const useRoleService = () => {
 			refetchOnWindowFocus: false,
 			enabled: id !== null,
 			placeholderData: {
+				id: 0,
 				full_name: "",
 				year_group: YearGroup.Enum.IB_1,
 				languages: [],
@@ -114,28 +115,31 @@ export const useRoleService = () => {
 		})
 	}
 
-	const useEditProfile = ()=>{ return (
-		useMutation({
-		mutationKey: ["editProfile"],
-		mutationFn: async (profile: TutorProfileType) => {
-			const { data } = await apiClient.post<TutorProfileType>(
-				"/api/role",
-				profile
-			);
-			return data;
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
-		},
-		onSuccess: () => {
-			toast.success("Profile saved");
-		},
-	}))}
+	const useEditProfile = () => {
+		return (
+			useMutation({
+				mutationKey: ["editProfile"],
+				mutationFn: async (profile: TutorProfileType) => {
+					const { data } = await apiClient.post<TutorProfileType>(
+						"/api/role",
+						profile
+					);
+					return data;
+				},
+				onError: (e: AxiosError<{ detail: string }>) => {
+					toast.error(e?.response?.data?.detail);
+				},
+				onSuccess: () => {
+					toast.success("Profile saved");
+				},
+			}))
+	}
 
 	return {
 		assignTuteeRole,
 		removeRole,
 		useGetTutors,
+		useGetTutees,
 		useGetTutorProfile, useGetTuteeProfile,
 		useEditProfile
 	};

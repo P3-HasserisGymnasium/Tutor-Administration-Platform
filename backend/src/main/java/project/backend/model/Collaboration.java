@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
@@ -19,19 +20,21 @@ import jakarta.persistence.OneToMany;
 
 @Entity
 public class Collaboration {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    
+
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "tutee_id")
+    @JsonManagedReference
     Tutee tutee;
 
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "tutor_id")
+    @JsonManagedReference
     Tutor tutor;
 
     @Enumerated(EnumType.STRING)
@@ -51,15 +54,27 @@ public class Collaboration {
     @Column(name = "termination_reason", nullable = true)
     String terminationReason;
 
-    @Column(name = "admin_accepted")
-    Boolean adminState;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tuteeState")
+    CollaborationState tuteeState;
 
-    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tutorState")
+    CollaborationState tutorState;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "adminState")
+    CollaborationState adminState;
+
+    @Column(name = "requested_pairing")
+    boolean requestedPairing = false;
+
     @OneToMany(mappedBy = "collaboration")
     @JsonBackReference
     List<Meeting> meetings = new ArrayList<>();
 
-    public Collaboration() {}
+    public Collaboration() {
+    }
 
     public Long getId() {
         return id;
@@ -133,11 +148,39 @@ public class Collaboration {
         this.meetings = meetings;
     }
 
-    public Boolean getAdminAccepted() {
+    public void setTutorState(CollaborationState tutorState) {
+        this.tutorState = tutorState;
+    }
+
+    public CollaborationState getTutorState() {
+        return tutorState;
+    }
+
+    public void setTuteeState(CollaborationState tuteeState) {
+        this.tuteeState = tuteeState;
+    }
+
+    public CollaborationState getTuteeState() {
+        return tuteeState;
+    }
+
+    public void setAdminState(CollaborationState adminState) {
+        this.adminState = adminState;
+    }
+
+    public void setRequestedPairing(boolean requestedPairing) {
+        this.requestedPairing = requestedPairing;
+    }
+
+    public boolean getRequestedPairing() {
+        return requestedPairing;
+    }
+
+    public CollaborationState getAdminState() {
         return adminState;
     }
 
-    public void setAdminAccepted(Boolean adminState) {
-        this.adminState = adminState;
+    public void setAdminAccepted() {
+        this.adminState = CollaborationState.ESTABLISHED;
     }
 }

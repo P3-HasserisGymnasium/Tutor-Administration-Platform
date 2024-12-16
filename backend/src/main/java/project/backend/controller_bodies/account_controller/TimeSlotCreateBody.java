@@ -5,8 +5,6 @@ import java.util.List;
 
 import project.backend.model.WeekDayEnum;
 
-
-
 public class TimeSlotCreateBody {
 
     public WeekDayEnum day;
