@@ -1,16 +1,15 @@
 import { Avatar, Box, Dialog, DialogContent, DialogTitle, Grid2, IconButton, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Dispatch, SetStateAction } from "react";
-import { TutorProfileType } from "~/types/entity_types";
-import TimeAvailabilityBox from "~/components/content_components/TimeAvailabilityBox";
+import { CollaborationType } from "~/types/entity_types";
 
-type ManageTutorDialogProps = {
+type AcceptCollaborationRequestDialogProps = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  tutorProfile: TutorProfileType;
+  collaboration: CollaborationType;
 };
 
-const ManageTutorDialog = ({ open, setOpen, tutorProfile }: ManageTutorDialogProps) => {
+const AcceptCollaborationRequestDialog = ({ open, setOpen }: AcceptCollaborationRequestDialogProps) => {
   const handleClose = () => {
     setOpen(false);
   };
@@ -40,42 +39,24 @@ const ManageTutorDialog = ({ open, setOpen, tutorProfile }: ManageTutorDialogPro
           {/* Picture and Name Row */}
           <Grid2 container spacing={2} alignItems="center" justifyContent="start" sx={{ marginBottom: 2 }}>
             <Avatar alt="User Name" src="/path-to-image.jpg" sx={{ width: 80, height: 80 }} />
-            <Typography variant="h5">{tutorProfile.full_name}</Typography>
           </Grid2>
 
           {/* Info Row */}
-          <Box sx={{ marginBottom: 2 }}>
-            <Typography variant="body1">
-              <strong>Year group:</strong> {tutorProfile.year_group}
-            </Typography>
-            <Typography variant="body1">
-              <strong>Languages:</strong> {tutorProfile.languages.join(", ")}
-            </Typography>
-            <Typography variant="body1">
-              <strong>Subjects:</strong> {tutorProfile.tutoring_subjects.join(", ")}
-            </Typography>
-          </Box>
+          <Box sx={{ marginBottom: 2 }}></Box>
 
           {/* Time Availability Row */}
           <Box sx={{ marginBottom: 2 }}>
             <Typography variant="body1" sx={{ fontWeight: "bold" }}>
               Time Availability:
             </Typography>
-            <Grid2 container spacing={2}>
-              {tutorProfile.time_availability.map((availability, i) => (
-                <TimeAvailabilityBox key={"ijdad " + i} timeAvailability={availability} />
-              ))}
-            </Grid2>
           </Box>
 
           {/* Description Row */}
-          <Box>
-            <Typography variant="body1">{tutorProfile.description}</Typography>
-          </Box>
+          <Box></Box>
         </Box>
       </DialogContent>
     </Dialog>
   );
 };
 
-export default ManageTutorDialog;
+export default AcceptCollaborationRequestDialog;

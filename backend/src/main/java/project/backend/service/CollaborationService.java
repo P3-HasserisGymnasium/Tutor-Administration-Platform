@@ -12,7 +12,6 @@ import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.collaboration_bodies.CollaborationCreateBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByPostBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByTutorBody;
-import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.model.Collaboration;
 import project.backend.model.EntityType;
 import project.backend.model.CollaborationState;
@@ -70,6 +69,10 @@ public class CollaborationService {
 
     public List<Collaboration> getAllCollaborations() {
         return collaborationRepository.findAll();
+    }
+
+    public List<Collaboration> getCollaborationsAwaitingAcceptance() {
+        return collaborationRepository.findByWaitingForAdmin();
     }
 
     public Collaboration createCollaboration(CollaborationCreateBody body) {

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import project.backend.model.Post;
-import project.backend.model.PostState;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.repository.PostRepository;

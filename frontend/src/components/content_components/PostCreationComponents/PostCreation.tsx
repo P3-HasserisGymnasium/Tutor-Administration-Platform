@@ -2,7 +2,7 @@ import { Box, TextField, Typography, Checkbox, FormControlLabel } from "@mui/mat
 import CustomAutocomplete from "../CustomAutocomplete";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PostCreationType, zodPostCreationSchema } from "~/types/data_types";
+import { PostCreationType, PostState, zodPostCreationSchema } from "~/types/data_types";
 import SetDuration from "../SetDuration";
 import { useState } from "react";
 import { useMediaQuery } from "@mui/material";
@@ -20,6 +20,7 @@ export default function PostCreation() {
       subject: undefined,
       duration: [0, 12],
       description: "",
+      state: PostState.Enum.VISIBLE,
     },
   };
   const filterMethods = useForm<PostCreationType>(useFormParameter);

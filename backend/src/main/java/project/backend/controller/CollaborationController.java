@@ -21,7 +21,6 @@ import project.backend.controller_bodies.collaboration_bodies.CollaborationCreat
 import project.backend.controller_bodies.collaboration_bodies.CollaborationResponseBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByPostBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByTutorBody;
-import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
 import project.backend.controller_bodies.role_controller.TutorProfileResponse;
 import project.backend.model.Collaboration;
@@ -169,6 +168,20 @@ public class CollaborationController {
         return ResponseEntity.status(HttpStatus.OK).body(collaborationResponseBodies);
     }
 
+    @GetMapping("/awaiting_acceptance")
+    public ResponseEntity<?> getCollaborationsAwaitingAcceptance(HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Unauthorized: You must be logged in as an administrator to view collaborations awaiting acceptance");
+        }
+
+        List<Collaboration> collaborations = collaborationService.getCollaborationsAwaitingAcceptance();
+
+        return ResponseEntity.status(HttpStatus.OK).body(collaborations);
+    }
+
     @PostMapping("/")
     public ResponseEntity<?> createCollaboration(@RequestBody CollaborationCreateBody body,
             HttpServletRequest request) {
@@ -207,7 +220,6 @@ public class CollaborationController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
         }
-
     }
 
     @PostMapping("/request/by-post")
