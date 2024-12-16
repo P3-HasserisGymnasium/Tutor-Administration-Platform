@@ -72,16 +72,6 @@ public class CollaborationService {
         return collaborationRepository.findAll();
     }
 
-    public ArrayList<Collaboration> getAllRequestedPairingCollaborations() {
-        List<Collaboration> all = getAllCollaborations();
-        ArrayList<Collaboration> pairingRequests = new ArrayList<>();
-        for (int i = 0; i < all.size(); i++) {
-            if (all.get(i).getRequestedPairing())
-                pairingRequests.add(all.get(i));
-        }
-        return pairingRequests;
-    }
-
     public Collaboration createCollaboration(CollaborationCreateBody body) {
 
         Collaboration collaboration = new Collaboration();
@@ -103,17 +93,6 @@ public class CollaborationService {
         collaborationRepository.deleteById(id);
     }
 
-    // this is very weird implemented, should receive a post body, and correctly
-    // fill out all the options.
-    public void requestCollaborationSuggestion(Long studentId, PostBody requestBody) {
-        Collaboration collaboration = new Collaboration();
-        collaboration.setSubject(requestBody.subject);
-        collaboration.setState(CollaborationState.WAITING_FOR_ADMIN);
-        collaboration.setAdminAccepted();
-        collaboration.setTutee(roleService.getTuteeById(studentId));
-        collaboration.setRequestedPairing(true);
-        collaborationRepository.save(collaboration);
-    }
 
     // admin provides collaboration suggestion
     public void submitCollaborationSuggestion(Long collaborationId, Long tutorId) {
@@ -139,9 +118,11 @@ public class CollaborationService {
 
         Collaboration collaboration = getCollaborationById(collaborationId);
         CollaborationState state = collaboration.getState();
-        boolean adminAccepted = collaboration.getAdminState() == CollaborationState.ESTABLISHED;
+        boolean adminAccepted = collaboration.getAdminAccepted();
         Long senderId = null;
+        EntityType senderType = null;
         Long receiverId = null;
+        EntityType receiverType = null;
         switch (role) {
             case Tutee:
                 if (state != CollaborationState.WAITING_FOR_TUTEE) {
@@ -151,9 +132,12 @@ public class CollaborationService {
                     collaboration.setState(CollaborationState.ESTABLISHED);
                     senderId = collaboration.getTutee().getId();
                     receiverId = collaboration.getTutor().getId();
+                    senderType = EntityType.TUTEE;
+                    receiverType = EntityType.TUTOR;
                 } else {
                     collaboration.setState(CollaborationState.WAITING_FOR_ADMIN);
                     senderId = collaboration.getTutee().getId();
+                    senderType = EntityType.TUTEE;
                 }
                 break;
             case Tutor:
@@ -164,10 +148,12 @@ public class CollaborationService {
                     collaboration.setState(CollaborationState.ESTABLISHED);
                     senderId = collaboration.getTutor().getId();
                     receiverId = collaboration.getTutee().getId();
+                    senderType = EntityType.TUTOR;
+                    receiverType = EntityType.TUTEE;
                 } else {
                     collaboration.setState(CollaborationState.WAITING_FOR_ADMIN);
                     senderId = collaboration.getTutor().getId();
-
+                    senderType = EntityType.TUTOR;
                 }
                 break;
             case Administrator:
@@ -177,7 +163,7 @@ public class CollaborationService {
                 if (adminAccepted) {
                     collaboration.setState(CollaborationState.WAITING_FOR_BOTH);
                 } else {
-                    collaboration.setAdminAccepted();
+                    collaboration.setAdminAccepted(true);
                     collaboration.setState(CollaborationState.ESTABLISHED);
                     break;
                 }
@@ -193,7 +179,7 @@ public class CollaborationService {
         }
 
         if (senderId != null && receiverId != null) {
-            notificationService.sendNotification(senderId, EntityType.TUTEE, receiverId, EntityType.TUTOR,
+            notificationService.sendNotification(senderId, senderType, receiverId, receiverType,
                     collaborationId,
                     EntityType.COLLABORATION);
         }
@@ -230,33 +216,6 @@ public class CollaborationService {
         Long tuteeId = collaboration.getTutee().getId();
         Long tutorId = collaboration.getTutor().getId();
         CollaborationState state = collaboration.getState();
-
-        if (collaboration.getAdminState() == CollaborationState.REJECTED) {
-            collaboration.setState(CollaborationState.REJECTED);
-
-            notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId,
-                    EntityType.COLLABORATION);
-            notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId,
-                    EntityType.COLLABORATION);
-
-        } else if (role == RoleEnum.Tutee) {
-            collaboration.setTuteeState(CollaborationState.REJECTED);
-            collaboration.setState(CollaborationState.REJECTED);
-
-            notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId,
-                    EntityType.COLLABORATION);
-
-        } else if (role == RoleEnum.Tutor) {
-            collaboration.setTutorState(CollaborationState.REJECTED);
-            collaboration.setState(CollaborationState.REJECTED);
-
-            notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId,
-                    EntityType.COLLABORATION);
-        } else {
-            throw new IllegalArgumentException("Invalid role specified.");
-        }
-
-        deleteCollaborationById(collaborationId);
         switch (role) {
             case Tutee -> {
                 if (state != CollaborationState.WAITING_FOR_TUTEE) {
@@ -286,14 +245,8 @@ public class CollaborationService {
             }
             default -> throw new IllegalArgumentException("Invalid role specified.");
         }
-
-        try {
-            deleteCollaborationById(collaborationId);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Collaboration does not exist");
-        }
     }
-
+/* 
     // request specififc tutor or tutor request tutee through a post
     public void requestCollaboration(Long tuteeId, Long tutorId, RoleEnum collabRequester, SubjectEnum subject) {
 
@@ -325,7 +278,7 @@ public class CollaborationService {
             case Administrator -> throw new UnsupportedOperationException("Unimplemented case: " + collabRequester);
             default -> throw new IllegalArgumentException("Unexpected value: " + collabRequester);
         }
-    }
+    } */
 
     public void requestCollaborationByPost(RequestCollaborationByPostBody postBody) {
 
@@ -343,6 +296,7 @@ public class CollaborationService {
         collaboration.setTutee(post.getTutee());
         collaboration.setTutor(tutor);
         collaboration.setSubject(post.getSubject());
+        collaboration.setAdminAccepted(false);        
         collaboration.setState(CollaborationState.WAITING_FOR_TUTEE);
         collaboration.setStartTimestamp(new Timestamp(System.currentTimeMillis()));
         collaborationRepository.save(collaboration);
@@ -363,9 +317,9 @@ public class CollaborationService {
 
         collaboration.setTutee(tutee);
         collaboration.setTutor(tutor);
-        System.out.println("subject" + body.subject);
-        System.out.println("subjectssss" + newPost.getSubject());
+        collaboration.setAdminAccepted(false);
         collaboration.setSubject(newPost.getSubject());
+
         collaboration.setState(CollaborationState.WAITING_FOR_TUTOR);
         collaboration.setStartTimestamp(new Timestamp(System.currentTimeMillis()));
         Collaboration createdCollab = collaborationRepository.save(collaboration);

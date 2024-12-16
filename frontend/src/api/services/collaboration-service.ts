@@ -15,21 +15,6 @@ import { Role } from "~/types/data_types";
 import { z } from "zod";
 
 export const useCollaborationService = () => {
-	//Admin wants to get pairing help requests
-	const getCollaborationSuggestionRequests = () => {
-		return useQuery({
-			queryKey: ["getCollaborationSuggestions"],
-			queryFn: async () => {
-				const { data } = await apiClient.get<CollaborationType[]>(
-					`/api/collaboration/pairing_requests`
-				);
-				return data;
-			},
-			refetchOnWindowFocus: false,
-			placeholderData: [],
-		})
-	};
-
 	//Admin requests a collaboration
 	const submitCollaborationSuggestion = useMutation({
 		mutationKey: ["submitCollaborationSuggestion"],
@@ -179,18 +164,18 @@ export const useCollaborationService = () => {
 		},
 	});
 
-	const getCollabortations = () => {
+	const useGetCollabortations = () => {
 		return useQuery({
 			queryKey: ["getCollaborations"],
 			queryFn: async () => {
-				const { data } = await apiClient.get<CollaborationType[]>(
-					`/api/collaboration/all`
-				);
-				return data;
+				const { data } = await apiClient.get(`/api/collaboration/all`);
+				const cleanedString = data.replace(/^(\[.*\])(\[.*\])$/, "$1");
+				const parsedData = JSON.parse(cleanedString);
+				return parsedData;
 			},
 			refetchOnWindowFocus: false,
 			placeholderData: [],
-		})
+		});
 	};
 
 	const useGetCollaborationsWithTutee = (id: number | null) => {
@@ -232,9 +217,8 @@ export const useCollaborationService = () => {
 	};
 
 	return {
-		getCollaborationSuggestionRequests,
 		useGetCollaborationsWithTutee,
-		getCollabortations,
+		useGetCollabortations,
 		useGetCollaborationsWithTutor,
 		submitCollaborationSuggestion,
 		acceptCollaboration,

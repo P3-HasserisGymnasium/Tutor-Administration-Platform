@@ -18,7 +18,7 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, context
 	const { acceptCollaboration, rejectCollaboration, acceptCollaborationByPost } = useCollaborationService();
 	const { data: collaboration, isLoading: isCollaborationLoading } = useCollaborationService().useGetCollaborationById(context_id);
 	const { data: post, isLoading: isPostLoading } = usePostService().useGetPostById(context_id);
-	const { data: tutorProfile, isLoading: isTutorProfileLoading } = useRoleService().useGetTutorProfile(tutor_id);
+	const { data: tutorProfile, isLoading: isTutorProfileLoading } = useRoleService().useGetTutorProfile(tutor_id || 0);
 	console.log("collaboration", collaboration);
 	console.log("post", post);
 	console.log("tutorProfile", tutorProfile);

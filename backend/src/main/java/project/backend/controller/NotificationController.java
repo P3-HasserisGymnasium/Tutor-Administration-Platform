@@ -97,6 +97,28 @@ public class NotificationController {
         return ResponseEntity.status(HttpStatus.OK).body(notificationResponseBodies);
     }
 
+    @GetMapping("/admin")
+    public ResponseEntity<?> getNotificationsForAdmin(HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to view notifications for the administrator");
+        }
+
+        List<Notification> notifications = notificationService.getAllNotificationsForAdmin();
+
+        if (notifications == null || notifications.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No notifications found for the administrator");
+        }
+
+        List<NotificationResponseBody> notificationResponseBodies = new ArrayList<>();
+        for (Notification notification : notifications) {
+            notificationResponseBodies.add(createNotificationResponseBody(notification));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(notificationResponseBodies);
+    }
+
     @GetMapping("/sentToTutee/{id}")
     public ResponseEntity<?> getNotificationsSentToTuteeByUserId(@PathVariable Long id, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);

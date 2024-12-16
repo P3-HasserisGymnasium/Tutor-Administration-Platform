@@ -60,7 +60,13 @@ export default function AuthenticatedApp() {
 					/>
 
 					{/* Admin routes */}
-					{isAdmin ? <Route path="/admin/*" element={<AdministratorPage />} /> : <Route path="/admin/*" element={<Forbidden />} />}
+					{isAdmin ? (
+						<Route path="/admin/*">
+							<Route path="" element={<AdministratorPage />} />
+							<Route path="notifications" element={<NotificationsList />} />
+							<Route path="*" element={<NotFound />} />
+						</Route>
+					) : null}
 
 					{/* Tutee routes */}
 					{isTutee ? (

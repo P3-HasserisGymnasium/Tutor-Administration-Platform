@@ -60,6 +60,8 @@ export const useRolePrefix = (): string => {
 			return "/tutee";
 		case rolePrefix.startsWith("/tutor"):
 			return "/tutor";
+		case rolePrefix.startsWith("/admin"):
+			return "/admin";
 		case rolePrefix.startsWith("/login"):
 			return "/login";
 		case rolePrefix.startsWith("/register"):
@@ -188,10 +190,10 @@ export const useVariableHeight = (value?: string | number) => {
  * setCookie sets a cookie with a given name, value and expiration date.
  */
 export const setCookie = (name: string, value: string, hours: number) => {
-	console.log("name", name)
+	console.log("name", name);
 	const expires = new Date(Date.now() + hours * 36e5).toUTCString();
 	document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/;`;
-	console.log("naming")
+	console.log("naming");
 };
 
 /**
@@ -210,8 +212,6 @@ export const getCookie = (name: string) => {
 export const deleteCookie = (name: string) => {
 	document.cookie = `${name}=; path=/; max-age=0`;
 };
-
-
 
 export const generateNotificationMessage = (notification: NotificationResponseType): string => {
 	switch (notification.context_type) {
@@ -248,4 +248,4 @@ export const generateNotificationMessage = (notification: NotificationResponseTy
 		default:
 			return "You have received a new notification";
 	}
-}
+};

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import jakarta.servlet.http.HttpServletRequest;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
@@ -36,16 +38,15 @@ public class RoleController {
     }
 
     @GetMapping("/tutees")
-    public ResponseEntity<?> getTutees(HttpServletRequest request) {
+    public ResponseEntity<?> getTutees(HttpServletRequest request) throws JsonProcessingException {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to view all tutees");
         }
 
-        List<TuteeProfileResponse> tutees = roleService.getTutees();
-
-        return ResponseEntity.status(HttpStatus.OK).body(tutees);
+        ArrayList<TuteeProfileResponse> tutees = roleService.getTutees();
+        return ResponseEntity.ok(tutees); 
     }
 
     @GetMapping("/tutors")
@@ -68,14 +69,14 @@ public class RoleController {
                 TutorProfileResponse response = roleService.getTutorProfile(id);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tutor not found");
+                return ResponseEntity.status(HttpStatus.OK).body("error: " + e.getMessage());
             }
         } else {
             try {
                 TuteeProfileResponse response = roleService.getTuteeProfile(id);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
+                return ResponseEntity.status(HttpStatus.OK).body("error: " + e.getMessage());
             }
         }
     }

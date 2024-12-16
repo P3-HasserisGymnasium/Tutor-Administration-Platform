@@ -43,8 +43,11 @@ export default function NotificationsList() {
 			return;
 		}
 	};
-	console.log("abything");
 	useEffect(() => {
+		console.log("context_id", context_id);
+		console.log("tutor_id", tutor_id);
+		console.log("tutee_id", tutee_id);
+
 		if (context_id && tutor_id) {
 			setIsAcceptTutorDialogOpen(true);
 		} else if (context_id && tutee_id) {
@@ -133,7 +136,7 @@ export default function NotificationsList() {
 				margin: "auto",
 			}}
 		>
-			{context_id && (
+			{context_id && tutor_id && (
 				<AcceptInvitationFromTutorDialog
 					open={isAcceptTutorDialogOpen}
 					setOpen={setIsAcceptTutorDialogOpen}

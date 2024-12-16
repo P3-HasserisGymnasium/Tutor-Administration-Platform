@@ -76,6 +76,10 @@ public class AccountService {
         return accountRepository.findById(id);
     }
 
+    public Administrator getAdminById(Long id) {
+        return roleService.getAdministratorByUserId(id);
+    }
+
     @Transactional
     public User saveNewStudent(AccountRegisterBody body) {
 

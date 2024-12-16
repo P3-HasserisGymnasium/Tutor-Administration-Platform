@@ -81,8 +81,10 @@ public class AccountController {
         try {
 
             User user = accountService.getUserIfCorrectPassword(body);
-            
-            if (user instanceof Administrator) {
+            Administrator admin =  accountService.getAdminById(user.getId());
+            System.out.println("admin: " + admin);
+            System.out.println("user: " + user);
+            if (admin != null) {
                 return accountService.handleAdminLogin((Administrator) user);
             }
 

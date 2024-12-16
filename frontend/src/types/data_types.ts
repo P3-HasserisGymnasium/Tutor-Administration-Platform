@@ -93,7 +93,7 @@ export const zodPostCreationSchema = z.object({
 	title: z.string(),
 	description: z.string(),
 	subject: Subject,
-	state: PostState.optional(),
+	state: PostState,
 	duration: z.union([z.array(z.number()), z.undefined()]),
 });
 // Defining types for forms and zod schemas

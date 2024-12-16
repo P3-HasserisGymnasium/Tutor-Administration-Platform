@@ -7,7 +7,8 @@ import AdminManageTutees from "./AdminManageTutees";
 import { useCurrentTheme } from "~/utilities/helperFunctions";
 import AdminOverview from "./AdminOverview";
 import AdminManageTutors from "./AdminManageTutors";
-import { tutorListFilterType } from '~/types/data_types';
+import { CollaborationState, tutorListFilterType } from "~/types/data_types";
+import { CollaborationType } from "~/types/entity_types";
 
 export default function AdministratorPage() {
 	const theme = useCurrentTheme();
@@ -16,10 +17,11 @@ export default function AdministratorPage() {
 		time_availability: [],
 		year_group: [],
 		languages: [],
-	}
+	};
 	const { data: tutors, isLoading: isTutorsLoading } = useRoleService().useGetTutors(emptyFilter);
 	const { data: tutees, isLoading: isTuteesLoading } = useRoleService().useGetTutees();
-	const { data: collaborations, isLoading: isCollaborationsLoading } = useCollaborationService().getCollabortations();
+	const { data: collablist, isLoading: isCollaborationsLoading } = useCollaborationService().useGetCollabortations();
+	const collaborations = collablist?.filter((collab: CollaborationType) => collab.state === CollaborationState.Enum.ESTABLISHED);
 
 	return (
 		<ThemeProvider theme={theme}>

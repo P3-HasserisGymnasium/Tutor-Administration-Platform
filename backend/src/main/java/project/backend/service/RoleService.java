@@ -27,6 +27,7 @@ import project.backend.repository.AccountRepository;
 import project.backend.repository.AdministratorRepository;
 import project.backend.repository.RoleRepository;
 import project.backend.repository.StudentRepository;
+import project.backend.repository.TuteeRepository;
 import project.backend.repository.TutorRepository;
 
 @Service
@@ -45,30 +46,34 @@ public class RoleService {
     final AccountRepository accountRepository;
 
     @Autowired
+    final TuteeRepository tuteeRepository;
+
+    @Autowired
     final AdministratorRepository administratorRepository;
 
     public RoleService(RoleRepository roleRepository, StudentRepository studentRepository,
             TutorRepository tutorRepository, AdministratorRepository administratorRepository,
-            AccountRepository accountRepository) {
+            AccountRepository accountRepository, TuteeRepository tuteeRepository) {
         this.roleRepository = roleRepository;
         this.studentRepository = studentRepository;
         this.tutorRepository = tutorRepository;
         this.administratorRepository = administratorRepository;
         this.accountRepository = accountRepository;
+        this.tuteeRepository = tuteeRepository;
     }
 
-    public List<TuteeProfileResponse> getTutees() {
-        List<Student> students = studentRepository.getTutees();
-        List<TuteeProfileResponse> tutees = new ArrayList<TuteeProfileResponse>();
-        for (Student student : students) {
-            TuteeProfileResponse tutee = new TuteeProfileResponse();
-            tutee.id = student.getTutee().getId();
-            tutee.full_name = student.getFullName();
-            System.out.println("@RoleService, full_name: " + student.getFullName() + ", id: " + student.getId());
-            tutee.year_group = student.getYearGroup();
-            tutee.languages = student.getLanguages();
-            // We don't care about the rest of the values, surely
-            tutees.add(tutee);
+    public ArrayList<TuteeProfileResponse> getTutees() {
+        List<Tutee> tuteeList = tuteeRepository.findAll();
+        ArrayList<TuteeProfileResponse> tutees = new ArrayList<>();
+        for (Tutee tutee : tuteeList) {
+            Student student = tutee.getStudent();
+            TuteeProfileResponse tuteeResponse = new TuteeProfileResponse();
+            tuteeResponse.setFullName(student.getFullName());
+            tuteeResponse.setYearGroup(student.getYearGroup());
+            tuteeResponse.setLanguages(student.getLanguages());
+            tuteeResponse.setSubjectsReceivingHelpIn(tutee.getCollaborations().stream().map(collab -> collab.getSubject()).toList());
+            tuteeResponse.setContactInfo(student.getContactInfo());
+            tutees.add(tuteeResponse);
         }
         return tutees;
     }
@@ -122,13 +127,7 @@ public class RoleService {
     }
 
     public Tutee getTuteeById(Long id) {
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + id));
-
-        Tutee tutee = student.getTutee();
-        if (tutee == null) {
-            throw new IllegalArgumentException("This student is not assigned a Tutee");
-        }
+        Tutee tutee = tuteeRepository.findById(id).get();
 
         return tutee;
     }
@@ -275,7 +274,7 @@ public class RoleService {
     }
 
     public TuteeProfileResponse getTuteeProfile(Long id) {
-        Tutee tutee = getTuteeByUserId(id);
+        Tutee tutee = getTuteeById(id);
 
         Student student = tutee.getStudent();
 

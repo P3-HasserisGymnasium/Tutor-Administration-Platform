@@ -58,13 +58,6 @@ public class CollaborationController {
         this.roleService = roleService;
     }
 
-    @GetMapping("/pairing_requests")
-    public ResponseEntity<?> getCollaborationSuggestions(HttpServletRequest request) {
-        List<Collaboration> requests = collaborationService.getAllRequestedPairingCollaborations();
-
-        return ResponseEntity.status(HttpStatus.OK).body(requests);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<?> getCollaboration(@PathVariable Long id, HttpServletRequest request) {
         // AuthenticatedUserBody authenticatedUser =
@@ -269,16 +262,6 @@ public class CollaborationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
         return ResponseEntity.status(HttpStatus.OK).body("Collaboration requested");
-    }
-
-    @PostMapping("/request-suggestion/{id}")
-    public ResponseEntity<?> requestCollaborationSuggestion(@PathVariable Long tuteeId,
-            @RequestBody PostBody requestBody, HttpServletRequest request) {
-        // AuthenticatedUserBody authenticatedUser =
-        // AuthUser.getAuthenticatedUser(request);
-
-        collaborationService.requestCollaborationSuggestion(tuteeId, requestBody);
-        return ResponseEntity.status(HttpStatus.OK).body("Collaboration suggestion requested");
     }
 
     @PostMapping("/submit-suggestion/{collaborationId}/{tutorId}")

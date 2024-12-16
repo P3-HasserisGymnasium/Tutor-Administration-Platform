@@ -48,8 +48,11 @@ public class PostService {
     }
 
     public Post savePost(Post post) {
-        post.setState(PostState.VISIBLE);
         return postRepository.save(post);
+    }
+
+    public Post[] getPairingRequests() {
+        return postRepository.findPairingRequests();
     }
 
     public void deletePostById(Long postId) {

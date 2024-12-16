@@ -135,6 +135,21 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
+    @GetMapping("/pairing_requests")
+    public ResponseEntity<?> getPairingRequests(HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You do not have access to this resource");
+        }
+
+        Post[] posts = postService.getPairingRequests();
+        if (posts == null) {
+            return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(posts);
+    }
+
   
 
     @PostMapping("/")
@@ -157,7 +172,8 @@ public class PostController {
         post.setTitle(postBody.title);
         post.setDescription(postBody.description);
         post.setDuration(postBody.duration);
-        post.setState(PostState.VISIBLE);    
+        System.out.println("postttt" + postBody.getState());
+        post.setState(postBody.getState());    
         System.out.println("post1" + post);
 
         postService.createPost(post, tutee.getId());

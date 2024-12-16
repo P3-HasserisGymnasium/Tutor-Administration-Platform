@@ -96,6 +96,10 @@ public class NotificationService {
         return notificationRepository.findAllSentToTutor(userId);
     }
 
+    public List<Notification> getAllNotificationsForAdmin() {
+        return notificationRepository.findAllSentToAdmin().orElse(null);
+    }
+
     public Optional<Notification> getNotificationById(Long id) {
         return notificationRepository.findById(id);
     }

@@ -43,8 +43,8 @@ export default function MiniCalendar({ meetings }: MiniCalenderProps) {
 
 					return {
 						title: "Meeting with " + (userState.id == Number(meeting.tutor_user_id) ? meeting.tutee_name : meeting.tutor_name),
-						start: meeting.start_timestamp,
-						end: meeting.end_timestamp,
+						start: meeting.start_date,
+						end: meeting.end_date,
 						backgroundColor: backgroundcolor,
 						borderColor: borderColor,
 					};
