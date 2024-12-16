@@ -31,6 +31,11 @@ export default function AuthenticatedApp() {
 	const isTutor = userState.role?.includes(Role.Enum.Tutor);
 	const isAdmin = userState.is_administrator;
 	const rolePrefix = useRolePrefix();
+	console.log("userState", userState);
+	console.log("rolePrefix", rolePrefix);
+	console.log("isTutee", isTutee);
+	console.log("isTutor", isTutor);
+	console.log("isAdmin", isAdmin);
 	return (
 		<Box
 			sx={{
@@ -90,8 +95,6 @@ export default function AuthenticatedApp() {
 							</Route>
 						</>
 					) : null}
-
-
 
 					{/* Catch-all for invalid roles */}
 					<Route path="*" element={<NotFound />} />

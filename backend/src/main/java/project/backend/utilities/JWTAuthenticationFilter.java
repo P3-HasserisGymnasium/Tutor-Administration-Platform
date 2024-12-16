@@ -105,6 +105,14 @@ public class JWTAuthenticationFilter implements Filter {
             Long userIdLong = Long.parseLong(userID);
             authenticatedUser.userId = userIdLong;
             Student student = roleService.getStudentById(userIdLong);
+
+            Administrator administrator = roleService.getAdministratorByUserId(userIdLong);
+            if (administrator != null) {
+                authenticatedUser.administratorId = administrator.getId();
+                request.setAttribute("authenticatedUser", authenticatedUser);
+                chain.doFilter(request, response);
+            }
+
             if (student != null) {
                 authenticatedUser.studentId = student.getId();
             }
@@ -117,10 +125,7 @@ public class JWTAuthenticationFilter implements Filter {
                 authenticatedUser.tuteeId = tutee.getId();
             }
             
-            Administrator administrator = roleService.getAdministratorByUserId(userIdLong);
-            if (administrator != null) {
-                authenticatedUser.administratorId = administrator.getId();
-            }
+
 
             request.setAttribute("authenticatedUser", authenticatedUser);
             chain.doFilter(request, response);  

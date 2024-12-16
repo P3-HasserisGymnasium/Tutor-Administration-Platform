@@ -175,7 +175,7 @@ public class RoleService {
         Optional<Student> studentOpt = studentRepository.findById(id);
 
         if (!studentOpt.isPresent()) {
-            throw new IllegalArgumentException("Student not found wiht ID: " + id);
+            return null;
         }
 
         return studentOpt.get();
