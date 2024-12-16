@@ -25,6 +25,7 @@ import project.backend.model.Administrator;
 import project.backend.model.Student;
 import project.backend.model.User;
 import project.backend.service.AccountService;
+import project.backend.service.RoleService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -32,8 +33,10 @@ import project.backend.service.AccountService;
 public class AccountController {
 
     final AccountService accountService;
-    public AccountController(AccountService accountService) {
+    final RoleService roleService;
+    public AccountController(AccountService accountService, RoleService roleService) {
         this.accountService = accountService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/{id}")

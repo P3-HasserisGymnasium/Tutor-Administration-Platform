@@ -66,7 +66,8 @@ public class TutorApplicationController {
         }
 
         try {
-            tutorApplicationService.createTutorApplication(body, authenticatedUser.getTuteeId());
+            TutorApplication application = tutorApplicationService.createTutorApplication(body);
+            notificationService.sendNotification(authenticatedUser.getTuteeId(), EntityType.TUTEE, 0L, EntityType.ADMIN, application.getId(), EntityType.POST);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
