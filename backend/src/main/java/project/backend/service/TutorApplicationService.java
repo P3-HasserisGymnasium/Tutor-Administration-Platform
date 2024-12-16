@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.tutor_application_controller.TutorApplicationCreateBody;
 import project.backend.controller_bodies.tutor_application_controller.TutorTimeSlotCreateBody;
+import project.backend.model.EntityType;
 import project.backend.model.Student;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutor;
@@ -27,16 +28,20 @@ public class TutorApplicationService {
     private final RoleService roleService;
 
     @Autowired
+    private final NotificationService notificationService;
+
+    @Autowired
     final TutorRepository tutorRepository;
 
     @Autowired
     final TutorTimeslotRepository tutorTimeslotRepository;
 
-    public TutorApplicationService(TutorApplicationRepository tutorApplicationRepository, RoleService roleService, TutorRepository tutorRepository, TutorTimeslotRepository tutorTimeslotRepository) {
+    public TutorApplicationService(TutorApplicationRepository tutorApplicationRepository, RoleService roleService, TutorRepository tutorRepository, TutorTimeslotRepository tutorTimeslotRepository, NotificationService notificationService) {
         this.tutorApplicationRepository = tutorApplicationRepository;
         this.roleService = roleService;
         this.tutorRepository = tutorRepository;
         this.tutorTimeslotRepository = tutorTimeslotRepository;
+        this.notificationService = notificationService;
     }
 
     public TutorApplication getTutorApplicationById(Long id){
@@ -48,7 +53,7 @@ public class TutorApplicationService {
         return tutorApplicationRepository.findAll();
     }
 
-    public TutorApplication createTutorApplication(TutorApplicationCreateBody applicationBody) {
+    public void createTutorApplication(TutorApplicationCreateBody applicationBody, long tuteeId){
         
         TutorApplication tutorApplication = new TutorApplication();
 
@@ -63,6 +68,7 @@ public class TutorApplicationService {
         tutorApplication.setDescription(applicationBody.tutor_profile_description);
 
         TutorApplication savedTutorApplication = tutorApplicationRepository.save(tutorApplication);
+        notificationService.sendNotification(tuteeId, EntityType.TUTEE, 0L, EntityType.ADMIN, savedTutorApplication.getId(), EntityType.POST);
         
         for (TutorTimeSlotCreateBody timeSlotBody : applicationBody.time_availability) {
             TutorTimeSlot timeSlot = new TutorTimeSlot();
@@ -73,7 +79,6 @@ public class TutorApplicationService {
 
             tutorTimeslotRepository.save(timeSlot);
         }
-        return savedTutorApplication;
     }
 
     public void deleteTutorApplicationById(Long id) {
