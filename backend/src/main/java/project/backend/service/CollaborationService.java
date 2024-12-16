@@ -13,12 +13,15 @@ import project.backend.controller_bodies.collaboration_bodies.CollaborationCreat
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByPostBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByTutorBody;
 import project.backend.controller_bodies.post_controller.PostBody;
+import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
+import project.backend.controller_bodies.role_controller.TutorProfileResponse;
 import project.backend.model.Collaboration;
 import project.backend.model.EntityType;
 import project.backend.model.CollaborationState;
 import project.backend.model.Feedback;
 import project.backend.model.Post;
 import project.backend.model.RoleEnum;
+import project.backend.model.Student;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.model.Tutor;
@@ -323,4 +326,27 @@ public class CollaborationService {
         notificationService.sendNotification(tuteeId, EntityType.TUTEE, admin.getId(), EntityType.ADMIN, feedback.getId(), EntityType.FEEDBACK);
     }
 
+    public Post createPost(PostBody postBody, Long tuteeId){
+        return postService.createPost(postBody, tuteeId);
+    }
+
+    public Student getStudentByTuteeOrTutorId(long id){
+        return roleService.getStudentByTuteeOrTutorId(id);
+    }
+
+    public TutorProfileResponse getTutorProfile(long userId){
+        return roleService.getTutorProfile(userId);
+    }
+
+    public TuteeProfileResponse getTuteeProfile(long userId){
+        return roleService.getTuteeProfile(userId);
+    }
+
+    public Optional<Post> getPostById(Long id){
+        return postService.getPostById(id);
+    }
+
+    public void sendNotification(Long senderId, EntityType senderType, Long receiverId, EntityType receiverType, Long contextId, EntityType contextType){
+        notificationService.sendNotification(senderId, senderType, receiverId, receiverType, contextId, contextType);
+    }
 }

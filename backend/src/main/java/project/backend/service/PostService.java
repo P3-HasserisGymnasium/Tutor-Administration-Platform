@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.model.Post;
 import project.backend.model.PostState;
 import project.backend.model.SubjectEnum;
@@ -25,9 +26,6 @@ public class PostService {
   
     @Autowired
     final TuteeRepository tuteeRepository;
-
-    
-  
 
     public PostService(PostRepository postRepository, RoleService roleService, TuteeRepository tuteeRepository) {
         this.postRepository = postRepository;
@@ -89,16 +87,28 @@ public class PostService {
         return savePost(existingPost);        
     }
 */
-    public Post createPost(Post post, Long tuteeId){
-        
+    public Post createPost(PostBody postBody, Long tuteeId){
+        Tutee tutee = roleService.getTuteeById(tuteeId);
+
+        Post post = new Post();
+        post.setTutee(tutee);
+        post.setSubject(postBody.subject);
+        post.setTitle(postBody.title);
+        post.setDescription(postBody.description);
+        post.setDuration(postBody.duration);
+        post.setState(PostState.VISIBLE);    
+
+        System.out.println("post1" + post);
+
         Optional<Tutee> tuteeOpt = tuteeRepository.findById(tuteeId);
         System.out.println("tuteeId" + tuteeId);
         System.out.println("tuteeOpt" + tuteeOpt);
+        
         if(!tuteeOpt.isPresent()){
             throw new IllegalArgumentException("Tutee not found with ID: " + tuteeId);
         }
 
-        Tutee tutee = tuteeOpt.get();
+        tutee = tuteeOpt.get();
 
         post.setTutee(tutee);
         post.setCreationTimestamp(new Timestamp(System.currentTimeMillis()));

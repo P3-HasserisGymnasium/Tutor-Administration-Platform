@@ -25,11 +25,8 @@ import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.model.Post;
 import project.backend.model.PostState;
-import project.backend.model.Student;
 import project.backend.model.SubjectEnum;
-import project.backend.model.Tutee;
 import project.backend.service.PostService;
-import project.backend.service.RoleService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -37,11 +34,9 @@ import project.backend.service.RoleService;
 public class PostController {
 
     final PostService postService;
-    final RoleService roleService;
 
-    public PostController(PostService postService, RoleService roleService) {
+    public PostController(PostService postService) {
         this.postService = postService;
-        this.roleService = roleService;
     }
 
     @GetMapping("")
@@ -140,29 +135,14 @@ public class PostController {
     @PostMapping("/")
     public ResponseEntity<?> createPost(@RequestBody PostBody postBody, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
-        Student student = roleService.getStudentById(authenticatedUser.getUserId());
-        Tutee tutee = student.getTutee();
 
-        System.out.println("firstprint" + authenticatedUser.getTuteeId());
-        System.out.println("secondprint" + tutee.getId());
-        System.out.println("thirdprint" + authenticatedUser.isAdministrator());
-
-        if (authenticatedUser.getTuteeId() != tutee.getId() && !authenticatedUser.isAdministrator()){
+        if (!authenticatedUser.isTutee() && !authenticatedUser.isAdministrator()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to create a post");
         }
 
-        Post post = new Post();
-        post.setTutee(tutee);
-        post.setSubject(postBody.subject);
-        post.setTitle(postBody.title);
-        post.setDescription(postBody.description);
-        post.setDuration(postBody.duration);
-        post.setState(PostState.VISIBLE);    
-        System.out.println("post1" + post);
-
-        postService.createPost(post, tutee.getId());
-        System.out.println("post2" + post);
-        return ResponseEntity.status(HttpStatus.CREATED).body(post);
+        postService.createPost(postBody, authenticatedUser.getTuteeId());
+        System.out.println("post2" + postBody);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Post created");
     }
 
     @DeleteMapping("/{id}")

@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import project.backend.model.Meeting;
 import project.backend.model.MeetingEnum;
+import project.backend.model.Collaboration;
 import project.backend.model.EntityType;
 import project.backend.repository.MeetingRepository;
+
 
 @Service
 public class MeetingService {
@@ -20,9 +22,13 @@ public class MeetingService {
     @Autowired 
     final NotificationService notificationService;
 
-    public MeetingService(MeetingRepository meetingRepository, NotificationService notificationService) {
+    @Autowired
+    final CollaborationService collaborationService;
+
+    public MeetingService(MeetingRepository meetingRepository, NotificationService notificationService, CollaborationService collaborationService) {
         this.meetingRepository = meetingRepository;
         this.notificationService = notificationService;
+        this.collaborationService = collaborationService;
     }
 
     public Optional<Meeting> getMeetingById(Long id){
@@ -118,5 +124,7 @@ public class MeetingService {
         meetingRepository.save(meeting);
     }
 
-     
+    public Collaboration getCollaborationById(Long id){
+        return collaborationService.getCollaborationById(id);
+    }   
 }
