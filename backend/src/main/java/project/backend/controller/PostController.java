@@ -51,8 +51,6 @@ public class PostController {
         if (!authenticatedUser.isTutor() && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to view these posts");
         }
-        System.out.println("subjects" + subjects);
-        System.out.println("duration" + duration);
         if(subjects != null && !subjects.isEmpty() && duration != null && !duration.isEmpty()){
             // Parse subjects
             List<SubjectEnum> subjectList = null;
@@ -162,7 +160,6 @@ public class PostController {
         }
 
         postService.createPost(postBody, authenticatedUser.getTuteeId());
-        System.out.println("post2" + postBody);
         return ResponseEntity.status(HttpStatus.CREATED).body("Post created");
     }
 

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.model.Post;
+import project.backend.model.PostState;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.repository.PostRepository;
@@ -97,13 +98,11 @@ public class PostService {
         post.setTitle(postBody.title);
         post.setDescription(postBody.description);
         post.setDuration(postBody.duration);
+        post.setPairingRequest(postBody.getIsPairingRequest());
         post.setState(PostState.VISIBLE);    
 
-        System.out.println("post1" + post);
 
         Optional<Tutee> tuteeOpt = tuteeService.getTuteeById(tuteeId);
-        System.out.println("tuteeId" + tuteeId);
-        System.out.println("tuteeOpt" + tuteeOpt);
         
         if(!tuteeOpt.isPresent()){
             throw new IllegalArgumentException("Tutee not found with ID: " + tuteeId);

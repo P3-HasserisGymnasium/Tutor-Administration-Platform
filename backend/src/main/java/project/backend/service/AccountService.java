@@ -90,11 +90,8 @@ public class AccountService {
         newStudent.setPasswordHash(passwordHash);
         newStudent.setLanguages(body.languages);
         newStudent.setYearGroup(body.year_group);
-        System.out.println("Roles: " + body.roles);
         Student savedStudent = studentService.saveStudent(newStudent);
-        System.out.println("@AccountService, saved student with id: " + savedStudent.getId());
         if (body.roles.contains(RoleEnum.Tutor)) {
-            System.out.println("@AccountService, adding tutor");
             Tutor newTutor = new Tutor();
 
             newTutor.setTutoringSubjects(body.subjects);
@@ -102,10 +99,8 @@ public class AccountService {
             newTutor.setProfileDescription(body.tutor_profile_description);
 
             savedStudent.setTutor(newTutor);
-            System.out.println("@AccountService, added new tutor to student " + savedStudent.getId());
             
             tutorService.saveTutor(newTutor);
-            System.out.println("@AccountService, saved tutor with id: " + newTutor.getId());
 
             List<TutorTimeSlot> timeSlots = new LinkedList<>();
             for (TimeSlotCreateBody timeSlotBody : body.time_availability) {
@@ -128,16 +123,13 @@ public class AccountService {
             newTutor.setFreeTimeSlots(timeSlots);
         }
         if (body.roles.contains(RoleEnum.Tutee)) {
-            System.out.println("@AccountService, adding tutee");
             Tutee newTutee = new Tutee();
 
             newTutee.setStudent(savedStudent);
 
             savedStudent.setTutee(newTutee); 
-            System.out.println("@AccountService, added tutee to student " + savedStudent.getId());
             
             tuteeService.saveTutee(newTutee);
-            System.out.println("@AccountService, saved tutee with id: " + newTutee.getId());
         }
 
         studentService.saveStudent(savedStudent);
@@ -186,7 +178,6 @@ public class AccountService {
 
     private AccountLoginSuccessBody createStudentResponse(Student student) {
         AccountLoginSuccessBody responseBody = new AccountLoginSuccessBody();
-        System.out.println("Student: " + student);
         Tutor tutor = student.getTutor();
      
         responseBody.token = generateToken(student.getId().toString());
@@ -195,7 +186,6 @@ public class AccountService {
         responseBody.email = student.getEmail();
         responseBody.role = List.of(roleService.getRolesByUserId(student.getId()));
         if (tutor != null) {
-            System.out.println("Tutorinhere: " + tutor);
             responseBody.tutoring_subjects = tutor.getTutoringSubjects();
         }
         responseBody.year_group = student.getYearGroup();

@@ -45,8 +45,8 @@ public class RoleController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to view all tutees");
         }
 
-        ArrayList<TuteeProfileResponse> tutees = roleService.getTutees();
-        return ResponseEntity.ok(tutees); 
+        List<TuteeProfileResponse> tutees = roleService.getTutees();
+        return ResponseEntity.status(HttpStatus.OK).body(tutees);
     }
 
     @GetMapping("/tutors")
@@ -64,7 +64,6 @@ public class RoleController {
             HttpServletRequest request) {
 
         if (role == RoleEnum.Tutor) {
-            System.out.println("Tutor");
             try {
                 TutorProfileResponse response = roleService.getTutorProfile(id);
                 return ResponseEntity.status(HttpStatus.OK).body(response);

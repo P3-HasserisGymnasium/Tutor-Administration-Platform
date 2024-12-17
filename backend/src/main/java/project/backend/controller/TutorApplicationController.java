@@ -15,8 +15,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.tutor_application_controller.TutorApplicationCreateBody;
-import project.backend.model.EntityType;
-import project.backend.model.TutorApplication;
 import project.backend.service.NotificationService;
 import project.backend.service.TutorApplicationService;
 

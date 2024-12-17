@@ -48,14 +48,17 @@ public class CollaborationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getCollaboration(@PathVariable Long id, HttpServletRequest request) {
-        // AuthenticatedUserBody authenticatedUser =
-        // AuthUser.getAuthenticatedUser(request);
+        AuthenticatedUserBody authenticatedUser =  AuthUser.getAuthenticatedUser(request);
 
         Collaboration collaboration = collaborationService.getCollaborationById(id);
 
-        if (collaboration == null) {
-            return null;
+        if (collaboration == null) return null;
+
+
+        if (authenticatedUser.getTuteeId() != collaboration.getTutee().getId() && authenticatedUser.getTutorId() != collaboration.getTutor().getId() && !authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authortized to view this collaboration");
         }
+
 
         CollaborationResponseBody collaborationResponseBody = new CollaborationResponseBody();
         collaborationResponseBody.setId(collaboration.getId());
@@ -116,15 +119,6 @@ public class CollaborationController {
             collaborationResponseBody.setStartDate(collaboration.getStartTimestamp());
             collaborationResponseBodies.add(collaborationResponseBody);
 
-            System.out.println(collaborationResponseBody);
-            System.out.println("kraskraskras" + collaborationResponseBody.getId());
-            System.out.println("kraskraskras" + collaborationResponseBody.getTuteeId());
-            System.out.println("kraskraskras" + collaborationResponseBody.getTutorId());
-            System.out.println("kraskraskras" + collaborationResponseBody.getTuteeName());
-            System.out.println("kraskraskras" + collaborationResponseBody.getTutorName());
-            System.out.println("kraskraskras" + collaborationResponseBody.getState());
-            System.out.println("kraskraskras" + collaborationResponseBody.getSubject());
-            System.out.println("kraskraskras" + collaborationResponseBody.getStartDate());
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(new ArrayList<>(collaborationResponseBodies));
@@ -216,8 +210,6 @@ public class CollaborationController {
     public ResponseEntity<?> requestCollaborationByPost(@RequestBody RequestCollaborationByPostBody postBody,
             HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
-        System.out.println("authenticatedUser" + authenticatedUser);
-        System.out.println("postBody" + postBody);
 
         if (!authenticatedUser.isTutor() && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

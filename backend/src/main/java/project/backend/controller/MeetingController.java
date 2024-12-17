@@ -209,8 +209,9 @@ public class MeetingController {
     public ResponseEntity<String> requestMeeting(@RequestBody MeetingBody body, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        System.out.println(body);
-        System.out.println("ussr" + authenticatedUser);
+        if (!authenticatedUser.isTutee()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to request a meeting");
+        }
 
         Collaboration collaboration = meetingService.getCollaborationById(body.collaboration);
 

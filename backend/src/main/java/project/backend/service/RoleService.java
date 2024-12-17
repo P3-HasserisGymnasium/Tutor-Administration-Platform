@@ -42,12 +42,64 @@ public class RoleService {
         this.administratorService = administratorService;
     }
 
-    public List<Student> getTutees() {
-        return studentService.getTutees();
+    public List<TuteeProfileResponse> getTutees() {
+        List<Student> studentList = studentService.getTutees();
+        ArrayList<TuteeProfileResponse> tutees = new ArrayList<>();
+        for (Student student : studentList) {
+            Tutee tutee = student.getTutee();
+            TuteeProfileResponse tuteeResponse = new TuteeProfileResponse();
+            tuteeResponse.setFullName(student.getFullName());
+            tuteeResponse.setYearGroup(student.getYearGroup());
+            tuteeResponse.setLanguages(student.getLanguages());
+            tuteeResponse.setSubjectsReceivingHelpIn(tutee.getCollaborations().stream().map(collab -> collab.getSubject()).toList());
+            tuteeResponse.setContactInfo(student.getContactInfo());
+            tutees.add(tuteeResponse);
+        }
+        return tutees;
     }
 
-    public List<Student> getTutors() {
-        return studentService.getTutors();
+    public List<TutorProfileResponse> getTutors() {
+        List<Student> students = studentService.getTutors();
+        List<TutorProfileResponse> tutors = new ArrayList<>();
+        for (Student student : students) {
+            TutorProfileResponse response = new TutorProfileResponse();
+            response.id = student.getTutor().getId();
+            response.contact_info = student.getContactInfo();
+            response.full_name = student.getFullName();
+            response.languages = student.getLanguages();
+            response.year_group = student.getYearGroup();
+
+            List<TimeSlotCreateBody> timeSlotRepsonses = new LinkedList<>();
+            for (TutorTimeSlot timeSlot : student.getTutor().getFreeTimeSlots()) {
+                TimeSlotCreateBody timeSlotResponse = new TimeSlotCreateBody();
+
+                WeekDayEnum weekDay = timeSlot.getWeekDay();
+                for (WeekDayEnum day : WeekDayEnum.values()) {
+                    for (TimeSlotCreateBody timeSlotCreateBody : timeSlotRepsonses) {
+                        if (timeSlotCreateBody.day == day) {
+                            timeSlotResponse = timeSlotCreateBody;
+                            break;
+                        }
+                    }
+                }
+
+                timeSlotResponse.day = weekDay;
+
+                TimeCreateBody timeCreateBody = new TimeCreateBody();
+                timeCreateBody.start_time = timeSlot.getStartTime();
+                timeCreateBody.end_time = timeSlot.getEndTime();
+                timeSlotResponse.time.add(timeCreateBody);
+
+                timeSlotRepsonses.add(timeSlotResponse);
+            }
+            response.time_availability = timeSlotRepsonses;
+
+            response.tutoring_subjects = student.getTutor().getTutoringSubjects();
+            response.description = student.getTutor().getProfileDescription();
+
+            tutors.add(response);
+        }
+        return tutors;
     }
 
     public Student saveStudent(Student student) {
@@ -118,8 +170,6 @@ public class RoleService {
         Student student = getStudentById(id);
         Tutor tutor = student.getTutor();
         Tutee tutee = student.getTutee();
-        System.out.println("tutor: " + tutor);
-        System.out.println("tutee: " + tutee);
 
         if (tutor != null && tutee != null) {
             return new RoleEnum[] { RoleEnum.Tutor, RoleEnum.Tutee };
@@ -229,7 +279,6 @@ public class RoleService {
             List<TimeSlotCreateBody> filterTimeAvailabilities, List<YearGroupEnum> filterYearGroups,
             List<LanguageEnum> filterLanguages) {
 
-        System.out.println("timeAvailabilities: " + filterTimeAvailabilities.size());
 
         // TimeSlotCreateBody to TutorTimeSlot
         List<TutorTimeSlot> filterTimeSlots = new LinkedList<>();
@@ -240,17 +289,10 @@ public class RoleService {
                 tutorTimeSlot.setStartTime(time.start_time);
                 tutorTimeSlot.setEndTime(time.end_time);
                 filterTimeSlots.add(tutorTimeSlot);
-
-                System.out.println("parsed to TutorTimeSlot: " + tutorTimeSlot.getWeekDay() + ", "
-                        + tutorTimeSlot.getStartTime() + ", " + tutorTimeSlot.getEndTime());
             }
         }
 
         List<Tutor> tutors = tutorService.getAllTutors();
-        System.out.println("@RoleService, tutors found: " + tutors.size());
-
-        System.out.println("@RoleService, filtrering for, subjects: " + filterSubjects + ", timeAvailabilities: "
-                + filterTimeAvailabilities + ", yearGroups: " + filterYearGroups + ", languages: " + filterLanguages);
         if (filterSubjects != null && !filterSubjects.isEmpty()) {
             tutors = tutors
                     .stream()
@@ -264,7 +306,6 @@ public class RoleService {
                     })
                     .toList();
         }
-        System.out.println("@RoleService, tutors left after first filter: " + tutors.size());
         if (filterTimeAvailabilities != null && filterTimeAvailabilities.isEmpty() == false) {
             tutors = tutors
                     .stream()
@@ -287,41 +328,26 @@ public class RoleService {
                                 int tutorTimeSlotEndTimeHour = Integer.parseInt(endTimeTutorArray[0]);
                                 int tutorTimeSlotEndTimeMinute = Integer.parseInt(endTimeTutorArray[1]);
 
-                                System.out.println("filterDay: " + filterTimeSlot.getWeekDay()
-                                        + "\nfilterTimeSlotStartTimeHour: " + filterTimeSlotStartTimeHour
-                                        + "\nfilterTimeSlotStartTimeMinute: " + filterTimeSlotStartTimeMinute
-                                        + "\ntutorTimeSlotDay: " + tutorTimeSlot.getWeekDay()
-                                        + "\ntutorTimeSlotStartTimeHour: " + tutorTimeSlotStartTimeHour
-                                        + "\ntutorTimeSlotStartTimeMinute: " + tutorTimeSlotStartTimeMinute);
-                                System.out.println("filterTimeSlotEndTimeHour: " + filterTimeSlotEndTimeHour
-                                        + "\nfilterTimeSlotEndTimeMinute: " + filterTimeSlotEndTimeMinute
-                                        + "\ntutorTimeSlotEndTimeHour: " + tutorTimeSlotEndTimeHour
-                                        + "\ntutorTimeSlotEndTimeMinute: " + tutorTimeSlotEndTimeMinute);
-
                                 if (filterTimeSlot.getWeekDay() == tutorTimeSlot.getWeekDay()
                                         && isTimeSmallerOrEqual(tutorTimeSlotStartTimeHour,
                                                 tutorTimeSlotStartTimeMinute, filterTimeSlotStartTimeHour,
                                                 filterTimeSlotStartTimeMinute)
                                         && isTimeSmallerOrEqual(filterTimeSlotEndTimeHour, filterTimeSlotEndTimeMinute,
                                                 tutorTimeSlotEndTimeHour, tutorTimeSlotEndTimeMinute)) {
-                                    System.out.println("true");
                                     return true;
                                 }
                             }
                         }
-                        System.out.println("false");
                         return false;
                     })
                     .toList();
         }
-        System.out.println("@RoleService, tutors left after second filter: " + tutors.size());
         if (filterYearGroups != null && filterYearGroups.isEmpty() == false) {
             tutors = tutors
                     .stream()
                     .filter(tutor -> filterYearGroups.contains(tutor.getStudent().getYearGroup()))
                     .toList();
         }
-        System.out.println("@RoleService, tutors left after third filter: " + tutors.size());
         if (filterLanguages != null && filterLanguages.isEmpty() == false) {
             tutors = tutors
                     .stream()
@@ -335,7 +361,6 @@ public class RoleService {
                     })
                     .toList();
         }
-        System.out.println("@RoleService, tutors left after fourth filter: " + tutors.size());
 
         ArrayList<TutorProfileResponse> responses = new ArrayList<>();
 
@@ -404,8 +429,6 @@ public class RoleService {
     }
 
     boolean isTimeSmallerOrEqual(int smallHour, int smallMinute, int bigHour, int bigMinute) {
-        System.out.println("if " + smallHour + " < " + bigHour);
-        System.out.println("else if " + smallHour + " == " + bigHour + " && " + smallMinute + " <= " + bigMinute);
         if (smallHour < bigHour) {
             return true;
         } else if (smallHour == bigHour && smallMinute <= bigMinute) {

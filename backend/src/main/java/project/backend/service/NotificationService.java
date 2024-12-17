@@ -55,14 +55,6 @@ public class NotificationService {
         
         String sender_name = generateSenderName(senderId, senderType);
         String receiver_name = generateReceiverName(receiverId, receiverType);
-        System.out.println("sender_name" + sender_name);                         
-        System.out.println("receiver_name" + receiver_name);
-        System.out.println("senderId" + senderId);
-        System.out.println("receiverId" + receiverId);
-        System.out.println("contextId" + contextId);
-        System.out.println("contextType" + contextType);
-        System.out.println("senderType" + senderType);
-        System.out.println("receiverType" + receiverType);
         body.sender_id = senderId;
         body.sender_name = sender_name;
         body.sender_type = senderType;

@@ -306,6 +306,9 @@ public class CollaborationService {
         Tutor tutor = roleService.getTutorByUserId(postBody.getTutor_id());
         ArrayList<Collaboration> existingCollaboration = collaborationRepository
                 .findByTuteeTutorAndSubject(tutee.getId(), tutor.getId(), post.getSubject());
+
+        existingCollaboration.removeIf(collaboration -> collaboration.getState() == CollaborationState.REJECTED);
+
         if (existingCollaboration.size() > 0 || existingCollaboration == null) {
             throw new IllegalArgumentException("Collaboration already exists or request is pending");
         }
@@ -324,11 +327,12 @@ public class CollaborationService {
 
         ArrayList<Collaboration> existingCollaboration = collaborationRepository.findByTuteeTutorAndSubject(tuteeId,
                 body.tutorId, body.subject);
-        System.out.println("existingCollaboration" + existingCollaboration);
+
+        existingCollaboration.removeIf(collaboration -> collaboration.getState() == CollaborationState.REJECTED);
+
         if (existingCollaboration.size() > 0 || existingCollaboration == null) {
             throw new IllegalArgumentException("Collaboration already exists or request is pending");
         }
-        System.out.println("tuteeIdssssss" + tuteeId);
         Collaboration collaboration = new Collaboration();
         Tutor tutor = roleService.getTutorById(body.tutorId);
         Tutee tutee = roleService.getTuteeById(tuteeId);
