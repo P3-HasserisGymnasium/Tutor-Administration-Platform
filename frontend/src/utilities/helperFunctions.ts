@@ -240,7 +240,7 @@ export const generateNotificationMessage = (notification: NotificationResponseTy
 			if (notification.sender_type === NotificationParticipant.Enum.TUTOR) {
 				return `You have received an update on your collaboration request for ${notification.sender_name}`;
 			}
-			return `You have received an update on a collaboration`;
+			return `You have received an update on a collaboration request`;
 
 		case NotificationContext.Enum.FEEDBACK:
 			return `You have received feedback from ${notification.sender_name} for tutor ${notification.receiver_name}`;

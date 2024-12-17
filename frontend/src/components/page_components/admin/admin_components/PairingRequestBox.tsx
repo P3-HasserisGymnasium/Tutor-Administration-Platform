@@ -20,6 +20,7 @@ export function PairingRequestBox({ post }: PairingRequestBoxProps) {
           mb: 2,
           display: "flex",
           width: "98%",
+          borderRadius: 100,
           height: "50px",
           minHeight: "50px",
           border: "1.5px solid black",
@@ -29,7 +30,7 @@ export function PairingRequestBox({ post }: PairingRequestBoxProps) {
           },
         }}
       >
-        <Box sx={{ backgroundColor: "green", width: 1 / 5, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <Box sx={{ borderRadius: 100, backgroundColor: "green", width: 1 / 5, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <Typography variant="h5" sx={{ color: "white" }}>
             Pairing help
           </Typography>
@@ -39,8 +40,8 @@ export function PairingRequestBox({ post }: PairingRequestBoxProps) {
             {post.title}
           </Typography>
         </Box>
-        <Box sx={{ width: 1 / 5, display: "flex", alignItems: "center", justifyContent: "flex-end", pr: 2 }}>
-          <Button sx={{ fontSize: "1.5em", color: "white", backgroundColor: "black", height: "40px" }}>Review</Button>
+        <Box sx={{ width: 1 / 5, display: "flex", alignItems: "center", justifyContent: "flex-end", pr: 1 }}>
+          <Button sx={{ borderRadius: 100, fontSize: "1.5em", color: "white", backgroundColor: "black", height: "40px" }}>Review</Button>
         </Box>
       </Paper>
     </>

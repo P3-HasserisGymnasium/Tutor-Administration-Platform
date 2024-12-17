@@ -21,6 +21,7 @@ export default function PostCreation() {
       duration: [0, 12],
       description: "",
       state: PostState.Enum.VISIBLE,
+      pairing_request: false,
     },
   };
   const filterMethods = useForm<PostCreationType>(useFormParameter);
@@ -118,15 +119,7 @@ export default function PostCreation() {
             </Box>
           </Box>
           <Typography variant="h3">Describe your request</Typography>
-          <TextField
-            multiline
-            maxRows={getMaxRows()}
-            variant="outlined"
-            size="small"
-            placeholder="Which topics do you need help with?"
-            {...register("description")}
-            sx={{}}
-          />
+          <TextField multiline maxRows={getMaxRows()} variant="outlined" size="small" placeholder="Which topics do you need help with?" {...register("description")} sx={{}} />
         </Box>
 
         <Box

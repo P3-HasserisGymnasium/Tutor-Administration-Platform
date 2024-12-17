@@ -11,23 +11,28 @@ import {
 	RequestCollaborationByTutorType,
 	TutorProfileType,
 } from "~/types/entity_types";
-import { RoleType } from "~/types/data_types";
+import { RoleType, SubjectType } from "~/types/data_types";
+import { useNavigate } from "react-router-dom";
 
 export const useCollaborationService = () => {
 	//Admin requests a collaboration
-	const submitCollaborationSuggestion = useMutation({
-		mutationKey: ["submitCollaborationSuggestion"],
-		mutationFn: async (collaboration: CollaborationType) => {
-			const { data } = await apiClient.post<CollaborationType>("/api/collaboration", collaboration);
-			return data;
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
-		},
-		onSuccess: () => {
-			toast.success("Collaboration suggestion submitted");
-		},
-	});
+	const useSubmitCollaborationSuggestion = () => {
+		return useMutation({
+			mutationKey: ["submitCollaborationSuggestion"],
+			mutationFn: async ({ tutee_id, tutor_id, post_id, subject }: { tutee_id: number; tutor_id: number; post_id: number, subject: SubjectType }) => {
+				const { data } = await apiClient.post<CollaborationType>("/api/collaboration/submit", { tutee_id, tutor_id, post_id, subject });
+				return data;
+			},
+			onError: (e: AxiosError<{ detail: string }>) => {
+				toast.error(e?.response?.data?.detail);
+			},
+			onSuccess: () => {
+				toast.success("Collaboration suggestion submitted");
+			},
+		})
+	};
+
+
 	const acceptCollaboration = useMutation({
 		mutationKey: ["acceptCollaboration"],
 		mutationFn: async ({ collaboration_id, role }: { collaboration_id: number; role: RoleType }) => {
@@ -132,6 +137,7 @@ export const useCollaborationService = () => {
 	};
 
 	const useTerminateCollaboration = () => {
+		const navigate = useNavigate();
 		return useMutation({
 			mutationKey: ["terminateCollaboration"],
 			mutationFn: async ({ id, terminationReason }: TerminationType) => {
@@ -142,7 +148,7 @@ export const useCollaborationService = () => {
 				toast.error("" + e?.response?.data);
 			},
 			onSuccess: () => {
-				toast.success("Collaboration terminated");
+				navigate("/");
 			},
 		});
 	};
@@ -215,7 +221,7 @@ export const useCollaborationService = () => {
 		useGetCollaborationsWithTutee,
 		useGetCollabortations,
 		useGetCollaborationsWithTutor,
-		submitCollaborationSuggestion,
+		useSubmitCollaborationSuggestion,
 		acceptCollaboration,
 		rejectCollaboration,
 		requestCollaborationSuggestion,

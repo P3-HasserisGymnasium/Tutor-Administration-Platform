@@ -21,6 +21,7 @@ import project.backend.controller_bodies.collaboration_bodies.CollaborationCreat
 import project.backend.controller_bodies.collaboration_bodies.CollaborationResponseBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByPostBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByTutorBody;
+import project.backend.controller_bodies.collaboration_bodies.SubmitBody;
 import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
 import project.backend.controller_bodies.role_controller.TutorProfileResponse;
 import project.backend.model.Collaboration;
@@ -276,14 +277,21 @@ public class CollaborationController {
         return ResponseEntity.status(HttpStatus.OK).body("Collaboration requested");
     }
 
-    @PostMapping("/submit-suggestion/{collaborationId}/{tutorId}")
-    public ResponseEntity<?> submitCollaborationSuggestion(@PathVariable Long collaborationId,
-            @PathVariable Long tutorId, HttpServletRequest request) {
-        // AuthenticatedUserBody authenticatedUser =
-        // AuthUser.getAuthenticatedUser(request);
+    @PostMapping("/submit")
+    public ResponseEntity<?> submitCollaborationSuggestion(@RequestBody SubmitBody body, HttpServletRequest request) {
+         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        collaborationService.submitCollaborationSuggestion(collaborationId, tutorId);
-        return ResponseEntity.status(HttpStatus.OK).body("Collaboration suggestion submitted");
+         if (!authenticatedUser.isAdministrator()) {
+             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                     .body("Unauthorized: You must be logged in as an administrator to submit a collaboration suggestion");
+         }
+
+         try {
+             collaborationService.submitCollaborationSuggestion(body);
+             return ResponseEntity.status(HttpStatus.OK).body("Collaboration suggestion submitted");
+         } catch (Exception e) {
+             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error" + e.getMessage());
+         }
     }
 
     @PostMapping("/accept/{collaborationId}/{role}")

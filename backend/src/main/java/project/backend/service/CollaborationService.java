@@ -12,6 +12,7 @@ import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.collaboration_bodies.CollaborationCreateBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByPostBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByTutorBody;
+import project.backend.controller_bodies.collaboration_bodies.SubmitBody;
 import project.backend.model.Collaboration;
 import project.backend.model.EntityType;
 import project.backend.model.CollaborationState;
@@ -98,21 +99,24 @@ public class CollaborationService {
 
 
     // admin provides collaboration suggestion
-    public void submitCollaborationSuggestion(Long collaborationId, Long tutorId) {
-        Tutor tutor = roleService.getStudentById(tutorId).getTutor();
+    public void submitCollaborationSuggestion(SubmitBody body) {
 
-        Collaboration collaboration = getCollaborationById(collaborationId);
 
-        collaboration.setTutor(tutor);
+        Collaboration collaboration = new Collaboration();
+        collaboration.setTutee(roleService.getTuteeById(body.getTutee_id()));
+        collaboration.setTutor(roleService.getTutorById(body.getTutor_id()));
+        collaboration.setSubject(body.getSubject());
         collaboration.setState(CollaborationState.WAITING_FOR_BOTH);
+        collaboration.setAdminAccepted(true);
+        Collaboration collab = collaborationRepository.save(collaboration);
 
-        Long tuteeId = collaboration.getTutee().getId();
+        Post post = postService.getPostById(body.getPost_id()).get();
+        post.setPairingRequest(false);
+        postService.savePost(post);
 
-        // notify tutor and tutee of the collaboration suggestion
-        notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR, collaborationId,
-                EntityType.COLLABORATION);
-        notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE, collaborationId,
-                EntityType.COLLABORATION);
+
+        notificationService.sendNotification(0L, EntityType.ADMIN, body.getTutee_id(), EntityType.TUTEE,
+                collab.getId(), EntityType.COLLABORATION);
 
         collaborationRepository.save(collaboration);
     }
@@ -128,16 +132,23 @@ public class CollaborationService {
         EntityType receiverType = null;
         switch (role) {
             case Tutee:
-                if (state != CollaborationState.WAITING_FOR_TUTEE) {
+                if (state != CollaborationState.WAITING_FOR_TUTEE && state != CollaborationState.WAITING_FOR_BOTH) {
                     throw new IllegalArgumentException("Collaboration is not waiting for tutee");
                 }
-                if (adminAccepted) {
+                if (adminAccepted && state == CollaborationState.WAITING_FOR_TUTEE) {
                     collaboration.setState(CollaborationState.ESTABLISHED);
                     senderId = collaboration.getTutee().getId();
                     receiverId = collaboration.getTutor().getId();
                     senderType = EntityType.TUTEE;
                     receiverType = EntityType.TUTOR;
-                } else {
+                } else if (state == CollaborationState.WAITING_FOR_BOTH) {
+                    collaboration.setState(CollaborationState.WAITING_FOR_TUTOR);
+                    senderId = collaboration.getTutee().getId();
+                    senderType = EntityType.TUTEE;
+                    receiverId = collaboration.getTutor().getId();
+                    receiverType = EntityType.TUTOR;
+                }
+                else {
                     collaboration.setState(CollaborationState.WAITING_FOR_ADMIN);
                     senderId = collaboration.getTutee().getId();
                     senderType = EntityType.TUTEE;

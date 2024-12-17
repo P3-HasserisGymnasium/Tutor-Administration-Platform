@@ -23,15 +23,13 @@ export const useNotificationService = () => {
 		return useQuery({
 			queryKey: ["getNotifications"],
 			queryFn: async () => {
-				const { data } = await apiClient.get(`/api/notifications/all`);
-				const cleanedString = data.replace(/^(\[.*\])(\[.*\])$/, "$1");
-				const parsedData: NotificationResponseType[] = JSON.parse(cleanedString);
-				return parsedData;
+				// const { data } = await apiClient.get<NotificationResponseType[]>(`/api/notifications/all`);
+				console.log("not implemented")
 			},
 			refetchOnWindowFocus: false,
 			refetchInterval: 60000, // Refetch every minute
 			staleTime: 60000, // Data is considered fresh for 60 seconds
-			placeholderData: [],
+
 		});
 	};
 	const useGetTuteeNotifications = (id: number | null) =>
