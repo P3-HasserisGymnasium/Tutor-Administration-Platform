@@ -39,10 +39,8 @@ export const usePostService = () => {
 		return useQuery({
 			queryKey: ["getPairingRequests"],
 			queryFn: async () => {
-				const { data } = await apiClient.get(`/api/post/pairing_requests`);
-				const cleanedString = data.replace(/^(\[.*\])(\[.*\])$/, "$1");
-				const parsedData: PostType[] = JSON.parse(cleanedString);
-				return parsedData;
+				const { data } = await apiClient.get<PostType[]>(`/api/post/pairing_requests`);
+				return data;
 			},
 			refetchOnWindowFocus: false,
 			placeholderData: [],
@@ -59,7 +57,7 @@ export const usePostService = () => {
 			onError: (e: AxiosError<{ detail: string }>) => {
 				toast.error(e?.response?.data?.detail);
 			},
-			onSuccess: () => { },
+			onSuccess: () => {},
 		});
 	};
 

@@ -11,8 +11,7 @@ import {
 	RequestCollaborationByTutorType,
 	TutorProfileType,
 } from "~/types/entity_types";
-import { Role } from "~/types/data_types";
-import { z } from "zod";
+import { RoleType } from "~/types/data_types";
 
 export const useCollaborationService = () => {
 	//Admin requests a collaboration
@@ -29,12 +28,10 @@ export const useCollaborationService = () => {
 			toast.success("Collaboration suggestion submitted");
 		},
 	});
-
-	type RoleType = z.infer<typeof Role>;
 	const acceptCollaboration = useMutation({
 		mutationKey: ["acceptCollaboration"],
-		mutationFn: async ({ id, role }: { id: number; role: RoleType }) => {
-			const { data } = await apiClient.post(`/api/collaboration/accept/${id}/${role}`);
+		mutationFn: async ({ collaboration_id, role }: { collaboration_id: number; role: RoleType }) => {
+			const { data } = await apiClient.post(`/api/collaboration/accept/${collaboration_id}/${role}`);
 			return data;
 		},
 		onError: (e: AxiosError) => {
@@ -61,8 +58,8 @@ export const useCollaborationService = () => {
 
 	const rejectCollaboration = useMutation({
 		mutationKey: ["rejectCollaboration"],
-		mutationFn: async ({ id, role }: { id: number; role: RoleType }) => {
-			const { data } = await apiClient.post(`/api/collaboration/reject/${id}/${role}`);
+		mutationFn: async ({ collaboration_id, role }: { collaboration_id: number; role: RoleType }) => {
+			const { data } = await apiClient.post(`/api/collaboration/reject/${collaboration_id}/${role}`);
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -168,10 +165,8 @@ export const useCollaborationService = () => {
 		return useQuery({
 			queryKey: ["getCollaborations"],
 			queryFn: async () => {
-				const { data } = await apiClient.get(`/api/collaboration/all`);
-				const cleanedString = data.replace(/^(\[.*\])(\[.*\])$/, "$1");
-				const parsedData = JSON.parse(cleanedString);
-				return parsedData;
+				const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/all`);
+				return data;
 			},
 			refetchOnWindowFocus: false,
 			placeholderData: [],

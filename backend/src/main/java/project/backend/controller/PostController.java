@@ -117,6 +117,8 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(post);
     }
 
+    
+
     @GetMapping("/tutee")
     public ResponseEntity<?> getOwnPosts(HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);

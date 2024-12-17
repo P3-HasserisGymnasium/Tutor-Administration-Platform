@@ -19,7 +19,7 @@ export default function AcceptInvitationFromTuteeDialog({ open, setOpen, context
 	const acceptCollab = () => {
 		if (collaboration?.id) {
 			acceptCollaboration.mutate(
-				{ id: collaboration.id, role: Role.Enum.Tutor },
+				{ collaboration_id: collaboration.id, role: Role.Enum.Tutor },
 				{
 					onSuccess: () => {
 						setOpen(false);
@@ -37,7 +37,7 @@ export default function AcceptInvitationFromTuteeDialog({ open, setOpen, context
 	const rejectCollab = () => {
 		if (collaboration?.id) {
 			rejectCollaboration.mutate(
-				{ id: collaboration.id, role: Role.Enum.Tutor },
+				{ collaboration_id: collaboration.id, role: Role.Enum.Tutor },
 				{
 					onSuccess: () => {
 						setOpen(false);

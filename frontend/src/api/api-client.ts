@@ -12,7 +12,6 @@ const apiClient = axios.create({
 apiClient.interceptors.response.use(function (response) {
 	response.headers["Access-Control-Allow-Origin"] = "*";
 	response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS";
-	response.headers["Content-Type"] = "application/json";
 
 	return response;
 });

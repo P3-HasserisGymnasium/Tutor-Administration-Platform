@@ -41,13 +41,8 @@ export const useRoleService = () => {
 			queryKey: ["getTutees"],
 			queryFn: async () => {
 				// crunch code 1 week left dont look, it work.
-				const { data } = await apiClient.get(`/api/role/tutees`);
-				const cleanedString = data.replace(/^(\[.*\])(\[.*\])$/, "$1");
-				const parsedData = JSON.parse(cleanedString);
-				console.log("parsed", parsedData);
-				console.log("original", data);
-				console.log("cleaned", cleanedString);
-				return parsedData;
+				const { data } = await apiClient.get<TuteeProfileType[]>(`/api/role/tutees`);
+				return data;
 			},
 			refetchOnWindowFocus: false,
 			placeholderData: [],

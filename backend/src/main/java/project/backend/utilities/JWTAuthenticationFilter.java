@@ -113,6 +113,7 @@ public class JWTAuthenticationFilter implements Filter {
                 System.out.println("JWTAuthenticationFilter: " + authenticatedUser.administratorId);
                 request.setAttribute("authenticatedUser", authenticatedUser);
                 chain.doFilter(request, response);
+                return;
             }
 
             if (student != null) {
