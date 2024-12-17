@@ -23,52 +23,39 @@ import project.backend.model.Tutor;
 import project.backend.model.TutorTimeSlot;
 import project.backend.model.WeekDayEnum;
 import project.backend.model.YearGroupEnum;
-import project.backend.repository.AccountRepository;
-import project.backend.repository.AdministratorRepository;
-import project.backend.repository.RoleRepository;
-import project.backend.repository.StudentRepository;
-import project.backend.repository.TutorRepository;
 
 @Service
 public class RoleService {
 
     @Autowired
-    final RoleRepository roleRepository;
+    final StudentService studentService;
 
     @Autowired
-    final StudentRepository studentRepository;
+    final TutorService tutorService;
 
     @Autowired
-    final TutorRepository tutorRepository;
+    final AdministratorService administratorService;
 
-    @Autowired
-    final AccountRepository accountRepository;
-
-    @Autowired
-    final AdministratorRepository administratorRepository;
-
-    public RoleService(RoleRepository roleRepository, StudentRepository studentRepository, TutorRepository tutorRepository, AdministratorRepository administratorRepository, AccountRepository accountRepository) {
-        this.roleRepository = roleRepository;
-        this.studentRepository = studentRepository;
-        this.tutorRepository = tutorRepository;
-        this.administratorRepository = administratorRepository;
-        this.accountRepository = accountRepository;
+    public RoleService(StudentService studentService, TutorService tutorService, AdministratorService administratorService) {
+        this.studentService = studentService;
+        this.tutorService = tutorService;
+        this.administratorService = administratorService;
     }
 
     public List<Student> getTutees() {
-        return studentRepository.getTutees();
+        return studentService.getTutees();
     }
 
     public List<Student> getTutors() {
-        return studentRepository.getTutors();
+        return studentService.getTutors();
     }
 
     public Student saveStudent(Student student) {
-        return studentRepository.save(student);
+        return studentService.saveStudent(student);
     }
 
     public Tutee getTuteeById(Long id){
-        Student student = studentRepository.findById(id)
+        Student student = studentService.getStudentById(id)
             .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + id));
 
         Tutee tutee = student.getTutee();
@@ -80,7 +67,7 @@ public class RoleService {
     }
 
     public Tutor getTutorByUserId(Long userId){
-        Student student = studentRepository.findById(userId).orElse(null);
+        Student student = studentService.getStudentById(userId).orElse(null);
         
         Tutor tutor = student.getTutor();
         if (tutor == null){
@@ -92,7 +79,7 @@ public class RoleService {
 
     public Tutee getTuteeByUserId(Long userId){
 
-        Student student = studentRepository.findById(userId)
+        Student student = studentService.getStudentById(userId)
             .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + userId));
         
         Tutee tutee = student.getTutee();
@@ -104,21 +91,21 @@ public class RoleService {
     }
 
     public Administrator getAdministratorByUserId(Long userId){
-        return administratorRepository.findById(userId)
+        return administratorService.getAdministratorById(userId)
             .orElse(null);
     }
 
     public Tutor getTutorById(Long tutorId){
-        return tutorRepository.findById(tutorId)
+        return tutorService.getTutorById(tutorId)
             .orElseThrow(() -> new IllegalArgumentException("Tutor not found with ID: " + tutorId));
     }
 
     public Administrator getAdministratorById(Long adminId){
-        return administratorRepository.findById(adminId).orElse(null);
+        return administratorService.getAdministratorById(adminId).orElse(null);
         }
 
     public Student getStudentById(Long id) {
-        Optional<Student> studentOpt = studentRepository.findById(id);
+        Optional<Student> studentOpt = studentService.getStudentById(id);
 
         if (!studentOpt.isPresent()) {
             throw new IllegalArgumentException("Student not found wiht ID: " + id);
@@ -158,7 +145,7 @@ public class RoleService {
         Tutee tutee = new Tutee();
         tutee.setStudent(student);
         student.setTutee(tutee);
-        studentRepository.save(student);
+        studentService.saveStudent(student);
 
     }
 
@@ -177,9 +164,9 @@ public class RoleService {
     public Student getStudentByTuteeOrTutorId(Long id) {
         Tutee tutee = getTuteeById(id);
         if (tutee == null) {
-            return studentRepository.getStudentByTutorId(id);
+            return studentService.getStudentByTutorId(id);
         } else {
-            return studentRepository.getStudentByTuteeId(id);
+            return studentService.getStudentByTuteeId(id);
         }
     }
 
@@ -257,7 +244,7 @@ public class RoleService {
             }
         }
 
-        List<Tutor> tutors = tutorRepository.findAll();
+        List<Tutor> tutors = tutorService.getAllTutors();
         System.out.println("@RoleService, tutors found: " + tutors.size());
 
         System.out.println("@RoleService, filtrering for, subjects: " + filterSubjects + ", timeAvailabilities: " + filterTimeAvailabilities + ", yearGroups: " + filterYearGroups + ", languages: " + filterLanguages);

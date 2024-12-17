@@ -15,8 +15,6 @@ import project.backend.model.TutorApplication;
 import project.backend.model.TutorApplicationState;
 import project.backend.model.TutorTimeSlot;
 import project.backend.repository.TutorApplicationRepository;
-import project.backend.repository.TutorRepository;
-import project.backend.repository.TutorTimeslotRepository;
 
 @Service
 public class TutorApplicationService {
@@ -31,16 +29,16 @@ public class TutorApplicationService {
     private final NotificationService notificationService;
 
     @Autowired
-    final TutorRepository tutorRepository;
+    private final TutorService tutorService;
 
     @Autowired
-    final TutorTimeslotRepository tutorTimeslotRepository;
+    final TutorTimeSlotService tutorTimeslotService;
 
-    public TutorApplicationService(TutorApplicationRepository tutorApplicationRepository, RoleService roleService, TutorRepository tutorRepository, TutorTimeslotRepository tutorTimeslotRepository, NotificationService notificationService) {
+    public TutorApplicationService(TutorApplicationRepository tutorApplicationRepository, RoleService roleService, TutorService tutorService, TutorTimeSlotService tutorTimeslotService, NotificationService notificationService) {
         this.tutorApplicationRepository = tutorApplicationRepository;
         this.roleService = roleService;
-        this.tutorRepository = tutorRepository;
-        this.tutorTimeslotRepository = tutorTimeslotRepository;
+        this.tutorService = tutorService;
+        this.tutorTimeslotService = tutorTimeslotService;
         this.notificationService = notificationService;
     }
 
@@ -77,7 +75,7 @@ public class TutorApplicationService {
             timeSlot.setEndTime(timeSlotBody.end_time);
             tutorApplication.getFreeTimeSlots().add(timeSlot);
 
-            tutorTimeslotRepository.save(timeSlot);
+            tutorTimeslotService.saveTutorTimeSlot(timeSlot);
         }
     }
 
@@ -117,7 +115,7 @@ public class TutorApplicationService {
 
         tutorApplicationRepository.save(tutorApplication);
         roleService.saveStudent(student); 
-        tutorRepository.save(tutor);
+        tutorService.saveTutor(tutor);
     }
 
     public void rejectTutorApplication(Long id, String rejectionReason){

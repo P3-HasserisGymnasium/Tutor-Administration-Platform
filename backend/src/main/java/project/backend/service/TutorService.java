@@ -1,5 +1,6 @@
 package project.backend.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,9 @@ public class TutorService {
 
     public void deleteTutorById(Long id) {
         tutorRepository.deleteById(id);
+    }
+
+    public List<Tutor> getAllTutors() {
+        return tutorRepository.findAll();
     }
 }

@@ -28,10 +28,6 @@ import project.backend.model.Tutor;
 import project.backend.model.TutorTimeSlot;
 import project.backend.model.User;
 import project.backend.repository.AccountRepository;
-import project.backend.repository.StudentRepository;
-import project.backend.repository.TuteeRepository;
-import project.backend.repository.TutorRepository;
-import project.backend.repository.TutorTimeslotRepository;
 import project.backend.utilities.PasswordUtility;
 
 @Service
@@ -41,27 +37,27 @@ public class AccountService {
     final AccountRepository accountRepository;
 
     @Autowired
-    final StudentRepository studentRepository;
+    final StudentService studentService;
 
     @Autowired
-    final TutorRepository tutorRepository;
+    final TutorService tutorService;
 
     @Autowired
-    final TuteeRepository tuteeRepository;
-
-    @Autowired
-    final TutorTimeslotRepository timeSlotRepository;
+    final TuteeService tuteeService;
 
     @Autowired
     final RoleService roleService;
 
-    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository, TutorRepository tutorRepository, TuteeRepository tuteeRepository, TutorTimeslotRepository timeSlotRepository, RoleService roleService) {
+    @Autowired
+    final TutorTimeSlotService timeSlotService;
+
+    public AccountService(AccountRepository accountRepository, StudentService studentService, TutorService tutorService, TuteeService tuteeService, RoleService roleService, TutorTimeSlotService timeSlotService) {
         this.roleService = roleService;
         this.accountRepository = accountRepository;
-        this.studentRepository = studentRepository;
-        this.tutorRepository = tutorRepository;
-        this.tuteeRepository = tuteeRepository;
-        this.timeSlotRepository = timeSlotRepository;
+        this.studentService = studentService;
+        this.tutorService = tutorService;
+        this.tuteeService = tuteeService;
+        this.timeSlotService = timeSlotService;
     }
 
     public boolean emailExists(String email) {
@@ -91,7 +87,7 @@ public class AccountService {
         newStudent.setLanguages(body.languages);
         newStudent.setYearGroup(body.year_group);
         System.out.println("Roles: " + body.roles);
-        Student savedStudent = studentRepository.save(newStudent);
+        Student savedStudent = studentService.saveStudent(newStudent);
         System.out.println("@AccountService, saved student with id: " + savedStudent.getId());
         if (body.roles.contains(RoleEnum.Tutor)) {
             System.out.println("@AccountService, adding tutor");
@@ -104,7 +100,7 @@ public class AccountService {
             savedStudent.setTutor(newTutor);
             System.out.println("@AccountService, added new tutor to student " + savedStudent.getId());
             
-            tutorRepository.save(newTutor);
+            tutorService.saveTutor(newTutor);
             System.out.println("@AccountService, saved tutor with id: " + newTutor.getId());
 
             List<TutorTimeSlot> timeSlots = new LinkedList<>();
@@ -119,7 +115,7 @@ public class AccountService {
                     newTimeSlot.setEndTime(timeBody.end_time);
                     newTimeSlot.setTutor(newTutor);
                     
-                    timeSlotRepository.save(newTimeSlot);
+                    timeSlotService.saveTutorTimeSlot(newTimeSlot);
 
                     timeSlots.add(newTimeSlot);
                 }                
@@ -136,11 +132,11 @@ public class AccountService {
             savedStudent.setTutee(newTutee); 
             System.out.println("@AccountService, added tutee to student " + savedStudent.getId());
             
-            tuteeRepository.save(newTutee);
+            tuteeService.saveTutee(newTutee);
             System.out.println("@AccountService, saved tutee with id: " + newTutee.getId());
         }
 
-        studentRepository.save(savedStudent);
+        studentService.saveStudent(savedStudent);
         return savedStudent;
     }
 

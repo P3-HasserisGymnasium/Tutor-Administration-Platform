@@ -27,7 +27,6 @@ import project.backend.model.Tutee;
 import project.backend.model.Tutor;
 import project.backend.model.Administrator;
 import project.backend.repository.CollaborationRepository;
-import project.backend.repository.AdministratorRepository;
 
 
 @Service
@@ -37,7 +36,7 @@ public class CollaborationService {
     final CollaborationRepository collaborationRepository;
 
     @Autowired
-    final AdministratorRepository administratorRepository;
+    final AdministratorService administratorService;
 
     @Autowired
     final NotificationService notificationService;
@@ -50,11 +49,11 @@ public class CollaborationService {
 
 
 
-    public CollaborationService(CollaborationRepository collaborationRepository, RoleService roleService, NotificationService notificationService, AdministratorRepository administratorRepository, PostService postService) {
+    public CollaborationService(CollaborationRepository collaborationRepository, RoleService roleService, NotificationService notificationService, AdministratorService administratorService, PostService postService) {
         this.collaborationRepository = collaborationRepository;
         this.roleService = roleService;
         this.notificationService = notificationService;
-        this.administratorRepository = administratorRepository;
+        this.administratorService = administratorService;
         this.postService = postService;
     }
 
@@ -321,7 +320,7 @@ public class CollaborationService {
 
         tutor.getFeedbacks().add(feedback); 
 
-        Administrator admin = administratorRepository.findFirstBy().orElseThrow(() -> new IllegalStateException("Administrator not found"));
+        Administrator admin = administratorService.findFirstBy().orElseThrow(() -> new IllegalStateException("Administrator not found"));
     
         notificationService.sendNotification(tuteeId, EntityType.TUTEE, admin.getId(), EntityType.ADMIN, feedback.getId(), EntityType.FEEDBACK);
     }

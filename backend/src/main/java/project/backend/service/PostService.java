@@ -13,7 +13,6 @@ import project.backend.model.PostState;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.repository.PostRepository;
-import project.backend.repository.TuteeRepository;
 
 @Service
 public class PostService {
@@ -25,12 +24,12 @@ public class PostService {
     final RoleService roleService; 
   
     @Autowired
-    final TuteeRepository tuteeRepository;
+    final TuteeService tuteeService;
 
-    public PostService(PostRepository postRepository, RoleService roleService, TuteeRepository tuteeRepository) {
+    public PostService(PostRepository postRepository, RoleService roleService, TuteeService tuteeService) {
         this.postRepository = postRepository;
         this.roleService = roleService;
-        this.tuteeRepository = tuteeRepository;
+        this.tuteeService = tuteeService;
     }
 
     public List<Post> getPostsByFilters(Integer minDuration, Integer maxDuration, List<SubjectEnum> subjects, Long tuteeId){
@@ -100,7 +99,7 @@ public class PostService {
 
         System.out.println("post1" + post);
 
-        Optional<Tutee> tuteeOpt = tuteeRepository.findById(tuteeId);
+        Optional<Tutee> tuteeOpt = tuteeService.getTuteeById(tuteeId);
         System.out.println("tuteeId" + tuteeId);
         System.out.println("tuteeOpt" + tuteeOpt);
         
