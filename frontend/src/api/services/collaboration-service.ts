@@ -11,30 +11,32 @@ import {
 	RequestCollaborationByTutorType,
 	TutorProfileType,
 } from "~/types/entity_types";
-import { Role } from "~/types/data_types";
-import { z } from "zod";
+import { RoleType, SubjectType } from "~/types/data_types";
+import { useNavigate } from "react-router-dom";
 
 export const useCollaborationService = () => {
 	//Admin requests a collaboration
-	const submitCollaborationSuggestion = useMutation({
-		mutationKey: ["submitCollaborationSuggestion"],
-		mutationFn: async (collaboration: CollaborationType) => {
-			const { data } = await apiClient.post<CollaborationType>("/api/collaboration", collaboration);
-			return data;
-		},
-		onError: (e: AxiosError<{ detail: string }>) => {
-			toast.error(e?.response?.data?.detail);
-		},
-		onSuccess: () => {
-			toast.success("Collaboration suggestion submitted");
-		},
-	});
+	const useSubmitCollaborationSuggestion = () => {
+		return useMutation({
+			mutationKey: ["submitCollaborationSuggestion"],
+			mutationFn: async ({ tutee_id, tutor_id, post_id, subject }: { tutee_id: number; tutor_id: number; post_id: number, subject: SubjectType }) => {
+				const { data } = await apiClient.post<CollaborationType>("/api/collaboration/submit", { tutee_id, tutor_id, post_id, subject });
+				return data;
+			},
+			onError: (e: AxiosError<{ detail: string }>) => {
+				toast.error(e?.response?.data?.detail);
+			},
+			onSuccess: () => {
+				toast.success("Collaboration suggestion submitted");
+			},
+		})
+	};
 
-	type RoleType = z.infer<typeof Role>;
+
 	const acceptCollaboration = useMutation({
 		mutationKey: ["acceptCollaboration"],
-		mutationFn: async ({ id, role }: { id: number; role: RoleType }) => {
-			const { data } = await apiClient.post(`/api/collaboration/accept/${id}/${role}`);
+		mutationFn: async ({ collaboration_id, role }: { collaboration_id: number; role: RoleType }) => {
+			const { data } = await apiClient.post(`/api/collaboration/accept/${collaboration_id}/${role}`);
 			return data;
 		},
 		onError: (e: AxiosError) => {
@@ -61,8 +63,8 @@ export const useCollaborationService = () => {
 
 	const rejectCollaboration = useMutation({
 		mutationKey: ["rejectCollaboration"],
-		mutationFn: async ({ id, role }: { id: number; role: RoleType }) => {
-			const { data } = await apiClient.post(`/api/collaboration/reject/${id}/${role}`);
+		mutationFn: async ({ collaboration_id, role }: { collaboration_id: number; role: RoleType }) => {
+			const { data } = await apiClient.post(`/api/collaboration/reject/${collaboration_id}/${role}`);
 			return data;
 		},
 		onError: (e: AxiosError<{ detail: string }>) => {
@@ -135,17 +137,18 @@ export const useCollaborationService = () => {
 	};
 
 	const useTerminateCollaboration = () => {
+		const navigate = useNavigate();
 		return useMutation({
 			mutationKey: ["terminateCollaboration"],
 			mutationFn: async ({ id, terminationReason }: TerminationType) => {
-				const { data } = await apiClient.post<string>("/api/collaboration/terminate" + id, terminationReason);
+				const { data } = await apiClient.post<string>("/api/collaboration/terminate/" + id, terminationReason);
 				return data;
 			},
 			onError: (e: AxiosError) => {
 				toast.error("" + e?.response?.data);
 			},
 			onSuccess: () => {
-				toast.success("Collaboration terminated");
+				navigate("/");
 			},
 		});
 	};
@@ -163,6 +166,18 @@ export const useCollaborationService = () => {
 			toast.success("Feedback submitted");
 		},
 	});
+
+	const useGetCollabortations = () => {
+		return useQuery({
+			queryKey: ["getCollaborations"],
+			queryFn: async () => {
+				const { data } = await apiClient.get<CollaborationType[]>(`/api/collaboration/all`);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			placeholderData: [],
+		});
+	};
 
 	const useGetCollaborationsWithTutee = (id: number | null) => {
 		return useQuery({
@@ -204,8 +219,9 @@ export const useCollaborationService = () => {
 
 	return {
 		useGetCollaborationsWithTutee,
+		useGetCollabortations,
 		useGetCollaborationsWithTutor,
-		submitCollaborationSuggestion,
+		useSubmitCollaborationSuggestion,
 		acceptCollaboration,
 		rejectCollaboration,
 		requestCollaborationSuggestion,

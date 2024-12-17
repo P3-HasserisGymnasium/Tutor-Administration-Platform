@@ -42,12 +42,16 @@ public class Post {
 
     @Column(name = "creation_date")
     Timestamp creationTimestamp;
-    
+
+    @Column(name = "is_pairing_request")
+    Boolean pairingRequest;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
     PostState state;
 
-    public Post(){}
+    public Post() {
+    }
 
     public Long getId() {
         return id;
@@ -113,6 +117,14 @@ public class Post {
             this.minDuration = duration.get(0);
             this.maxDuration = duration.get(1);
         }
+    }
+
+    public void setPairingRequest(Boolean pairingRequest) {
+        this.pairingRequest = pairingRequest;
+    }
+
+    public Boolean getPairingRequest() {
+        return pairingRequest;
     }
 
     public List<Integer> getDuration() {

@@ -3,6 +3,7 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 //import axios from "axios";
 import MiniPost from "./MiniPost";
 import { PostType } from "~/types/entity_types";
+import { PostState } from "~/types/data_types";
 
 type MiniPostListProps = {
 	posts: PostType[] | undefined;
@@ -11,7 +12,6 @@ type MiniPostListProps = {
 };
 
 export default function MiniPostList({ posts, isLoading, isError }: MiniPostListProps) {
-	
 	if (isLoading) {
 		return (
 			<Box sx={{ display: "flex", justifyContent: "center", marginTop: 4, width: "100%" }}>
@@ -30,6 +30,10 @@ export default function MiniPostList({ posts, isLoading, isError }: MiniPostList
 
 	if (!posts) return <Typography variant="h6">No posts found.</Typography>;
 
+	console.log("posts", posts);
+
+	posts = posts.filter((post) => post.state === PostState.Enum.VISIBLE);
+	console.log("postsafter", posts);
 	return (
 		<Box
 			sx={{

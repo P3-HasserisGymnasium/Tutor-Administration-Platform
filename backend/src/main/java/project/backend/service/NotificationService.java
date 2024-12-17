@@ -96,6 +96,10 @@ public class NotificationService {
         return notificationRepository.findAllSentToTutor(userId);
     }
 
+    public List<Notification> getAllNotificationsForAdmin() {
+        return notificationRepository.findAllSentToAdmin().orElse(null);
+    }
+
     public Optional<Notification> getNotificationById(Long id) {
         return notificationRepository.findById(id);
     }
@@ -123,7 +127,7 @@ public class NotificationService {
         } else if (senderType == EntityType.TUTOR) {
             sender_name = roleService.getTutorById(senderId).getStudent().getFullName();
         } else if (senderType == EntityType.ADMIN) {
-            sender_name = roleService.getAdministratorById(senderId).getFullName();
+            sender_name = "Administrator";
         }
 
         return sender_name;

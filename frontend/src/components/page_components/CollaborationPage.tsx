@@ -17,6 +17,7 @@ import { MeetingType } from "~/types/entity_types";
 import CustomButton from "../content_components/CustomButton";
 import dayjs from "dayjs";
 import { CommunicationChipRead } from "../content_components/CommunicationChip";
+import { Role } from "~/types/data_types";
 
 export default function CollaborationPage() {
 	const theme = useCurrentTheme();
@@ -27,11 +28,8 @@ export default function CollaborationPage() {
 	const params = useParams();
 	const { userState } = useAuth();
 	const rolePrefix = useRolePrefix();
-	console.log("params", params);
-	console.log("userState", userState);
 
 	const { data: partnerInformation } = useCollaborationService().useGetPartnerInformation(Number(params.collabId));
-	console.log("partnerInformation", partnerInformation);
 	const { data: meetings } = useMeetingService().useGetMeetings();
 	/*   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -208,10 +206,11 @@ export default function CollaborationPage() {
 								This box showcases both your upcoming and finished meetings.
 							</Typography>
 						</Box>
-
-						<Button sx={{ fontSize: "1rem", height: "40px" }} onClick={() => setIsRequestMeetingDialogOpen(true)}>
-							Request meeting
-						</Button>
+						{userState?.role?.includes(Role.Enum.Tutee) && (
+							<Button sx={{ fontSize: "1rem", height: "40px" }} onClick={() => setIsRequestMeetingDialogOpen(true)}>
+								Request meeting
+							</Button>
+						)}
 					</Box>
 					<Box sx={{ display: "flex", width: "100%", gap: 3, height: "90%", maxHeight: "60%", justifyContent: "center", pt: 2 }}>
 						<Paper elevation={8} sx={{ width: "40%", height: "100%", p: 2, borderRadius: "8px", overflow: "auto" }}>

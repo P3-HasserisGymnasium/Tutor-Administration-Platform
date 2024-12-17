@@ -70,20 +70,20 @@ public class RoleService {
         Student student = studentService.getStudentById(userId).orElse(null);
         
         Tutor tutor = student.getTutor();
-        if (tutor == null){
+        if (tutor == null) {
             return null;
         }
 
         return tutor;
     }
 
-    public Tutee getTuteeByUserId(Long userId){
+    public Tutee getTuteeByUserId(Long userId) {
 
         Student student = studentService.getStudentById(userId)
             .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + userId));
         
         Tutee tutee = student.getTutee();
-        if (tutee == null){
+        if (tutee == null) {
             throw new IllegalArgumentException("This student is not assigned a Tutee");
         }
 
@@ -108,7 +108,7 @@ public class RoleService {
         Optional<Student> studentOpt = studentService.getStudentById(id);
 
         if (!studentOpt.isPresent()) {
-            throw new IllegalArgumentException("Student not found wiht ID: " + id);
+            return null;
         }
 
         return studentOpt.get();
@@ -120,7 +120,6 @@ public class RoleService {
         Tutee tutee = student.getTutee();
         System.out.println("tutor: " + tutor);
         System.out.println("tutee: " + tutee);
-        
 
         if (tutor != null && tutee != null) {
             return new RoleEnum[] { RoleEnum.Tutor, RoleEnum.Tutee };
@@ -152,9 +151,9 @@ public class RoleService {
     @Deprecated
     public Object getProfile(Long id, RoleEnum role) {
         Student student = getStudentById(id);
-        if(role == RoleEnum.Tutee && student.getTutee() != null){
+        if (role == RoleEnum.Tutee && student.getTutee() != null) {
             return student.getTutee();
-        } else if(role == RoleEnum.Tutor && student.getTutor() != null){
+        } else if (role == RoleEnum.Tutor && student.getTutor() != null) {
             return student.getTutor();
         } else {
             throw new IllegalArgumentException("Invalid role specified.");
@@ -182,7 +181,7 @@ public class RoleService {
         List<TimeSlotCreateBody> timeSlotRepsonses = new LinkedList<>();
         for (TutorTimeSlot timeSlot : tutor.getFreeTimeSlots()) {
             TimeSlotCreateBody timeSlotResponse = new TimeSlotCreateBody();
-            
+
             WeekDayEnum weekDay = timeSlot.getWeekDay();
             for (WeekDayEnum day : WeekDayEnum.values()) {
                 for (TimeSlotCreateBody timeSlotCreateBody : timeSlotRepsonses) {
@@ -204,12 +203,12 @@ public class RoleService {
         }
         response.time_availability = timeSlotRepsonses;
         response.languages = tutor.getStudent().getLanguages();
-        
+
         return response;
     }
 
     public TuteeProfileResponse getTuteeProfile(Long id) {
-        Tutee tutee = getTuteeByUserId(id);
+        Tutee tutee = getTuteeById(id);
 
         Student student = tutee.getStudent();
 
@@ -226,8 +225,10 @@ public class RoleService {
         return response;
     }
 
-    public ArrayList<TutorProfileResponse> getTutorProfilesFiltered(List<SubjectEnum> filterSubjects, List<TimeSlotCreateBody> filterTimeAvailabilities, List<YearGroupEnum> filterYearGroups, List<LanguageEnum> filterLanguages) {
-        
+    public ArrayList<TutorProfileResponse> getTutorProfilesFiltered(List<SubjectEnum> filterSubjects,
+            List<TimeSlotCreateBody> filterTimeAvailabilities, List<YearGroupEnum> filterYearGroups,
+            List<LanguageEnum> filterLanguages) {
+
         System.out.println("timeAvailabilities: " + filterTimeAvailabilities.size());
 
         // TimeSlotCreateBody to TutorTimeSlot
@@ -240,89 +241,102 @@ public class RoleService {
                 tutorTimeSlot.setEndTime(time.end_time);
                 filterTimeSlots.add(tutorTimeSlot);
 
-                System.out.println("parsed to TutorTimeSlot: " + tutorTimeSlot.getWeekDay() + ", " + tutorTimeSlot.getStartTime() + ", " + tutorTimeSlot.getEndTime());
+                System.out.println("parsed to TutorTimeSlot: " + tutorTimeSlot.getWeekDay() + ", "
+                        + tutorTimeSlot.getStartTime() + ", " + tutorTimeSlot.getEndTime());
             }
         }
 
         List<Tutor> tutors = tutorService.getAllTutors();
         System.out.println("@RoleService, tutors found: " + tutors.size());
 
-        System.out.println("@RoleService, filtrering for, subjects: " + filterSubjects + ", timeAvailabilities: " + filterTimeAvailabilities + ", yearGroups: " + filterYearGroups + ", languages: " + filterLanguages);
+        System.out.println("@RoleService, filtrering for, subjects: " + filterSubjects + ", timeAvailabilities: "
+                + filterTimeAvailabilities + ", yearGroups: " + filterYearGroups + ", languages: " + filterLanguages);
         if (filterSubjects != null && !filterSubjects.isEmpty()) {
             tutors = tutors
-            .stream()
-            .filter(tutor -> {
-            for (SubjectEnum subject : tutor.getTutoringSubjects()) {
-                if (filterSubjects.contains(subject)) {
-                return true;
-                }
-            }
-            return false;
-            })
-            .toList();
+                    .stream()
+                    .filter(tutor -> {
+                        for (SubjectEnum subject : tutor.getTutoringSubjects()) {
+                            if (filterSubjects.contains(subject)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    })
+                    .toList();
         }
         System.out.println("@RoleService, tutors left after first filter: " + tutors.size());
         if (filterTimeAvailabilities != null && filterTimeAvailabilities.isEmpty() == false) {
             tutors = tutors
-            .stream()
-            .filter(tutor ->{
-                List<TutorTimeSlot> tutorTimeSlots = tutor.getFreeTimeSlots();
-                for (TutorTimeSlot filterTimeSlot : filterTimeSlots) {
-                    for (TutorTimeSlot tutorTimeSlot : tutorTimeSlots) {
+                    .stream()
+                    .filter(tutor -> {
+                        List<TutorTimeSlot> tutorTimeSlots = tutor.getFreeTimeSlots();
+                        for (TutorTimeSlot filterTimeSlot : filterTimeSlots) {
+                            for (TutorTimeSlot tutorTimeSlot : tutorTimeSlots) {
 
-                        String[] startTimeFilterArray = filterTimeSlot.getStartTime().split(":");
-                        int filterTimeSlotStartTimeHour = Integer.parseInt(startTimeFilterArray[0]);
-                        int filterTimeSlotStartTimeMinute = Integer.parseInt(startTimeFilterArray[1]);
-                        String[] endTimeFilterArray = filterTimeSlot.getEndTime().split(":");
-                        int filterTimeSlotEndTimeHour = Integer.parseInt(endTimeFilterArray[0]);
-                        int filterTimeSlotEndTimeMinute = Integer.parseInt(endTimeFilterArray[1]);
+                                String[] startTimeFilterArray = filterTimeSlot.getStartTime().split(":");
+                                int filterTimeSlotStartTimeHour = Integer.parseInt(startTimeFilterArray[0]);
+                                int filterTimeSlotStartTimeMinute = Integer.parseInt(startTimeFilterArray[1]);
+                                String[] endTimeFilterArray = filterTimeSlot.getEndTime().split(":");
+                                int filterTimeSlotEndTimeHour = Integer.parseInt(endTimeFilterArray[0]);
+                                int filterTimeSlotEndTimeMinute = Integer.parseInt(endTimeFilterArray[1]);
 
-                        String[] startTimeTutorArray = tutorTimeSlot.getStartTime().split(":");
-                        int tutorTimeSlotStartTimeHour = Integer.parseInt(startTimeTutorArray[0]);
-                        int tutorTimeSlotStartTimeMinute = Integer.parseInt(startTimeTutorArray[1]);
-                        String[] endTimeTutorArray = tutorTimeSlot.getEndTime().split(":");
-                        int tutorTimeSlotEndTimeHour = Integer.parseInt(endTimeTutorArray[0]);
-                        int tutorTimeSlotEndTimeMinute = Integer.parseInt(endTimeTutorArray[1]);
+                                String[] startTimeTutorArray = tutorTimeSlot.getStartTime().split(":");
+                                int tutorTimeSlotStartTimeHour = Integer.parseInt(startTimeTutorArray[0]);
+                                int tutorTimeSlotStartTimeMinute = Integer.parseInt(startTimeTutorArray[1]);
+                                String[] endTimeTutorArray = tutorTimeSlot.getEndTime().split(":");
+                                int tutorTimeSlotEndTimeHour = Integer.parseInt(endTimeTutorArray[0]);
+                                int tutorTimeSlotEndTimeMinute = Integer.parseInt(endTimeTutorArray[1]);
 
-                        System.out.println("filterDay: " + filterTimeSlot.getWeekDay() + "\nfilterTimeSlotStartTimeHour: " + filterTimeSlotStartTimeHour + "\nfilterTimeSlotStartTimeMinute: " + filterTimeSlotStartTimeMinute + "\ntutorTimeSlotDay: " + tutorTimeSlot.getWeekDay() + "\ntutorTimeSlotStartTimeHour: " + tutorTimeSlotStartTimeHour + "\ntutorTimeSlotStartTimeMinute: " + tutorTimeSlotStartTimeMinute);
-                        System.out.println("filterTimeSlotEndTimeHour: " + filterTimeSlotEndTimeHour + "\nfilterTimeSlotEndTimeMinute: " + filterTimeSlotEndTimeMinute + "\ntutorTimeSlotEndTimeHour: " + tutorTimeSlotEndTimeHour + "\ntutorTimeSlotEndTimeMinute: " + tutorTimeSlotEndTimeMinute);
-                        
-                        if (filterTimeSlot.getWeekDay() == tutorTimeSlot.getWeekDay() 
-                        && isTimeSmallerOrEqual(tutorTimeSlotStartTimeHour, tutorTimeSlotStartTimeMinute, filterTimeSlotStartTimeHour, filterTimeSlotStartTimeMinute)
-                        && isTimeSmallerOrEqual(filterTimeSlotEndTimeHour, filterTimeSlotEndTimeMinute, tutorTimeSlotEndTimeHour, tutorTimeSlotEndTimeMinute)) {
-                            System.out.println("true");                   
-                            return true;     
+                                System.out.println("filterDay: " + filterTimeSlot.getWeekDay()
+                                        + "\nfilterTimeSlotStartTimeHour: " + filterTimeSlotStartTimeHour
+                                        + "\nfilterTimeSlotStartTimeMinute: " + filterTimeSlotStartTimeMinute
+                                        + "\ntutorTimeSlotDay: " + tutorTimeSlot.getWeekDay()
+                                        + "\ntutorTimeSlotStartTimeHour: " + tutorTimeSlotStartTimeHour
+                                        + "\ntutorTimeSlotStartTimeMinute: " + tutorTimeSlotStartTimeMinute);
+                                System.out.println("filterTimeSlotEndTimeHour: " + filterTimeSlotEndTimeHour
+                                        + "\nfilterTimeSlotEndTimeMinute: " + filterTimeSlotEndTimeMinute
+                                        + "\ntutorTimeSlotEndTimeHour: " + tutorTimeSlotEndTimeHour
+                                        + "\ntutorTimeSlotEndTimeMinute: " + tutorTimeSlotEndTimeMinute);
+
+                                if (filterTimeSlot.getWeekDay() == tutorTimeSlot.getWeekDay()
+                                        && isTimeSmallerOrEqual(tutorTimeSlotStartTimeHour,
+                                                tutorTimeSlotStartTimeMinute, filterTimeSlotStartTimeHour,
+                                                filterTimeSlotStartTimeMinute)
+                                        && isTimeSmallerOrEqual(filterTimeSlotEndTimeHour, filterTimeSlotEndTimeMinute,
+                                                tutorTimeSlotEndTimeHour, tutorTimeSlotEndTimeMinute)) {
+                                    System.out.println("true");
+                                    return true;
+                                }
+                            }
                         }
-                    }
-                }
-                System.out.println("false");
-                return false;
-            })
-            .toList();
+                        System.out.println("false");
+                        return false;
+                    })
+                    .toList();
         }
         System.out.println("@RoleService, tutors left after second filter: " + tutors.size());
         if (filterYearGroups != null && filterYearGroups.isEmpty() == false) {
             tutors = tutors
-            .stream()
-            .filter(tutor -> filterYearGroups.contains(tutor.getStudent().getYearGroup()))
-            .toList();
+                    .stream()
+                    .filter(tutor -> filterYearGroups.contains(tutor.getStudent().getYearGroup()))
+                    .toList();
         }
         System.out.println("@RoleService, tutors left after third filter: " + tutors.size());
         if (filterLanguages != null && filterLanguages.isEmpty() == false) {
             tutors = tutors
-            .stream()
-            .filter(tutor -> {
-                for (LanguageEnum language : tutor.getStudent().getLanguages()) {
-                    if (filterLanguages.contains(language)) {
-                        return true;
-                    }
-                }
-                return false;
-            })
-            .toList();
+                    .stream()
+                    .filter(tutor -> {
+                        for (LanguageEnum language : tutor.getStudent().getLanguages()) {
+                            if (filterLanguages.contains(language)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    })
+                    .toList();
         }
         System.out.println("@RoleService, tutors left after fourth filter: " + tutors.size());
-        
+
         ArrayList<TutorProfileResponse> responses = new ArrayList<>();
 
         for (Tutor tutor : tutors) {
@@ -338,7 +352,7 @@ public class RoleService {
             List<TimeSlotCreateBody> timeSlotRepsonses = new LinkedList<>();
             for (TutorTimeSlot timeSlot : tutor.getFreeTimeSlots()) {
                 TimeSlotCreateBody timeSlotResponse = new TimeSlotCreateBody();
-                
+
                 WeekDayEnum weekDay = timeSlot.getWeekDay();
                 for (WeekDayEnum day : WeekDayEnum.values()) {
                     for (TimeSlotCreateBody timeSlotCreateBody : timeSlotRepsonses) {
@@ -376,11 +390,11 @@ public class RoleService {
     public void removeRole(Long id, RoleEnum role) {
         Student student = getStudentById(id);
 
-        if (role == RoleEnum.Tutee && student.getTutee() != null){
+        if (role == RoleEnum.Tutee && student.getTutee() != null) {
             student.setTutee(null);
             saveStudent(student);
 
-        }else if(role == RoleEnum.Tutor && student.getTutor() != null){
+        } else if (role == RoleEnum.Tutor && student.getTutor() != null) {
             student.setTutor(null);
             saveStudent(student);
 

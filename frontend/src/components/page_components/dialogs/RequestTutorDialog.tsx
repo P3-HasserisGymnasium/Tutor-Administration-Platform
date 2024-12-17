@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { RequestCollaborationByTutorType, TutorProfileType } from "~/types/entity_types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
-import { zodPostCreationSchema, PostCreationType } from "~/types/data_types";
+import { zodPostCreationSchema, PostCreationType, PostState } from "~/types/data_types";
 import CustomAutocomplete from "~/components/content_components/CustomAutocomplete";
 import SetDuration from "~/components/content_components/SetDuration";
 import { useCollaborationService } from "~/api/services/collaboration-service";
@@ -26,6 +26,8 @@ const RequestTutorDialog = ({ open, setOpen, tutorProfile }: RequestTutorDialogP
       subject: undefined,
       duration: [0, 12],
       description: "",
+      state: PostState.Enum.INVISIBLE,
+      pairing_request: false,
     },
   };
   const filterMethods = useForm<PostCreationType>(useFormParameter);
@@ -145,15 +147,7 @@ const RequestTutorDialog = ({ open, setOpen, tutorProfile }: RequestTutorDialogP
               </Box>
             </Box>
             <Typography variant="h3">Describe your request</Typography>
-            <TextField
-              multiline
-              maxRows={getMaxRows()}
-              variant="outlined"
-              size="small"
-              placeholder="Which topics do you need help with?"
-              {...register("description")}
-              sx={{}}
-            />
+            <TextField multiline maxRows={getMaxRows()} variant="outlined" size="small" placeholder="Which topics do you need help with?" {...register("description")} sx={{}} />
           </Box>
 
           <Box

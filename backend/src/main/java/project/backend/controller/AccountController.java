@@ -78,14 +78,18 @@ public class AccountController {
         try {
 
             User user = accountService.getUserIfCorrectPassword(body);
+            Administrator admin =  accountService.getAdminById(user.getId());
+            System.out.println("admin: " + admin);
+            System.out.println("user: " + user);
+            if (admin != null) {
+                return accountService.handleAdminLogin((Administrator) user);
+            }
 
             if (user instanceof Student) {
                 return accountService.handleStudentLogin((Student) user);
             }
 
-            if (user instanceof Administrator) {
-                return accountService.handleAdminLogin((Administrator) user);
-            }
+          
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid user type");
 

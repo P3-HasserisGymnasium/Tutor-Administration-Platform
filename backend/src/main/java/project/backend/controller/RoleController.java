@@ -1,5 +1,6 @@
 package project.backend.controller;
 
+import java.util.List;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +14,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import jakarta.servlet.http.HttpServletRequest;
+import project.backend.controller_bodies.AuthUser;
+import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
 import project.backend.controller_bodies.role_controller.TutorFilterBody;
 import project.backend.controller_bodies.role_controller.TutorProfileResponse;
 import project.backend.model.RoleEnum;
 import project.backend.service.RoleService;
 
-
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/role")
 public class RoleController {
-    
+
     @Autowired
     final RoleService roleService;
 
@@ -33,32 +37,55 @@ public class RoleController {
         this.roleService = roleService;
     }
 
+    @GetMapping("/tutees")
+    public ResponseEntity<?> getTutees(HttpServletRequest request) throws JsonProcessingException {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to view all tutees");
+        }
+
+        ArrayList<TuteeProfileResponse> tutees = roleService.getTutees();
+        return ResponseEntity.ok(tutees); 
+    }
+
+    @GetMapping("/tutors")
+    public ResponseEntity<?> getTutors(HttpServletRequest request) {
+
+        // Everyone is allowed yes?
+
+        List<TutorProfileResponse> tutors = roleService.getTutors();
+
+        return ResponseEntity.status(HttpStatus.OK).body(tutors);
+    }
+
     @GetMapping("/{id}/{role}")
-    public ResponseEntity<?> getProfile(@PathVariable long id, @PathVariable RoleEnum role, HttpServletRequest request) {
-        //AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
-        System.out.println("Role: " + role);
+    public ResponseEntity<?> getProfile(@PathVariable long id, @PathVariable RoleEnum role,
+            HttpServletRequest request) {
+
         if (role == RoleEnum.Tutor) {
             System.out.println("Tutor");
             try {
                 TutorProfileResponse response = roleService.getTutorProfile(id);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tutor not found");
+                return ResponseEntity.status(HttpStatus.OK).body("error: " + e.getMessage());
             }
         } else {
             try {
                 TuteeProfileResponse response = roleService.getTuteeProfile(id);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
+                return ResponseEntity.status(HttpStatus.OK).body("error: " + e.getMessage());
             }
         }
     }
- 
+
     @PostMapping("/tutorsFiltered")
     public ResponseEntity<?> getTutorProfilesFiltered(@RequestBody TutorFilterBody body, HttpServletRequest request) {
         try {
-            ArrayList<TutorProfileResponse> response = roleService.getTutorProfilesFiltered(body.subjects, body.time_availability, body.year_group, body.languages);
+            ArrayList<TutorProfileResponse> response = roleService.getTutorProfilesFiltered(body.subjects,
+                    body.time_availability, body.year_group, body.languages);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("error: " + e.getMessage());

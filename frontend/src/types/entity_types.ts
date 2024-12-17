@@ -20,10 +20,12 @@ import {
 export const zodPostSchema = z.object({
 	id: zodUUID,
 	tutee_id: zodUUID.optional(),
+	tutee_name: z.string().optional(),
 	title: z.string(),
 	description: z.string(),
 	subject: Subject,
 	duration: z.array(z.number()).optional(),
+	pairing_request: z.boolean().optional(),
 	state: z.string(),
 });
 
@@ -39,6 +41,7 @@ export const zodTutorProfileSchema = z.object({
 });
 
 export const zodTuteeProfileSchema = z.object({
+	id: zodUUID,
 	full_name: z.string(),
 	year_group: YearGroup,
 	languages: z.array(Language),
@@ -70,6 +73,7 @@ export const zodCollaborationSchema = z.object({
 	subject: Subject,
 	end_date: z.union([z.date(), z.string()]).optional(),
 	startDate: z.union([z.date(), z.string()]).optional(),
+	requestedPairing: z.boolean(),
 });
 
 export const tutorProfileSchema = z.object({

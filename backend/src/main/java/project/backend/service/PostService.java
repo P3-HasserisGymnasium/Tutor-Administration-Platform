@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.model.Post;
-import project.backend.model.PostState;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.repository.PostRepository;
@@ -45,8 +44,11 @@ public class PostService {
     }
 
     public Post savePost(Post post) {
-        post.setState(PostState.VISIBLE);
         return postRepository.save(post);
+    }
+
+    public Post[] getPairingRequests() {
+        return postRepository.findPairingRequests();
     }
 
     public void deletePostById(Long postId) {
