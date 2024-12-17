@@ -22,6 +22,7 @@ import project.backend.controller_bodies.collaboration_bodies.CollaborationRespo
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByPostBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByTutorBody;
 import project.backend.controller_bodies.collaboration_bodies.SubmitBody;
+import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
 import project.backend.controller_bodies.role_controller.TutorProfileResponse;
 import project.backend.model.Collaboration;
@@ -33,9 +34,6 @@ import project.backend.model.RoleEnum;
 import project.backend.model.Student;
 import project.backend.model.SubjectEnum;
 import project.backend.service.CollaborationService;
-import project.backend.service.NotificationService;
-import project.backend.service.PostService;
-import project.backend.service.RoleService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -44,30 +42,23 @@ public class CollaborationController {
 
     private final CollaborationService collaborationService;
 
-    private final NotificationService notificationService;
-
-    private final PostService postService;
-
-    private final RoleService roleService;
-
-    public CollaborationController(CollaborationService collaborationService, NotificationService notificationService,
-            PostService postService, RoleService roleService) {
+    public CollaborationController(CollaborationService collaborationService) {
         this.collaborationService = collaborationService;
-        this.notificationService = notificationService;
-        this.postService = postService;
-        this.roleService = roleService;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getCollaboration(@PathVariable Long id, HttpServletRequest request) {
-        // AuthenticatedUserBody authenticatedUser =
-        // AuthUser.getAuthenticatedUser(request);
+        AuthenticatedUserBody authenticatedUser =  AuthUser.getAuthenticatedUser(request);
 
         Collaboration collaboration = collaborationService.getCollaborationById(id);
 
-        if (collaboration == null) {
-            return null;
+        if (collaboration == null) return null;
+
+
+        if (authenticatedUser.getTuteeId() != collaboration.getTutee().getId() && authenticatedUser.getTutorId() != collaboration.getTutor().getId() && !authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authortized to view this collaboration");
         }
+
 
         CollaborationResponseBody collaborationResponseBody = new CollaborationResponseBody();
         collaborationResponseBody.setId(collaboration.getId());
@@ -128,15 +119,6 @@ public class CollaborationController {
             collaborationResponseBody.setStartDate(collaboration.getStartTimestamp());
             collaborationResponseBodies.add(collaborationResponseBody);
 
-            System.out.println(collaborationResponseBody);
-            System.out.println("kraskraskras" + collaborationResponseBody.getId());
-            System.out.println("kraskraskras" + collaborationResponseBody.getTuteeId());
-            System.out.println("kraskraskras" + collaborationResponseBody.getTutorId());
-            System.out.println("kraskraskras" + collaborationResponseBody.getTuteeName());
-            System.out.println("kraskraskras" + collaborationResponseBody.getTutorName());
-            System.out.println("kraskraskras" + collaborationResponseBody.getState());
-            System.out.println("kraskraskras" + collaborationResponseBody.getSubject());
-            System.out.println("kraskraskras" + collaborationResponseBody.getStartDate());
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(new ArrayList<>(collaborationResponseBodies));
@@ -210,12 +192,13 @@ public class CollaborationController {
             Collaboration collaboration = collaborationService.getCollaborationById(collaborationId);
             boolean isTutor = collaboration.getTutor().getId() == authenticatedUser.getTutorId();
             if (isTutor) {
-                Student student = roleService.getStudentByTuteeOrTutorId(collaboration.getTutee().getId());
-                TuteeProfileResponse response = roleService.getTuteeProfile(student.getId());
+
+                Student student = collaborationService.getStudentByTuteeOrTutorId(collaboration.getTutee().getId());
+                TuteeProfileResponse response = collaborationService.getTuteeProfile(student.getId());
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
-                Student student = roleService.getStudentByTuteeOrTutorId(collaboration.getTutor().getId());
-                TutorProfileResponse response = roleService.getTutorProfile(student.getId());
+                Student student = collaborationService.getStudentByTuteeOrTutorId(collaboration.getTutor().getId());
+                TutorProfileResponse response = collaborationService.getTutorProfile(student.getId());
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
         } catch (Exception e) {
@@ -227,8 +210,6 @@ public class CollaborationController {
     public ResponseEntity<?> requestCollaborationByPost(@RequestBody RequestCollaborationByPostBody postBody,
             HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
-        System.out.println("authenticatedUser" + authenticatedUser);
-        System.out.println("postBody" + postBody);
 
         if (!authenticatedUser.isTutor() && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -241,11 +222,10 @@ public class CollaborationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
-        Post post = postService.getPostById(postBody.getPost_id()).orElse(null);
+        Post post = collaborationService.getPostById(postBody.getPost_id()).orElse(null);
 
-        notificationService.sendNotification(authenticatedUser.getTutorId(), EntityType.TUTOR, post.getTutee().getId(),
-                EntityType.TUTEE, post.getId(), EntityType.POST);
-
+        collaborationService.sendNotification(authenticatedUser.getTutorId(), EntityType.TUTOR, post.getTutee().getId(), EntityType.TUTEE, post.getId(), EntityType.POST);
+        
         return ResponseEntity.status(HttpStatus.OK).body("Collaboration requested");
     }
 
@@ -258,19 +238,12 @@ public class CollaborationController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Unauthorized: You must be logged in as a tutor to request a collaboration");
         }
-
-        try {
-
-            Post post = new Post();
-            post.setTutee(roleService.getTuteeById(authenticatedUser.getTuteeId()));
-            post.setTitle(body.title);
-            post.setDescription(body.description);
-            post.setSubject(body.subject);
-            post.setDuration(body.duration);
-            post.setState(PostState.INVISIBLE);
-            postService.createPost(post, authenticatedUser.getTuteeId());
-
+        
+        try { 
+            PostBody postBody = new PostBody(authenticatedUser.userId, body.title, body.description, body.subject, body.duration, PostState.INVISIBLE);
+            Post post = collaborationService.createPost(postBody, authenticatedUser.getTuteeId());
             collaborationService.requestCollaborationByTutor(body, authenticatedUser.getTuteeId(), post);
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -315,7 +288,7 @@ public class CollaborationController {
     public ResponseEntity<?> acceptCollaborationByPost(@PathVariable Long postId, @PathVariable Long tutorId, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        SubjectEnum post_subject = postService.getPostById(postId).get().getSubject();
+        SubjectEnum post_subject = collaborationService.getPostById(postId).get().getSubject();
 
         if (post_subject == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post does not exist");

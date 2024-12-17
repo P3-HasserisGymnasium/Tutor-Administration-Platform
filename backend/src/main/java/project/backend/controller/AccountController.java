@@ -25,7 +25,6 @@ import project.backend.model.Administrator;
 import project.backend.model.Student;
 import project.backend.model.User;
 import project.backend.service.AccountService;
-import project.backend.service.RoleService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -33,10 +32,8 @@ import project.backend.service.RoleService;
 public class AccountController {
 
     final AccountService accountService;
-    final RoleService roleService;
-    public AccountController(AccountService accountService, RoleService roleService) {
+    public AccountController(AccountService accountService) {
         this.accountService = accountService;
-        this.roleService = roleService;
     }
 
     @GetMapping("/{id}")
@@ -47,9 +44,13 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to view this user");
         }
 
-        User user = accountService.getUserById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        try {
+            User user = accountService.getUserById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
 
-        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @PostMapping("/")
@@ -71,7 +72,11 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to delete this user");
         }
 
-        accountService.deleteUserById(id);
+        try {
+                accountService.deleteUserById(id);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
     }
@@ -82,8 +87,6 @@ public class AccountController {
 
             User user = accountService.getUserIfCorrectPassword(body);
             Administrator admin =  accountService.getAdminById(user.getId());
-            System.out.println("admin: " + admin);
-            System.out.println("user: " + user);
             if (admin != null) {
                 return accountService.handleAdminLogin((Administrator) user);
             }
@@ -100,5 +103,4 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
-
 }

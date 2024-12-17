@@ -1,5 +1,6 @@
 package project.backend.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +37,21 @@ public class StudentService {
 
     public void deleteStudent(Student student) {
         studentRepository.delete(student);
+    }
+
+    public List<Student> getTutees(){
+        return studentRepository.getTutees();
+    }
+
+    public List<Student> getTutors(){
+        return studentRepository.getTutors();
+    }
+
+    public Student getStudentByTutorId(Long TutorId){
+        return studentRepository.getStudentByTutorId(TutorId);
+    }
+
+    public Student getStudentByTuteeId(Long TuteeId){
+        return studentRepository.getStudentByTuteeId(TuteeId);
     }
 }

@@ -10,6 +10,7 @@ public class TutorTimeSlotService {
     
     @Autowired
     final TutorTimeslotRepository tutorTimeslotRepository;
+    
     public TutorTimeSlotService(TutorTimeslotRepository tutorTimeslotRepository) {
         this.tutorTimeslotRepository = tutorTimeslotRepository;
     }

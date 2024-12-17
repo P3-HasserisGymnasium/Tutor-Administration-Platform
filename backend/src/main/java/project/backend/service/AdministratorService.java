@@ -29,4 +29,8 @@ public class AdministratorService {
     public void deleteAdministratorById(Long id) {
         administratorRepository.deleteById(id);
     }
+
+    public Optional<Administrator> findFirstBy() {
+        return administratorRepository.findFirstBy();
+    }
 }

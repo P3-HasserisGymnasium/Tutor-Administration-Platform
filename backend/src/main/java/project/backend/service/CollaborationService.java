@@ -12,6 +12,9 @@ import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.collaboration_bodies.CollaborationCreateBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByPostBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByTutorBody;
+import project.backend.controller_bodies.post_controller.PostBody;
+import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
+import project.backend.controller_bodies.role_controller.TutorProfileResponse;
 import project.backend.controller_bodies.collaboration_bodies.SubmitBody;
 import project.backend.model.Collaboration;
 import project.backend.model.EntityType;
@@ -19,12 +22,13 @@ import project.backend.model.CollaborationState;
 import project.backend.model.Feedback;
 import project.backend.model.Post;
 import project.backend.model.RoleEnum;
+import project.backend.model.Student;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.model.Tutor;
 import project.backend.model.Administrator;
 import project.backend.repository.CollaborationRepository;
-import project.backend.repository.AdministratorRepository;
+
 
 @Service
 public class CollaborationService {
@@ -33,7 +37,7 @@ public class CollaborationService {
     final CollaborationRepository collaborationRepository;
 
     @Autowired
-    final AdministratorRepository administratorRepository;
+    final AdministratorService administratorService;
 
     @Autowired
     final NotificationService notificationService;
@@ -44,13 +48,13 @@ public class CollaborationService {
     @Autowired
     final RoleService roleService;
 
-    public CollaborationService(CollaborationRepository collaborationRepository, RoleService roleService,
-            NotificationService notificationService, AdministratorRepository administratorRepository,
-            PostService postService) {
+
+
+    public CollaborationService(CollaborationRepository collaborationRepository, RoleService roleService, NotificationService notificationService, AdministratorService administratorService, PostService postService) {
         this.collaborationRepository = collaborationRepository;
         this.roleService = roleService;
         this.notificationService = notificationService;
-        this.administratorRepository = administratorRepository;
+        this.administratorService = administratorService;
         this.postService = postService;
     }
 
@@ -302,6 +306,9 @@ public class CollaborationService {
         Tutor tutor = roleService.getTutorByUserId(postBody.getTutor_id());
         ArrayList<Collaboration> existingCollaboration = collaborationRepository
                 .findByTuteeTutorAndSubject(tutee.getId(), tutor.getId(), post.getSubject());
+
+        existingCollaboration.removeIf(collaboration -> collaboration.getState() == CollaborationState.REJECTED);
+
         if (existingCollaboration.size() > 0 || existingCollaboration == null) {
             throw new IllegalArgumentException("Collaboration already exists or request is pending");
         }
@@ -320,11 +327,12 @@ public class CollaborationService {
 
         ArrayList<Collaboration> existingCollaboration = collaborationRepository.findByTuteeTutorAndSubject(tuteeId,
                 body.tutorId, body.subject);
-        System.out.println("existingCollaboration" + existingCollaboration);
+
+        existingCollaboration.removeIf(collaboration -> collaboration.getState() == CollaborationState.REJECTED);
+
         if (existingCollaboration.size() > 0 || existingCollaboration == null) {
             throw new IllegalArgumentException("Collaboration already exists or request is pending");
         }
-        System.out.println("tuteeIdssssss" + tuteeId);
         Collaboration collaboration = new Collaboration();
         Tutor tutor = roleService.getTutorById(body.tutorId);
         Tutee tutee = roleService.getTuteeById(tuteeId);
@@ -365,11 +373,32 @@ public class CollaborationService {
 
         tutor.getFeedbacks().add(feedback);
 
-        Administrator admin = administratorRepository.findFirstBy()
-                .orElseThrow(() -> new IllegalStateException("Administrator not found"));
-
-        notificationService.sendNotification(tuteeId, EntityType.TUTEE, admin.getId(), EntityType.ADMIN,
-                feedback.getId(), EntityType.FEEDBACK);
+        Administrator admin = administratorService.findFirstBy().orElseThrow(() -> new IllegalStateException("Administrator not found"));
+    
+        notificationService.sendNotification(tuteeId, EntityType.TUTEE, admin.getId(), EntityType.ADMIN, feedback.getId(), EntityType.FEEDBACK);
     }
 
+    public Post createPost(PostBody postBody, Long tuteeId){
+        return postService.createPost(postBody, tuteeId);
+    }
+
+    public Student getStudentByTuteeOrTutorId(long id){
+        return roleService.getStudentByTuteeOrTutorId(id);
+    }
+
+    public TutorProfileResponse getTutorProfile(long userId){
+        return roleService.getTutorProfile(userId);
+    }
+
+    public TuteeProfileResponse getTuteeProfile(long userId){
+        return roleService.getTuteeProfile(userId);
+    }
+
+    public Optional<Post> getPostById(Long id){
+        return postService.getPostById(id);
+    }
+
+    public void sendNotification(Long senderId, EntityType senderType, Long receiverId, EntityType receiverType, Long contextId, EntityType contextType){
+        notificationService.sendNotification(senderId, senderType, receiverId, receiverType, contextId, contextType);
+    }
 }

@@ -23,50 +23,30 @@ import project.backend.model.Tutor;
 import project.backend.model.TutorTimeSlot;
 import project.backend.model.WeekDayEnum;
 import project.backend.model.YearGroupEnum;
-import project.backend.repository.AccountRepository;
-import project.backend.repository.AdministratorRepository;
-import project.backend.repository.RoleRepository;
-import project.backend.repository.StudentRepository;
-import project.backend.repository.TuteeRepository;
-import project.backend.repository.TutorRepository;
 
 @Service
 public class RoleService {
 
     @Autowired
-    final RoleRepository roleRepository;
+    final StudentService studentService;
 
     @Autowired
-    final StudentRepository studentRepository;
+    final TutorService tutorService;
 
     @Autowired
-    final TutorRepository tutorRepository;
+    final AdministratorService administratorService;
 
-    @Autowired
-    final AccountRepository accountRepository;
-
-    @Autowired
-    final TuteeRepository tuteeRepository;
-
-    @Autowired
-    final AdministratorRepository administratorRepository;
-
-    public RoleService(RoleRepository roleRepository, StudentRepository studentRepository,
-            TutorRepository tutorRepository, AdministratorRepository administratorRepository,
-            AccountRepository accountRepository, TuteeRepository tuteeRepository) {
-        this.roleRepository = roleRepository;
-        this.studentRepository = studentRepository;
-        this.tutorRepository = tutorRepository;
-        this.administratorRepository = administratorRepository;
-        this.accountRepository = accountRepository;
-        this.tuteeRepository = tuteeRepository;
+    public RoleService(StudentService studentService, TutorService tutorService, AdministratorService administratorService) {
+        this.studentService = studentService;
+        this.tutorService = tutorService;
+        this.administratorService = administratorService;
     }
 
-    public ArrayList<TuteeProfileResponse> getTutees() {
-        List<Tutee> tuteeList = tuteeRepository.findAll();
+    public List<TuteeProfileResponse> getTutees() {
+        List<Student> studentList = studentService.getTutees();
         ArrayList<TuteeProfileResponse> tutees = new ArrayList<>();
-        for (Tutee tutee : tuteeList) {
-            Student student = tutee.getStudent();
+        for (Student student : studentList) {
+            Tutee tutee = student.getTutee();
             TuteeProfileResponse tuteeResponse = new TuteeProfileResponse();
             tuteeResponse.setFullName(student.getFullName());
             tuteeResponse.setYearGroup(student.getYearGroup());
@@ -79,7 +59,7 @@ public class RoleService {
     }
 
     public List<TutorProfileResponse> getTutors() {
-        List<Student> students = studentRepository.getTutors();
+        List<Student> students = studentService.getTutors();
         List<TutorProfileResponse> tutors = new ArrayList<>();
         for (Student student : students) {
             TutorProfileResponse response = new TutorProfileResponse();
@@ -123,18 +103,24 @@ public class RoleService {
     }
 
     public Student saveStudent(Student student) {
-        return studentRepository.save(student);
+        return studentService.saveStudent(student);
     }
 
-    public Tutee getTuteeById(Long id) {
-        Tutee tutee = tuteeRepository.findById(id).get();
+    public Tutee getTuteeById(Long id){
+        Student student = studentService.getStudentById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + id));
+
+        Tutee tutee = student.getTutee();
+        if (tutee == null){
+            throw new IllegalArgumentException("This student is not assigned a Tutee");
+        }
 
         return tutee;
     }
 
-    public Tutor getTutorByUserId(Long userId) {
-        Student student = studentRepository.findById(userId).orElse(null);
-
+    public Tutor getTutorByUserId(Long userId){
+        Student student = studentService.getStudentById(userId).orElse(null);
+        
         Tutor tutor = student.getTutor();
         if (tutor == null) {
             return null;
@@ -145,9 +131,9 @@ public class RoleService {
 
     public Tutee getTuteeByUserId(Long userId) {
 
-        Student student = studentRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + userId));
-
+        Student student = studentService.getStudentById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + userId));
+        
         Tutee tutee = student.getTutee();
         if (tutee == null) {
             throw new IllegalArgumentException("This student is not assigned a Tutee");
@@ -156,22 +142,22 @@ public class RoleService {
         return tutee;
     }
 
-    public Administrator getAdministratorByUserId(Long userId) {
-        return administratorRepository.findById(userId)
-                .orElse(null);
+    public Administrator getAdministratorByUserId(Long userId){
+        return administratorService.getAdministratorById(userId)
+            .orElse(null);
     }
 
-    public Tutor getTutorById(Long tutorId) {
-        return tutorRepository.findById(tutorId)
-                .orElseThrow(() -> new IllegalArgumentException("Tutor not found with ID: " + tutorId));
+    public Tutor getTutorById(Long tutorId){
+        return tutorService.getTutorById(tutorId)
+            .orElseThrow(() -> new IllegalArgumentException("Tutor not found with ID: " + tutorId));
     }
 
-    public Administrator getAdministratorById(Long adminId) {
-        return administratorRepository.findById(adminId).orElse(null);
-    }
+    public Administrator getAdministratorById(Long adminId){
+        return administratorService.getAdministratorById(adminId).orElse(null);
+        }
 
     public Student getStudentById(Long id) {
-        Optional<Student> studentOpt = studentRepository.findById(id);
+        Optional<Student> studentOpt = studentService.getStudentById(id);
 
         if (!studentOpt.isPresent()) {
             return null;
@@ -184,8 +170,6 @@ public class RoleService {
         Student student = getStudentById(id);
         Tutor tutor = student.getTutor();
         Tutee tutee = student.getTutee();
-        System.out.println("tutor: " + tutor);
-        System.out.println("tutee: " + tutee);
 
         if (tutor != null && tutee != null) {
             return new RoleEnum[] { RoleEnum.Tutor, RoleEnum.Tutee };
@@ -210,7 +194,7 @@ public class RoleService {
         Tutee tutee = new Tutee();
         tutee.setStudent(student);
         student.setTutee(tutee);
-        studentRepository.save(student);
+        studentService.saveStudent(student);
 
     }
 
@@ -229,9 +213,9 @@ public class RoleService {
     public Student getStudentByTuteeOrTutorId(Long id) {
         Tutee tutee = getTuteeById(id);
         if (tutee == null) {
-            return studentRepository.getStudentByTutorId(id);
+            return studentService.getStudentByTutorId(id);
         } else {
-            return studentRepository.getStudentByTuteeId(id);
+            return studentService.getStudentByTuteeId(id);
         }
     }
 
@@ -295,7 +279,6 @@ public class RoleService {
             List<TimeSlotCreateBody> filterTimeAvailabilities, List<YearGroupEnum> filterYearGroups,
             List<LanguageEnum> filterLanguages) {
 
-        System.out.println("timeAvailabilities: " + filterTimeAvailabilities.size());
 
         // TimeSlotCreateBody to TutorTimeSlot
         List<TutorTimeSlot> filterTimeSlots = new LinkedList<>();
@@ -306,17 +289,10 @@ public class RoleService {
                 tutorTimeSlot.setStartTime(time.start_time);
                 tutorTimeSlot.setEndTime(time.end_time);
                 filterTimeSlots.add(tutorTimeSlot);
-
-                System.out.println("parsed to TutorTimeSlot: " + tutorTimeSlot.getWeekDay() + ", "
-                        + tutorTimeSlot.getStartTime() + ", " + tutorTimeSlot.getEndTime());
             }
         }
 
-        List<Tutor> tutors = tutorRepository.findAll();
-        System.out.println("@RoleService, tutors found: " + tutors.size());
-
-        System.out.println("@RoleService, filtrering for, subjects: " + filterSubjects + ", timeAvailabilities: "
-                + filterTimeAvailabilities + ", yearGroups: " + filterYearGroups + ", languages: " + filterLanguages);
+        List<Tutor> tutors = tutorService.getAllTutors();
         if (filterSubjects != null && !filterSubjects.isEmpty()) {
             tutors = tutors
                     .stream()
@@ -330,7 +306,6 @@ public class RoleService {
                     })
                     .toList();
         }
-        System.out.println("@RoleService, tutors left after first filter: " + tutors.size());
         if (filterTimeAvailabilities != null && filterTimeAvailabilities.isEmpty() == false) {
             tutors = tutors
                     .stream()
@@ -353,41 +328,26 @@ public class RoleService {
                                 int tutorTimeSlotEndTimeHour = Integer.parseInt(endTimeTutorArray[0]);
                                 int tutorTimeSlotEndTimeMinute = Integer.parseInt(endTimeTutorArray[1]);
 
-                                System.out.println("filterDay: " + filterTimeSlot.getWeekDay()
-                                        + "\nfilterTimeSlotStartTimeHour: " + filterTimeSlotStartTimeHour
-                                        + "\nfilterTimeSlotStartTimeMinute: " + filterTimeSlotStartTimeMinute
-                                        + "\ntutorTimeSlotDay: " + tutorTimeSlot.getWeekDay()
-                                        + "\ntutorTimeSlotStartTimeHour: " + tutorTimeSlotStartTimeHour
-                                        + "\ntutorTimeSlotStartTimeMinute: " + tutorTimeSlotStartTimeMinute);
-                                System.out.println("filterTimeSlotEndTimeHour: " + filterTimeSlotEndTimeHour
-                                        + "\nfilterTimeSlotEndTimeMinute: " + filterTimeSlotEndTimeMinute
-                                        + "\ntutorTimeSlotEndTimeHour: " + tutorTimeSlotEndTimeHour
-                                        + "\ntutorTimeSlotEndTimeMinute: " + tutorTimeSlotEndTimeMinute);
-
                                 if (filterTimeSlot.getWeekDay() == tutorTimeSlot.getWeekDay()
                                         && isTimeSmallerOrEqual(tutorTimeSlotStartTimeHour,
                                                 tutorTimeSlotStartTimeMinute, filterTimeSlotStartTimeHour,
                                                 filterTimeSlotStartTimeMinute)
                                         && isTimeSmallerOrEqual(filterTimeSlotEndTimeHour, filterTimeSlotEndTimeMinute,
                                                 tutorTimeSlotEndTimeHour, tutorTimeSlotEndTimeMinute)) {
-                                    System.out.println("true");
                                     return true;
                                 }
                             }
                         }
-                        System.out.println("false");
                         return false;
                     })
                     .toList();
         }
-        System.out.println("@RoleService, tutors left after second filter: " + tutors.size());
         if (filterYearGroups != null && filterYearGroups.isEmpty() == false) {
             tutors = tutors
                     .stream()
                     .filter(tutor -> filterYearGroups.contains(tutor.getStudent().getYearGroup()))
                     .toList();
         }
-        System.out.println("@RoleService, tutors left after third filter: " + tutors.size());
         if (filterLanguages != null && filterLanguages.isEmpty() == false) {
             tutors = tutors
                     .stream()
@@ -401,7 +361,6 @@ public class RoleService {
                     })
                     .toList();
         }
-        System.out.println("@RoleService, tutors left after fourth filter: " + tutors.size());
 
         ArrayList<TutorProfileResponse> responses = new ArrayList<>();
 
@@ -470,8 +429,6 @@ public class RoleService {
     }
 
     boolean isTimeSmallerOrEqual(int smallHour, int smallMinute, int bigHour, int bigMinute) {
-        System.out.println("if " + smallHour + " < " + bigHour);
-        System.out.println("else if " + smallHour + " == " + bigHour + " && " + smallMinute + " <= " + bigMinute);
         if (smallHour < bigHour) {
             return true;
         } else if (smallHour == bigHour && smallMinute <= bigMinute) {

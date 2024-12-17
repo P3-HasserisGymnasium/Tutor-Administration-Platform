@@ -15,8 +15,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.tutor_application_controller.TutorApplicationCreateBody;
-import project.backend.model.EntityType;
-import project.backend.model.TutorApplication;
 import project.backend.service.NotificationService;
 import project.backend.service.TutorApplicationService;
 
@@ -66,8 +64,7 @@ public class TutorApplicationController {
         }
 
         try {
-            TutorApplication application = tutorApplicationService.createTutorApplication(body);
-            notificationService.sendNotification(authenticatedUser.getTuteeId(), EntityType.TUTEE, 0L, EntityType.ADMIN, application.getId(), EntityType.POST);
+            tutorApplicationService.createTutorApplication(body, authenticatedUser.getTuteeId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

@@ -7,11 +7,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.model.Post;
+import project.backend.model.PostState;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.repository.PostRepository;
-import project.backend.repository.TuteeRepository;
 
 @Service
 public class PostService {
@@ -23,15 +24,12 @@ public class PostService {
     final RoleService roleService; 
   
     @Autowired
-    final TuteeRepository tuteeRepository;
+    final TuteeService tuteeService;
 
-    
-  
-
-    public PostService(PostRepository postRepository, RoleService roleService, TuteeRepository tuteeRepository) {
+    public PostService(PostRepository postRepository, RoleService roleService, TuteeService tuteeService) {
         this.postRepository = postRepository;
         this.roleService = roleService;
-        this.tuteeRepository = tuteeRepository;
+        this.tuteeService = tuteeService;
     }
 
     public List<Post> getPostsByFilters(Integer minDuration, Integer maxDuration, List<SubjectEnum> subjects, Long tuteeId){
@@ -91,16 +89,26 @@ public class PostService {
         return savePost(existingPost);        
     }
 */
-    public Post createPost(Post post, Long tuteeId){
+    public Post createPost(PostBody postBody, Long tuteeId){
+        Tutee tutee = roleService.getTuteeById(tuteeId);
+
+        Post post = new Post();
+        post.setTutee(tutee);
+        post.setSubject(postBody.subject);
+        post.setTitle(postBody.title);
+        post.setDescription(postBody.description);
+        post.setDuration(postBody.duration);
+        post.setPairingRequest(postBody.getIsPairingRequest());
+        post.setState(PostState.VISIBLE);    
+
+
+        Optional<Tutee> tuteeOpt = tuteeService.getTuteeById(tuteeId);
         
-        Optional<Tutee> tuteeOpt = tuteeRepository.findById(tuteeId);
-        System.out.println("tuteeId" + tuteeId);
-        System.out.println("tuteeOpt" + tuteeOpt);
         if(!tuteeOpt.isPresent()){
             throw new IllegalArgumentException("Tutee not found with ID: " + tuteeId);
         }
 
-        Tutee tutee = tuteeOpt.get();
+        tutee = tuteeOpt.get();
 
         post.setTutee(tutee);
         post.setCreationTimestamp(new Timestamp(System.currentTimeMillis()));
