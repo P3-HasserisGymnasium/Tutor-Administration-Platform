@@ -6,6 +6,7 @@ public enum EntityType {
     ADMIN,
     COLLABORATION,
     MEETING,
+    TUTORAPPLICATION,
     POST,
     NOTIFICATION,
     FEEDBACK,

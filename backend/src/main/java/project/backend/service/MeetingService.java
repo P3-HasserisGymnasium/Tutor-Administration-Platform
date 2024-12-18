@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import project.backend.model.Meeting;
@@ -25,7 +26,7 @@ public class MeetingService {
     @Autowired
     final CollaborationService collaborationService;
 
-    public MeetingService(MeetingRepository meetingRepository, NotificationService notificationService, CollaborationService collaborationService) {
+    public MeetingService(MeetingRepository meetingRepository, @Lazy NotificationService notificationService, CollaborationService collaborationService) {
         this.meetingRepository = meetingRepository;
         this.notificationService = notificationService;
         this.collaborationService = collaborationService;

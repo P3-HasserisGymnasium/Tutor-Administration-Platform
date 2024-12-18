@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
+import project.backend.controller_bodies.role_controller.AddSubjectBody;
 import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
 import project.backend.controller_bodies.role_controller.TutorFilterBody;
 import project.backend.controller_bodies.role_controller.TutorProfileResponse;
@@ -86,6 +87,41 @@ public class RoleController {
             ArrayList<TutorProfileResponse> response = roleService.getTutorProfilesFiltered(body.subjects,
                     body.time_availability, body.year_group, body.languages);
             return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("error: " + e.getMessage());
+        }
+    }
+
+
+    @PostMapping("/tutor/addSubject")
+    public ResponseEntity<?> addSubjectToTutor(@RequestBody AddSubjectBody body, HttpServletRequest request) {
+
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to add subjects to tutors");
+        }
+
+        try {
+            roleService.addSubjectToTutor(body);
+            return ResponseEntity.ok().body("Subject added to tutor");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/tutor/removeSubject")
+    public ResponseEntity<?> removeSubjectFromTutor(@RequestBody AddSubjectBody body, HttpServletRequest request) {
+
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to remove subjects from tutors");
+        }
+
+        try {
+            roleService.removeSubjectFromTutor(body);
+            return ResponseEntity.ok().body("Subject removed from tutor");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("error: " + e.getMessage());
         }

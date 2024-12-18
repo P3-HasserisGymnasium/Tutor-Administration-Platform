@@ -54,8 +54,10 @@ const RequestTutorDialog = ({ open, setOpen, tutorProfile }: RequestTutorDialogP
       title: values.title,
       subject: values.subject,
       duration: checked ? undefined : values.duration,
+      pairing_request: values.pairing_request,
       description: values.description,
     };
+    console.log("Requesting collaboration with", body);
     requestCollaborationMutation.mutate(body, {
       onSuccess: () => {
         console.log("Collaboration requested");

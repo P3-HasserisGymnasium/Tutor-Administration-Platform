@@ -9,6 +9,7 @@ public class RequestCollaborationByTutorBody {
     public Long userId;
     public String title;
     public String description;
+    public boolean pairing_request;
     public SubjectEnum subject;
     public List<Integer> duration;
     

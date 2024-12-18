@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import project.backend.controller_bodies.tutor_application_controller.TutorApplicationCreateBody;
 import project.backend.controller_bodies.tutor_application_controller.TutorTimeSlotCreateBody;
 import project.backend.model.EntityType;
+import project.backend.model.RoleEnum;
 import project.backend.model.Student;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutor;
@@ -51,7 +52,7 @@ public class TutorApplicationService {
         return tutorApplicationRepository.findAll();
     }
 
-    public void createTutorApplication(TutorApplicationCreateBody applicationBody, long tuteeId){
+    public void createTutorApplication(TutorApplicationCreateBody applicationBody, RoleEnum role, long tuteeOrTutorId){
         
         TutorApplication tutorApplication = new TutorApplication();
 
@@ -66,7 +67,16 @@ public class TutorApplicationService {
         tutorApplication.setDescription(applicationBody.tutor_profile_description);
 
         TutorApplication savedTutorApplication = tutorApplicationRepository.save(tutorApplication);
-        notificationService.sendNotification(tuteeId, EntityType.TUTEE, 0L, EntityType.ADMIN, savedTutorApplication.getId(), EntityType.POST);
+
+        if (role == RoleEnum.Tutor) {
+            long tutorId = tuteeOrTutorId;
+            notificationService.sendNotification(tutorId, EntityType.TUTOR, 0L, EntityType.ADMIN, savedTutorApplication.getId(), EntityType.TUTORAPPLICATION);
+        } else if (role == RoleEnum.Tutee) {
+            long tuteeId = tuteeOrTutorId;
+            notificationService.sendNotification(tuteeId, EntityType.TUTEE, 0L, EntityType.ADMIN, savedTutorApplication.getId(), EntityType.TUTORAPPLICATION);
+
+        }
+
         
         for (TutorTimeSlotCreateBody timeSlotBody : applicationBody.time_availability) {
             TutorTimeSlot timeSlot = new TutorTimeSlot();
@@ -74,7 +84,6 @@ public class TutorApplicationService {
             timeSlot.setStartTime(timeSlotBody.start_time);
             timeSlot.setEndTime(timeSlotBody.end_time);
             tutorApplication.getFreeTimeSlots().add(timeSlot);
-
             tutorTimeslotService.saveTutorTimeSlot(timeSlot);
         }
     }

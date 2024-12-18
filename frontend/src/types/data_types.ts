@@ -66,6 +66,11 @@ export const zodPostListFilterSchema = z.object({
 	subjects: z.array(Subject),
 });
 
+export const zodSubjectBody = z.object({
+	tutorId: zodUUID,
+	subject: Subject,
+});
+
 export const PostState = z.enum(["VISIBLE", "INVISIBLE"]);
 export const MeetingState = z.enum(["PENDING", "ACCEPTED", "REJECTED", "TERMINATED"] as const);
 export const NotificationContext = z.enum([
@@ -118,6 +123,7 @@ export type SubjectType = z.infer<typeof Subject>;
 export type CollaborationStateType = z.infer<typeof CollaborationState>;
 export type CommunicationMediumType = z.infer<typeof communication_medium>;
 export type ContactInfoType = z.infer<typeof zodContactInfo>;
+export type SubjectBodyType = z.infer<typeof zodSubjectBody>;
 export type UUIDType = z.infer<typeof zodUUID>;
 export type AccountRegisterResponseType = {
 	tutor: boolean;

@@ -2,7 +2,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { tutorListFilterType, YearGroup } from "~/types/data_types";
+import { tutorListFilterType, YearGroup, SubjectBodyType } from "~/types/data_types";
 import { TuteeProfileType, TutorProfileType } from "~/types/entity_types";
 
 // tutee/tutor:role_id -> role:student_id -> student:id
@@ -118,9 +118,43 @@ export const useRoleService = () => {
 		});
 	};
 
+	const useAddSubject = () => {
+		return useMutation({
+			mutationKey: ["addSubject"],
+			mutationFn: async (subjectBody: SubjectBodyType) => {
+				const { data } = await apiClient.post<string>("/api/role/tutor/addSubject", subjectBody);
+				return data;
+			},
+			onError: (e: AxiosError) => {
+				toast.error("" + e?.response?.data);
+			},
+			onSuccess: () => {
+				toast.success("Subject added");
+			},
+		})
+	};
+
+	const useRemoveSubject = () => {
+		return useMutation({
+			mutationKey: ["removeSubject"],
+			mutationFn: async (subjectBody: SubjectBodyType) => {
+				const { data } = await apiClient.post<string>("/api/role/tutor/removeSubject", subjectBody);
+				return data;
+			},
+			onError: (e: AxiosError) => {
+				toast.error("" + e?.response?.data);
+			},
+			onSuccess: () => {
+				toast.success("Subject removed");
+			},
+		})
+	};
+
 	return {
 		assignTuteeRole,
 		removeRole,
+		useAddSubject,
+		useRemoveSubject,
 		useGetTutors,
 		useGetTutees,
 		useGetTutorProfile,
