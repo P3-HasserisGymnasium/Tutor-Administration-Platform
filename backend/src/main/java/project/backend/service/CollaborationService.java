@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.AuthenticatedUserBody;
@@ -50,7 +51,7 @@ public class CollaborationService {
 
 
 
-    public CollaborationService(CollaborationRepository collaborationRepository, RoleService roleService, NotificationService notificationService, AdministratorService administratorService, PostService postService) {
+    public CollaborationService(CollaborationRepository collaborationRepository, @Lazy RoleService roleService, NotificationService notificationService, AdministratorService administratorService, PostService postService) {
         this.collaborationRepository = collaborationRepository;
         this.roleService = roleService;
         this.notificationService = notificationService;

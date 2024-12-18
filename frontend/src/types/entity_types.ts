@@ -51,7 +51,7 @@ export const zodTuteeProfileSchema = z.object({
 
 export const zodMeetingSchema = z.object({
 	id: zodUUID,
-	collaboration: zodUUID,
+	collaboration_id: zodUUID,
 	start_date: z.string(),
 	end_date: z.string(),
 	meeting_state: MeetingState,
@@ -218,6 +218,7 @@ export const zodRequestCollaborationByTutorType = z.object({
 	title: z.string(),
 	description: z.string(),
 	subject: Subject,
+	pairing_request: z.boolean(),
 	duration: z.union([z.array(z.number()), z.undefined()]),
 });
 export const zodRequestCollaborationByPostType = z.object({

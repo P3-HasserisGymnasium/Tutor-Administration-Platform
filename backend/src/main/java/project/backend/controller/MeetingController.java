@@ -213,7 +213,7 @@ public class MeetingController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to request a meeting");
         }
 
-        Collaboration collaboration = meetingService.getCollaborationById(body.collaboration);
+        Collaboration collaboration = meetingService.getCollaborationById(body.collaboration_id);
 
         if (collaboration == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Collaboration not found");

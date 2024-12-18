@@ -1,20 +1,24 @@
 package project.backend.service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.account_controller.TimeCreateBody;
 import project.backend.controller_bodies.account_controller.TimeSlotCreateBody;
+import project.backend.controller_bodies.role_controller.AddSubjectBody;
 import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
 import project.backend.controller_bodies.role_controller.TutorProfileResponse;
 import project.backend.model.Administrator;
 import project.backend.model.Collaboration;
 import project.backend.model.LanguageEnum;
+import project.backend.model.Meeting;
 import project.backend.model.RoleEnum;
 import project.backend.model.Student;
 import project.backend.model.SubjectEnum;
@@ -33,13 +37,21 @@ public class RoleService {
     @Autowired
     final TutorService tutorService;
 
+    @Autowired 
+    final CollaborationService collaborationService;
+
+    @Autowired
+    final MeetingService meetingService;
+
     @Autowired
     final AdministratorService administratorService;
 
-    public RoleService(StudentService studentService, TutorService tutorService, AdministratorService administratorService) {
+    public RoleService(StudentService studentService, TutorService tutorService, AdministratorService administratorService, @Lazy CollaborationService collaborationService, @Lazy MeetingService meetingService) {
         this.studentService = studentService;
         this.tutorService = tutorService;
         this.administratorService = administratorService;
+        this.collaborationService = collaborationService;
+        this.meetingService = meetingService;
     }
 
     public List<TuteeProfileResponse> getTutees() {
@@ -111,9 +123,6 @@ public class RoleService {
             .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + id));
 
         Tutee tutee = student.getTutee();
-        if (tutee == null){
-            throw new IllegalArgumentException("This student is not assigned a Tutee");
-        }
 
         return tutee;
     }
@@ -127,6 +136,56 @@ public class RoleService {
         }
 
         return tutor;
+    }
+
+    public Tutor addSubjectToTutor(AddSubjectBody body) {
+        Tutor tutor = tutorService.getTutorById(body.getTutorId())
+            .orElseThrow(() -> new IllegalArgumentException("Tutor not found with ID: " + body.getTutorId()));
+
+        if (tutor.getTutoringSubjects().contains(body.getSubject())) {
+            throw new IllegalArgumentException("Tutor is already tutoring this subject.");
+        }
+
+        tutor.getTutoringSubjects().add(body.getSubject());
+
+        return tutorService.saveTutor(tutor);
+    }
+
+    public Tutor removeSubjectFromTutor(AddSubjectBody body) {
+        Tutor tutor = tutorService.getTutorById(body.getTutorId())
+            .orElseThrow(() -> new IllegalArgumentException("Tutor not found with ID: " + body.getTutorId()));
+
+        if (!tutor.getTutoringSubjects().contains(body.getSubject())) {
+            throw new IllegalArgumentException("Tutor is not tutoring this subject.");
+        }
+
+        tutor.getTutoringSubjects().remove(body.getSubject());
+
+        List<Collaboration> existingCollaborations = tutor.getCollaborations();
+        System.out.println(existingCollaborations.get(0).getSubject());
+        Iterator<Collaboration> iterator = existingCollaborations.iterator();
+        while (iterator.hasNext()) {
+            Collaboration collab = iterator.next();
+            if (collab.getSubject() == body.getSubject()) {
+                
+                System.out.println("Deleting meeting");
+                System.out.println("collab id " + collab.getId());
+                System.out.println("collab subject " + collab.getSubject());
+                
+                List<Meeting> meetings = collab.getMeetings();
+
+                System.out.println(meetings.size());
+                if (meetings.size() > 0) {
+                    for (Meeting meeting : meetings) {
+                        meetingService.deleteMeetingById(meeting.getId());
+                    }
+                }
+                iterator.remove();
+            }
+        }
+
+
+        return tutorService.saveTutor(tutor);
     }
 
     public Tutee getTuteeByUserId(Long userId) {
@@ -195,7 +254,6 @@ public class RoleService {
         tutee.setStudent(student);
         student.setTutee(tutee);
         studentService.saveStudent(student);
-
     }
 
     @Deprecated

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.notification_controller.NotificationCreateBody;
@@ -22,7 +23,7 @@ public class NotificationService {
     @Autowired
     final private RoleService roleService; 
     
-    public NotificationService(NotificationRepository notificationRepository, RoleService roleService) {
+    public NotificationService(NotificationRepository notificationRepository, @Lazy RoleService roleService) {
         this.notificationRepository = notificationRepository;
         this.roleService = roleService;
     }
@@ -44,6 +45,14 @@ public class NotificationService {
         notification.setContextType(body.context_type);
 
         notification.setState(body.state);
+
+        System.out.println("Notification created: " + notification.toString());
+        System.out.println("Notification created: " + notification.getSenderName());
+        System.out.println("Notification created: " + notification.getReceiverName());
+        System.out.println("Notification created: " + notification.getReceiverType());
+        System.out.println("Notification created: " + notification.getContextType());
+        System.out.println("Notification created: " + notification.getState());
+        
 
         return notificationRepository.save(notification);
     }

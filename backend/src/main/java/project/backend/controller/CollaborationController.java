@@ -241,6 +241,7 @@ public class CollaborationController {
         
         try { 
             PostBody postBody = new PostBody(authenticatedUser.userId, body.title, body.description, body.subject, body.duration, PostState.INVISIBLE);
+            postBody.setPairingRequest(body.pairing_request);
             Post post = collaborationService.createPost(postBody, authenticatedUser.getTuteeId());
             collaborationService.requestCollaborationByTutor(body, authenticatedUser.getTuteeId(), post);
 
