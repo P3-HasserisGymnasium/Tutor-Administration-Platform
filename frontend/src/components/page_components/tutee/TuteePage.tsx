@@ -1,5 +1,5 @@
 import MediumShortOnShortBoxLayout from "components/layout_components/MediumShortOnShortBoxLayout";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip, ThemeProvider } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 // import tutorTheme from "~/themes/tutorTheme";
@@ -37,10 +37,10 @@ export default function TuteePage() {
 	const theme = useCurrentTheme();
 	const { isMobile } = useBreakpoints();
 	const [view, setView] = useState<"list" | "calender">("calender");
-	const [showCollabDialog, setShowCollabDialog] = useState(false);
-	const [showPostDialog, setShowPostDialog] = useState(false);
-	const [showEditPostDialog, setShowEditPostDialog] = useState(false);
-	const [showCreateCollabDialog, setshowCreateCollabDialog] = useState(false);
+	const [showCollabDialog, setShowCollabDialog] = React.useState(false);
+	const [showPostDialog, setShowPostDialog] = React.useState(false);
+	const [showEditPostDialog, setShowEditPostDialog] = React.useState(false);
+	const [showCreateCollabDialog, setshowCreateCollabDialog] = React.useState(false);
 	const { userState } = useAuth();
 	const { data: postlist, isLoading: postsLoading, isError: postsError } = useGetTuteePosts();
 	const { data: collaborations, isLoading: collabLoading, isError: collabError } = useGetCollaborationsWithTutee(userState?.id || null);
