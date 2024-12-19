@@ -10,7 +10,6 @@ import MiniCalendar from "../content_components/MiniCalendar";
 import MeetingsList from "../content_components/MeetingsList";
 import InfoIcon from "@mui/icons-material/Info";
 import { useParams } from "react-router-dom";
-import { useAuth } from "~/api/authentication/useAuth";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useMeetingService } from "~/api/services/meeting-service";
 import { MeetingType } from "~/types/entity_types";
@@ -18,6 +17,7 @@ import CustomButton from "../content_components/CustomButton";
 import dayjs from "dayjs";
 import { CommunicationChipRead } from "../content_components/CommunicationChip";
 import { Role } from "~/types/data_types";
+import { useAuth } from "~/api/authentication/useAuth";
 
 export default function CollaborationPage() {
   const theme = useCurrentTheme();

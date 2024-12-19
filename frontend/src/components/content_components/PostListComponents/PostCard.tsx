@@ -19,17 +19,15 @@ export default function PostCard({ post }: { post: PostType }) {
 			tutor_id: userState?.id || 0,
 		};
 		requestCollaborationMutation.mutate(body, {
-			onSuccess: () => {
-				console.log("Collaboration requested");
-			},
+			onSuccess: () => { },
 			onError: (error) => {
 				console.error(error);
 			},
 		});
 	};
-
 	return (
 		<Box
+			data-testid="postcard1"
 			sx={{
 				display: "flex",
 				flexDirection: "row",

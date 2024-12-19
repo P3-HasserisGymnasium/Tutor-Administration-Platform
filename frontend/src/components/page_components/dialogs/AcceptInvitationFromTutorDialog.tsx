@@ -19,11 +19,7 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, context
   const { data: collaboration, isLoading: isCollaborationLoading } = useCollaborationService().useGetCollaborationById(context_id);
   const { data: post, isLoading: isPostLoading } = usePostService().useGetPostById(context_id);
   const { data: tutorProfile, isLoading: isTutorProfileLoading } = useRoleService().useGetTutorProfile(tutor_id || 0);
-  console.log("collaboration", collaboration);
-  console.log("post", post);
-  console.log("tutorProfile", tutorProfile);
-  console.log("context_id", context_id);
-  console.log("context_type", context_type);
+
   const acceptCollab = () => {
     if (context_type === NotificationContext.Enum.COLLABORATION && collaboration?.id) {
       acceptCollaboration.mutate(
