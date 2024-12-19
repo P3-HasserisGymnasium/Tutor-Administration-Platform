@@ -109,7 +109,7 @@ export const useRoleService = () => {
 			useMutation({
 				mutationKey: ["editProfile"],
 				mutationFn: async ({ profile, id }: { profile: TutorProfileType, id: number }) => {
-					const { data } = await apiClient.post<TutorProfileType>(
+					const { data } = await apiClient.put<TutorProfileType>(
 						`/api/role/edit/${id}/Tutor`,
 						profile
 					);

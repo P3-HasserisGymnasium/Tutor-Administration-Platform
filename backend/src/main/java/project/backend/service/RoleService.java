@@ -280,7 +280,7 @@ public class RoleService {
     }
 
     public TutorProfileResponse getTutorProfile(Long id) {
-        Tutor tutor = getTutorById(id);
+        Tutor tutor = getTutorByUserId(id);
         TutorProfileResponse response = new TutorProfileResponse();
         response.full_name = tutor.getStudent().getFullName();
         response.description = tutor.getProfileDescription();
@@ -478,7 +478,7 @@ public class RoleService {
         tutor.setTutoringSubjects(body.tutoring_subjects);
 
         // Clear and add new freeTimeSlots
-        if (body.time_availability != null) {
+        if (body.time_availability != null && !body.time_availability.isEmpty()) {
             // Clear the existing time slots and remove orphaned TutorTimeSlot instances
             List<TutorTimeSlot> timeSlots = tutor.getFreeTimeSlots();
             timeSlots.clear(); // Clear the collection of time slots
