@@ -75,8 +75,12 @@ public class Tutor extends Role {
     }
 
     public void setFreeTimeSlots(List<TutorTimeSlot> freeTimeSlots) {
-        this.freeTimeSlots = freeTimeSlots;
+        this.freeTimeSlots.clear();
+        if (freeTimeSlots != null) {
+            this.freeTimeSlots.addAll(freeTimeSlots);
+        }
     }
+
 
     public List<Collaboration> getCollaborations() {
         return collaborations;

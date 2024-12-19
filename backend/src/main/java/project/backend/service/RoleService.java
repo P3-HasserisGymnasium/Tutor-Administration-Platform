@@ -478,7 +478,7 @@ public class RoleService {
         tutor.setTutoringSubjects(body.tutoring_subjects);
 
         // Clear and add new freeTimeSlots
-        if (body.time_availability != null) {
+        if (body.time_availability != null && !body.time_availability.isEmpty()) {
             // Clear the existing time slots and remove orphaned TutorTimeSlot instances
             List<TutorTimeSlot> timeSlots = tutor.getFreeTimeSlots();
             timeSlots.clear(); // Clear the collection of time slots
