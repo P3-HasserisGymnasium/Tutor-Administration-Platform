@@ -81,6 +81,29 @@ public class RoleController {
         }
     }
 
+    @PostMapping("/edit/{id}/{role}")
+    public ResponseEntity<?> editProfile(@PathVariable long id, @PathVariable RoleEnum role,
+            @RequestBody TutorProfileResponse body, HttpServletRequest request) {
+        // AuthenticatedUserBody authenticatedUser =
+        // AuthUser.getAuthenticatedUser(request);
+
+        if (role == RoleEnum.Tutor) {
+            try {
+                roleService.editTutorProfile(id, body);
+                return ResponseEntity.status(HttpStatus.OK).body("Tutor profile edited successfully");
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("error:" + e.getMessage());
+            }
+        } else {
+            try {
+                // roleService.editTuteeProfile(id, body);
+                return ResponseEntity.status(HttpStatus.OK).body("Tutee profile edited successfully");
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
+            }
+        }
+    }
+
     @PostMapping("/tutorsFiltered")
     public ResponseEntity<?> getTutorProfilesFiltered(@RequestBody TutorFilterBody body, HttpServletRequest request) {
         try {
@@ -92,14 +115,14 @@ public class RoleController {
         }
     }
 
-
     @PostMapping("/tutor/addSubject")
     public ResponseEntity<?> addSubjectToTutor(@RequestBody AddSubjectBody body, HttpServletRequest request) {
 
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!authenticatedUser.isAdministrator()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to add subjects to tutors");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("You do not have permission to add subjects to tutors");
         }
 
         try {
@@ -116,7 +139,8 @@ public class RoleController {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         if (!authenticatedUser.isAdministrator()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to remove subjects from tutors");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("You do not have permission to remove subjects from tutors");
         }
 
         try {

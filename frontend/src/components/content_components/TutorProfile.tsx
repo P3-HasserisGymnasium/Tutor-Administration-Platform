@@ -12,7 +12,7 @@ import React from "react";
 import CustomButton from "./CustomButton";
 import { TutorProfileType } from "~/types/entity_types";
 import CustomAutocomplete from "./CustomAutocomplete";
-import { FormProvider, useForm, Controller, useFormContext, useWatch } from "react-hook-form";
+import { Controller, FormProvider, useForm, useFormContext, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { zodTutorProfileSchema } from "~/types/entity_types";
 import { Language } from "~/types/data_types";
@@ -41,7 +41,17 @@ export default function TutorProfile() {
 	}
 
 	const editProfile = (values: TutorProfileType) => {
-		editPostMutation.mutate(values, {});
+		console.log("values", values);
+		console.log("userState.id", userState.id);
+		editPostMutation.mutate({ profile: values, id: userState.id as number }, {
+			onSuccess: () => {
+				console.log("Edit profile succeeded");
+				setState("preview");
+			},
+			onError: (error) => {
+				console.error("Edit profile failed", error);
+			},
+		});
 	};
 
 	return (

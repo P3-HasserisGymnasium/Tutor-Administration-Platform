@@ -37,7 +37,7 @@ public class RoleService {
     @Autowired
     final TutorService tutorService;
 
-    @Autowired 
+    @Autowired
     final CollaborationService collaborationService;
 
     @Autowired
@@ -46,7 +46,9 @@ public class RoleService {
     @Autowired
     final AdministratorService administratorService;
 
-    public RoleService(StudentService studentService, TutorService tutorService, AdministratorService administratorService, @Lazy CollaborationService collaborationService, @Lazy MeetingService meetingService) {
+    public RoleService(StudentService studentService, TutorService tutorService,
+            AdministratorService administratorService, @Lazy CollaborationService collaborationService,
+            @Lazy MeetingService meetingService) {
         this.studentService = studentService;
         this.tutorService = tutorService;
         this.administratorService = administratorService;
@@ -63,7 +65,8 @@ public class RoleService {
             tuteeResponse.setFullName(student.getFullName());
             tuteeResponse.setYearGroup(student.getYearGroup());
             tuteeResponse.setLanguages(student.getLanguages());
-            tuteeResponse.setSubjectsReceivingHelpIn(tutee.getCollaborations().stream().map(collab -> collab.getSubject()).toList());
+            tuteeResponse.setSubjectsReceivingHelpIn(
+                    tutee.getCollaborations().stream().map(collab -> collab.getSubject()).toList());
             tuteeResponse.setContactInfo(student.getContactInfo());
             tutees.add(tuteeResponse);
         }
@@ -118,18 +121,18 @@ public class RoleService {
         return studentService.saveStudent(student);
     }
 
-    public Tutee getTuteeById(Long id){
+    public Tutee getTuteeById(Long id) {
         Student student = studentService.getStudentById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + id));
 
         Tutee tutee = student.getTutee();
 
         return tutee;
     }
 
-    public Tutor getTutorByUserId(Long userId){
+    public Tutor getTutorByUserId(Long userId) {
         Student student = studentService.getStudentById(userId).orElse(null);
-        
+
         Tutor tutor = student.getTutor();
         if (tutor == null) {
             return null;
@@ -140,7 +143,7 @@ public class RoleService {
 
     public Tutor addSubjectToTutor(AddSubjectBody body) {
         Tutor tutor = tutorService.getTutorById(body.getTutorId())
-            .orElseThrow(() -> new IllegalArgumentException("Tutor not found with ID: " + body.getTutorId()));
+                .orElseThrow(() -> new IllegalArgumentException("Tutor not found with ID: " + body.getTutorId()));
 
         if (tutor.getTutoringSubjects().contains(body.getSubject())) {
             throw new IllegalArgumentException("Tutor is already tutoring this subject.");
@@ -153,7 +156,7 @@ public class RoleService {
 
     public Tutor removeSubjectFromTutor(AddSubjectBody body) {
         Tutor tutor = tutorService.getTutorById(body.getTutorId())
-            .orElseThrow(() -> new IllegalArgumentException("Tutor not found with ID: " + body.getTutorId()));
+                .orElseThrow(() -> new IllegalArgumentException("Tutor not found with ID: " + body.getTutorId()));
 
         if (!tutor.getTutoringSubjects().contains(body.getSubject())) {
             throw new IllegalArgumentException("Tutor is not tutoring this subject.");
@@ -167,11 +170,11 @@ public class RoleService {
         while (iterator.hasNext()) {
             Collaboration collab = iterator.next();
             if (collab.getSubject() == body.getSubject()) {
-                
+
                 System.out.println("Deleting meeting");
                 System.out.println("collab id " + collab.getId());
                 System.out.println("collab subject " + collab.getSubject());
-                
+
                 List<Meeting> meetings = collab.getMeetings();
 
                 System.out.println(meetings.size());
@@ -184,15 +187,14 @@ public class RoleService {
             }
         }
 
-
         return tutorService.saveTutor(tutor);
     }
 
     public Tutee getTuteeByUserId(Long userId) {
 
         Student student = studentService.getStudentById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + userId));
-        
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + userId));
+
         Tutee tutee = student.getTutee();
         if (tutee == null) {
             throw new IllegalArgumentException("This student is not assigned a Tutee");
@@ -201,19 +203,19 @@ public class RoleService {
         return tutee;
     }
 
-    public Administrator getAdministratorByUserId(Long userId){
+    public Administrator getAdministratorByUserId(Long userId) {
         return administratorService.getAdministratorById(userId)
-            .orElse(null);
+                .orElse(null);
     }
 
-    public Tutor getTutorById(Long tutorId){
+    public Tutor getTutorById(Long tutorId) {
         return tutorService.getTutorById(tutorId)
-            .orElseThrow(() -> new IllegalArgumentException("Tutor not found with ID: " + tutorId));
+                .orElseThrow(() -> new IllegalArgumentException("Tutor not found with ID: " + tutorId));
     }
 
-    public Administrator getAdministratorById(Long adminId){
+    public Administrator getAdministratorById(Long adminId) {
         return administratorService.getAdministratorById(adminId).orElse(null);
-        }
+    }
 
     public Student getStudentById(Long id) {
         Optional<Student> studentOpt = studentService.getStudentById(id);
@@ -333,7 +335,6 @@ public class RoleService {
     public ArrayList<TutorProfileResponse> getTutorProfilesFiltered(List<SubjectEnum> filterSubjects,
             List<TimeSlotCreateBody> filterTimeAvailabilities, List<YearGroupEnum> filterYearGroups,
             List<LanguageEnum> filterLanguages) {
-
 
         // TimeSlotCreateBody to TutorTimeSlot
         List<TutorTimeSlot> filterTimeSlots = new LinkedList<>();
@@ -461,10 +462,44 @@ public class RoleService {
         return responses;
     }
 
-    public void editProfile(Long id) {
-        Student student = getStudentById(id);
+    public void editTutorProfile(Long id, TutorProfileResponse body) {
+        Tutor tutor = getTutorByUserId(id);
+        Student student = tutor.getStudent();
 
-        saveStudent(student);
+        student.setFullName(body.full_name);
+        student.setYearGroup(body.year_group);
+        if (body.contact_info != null) {
+            student.getContactInfo().clear(); // Clear existing references
+            student.getContactInfo().addAll(body.contact_info); // Add new ones
+        }
+        student.setLanguages(body.languages);
+
+        tutor.setProfileDescription(body.description);
+        tutor.setTutoringSubjects(body.tutoring_subjects);
+
+        // Clear and add new freeTimeSlots
+        if (body.time_availability != null) {
+            // Clear the existing time slots and remove orphaned TutorTimeSlot instances
+            List<TutorTimeSlot> timeSlots = tutor.getFreeTimeSlots();
+            timeSlots.clear(); // Clear the collection of time slots
+
+            // Now add the new time slots
+            List<TutorTimeSlot> newTimeSlots = new LinkedList<>();
+            for (TimeSlotCreateBody timeSlot : body.time_availability) {
+                for (TimeCreateBody time : timeSlot.time) {
+                    TutorTimeSlot tutorTimeSlot = new TutorTimeSlot();
+                    tutorTimeSlot.setWeekDay(timeSlot.day);
+                    tutorTimeSlot.setStartTime(time.start_time);
+                    tutorTimeSlot.setEndTime(time.end_time);
+                    newTimeSlots.add(tutorTimeSlot);
+                }
+            }
+            tutor.setFreeTimeSlots(newTimeSlots); // Set the new time slots list
+        }
+
+        // Save the updated tutor
+        tutorService.saveTutor(tutor);
+
     }
 
     public void removeRole(Long id, RoleEnum role) {

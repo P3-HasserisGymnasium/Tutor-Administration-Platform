@@ -102,21 +102,27 @@ export const useRoleService = () => {
 		});
 	};
 
+
+
 	const useEditProfile = () => {
-		return useMutation({
-			mutationKey: ["editProfile"],
-			mutationFn: async (profile: TutorProfileType) => {
-				const { data } = await apiClient.post<TutorProfileType>("/api/role", profile);
-				return data;
-			},
-			onError: (e: AxiosError<{ detail: string }>) => {
-				toast.error(e?.response?.data?.detail);
-			},
-			onSuccess: () => {
-				toast.success("Profile saved");
-			},
-		});
-	};
+		return (
+			useMutation({
+				mutationKey: ["editProfile"],
+				mutationFn: async ({ profile, id }: { profile: TutorProfileType, id: number }) => {
+					const { data } = await apiClient.post<TutorProfileType>(
+						`/api/role/edit/${id}/Tutor`,
+						profile
+					);
+					return data;
+				},
+				onError: (e: AxiosError<{ detail: string }>) => {
+					toast.error(e?.response?.data?.detail);
+				},
+				onSuccess: () => {
+					toast.success("Profile saved");
+				},
+			}))
+	}
 
 
 	const addTutorSubject = useMutation({
