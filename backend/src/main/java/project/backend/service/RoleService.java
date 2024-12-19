@@ -37,6 +37,8 @@ public class RoleService {
     @Autowired
     final TutorService tutorService;
 
+    final TuteeService tuteeService;
+
     @Autowired
     final CollaborationService collaborationService;
 
@@ -46,11 +48,12 @@ public class RoleService {
     @Autowired
     final AdministratorService administratorService;
 
-    public RoleService(StudentService studentService, TutorService tutorService,
+    public RoleService(StudentService studentService, TutorService tutorService, TuteeService tuteeService,
             AdministratorService administratorService, @Lazy CollaborationService collaborationService,
             @Lazy MeetingService meetingService) {
         this.studentService = studentService;
         this.tutorService = tutorService;
+        this.tuteeService = tuteeService;
         this.administratorService = administratorService;
         this.collaborationService = collaborationService;
         this.meetingService = meetingService;
@@ -121,12 +124,9 @@ public class RoleService {
         return studentService.saveStudent(student);
     }
 
-    public Tutee getTuteeById(Long id) {
-        Student student = studentService.getStudentById(id)
+    public Tutee getTuteeByTuteeId(Long id) {
+        Tutee tutee = tuteeService.getTuteeById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + id));
-
-        Tutee tutee = student.getTutee();
-
         return tutee;
     }
 
@@ -270,13 +270,12 @@ public class RoleService {
         }
     }
 
-    public Student getStudentByTuteeOrTutorId(Long id) {
-        Tutee tutee = getTuteeById(id);
-        if (tutee == null) {
-            return studentService.getStudentByTutorId(id);
-        } else {
-            return studentService.getStudentByTuteeId(id);
-        }
+    public Student getStudentByTuteeId(Long id) {
+        return studentService.getStudentByTuteeId(id);
+    }
+
+    public Student getStudentByTutorId(Long id) {
+        return studentService.getStudentByTutorId(id);
     }
 
     public TutorProfileResponse getTutorProfile(Long id) {
@@ -315,7 +314,7 @@ public class RoleService {
     }
 
     public TuteeProfileResponse getTuteeProfile(Long id) {
-        Tutee tutee = getTuteeById(id);
+        Tutee tutee = getTuteeByTuteeId(id);
 
         Student student = tutee.getStudent();
 
@@ -334,7 +333,7 @@ public class RoleService {
 
     public ArrayList<TutorProfileResponse> getTutorProfilesFiltered(List<SubjectEnum> filterSubjects,
             List<TimeSlotCreateBody> filterTimeAvailabilities, List<YearGroupEnum> filterYearGroups,
-            List<LanguageEnum> filterLanguages) {
+            List<LanguageEnum> filterLanguages, Long currentTutorId) {
 
         // TimeSlotCreateBody to TutorTimeSlot
         List<TutorTimeSlot> filterTimeSlots = new LinkedList<>();
@@ -349,6 +348,11 @@ public class RoleService {
         }
 
         List<Tutor> tutors = tutorService.getAllTutors();
+
+        tutors = tutors.stream().filter(tutor -> {
+            return tutor.getId().equals(currentTutorId) == false;
+        }).toList();
+
         if (filterSubjects != null && !filterSubjects.isEmpty()) {
             tutors = tutors
                     .stream()
