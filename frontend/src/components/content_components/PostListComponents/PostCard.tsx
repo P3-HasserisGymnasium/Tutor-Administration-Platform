@@ -19,7 +19,7 @@ export default function PostCard({ post }: { post: PostType }) {
 			tutor_id: userState?.id || 0,
 		};
 		requestCollaborationMutation.mutate(body, {
-			onSuccess: () => {},
+			onSuccess: () => { },
 			onError: (error) => {
 				console.error(error);
 			},

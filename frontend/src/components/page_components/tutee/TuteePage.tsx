@@ -1,5 +1,5 @@
 import MediumShortOnShortBoxLayout from "components/layout_components/MediumShortOnShortBoxLayout";
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, Typography, ButtonGroup, IconButton, Tooltip, ThemeProvider } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 // import tutorTheme from "~/themes/tutorTheme";
@@ -36,22 +36,26 @@ export default function TuteePage() {
 	const { useGetCollaborationsWithTutee } = useCollaborationService();
 	const theme = useCurrentTheme();
 	const { isMobile } = useBreakpoints();
-	const [view, setView] = React.useState<"list" | "calender">("calender");
+	const [view, setView] = useState<"list" | "calender">("calender");
 	const [showCollabDialog, setShowCollabDialog] = React.useState(false);
 	const [showPostDialog, setShowPostDialog] = React.useState(false);
 	const [showEditPostDialog, setShowEditPostDialog] = React.useState(false);
 	const [showCreateCollabDialog, setshowCreateCollabDialog] = React.useState(false);
 	const { userState } = useAuth();
-	const { data: posts, isLoading: postsLoading, isError: postsError } = useGetTuteePosts();
+	const { data: postlist, isLoading: postsLoading, isError: postsError } = useGetTuteePosts();
 	const { data: collaborations, isLoading: collabLoading, isError: collabError } = useGetCollaborationsWithTutee(userState?.id || null);
 	const { data: meetings } = useMeetingService().useGetMeetings();
+
 	const filteredMeetings = meetings?.filter((meeting) => {
 		return meeting.tutee_user_id === userState.id;
 	});
 
 	const filteredCollaborations = collaborations?.filter((collab) => {
+		console.log("collab", collab);
 		return collab.state === CollaborationState.Enum.ESTABLISHED;
 	});
+
+	const posts = postlist?.filter((post) => post.state === PostState.Enum.VISIBLE);
 
 	return (
 		<ThemeProvider theme={theme}>

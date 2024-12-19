@@ -20,6 +20,7 @@ export default function RequestAdmin() {
       duration: [0, 12],
       description: "",
       state: PostState.Enum.INVISIBLE,
+      pairing_request: true,
     },
   };
   const filterMethods = useForm<PostCreationType>(useFormParameter);
@@ -41,8 +42,11 @@ export default function RequestAdmin() {
       return 20;
     }
   };
-
+  console.log("currnetState", getValues("state"));
   const createPost = (values: PostCreationType) => {
+    console.log("values", values);
+
+    values.state = PostState.Enum.INVISIBLE;
     createPostMutation.mutate(values, {
       onSuccess: () => {
         toast.success("Post created");

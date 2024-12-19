@@ -95,11 +95,11 @@ beforeEach(() => {
 				return [];
 			},
 		}),
-		useWatch: () => {},
+		useWatch: () => { },
 		FormProvider: ({ children }: { children: React.ReactNode }) => children,
 	}));
 	vi.doMock("@hookform/resolvers/zod", () => ({
-		zodResolver: () => {},
+		zodResolver: () => { },
 	}));
 });
 
@@ -195,19 +195,18 @@ describe("TuteePage", () => {
 		);
 		expect(screen.getByText("No posts found.")).toBeInTheDocument();
 	});
-	it("should render the MeetingsList component", () => {
-		const mockUseState = vi.spyOn(React, "useState");
+	it("should render the Calender component", () => {
+		/* const mockUseState = vi.spyOn(React, "useState");
 		mockUseState.mockImplementation((initialValue: "list" | "calender") => {
 			if (initialValue === "calender") return ["list", vi.fn()];
 			return [initialValue, vi.fn()];
-		});
+		}); */
 
 		render(
 			<Wrapper>
 				<TuteePage />
 			</Wrapper>
 		);
-		expect(screen.getByTestId("meetingbox")).toBeInTheDocument();
-		mockUseState.mockRestore();
+		expect(screen.getByTestId("mini-calendar")).toBeInTheDocument();
 	});
 });

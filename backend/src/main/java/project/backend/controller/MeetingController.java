@@ -22,9 +22,7 @@ import project.backend.model.Tutor;
 import project.backend.model.Collaboration;
 import project.backend.model.Meeting;
 import project.backend.model.MeetingEnum;
-import project.backend.service.CollaborationService;
 import project.backend.service.MeetingService;
-import project.backend.service.RoleService;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.meeting_controller.MeetingBody;
@@ -36,15 +34,9 @@ import project.backend.controller_bodies.meeting_controller.MeetingResponseBody;
 public class MeetingController {
 
     final MeetingService meetingService;
-    final CollaborationService collaborationService;
-    final RoleService roleService;
 
-    public MeetingController(MeetingService meetingService, CollaborationService collaborationService,RoleService roleService ) {
-
+    public MeetingController(MeetingService meetingService) {
         this.meetingService = meetingService;
-        this.collaborationService = collaborationService;
-        this.roleService = roleService;
-;
     }
 
     @GetMapping("/{id}")
@@ -217,10 +209,11 @@ public class MeetingController {
     public ResponseEntity<String> requestMeeting(@RequestBody MeetingBody body, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        System.out.println(body);
-        System.out.println("ussr" + authenticatedUser);
+        if (!authenticatedUser.isTutee()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to request a meeting");
+        }
 
-        Collaboration collaboration = collaborationService.getCollaborationById(body.collaboration);
+        Collaboration collaboration = meetingService.getCollaborationById(body.collaboration_id);
 
         if (collaboration == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Collaboration not found");

@@ -27,9 +27,8 @@ export default function MeetingsList({ meetings }: MeetingsListProps) {
 						width: "90%",
 						borderRadius: 2,
 						marginBottom: 4,
-						borderLeft: `5px solid ${
-							meeting.tutee_user_id == userState.id ? theme.customColors.tuteeColor : theme.customColors.tutorColor
-						}`,
+						borderLeft: `5px solid ${meeting.tutee_user_id == userState.id ? theme.customColors.tuteeColor : theme.customColors.tutorColor
+							}`,
 					}}
 				>
 					<Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
@@ -69,14 +68,12 @@ export default function MeetingsList({ meetings }: MeetingsListProps) {
 					<Box sx={{ display: "flex", alignItems: "center" }}>
 						<Typography
 							sx={{
-								color: `${
-									meeting.tutee_user_id == userState.id ? theme.customColors.darkTuteeColor : theme.customColors.darkTutorColor
-								} !important`,
+								color: `${meeting.tutee_user_id == userState.id ? theme.customColors.darkTuteeColor : theme.customColors.darkTutorColor
+									} !important`,
 							}}
 							variant="h6"
-						>{`Meeting with ${
-							meeting.tutee_user_id == userState.id ? "tutor " + meeting.tutor_name : "tutee " + meeting.tutee_name
-						}`}</Typography>
+						>{`Meeting with ${meeting.tutee_user_id == userState.id ? "tutor " + meeting.tutor_name : "tutee " + meeting.tutee_name
+							}`}</Typography>
 					</Box>
 				</Box>
 			))}

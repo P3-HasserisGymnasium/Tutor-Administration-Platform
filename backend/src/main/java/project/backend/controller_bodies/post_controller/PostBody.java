@@ -4,12 +4,14 @@ import project.backend.model.PostState;
 import project.backend.model.SubjectEnum;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PostBody {
     public Long userId;
     public String title;
     public String description;
     public SubjectEnum subject;
+    public Optional<Boolean> pairing_request;
     public List<Integer> duration; // Use Integer instead of int
     public PostState state;
 
@@ -67,6 +69,14 @@ public class PostBody {
 
     public PostState getState() {
         return state;
+    }
+
+    public boolean getIsPairingRequest() {
+        return pairing_request.orElse(false);
+    }
+
+    public void setPairingRequest(boolean pairing_request) {
+        this.pairing_request = Optional.of(pairing_request);
     }
 
     public void setState(PostState state) {

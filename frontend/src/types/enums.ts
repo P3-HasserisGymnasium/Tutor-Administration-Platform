@@ -1,18 +1,18 @@
 // Enum for subjects
 /*export const Subjects = {
-    MUSIC: "Music",
-    MATH: "Math",
-    ESS: "EScience",
-    ENGLISH: "English",
-    DANISH: "Danish",
-    TYSK: "Tysk",
-    FRENCH: "French",
-    BIOLOGY:"Biology",
-    CHEMISTRY:"Chemistry",
-    PE: "PE",
-    VA: "Visual Art",
-    PSYCHOLOGY:"psychology",
-    
+		MUSIC: "Music",
+		MATH: "Math",
+		ESS: "EScience",
+		ENGLISH: "English",
+		DANISH: "Danish",
+		TYSK: "Tysk",
+		FRENCH: "French",
+		BIOLOGY:"Biology",
+		CHEMISTRY:"Chemistry",
+		PE: "PE",
+		VA: "Visual Art",
+		PSYCHOLOGY:"psychology",
+	  
 
 };
 */
@@ -71,7 +71,7 @@ export type TimeAvailability = {
 // Mapping colors to subject
 export const SubjectColors: Record<Subject, subjectStyling> = {
 	[Subject.MUSIC]: { background: "#7fa6c8", color: "white" },
-	[Subject.MATH]: { background: "#d96f6f", color: "white" },
+	[Subject.MATH]: { background: "#522222", color: "white" },
 	[Subject.ESS]: { background: "#87b890", color: "white" },
 	[Subject.ENGLISH]: { background: "#d1b000", color: "white" },
 	[Subject.DANISH]: { background: "#c23c3c", color: "white" },
@@ -89,33 +89,33 @@ export const SubjectColors: Record<Subject, subjectStyling> = {
 
 // interface for subject styling
 interface subjectStyling {
-    background: string; //defining background color
-    color: string; // defining text color
+	background: string; //defining background color
+	color: string; // defining text color
 
 }
 
 export enum Language {
-    "PRE-IB",
-    "IB1",
-    "IB2",
+	"PRE-IB",
+	"IB1",
+	"IB2",
 };
 
 export enum MeetingState {
-    "PENDING",
-    "ACCEPTED",
-    "REJECTED",
-    "TERMINATED"
+	"PENDING",
+	"ACCEPTED",
+	"REJECTED",
+	"TERMINATED"
 };
 
 export enum NotificationContext {
-    "TutorApplication",
-    "Feedback",
-    "Collaboration",
-    "Meeting"
+	"TutorApplication",
+	"Feedback",
+	"Collaboration",
+	"Meeting"
 };
 
 export type PostType = {
-    id: number;
-    title: string;
-    body: string;
+	id: number;
+	title: string;
+	body: string;
 };

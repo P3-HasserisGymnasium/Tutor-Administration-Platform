@@ -15,8 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.tutor_application_controller.TutorApplicationCreateBody;
-import project.backend.model.EntityType;
-import project.backend.model.TutorApplication;
+import project.backend.model.RoleEnum;
 import project.backend.service.NotificationService;
 import project.backend.service.TutorApplicationService;
 
@@ -57,22 +56,31 @@ public class TutorApplicationController {
         return ResponseEntity.status(HttpStatus.OK).body(tutorApplicationService.getAllTutorApplications());
     }
 
-    @PostMapping("/")
-    public ResponseEntity<?> createTutorApplication(@RequestBody TutorApplicationCreateBody body, HttpServletRequest request) {
+    @PostMapping("/{role}")
+    public ResponseEntity<?> createTutorApplication(@RequestBody TutorApplicationCreateBody body, @PathVariable RoleEnum role, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        if (!authenticatedUser.isTutee()) {
+
+
+        if (!authenticatedUser.isTutee() && !authenticatedUser.isTutor()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You are not authorized to create a tutor application");
         }
 
+
         try {
-            TutorApplication application = tutorApplicationService.createTutorApplication(body);
-            notificationService.sendNotification(authenticatedUser.getTuteeId(), EntityType.TUTEE, 0L, EntityType.ADMIN, application.getId(), EntityType.POST);
+            if (role == RoleEnum.Tutor) {
+                tutorApplicationService.createTutorApplication(body, role, authenticatedUser.getTutorId());
+                return ResponseEntity.status(HttpStatus.OK).body("Tutor application created");
+            } else if (role == RoleEnum.Tutee) {
+                tutorApplicationService.createTutorApplication(body, role, authenticatedUser.getTuteeId());
+                return ResponseEntity.status(HttpStatus.OK).body("Tutor application created");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid role");
+            }
+
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
-        return ResponseEntity.status(HttpStatus.OK).body("Tutor application created");
     }
 
     @DeleteMapping("/{id}")

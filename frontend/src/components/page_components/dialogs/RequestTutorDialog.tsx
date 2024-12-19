@@ -52,10 +52,14 @@ const RequestTutorDialog = ({ open, setOpen, tutorProfile }: RequestTutorDialogP
 			title: values.title,
 			subject: values.subject,
 			duration: checked ? undefined : values.duration,
+			pairing_request: values.pairing_request,
 			description: values.description,
 		};
+		console.log("Requesting collaboration with", body);
 		requestCollaborationMutation.mutate(body, {
-			onSuccess: () => {},
+			onSuccess: () => {
+				console.log("Collaboration requested");
+			},
 			onError: (error) => {
 				console.error(error);
 			},
@@ -143,15 +147,7 @@ const RequestTutorDialog = ({ open, setOpen, tutorProfile }: RequestTutorDialogP
 							</Box>
 						</Box>
 						<Typography variant="h3">Describe your request</Typography>
-						<TextField
-							multiline
-							maxRows={getMaxRows()}
-							variant="outlined"
-							size="small"
-							placeholder="Which topics do you need help with?"
-							{...register("description")}
-							sx={{}}
-						/>
+						<TextField multiline maxRows={getMaxRows()} variant="outlined" size="small" placeholder="Which topics do you need help with?" {...register("description")} sx={{}} />
 					</Box>
 
 					<Box

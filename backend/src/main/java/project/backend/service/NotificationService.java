@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.notification_controller.NotificationCreateBody;
@@ -22,7 +23,7 @@ public class NotificationService {
     @Autowired
     final private RoleService roleService; 
     
-    public NotificationService(NotificationRepository notificationRepository, RoleService roleService) {
+    public NotificationService(NotificationRepository notificationRepository, @Lazy RoleService roleService) {
         this.notificationRepository = notificationRepository;
         this.roleService = roleService;
     }
@@ -45,6 +46,14 @@ public class NotificationService {
 
         notification.setState(body.state);
 
+        System.out.println("Notification created: " + notification.toString());
+        System.out.println("Notification created: " + notification.getSenderName());
+        System.out.println("Notification created: " + notification.getReceiverName());
+        System.out.println("Notification created: " + notification.getReceiverType());
+        System.out.println("Notification created: " + notification.getContextType());
+        System.out.println("Notification created: " + notification.getState());
+        
+
         return notificationRepository.save(notification);
     }
 
@@ -55,14 +64,6 @@ public class NotificationService {
         
         String sender_name = generateSenderName(senderId, senderType);
         String receiver_name = generateReceiverName(receiverId, receiverType);
-        System.out.println("sender_name" + sender_name);                         
-        System.out.println("receiver_name" + receiver_name);
-        System.out.println("senderId" + senderId);
-        System.out.println("receiverId" + receiverId);
-        System.out.println("contextId" + contextId);
-        System.out.println("contextType" + contextType);
-        System.out.println("senderType" + senderType);
-        System.out.println("receiverType" + receiverType);
         body.sender_id = senderId;
         body.sender_name = sender_name;
         body.sender_type = senderType;
@@ -96,6 +97,10 @@ public class NotificationService {
         return notificationRepository.findAllSentToTutor(userId);
     }
 
+    public List<Notification> getAllNotificationsForAdmin() {
+        return notificationRepository.findAllSentToAdmin().orElse(null);
+    }
+
     public Optional<Notification> getNotificationById(Long id) {
         return notificationRepository.findById(id);
     }
@@ -123,7 +128,7 @@ public class NotificationService {
         } else if (senderType == EntityType.TUTOR) {
             sender_name = roleService.getTutorById(senderId).getStudent().getFullName();
         } else if (senderType == EntityType.ADMIN) {
-            sender_name = roleService.getAdministratorById(senderId).getFullName();
+            sender_name = "Administrator";
         }
 
         return sender_name;

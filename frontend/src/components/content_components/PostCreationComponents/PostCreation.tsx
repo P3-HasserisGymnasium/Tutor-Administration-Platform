@@ -2,7 +2,7 @@ import { Box, TextField, Typography, Checkbox, FormControlLabel } from "@mui/mat
 import CustomAutocomplete from "../CustomAutocomplete";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PostCreationType, zodPostCreationSchema } from "~/types/data_types";
+import { PostCreationType, PostState, zodPostCreationSchema } from "~/types/data_types";
 import SetDuration from "../SetDuration";
 import { useState } from "react";
 import { useMediaQuery } from "@mui/material";
@@ -20,6 +20,8 @@ export default function PostCreation() {
       subject: undefined,
       duration: [0, 12],
       description: "",
+      state: PostState.Enum.VISIBLE,
+      pairing_request: false,
     },
   };
   const filterMethods = useForm<PostCreationType>(useFormParameter);
@@ -117,15 +119,7 @@ export default function PostCreation() {
             </Box>
           </Box>
           <Typography variant="h3">Describe your request</Typography>
-          <TextField
-            multiline
-            maxRows={getMaxRows()}
-            variant="outlined"
-            size="small"
-            placeholder="Which topics do you need help with?"
-            {...register("description")}
-            sx={{}}
-          />
+          <TextField multiline maxRows={getMaxRows()} variant="outlined" size="small" placeholder="Which topics do you need help with?" {...register("description")} sx={{}} />
         </Box>
 
         <Box

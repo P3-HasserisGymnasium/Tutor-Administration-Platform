@@ -25,7 +25,7 @@ export default function RequestMeetingDialog({ open, setOpen, timeAvailabilities
   const formMethods = useForm<MeetingType>({
     resolver: zodResolver(zodMeetingSchema),
     defaultValues: {
-      collaboration: Number(useLocation().pathname.split("/")[3]),
+      collaboration_id: Number(useLocation().pathname.split("/")[3]),
       meeting_state: MeetingState.Enum.PENDING,
       id: 123,
       rejection_reason: "",
@@ -66,8 +66,7 @@ export default function RequestMeetingDialog({ open, setOpen, timeAvailabilities
         <DialogTitle sx={{ fontWeight: "bold", fontSize: "1.5rem", pr: 0 }}>Tip</DialogTitle>
         <DialogContent sx={{ display: "flex", flexDirection: "column", pr: 0 }}>
           <Typography variant="body2">
-            Selecting one of the tutors timeslots increases the chance of your meeting being scheduled quickly. It helps avoid conflicts and ensures
-            you get the support you need at a convenient time.
+            Selecting one of the tutors timeslots increases the chance of your meeting being scheduled quickly. It helps avoid conflicts and ensures you get the support you need at a convenient time.
           </Typography>
           <Typography fontSize={"1rem"} mt={2} fontWeight={900} variant="body2">
             Available time slots

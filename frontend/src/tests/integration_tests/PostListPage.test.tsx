@@ -39,6 +39,7 @@ beforeEach(() => {
 						description: "This is a test post",
 						subject: "Math",
 						duration: 2,
+						state: "VISIBLE"
 					},
 				];
 				return {
@@ -58,11 +59,11 @@ beforeEach(() => {
 				return [];
 			},
 		}),
-		useWatch: () => {},
+		useWatch: () => { },
 		FormProvider: ({ children }: { children: React.ReactNode }) => children,
 	}));
 	vi.doMock("@hookform/resolvers/zod", () => ({
-		zodResolver: () => {},
+		zodResolver: () => { },
 	}));
 });
 

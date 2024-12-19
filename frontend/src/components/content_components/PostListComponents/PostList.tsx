@@ -1,11 +1,12 @@
 import { Box, Stack, Typography } from "@mui/material";
 import PostCard from "./PostCard";
-import { SubjectType } from "~/types/data_types";
+import { PostState, SubjectType } from "~/types/data_types";
 import { usePostService } from "~/api/services/post-service";
 import { CircularProgress } from "@mui/material";
 
 export default function PostList({ filters, loading }: { filters: { duration: number[]; subjects: SubjectType[] }; loading: boolean }) {
-	const { data: posts, isError } = usePostService().useGetPosts(filters);
+	const { data: postlist, isError } = usePostService().useGetPosts(filters);
+	const posts = postlist?.filter((post) => post.state === PostState.Enum.VISIBLE);
 
 	if (loading) {
 		return (
@@ -14,6 +15,7 @@ export default function PostList({ filters, loading }: { filters: { duration: nu
 			</Box>
 		);
 	}
+
 	if (isError) {
 		return (
 			<Typography variant="h6" color="red">

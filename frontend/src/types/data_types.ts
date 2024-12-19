@@ -21,7 +21,7 @@ export const Subject = z.enum([
 ] as const);
 export const Day = z.enum(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] as const);
 export const Language = z.enum(["Danish", "English"] as const);
-export const Role = z.enum(["Tutor", "Tutee"] as const);
+export const Role = z.enum(["Tutor", "Tutee", "Administrator"] as const);
 export const YearGroup = z.enum(["PRE_IB", "IB_1", "IB_2"] as const);
 export const communication_medium = z.enum(["Discord", "Microsoft_teams", "Skype", "Messenger", "Email"] as const);
 export const zodTimeSlotSchema = z.object({
@@ -66,6 +66,11 @@ export const zodPostListFilterSchema = z.object({
 	subjects: z.array(Subject),
 });
 
+export const zodSubjectBody = z.object({
+	tutorId: zodUUID,
+	subject: Subject,
+});
+
 export const PostState = z.enum(["VISIBLE", "INVISIBLE"]);
 export const MeetingState = z.enum(["PENDING", "ACCEPTED", "REJECTED", "TERMINATED"] as const);
 export const NotificationContext = z.enum([
@@ -93,7 +98,8 @@ export const zodPostCreationSchema = z.object({
 	title: z.string(),
 	description: z.string(),
 	subject: Subject,
-	state: PostState.optional(),
+	state: PostState,
+	pairing_request: z.boolean(),
 	duration: z.union([z.array(z.number()), z.undefined()]),
 });
 // Defining types for forms and zod schemas
@@ -117,6 +123,7 @@ export type SubjectType = z.infer<typeof Subject>;
 export type CollaborationStateType = z.infer<typeof CollaborationState>;
 export type CommunicationMediumType = z.infer<typeof communication_medium>;
 export type ContactInfoType = z.infer<typeof zodContactInfo>;
+export type SubjectBodyType = z.infer<typeof zodSubjectBody>;
 export type UUIDType = z.infer<typeof zodUUID>;
 export type AccountRegisterResponseType = {
 	tutor: boolean;

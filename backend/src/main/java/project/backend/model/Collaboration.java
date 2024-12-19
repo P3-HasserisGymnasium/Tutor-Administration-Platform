@@ -53,7 +53,6 @@ public class Collaboration {
 
     @Column(name = "admin_accepted")
     Boolean adminState;
-
     
     @OneToMany(mappedBy = "collaboration")
     @JsonBackReference
@@ -141,3 +140,4 @@ public class Collaboration {
         this.adminState = adminState;
     }
 }
+

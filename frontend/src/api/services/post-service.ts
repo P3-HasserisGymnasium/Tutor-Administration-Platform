@@ -35,6 +35,18 @@ export const usePostService = () => {
 		});
 	};
 
+	const useGetPairingRequests = () => {
+		return useQuery({
+			queryKey: ["getPairingRequests"],
+			queryFn: async () => {
+				const { data } = await apiClient.get<PostType[]>(`/api/post/pairing_requests`);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			placeholderData: [],
+		});
+	};
+
 	const useCreatePost = () => {
 		return useMutation({
 			mutationKey: ["createPost"],
@@ -100,6 +112,7 @@ export const usePostService = () => {
 		useGetTuteePosts,
 		useCreatePost,
 		useDeletePost,
+		useGetPairingRequests,
 		useGetPostById,
 		useEditPost,
 	};

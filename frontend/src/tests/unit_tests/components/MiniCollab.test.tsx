@@ -30,6 +30,7 @@ const mockCollaboration: CollaborationType = {
   tuteeId: 2,
   startDate: "2021-10-10",
   end_date: "2021-10-10",
+  requestedPairing: false
 };
 
 beforeEach(() => {

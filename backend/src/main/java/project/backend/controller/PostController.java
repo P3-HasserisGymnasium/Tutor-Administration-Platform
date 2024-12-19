@@ -1,5 +1,6 @@
 package project.backend.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -22,14 +23,12 @@ import org.springframework.http.ResponseEntity;
 import jakarta.servlet.http.HttpServletRequest;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
+import project.backend.controller_bodies.post_controller.PairingRequestBody;
 import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.model.Post;
 import project.backend.model.PostState;
-import project.backend.model.Student;
 import project.backend.model.SubjectEnum;
-import project.backend.model.Tutee;
 import project.backend.service.PostService;
-import project.backend.service.RoleService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -37,11 +36,9 @@ import project.backend.service.RoleService;
 public class PostController {
 
     final PostService postService;
-    final RoleService roleService;
 
-    public PostController(PostService postService, RoleService roleService) {
+    public PostController(PostService postService) {
         this.postService = postService;
-        this.roleService = roleService;
     }
 
     @GetMapping("")
@@ -54,8 +51,6 @@ public class PostController {
         if (!authenticatedUser.isTutor() && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to view these posts");
         }
-        System.out.println("subjects" + subjects);
-        System.out.println("duration" + duration);
         if(subjects != null && !subjects.isEmpty() && duration != null && !duration.isEmpty()){
             // Parse subjects
             List<SubjectEnum> subjectList = null;
@@ -67,7 +62,6 @@ public class PostController {
             Integer minDuration = null, maxDuration = null;
             String[] durationParts = duration.split(",");
             if (durationParts.length == 2) {
-                System.out.println("durationParts" + durationParts);
                 try {
                     minDuration = Integer.parseInt(durationParts[0]);
                     maxDuration = Integer.parseInt(durationParts[1]);
@@ -76,19 +70,13 @@ public class PostController {
                 }
             }
 
-            System.out.println("minDuration" + minDuration);
-            System.out.println("maxDuration" + maxDuration);
-            System.out.println("subjectList" + subjectList);
-
             Long fakeTuteeId = 0L;
             List<Post> posts = postService.getPostsByFilters(minDuration, maxDuration, subjectList, authenticatedUser.getTuteeId() != null ? authenticatedUser.getTuteeId() : fakeTuteeId);
-            System.out.println("postssss" + posts);
             return ResponseEntity.status(HttpStatus.OK).body(posts);
         }                       
 
         List<Post> posts = postService.getAllPosts();
 
-        System.out.println("posts" + posts);
         if (posts == null) {
             return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
         }
@@ -100,15 +88,9 @@ public class PostController {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         Post post = postService.getPostById(id).orElse(null);
-
         if (post == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
         }
-        System.out.println("authenticatedUser" + authenticatedUser);
-        System.out.println("authenticatedUser.getTutorId()" + authenticatedUser.getTutorId());
-        System.out.println("post.getTutee().getId()" + post.getTutee().getId());
-        System.out.println("authenticatedUser.getTuteeId()" + authenticatedUser.getTuteeId());
-        System.out.println("authenticatedUser.isAdministrator()" + authenticatedUser.isAdministrator());
 
         if (authenticatedUser.getTutorId() == null && authenticatedUser.getTuteeId() != post.getTutee().getId() && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to view this post");
@@ -117,6 +99,8 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(post);
     }
 
+    
+
     @GetMapping("/tutee")
     public ResponseEntity<?> getOwnPosts(HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
@@ -124,15 +108,45 @@ public class PostController {
         if (authenticatedUser.getTuteeId() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to view your posts");
         }
-        System.out.println("tuteeId" + authenticatedUser.getTuteeId());
 
         Post[] posts = postService.getPostsByTuteeId(authenticatedUser.getTuteeId());
-        System.out.println("postsSMIL1" + posts);
         if (posts == null) {
             return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
         }
-        System.out.println("postsSMIL2" + posts);
+
         return ResponseEntity.status(HttpStatus.OK).body(posts);
+    }
+
+    @GetMapping("/pairing_requests")
+    public ResponseEntity<?> getPairingRequests(HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You do not have access to this resource");
+        }
+
+        Post[] posts = postService.getPairingRequests();
+        
+        ArrayList<PairingRequestBody> pairingRequests = new ArrayList<>();
+
+        for (Post post : posts) {
+            PairingRequestBody pairingRequestBody = new PairingRequestBody();
+            pairingRequestBody.setId(post.getId());
+            pairingRequestBody.setTutee_id(post.getTutee().getId());
+            pairingRequestBody.setTutee_name(post.getTutee().getStudent().getFullName());
+            pairingRequestBody.setSubject(post.getSubject());
+            pairingRequestBody.setTitle(post.getTitle());
+            pairingRequestBody.setDescription(post.getDescription());
+            pairingRequestBody.setDuration(post.getDuration());
+            pairingRequestBody.setPairingRequest(post.getPairingRequest());
+            pairingRequestBody.setState(post.getState());
+            pairingRequests.add(pairingRequestBody);
+        }
+
+        if (posts == null) {
+            return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(pairingRequests);
     }
 
   
@@ -140,29 +154,13 @@ public class PostController {
     @PostMapping("/")
     public ResponseEntity<?> createPost(@RequestBody PostBody postBody, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
-        Student student = roleService.getStudentById(authenticatedUser.getUserId());
-        Tutee tutee = student.getTutee();
 
-        System.out.println("firstprint" + authenticatedUser.getTuteeId());
-        System.out.println("secondprint" + tutee.getId());
-        System.out.println("thirdprint" + authenticatedUser.isAdministrator());
-
-        if (authenticatedUser.getTuteeId() != tutee.getId() && !authenticatedUser.isAdministrator()){
+        if (!authenticatedUser.isTutee() && !authenticatedUser.isAdministrator()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to create a post");
         }
 
-        Post post = new Post();
-        post.setTutee(tutee);
-        post.setSubject(postBody.subject);
-        post.setTitle(postBody.title);
-        post.setDescription(postBody.description);
-        post.setDuration(postBody.duration);
-        post.setState(PostState.VISIBLE);    
-        System.out.println("post1" + post);
-
-        postService.createPost(post, tutee.getId());
-        System.out.println("post2" + post);
-        return ResponseEntity.status(HttpStatus.CREATED).body(post);
+        postService.createPost(postBody, authenticatedUser.getTuteeId());
+        return ResponseEntity.status(HttpStatus.CREATED).body("Post created");
     }
 
     @DeleteMapping("/{id}")
@@ -180,9 +178,8 @@ public class PostController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> editPost(@PathVariable Long id, @RequestBody PostBody postBody, HttpServletRequest request) {
-        System.out.println("before authuser");
+        
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
-        System.out.println("after authuser");
 
         if (!Objects.equals(authenticatedUser.getTuteeId(), postService.getPostById(id).get().getTutee().getId()) && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You do not have permission to update this post");
@@ -194,10 +191,6 @@ public class PostController {
         post.setDuration(postBody.duration);
         post.setState(PostState.VISIBLE);
 
-        System.out.println("PostController subject" + postBody.subject);
-        System.out.println("PostController title" + postBody.title);
-        System.out.println("PostController description" + postBody.description);
-        System.out.println("PostController duration" + postBody.duration);
 
         postService.editPost(id, post);
 

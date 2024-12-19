@@ -15,6 +15,8 @@ export default function MiniCalendar({ meetings }: MiniCalenderProps) {
 	const theme = useTheme<Theme>();
 	return (
 		<Paper
+			data-testid="mini-calendar"
+
 			elevation={0}
 			sx={{
 				width: "100%",
@@ -25,7 +27,6 @@ export default function MiniCalendar({ meetings }: MiniCalenderProps) {
 			}}
 		>
 			<FullCalendar
-				data-testid="mini-calendar"
 				plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 				initialView={"timeGridWeek"}
 				initialDate={new Date()}
