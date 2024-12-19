@@ -7,7 +7,8 @@ import { useEffect, useState } from "react";
 import AcceptInvitationFromTutorDialog from "../page_components/dialogs/AcceptInvitationFromTutorDialog";
 import AcceptInvitationFromTuteeDialog from "../page_components/dialogs/AcceptInvitationFromTuteeDialog";
 import { NotificationResponseType } from "~/types/entity_types";
-import { NotificationContext, NotificationParticipant, NotificationState } from "../../types/data_types";
+import { NotificationContext, NotificationContextType, NotificationParticipant, NotificationState } from "../../types/data_types";
+import InvitationUpdateFromAdministratorDialog from "../page_components/admin/admin_components/InvitationUpdateFromAdministratorDialog";
 
 export default function NotificationsList() {
   const theme = useTheme<Theme>();
@@ -15,7 +16,9 @@ export default function NotificationsList() {
   const { userState } = useAuth();
   const [isAcceptTuteeDialogOpen, setIsAcceptTuteeDialogOpen] = useState(false);
   const [isAcceptTutorDialogOpen, setIsAcceptTutorDialogOpen] = useState(false);
-  const [collaboration_id, setCollaboration_id] = useState<number | null>(null);
+  const [isAcceptAdminDialogOpen, setIsAcceptAdminDialogOpen] = useState(false);
+  const [context_id, setContext_id] = useState<number | null>(null);
+  const [context_type, setContext_type] = useState<NotificationContextType | null>(null);
   const [tutor_id, setTutor_id] = useState<number | null>(null);
   const [tutee_id, setTutee_id] = useState<number | null>(null);
   const changeStateMutation = useChangeNotificationState();
@@ -25,31 +28,45 @@ export default function NotificationsList() {
       (notification.context_type === NotificationContext.Enum.COLLABORATION || notification.context_type === NotificationContext.Enum.POST) &&
       notification.sender_type === NotificationParticipant.Enum.TUTOR
     ) {
-      setCollaboration_id(notification.context_id);
+      setContext_id(notification.context_id);
+      setContext_type(notification.context_type);
       setTutor_id(notification.sender_id);
 
       changeStateMutation.mutate({ notificationId: notification.notification_id, state: NotificationState.Enum.READ });
       return;
     }
-    if (
-      (notification.context_type === NotificationContext.Enum.COLLABORATION || notification.context_type === NotificationContext.Enum.POST) &&
-      notification.sender_type === NotificationParticipant.Enum.TUTEE
-    ) {
-      setCollaboration_id(notification.context_id);
+    if (notification.sender_type === NotificationParticipant.Enum.TUTEE) {
+      setContext_id(notification.context_id);
+      setContext_type(notification.context_type);
       setTutee_id(notification.sender_id);
 
       changeStateMutation.mutate({ notificationId: notification.notification_id, state: NotificationState.Enum.READ });
       return;
     }
-  };
 
-  useEffect(() => {
-    if (collaboration_id && tutor_id) {
-      setIsAcceptTutorDialogOpen(true);
-    } else if (collaboration_id && tutee_id) {
-      setIsAcceptTuteeDialogOpen(true);
+    if (notification.sender_type === NotificationParticipant.Enum.ADMIN) {
+      setContext_id(notification.context_id);
+      setContext_type(notification.context_type);
+      setTutor_id(0);
+
+      changeStateMutation.mutate({ notificationId: notification.notification_id, state: NotificationState.Enum.READ });
+      return;
     }
-  }, [collaboration_id, tutor_id, tutee_id]);
+  };
+  useEffect(() => {
+    console.log("context_id", context_id);
+    console.log("tutor_id", tutor_id);
+    console.log("tutee_id", tutee_id);
+
+    if (context_id && tutor_id) {
+      setIsAcceptTutorDialogOpen(true);
+    } else if (context_id && tutee_id) {
+      setIsAcceptTuteeDialogOpen(true);
+    } else if (context_id && tutor_id == 0) {
+      console.log("context_id", context_id);
+      setIsAcceptAdminDialogOpen(true);
+    }
+  }, [context_id, tutor_id, tutee_id]);
 
   // Render the list of notifications
   const renderNotifications = () => {
@@ -132,20 +149,11 @@ export default function NotificationsList() {
         margin: "auto",
       }}
     >
-      <AcceptInvitationFromTutorDialog
-        open={isAcceptTutorDialogOpen}
-        setOpen={setIsAcceptTutorDialogOpen}
-        collaboration_id={collaboration_id}
-        tutor_id={tutor_id}
-      />
-      {collaboration_id && (
-        <AcceptInvitationFromTuteeDialog
-          open={isAcceptTuteeDialogOpen}
-          setOpen={setIsAcceptTuteeDialogOpen}
-          collaboration_id={collaboration_id}
-          tutee_id={tutee_id}
-        />
+      {context_id && tutor_id != 0 && tutor_id != null && (
+        <AcceptInvitationFromTutorDialog open={isAcceptTutorDialogOpen} setOpen={setIsAcceptTutorDialogOpen} context_id={context_id} context_type={context_type} tutor_id={tutor_id} />
       )}
+      {context_id && tutee_id && <AcceptInvitationFromTuteeDialog open={isAcceptTuteeDialogOpen} setOpen={setIsAcceptTuteeDialogOpen} context_id={context_id} tutee_id={tutee_id} />}
+      {context_id && tutor_id == 0 && <InvitationUpdateFromAdministratorDialog open={isAcceptAdminDialogOpen} setOpen={setIsAcceptAdminDialogOpen} context_id={context_id} />}
       <Paper sx={{ width: "90%", height: "90%" }}>{renderNotifications()}</Paper>
     </Box>
   );

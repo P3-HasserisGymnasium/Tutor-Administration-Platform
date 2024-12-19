@@ -10,56 +10,45 @@ import MiniCalendar from "../content_components/MiniCalendar";
 import MeetingsList from "../content_components/MeetingsList";
 import InfoIcon from "@mui/icons-material/Info";
 import { useParams } from "react-router-dom";
-import { useAuth } from "~/api/authentication/useAuth";
 import { useCollaborationService } from "~/api/services/collaboration-service";
 import { useMeetingService } from "~/api/services/meeting-service";
 import { MeetingType } from "~/types/entity_types";
 import CustomButton from "../content_components/CustomButton";
-import CommunicationChip from "../content_components/CommunicationChip";
+import dayjs from "dayjs";
+import { CommunicationChipRead } from "../content_components/CommunicationChip";
+import { Role } from "~/types/data_types";
+import { useAuth } from "~/api/authentication/useAuth";
 
 export default function CollaborationPage() {
   const theme = useCurrentTheme();
   const [isRequestMeetingDialogOpen, setIsRequestMeetingDialogOpen] = useState(false);
   const [isEndCollaborationDialogOpen, setIsEndCollaborationDialogOpen] = useState(false);
-  const [view, setView] = useState<"list" | "calender">("list");
+  const [view, setView] = useState<"list" | "calender">("calender");
   const { isMobile } = useBreakpoints();
   const params = useParams();
   const { userState } = useAuth();
   const rolePrefix = useRolePrefix();
-  console.log("params", params);
-  console.log("userState", userState);
 
-  const { data: partnerInformation } = useCollaborationService().useGetPartnerInformation(Number(params.org_id));
-  console.log("partnerInformation", partnerInformation);
+  const { data: partnerInformation } = useCollaborationService().useGetPartnerInformation(Number(params.collabId));
   const { data: meetings } = useMeetingService().useGetMeetings();
   /*   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
     return date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) + " | " + date.toLocaleDateString("en-GB");
   }; */
-  const formatTimestamp = (timestamp: string) => {
-    const date = new Date(Date.parse(timestamp));
-    console.log("date", date);
-    return date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) + " | " + date.toLocaleDateString("en-GB");
-  };
+
+  console.log("collabIdFromParam: " + Number(params.collabId) + " meeting collabid: " + meetings?.[0]?.collaboration_id);
+  const meetingsBelongingToCollaboration = meetings?.filter((meeting) => meeting.collaboration_id == Number(params.collabId));
   // Categorize meetings into "Upcoming" and "Finished"
-  const upcomingMeetings = meetings?.filter((meeting) => new Date(formatTimestamp(meeting.start_timestamp)) > new Date());
-  const finishedMeetings = meetings?.filter((meeting) => new Date(formatTimestamp(meeting.end_timestamp)) < new Date());
+  const upcomingMeetings = meetingsBelongingToCollaboration?.filter((meeting) => meeting.start_date > new Date().toISOString());
+  const finishedMeetings = meetingsBelongingToCollaboration?.filter((meeting) => meeting.end_date < new Date().toISOString());
 
   return (
     <ThemeProvider theme={theme}>
       {rolePrefix == "/tutee" && partnerInformation && (
-        <RequestMeetingDialog
-          open={isRequestMeetingDialogOpen}
-          setOpen={setIsRequestMeetingDialogOpen}
-          timeAvailabilities={partnerInformation.time_availability}
-        />
+        <RequestMeetingDialog open={isRequestMeetingDialogOpen} setOpen={setIsRequestMeetingDialogOpen} timeAvailabilities={partnerInformation.time_availability} />
       )}
       <EndCollaborationDialog open={isEndCollaborationDialogOpen} setOpen={setIsEndCollaborationDialogOpen} />
-      <RequestMeetingDialog
-        open={isRequestMeetingDialogOpen}
-        setOpen={setIsRequestMeetingDialogOpen}
-        timeAvailabilities={partnerInformation?.time_availability || []}
-      />
+      <RequestMeetingDialog open={isRequestMeetingDialogOpen} setOpen={setIsRequestMeetingDialogOpen} timeAvailabilities={partnerInformation?.time_availability || []} />
 
       <MediumShortOnShortBoxLayout>
         <Box
@@ -120,10 +109,7 @@ export default function CollaborationPage() {
               </Button>
             </ButtonGroup>
             <Box sx={{ width: 1 / 3 }}>
-              <Tooltip
-                title="Your schedule showcases all of your meetings across all your collaborations, as a tutee. Click on a meeting to go to the specific collaboration."
-                arrow
-              >
+              <Tooltip title="Your schedule showcases all of your meetings across all your collaborations, as a tutee. Click on a meeting to go to the specific collaboration." arrow>
                 <IconButton
                   sx={{
                     position: "absolute",
@@ -148,7 +134,7 @@ export default function CollaborationPage() {
               border: "white 1px",
             }}
           >
-            {view === "calender" ? <MiniCalendar meetings={meetings as MeetingType[]} /> : <MeetingsList />}
+            {view === "calender" ? <MiniCalendar meetings={meetingsBelongingToCollaboration as MeetingType[]} /> : <MeetingsList meetings={meetingsBelongingToCollaboration as MeetingType[]} />}
           </Box>
         </Box>
 
@@ -180,7 +166,7 @@ export default function CollaborationPage() {
           <Box sx={{ display: "flex", gap: 2, flexDirection: "column", alignItems: "flex-start", ml: 2 }}>
             {partnerInformation?.contact_info?.map((contact) => {
               console.log("contact", contact);
-              return <CommunicationChip contactInfo={{ username: contact.username, communication_medium: contact.communication_medium }} />;
+              return <CommunicationChipRead contactInfo={{ username: contact.username, communication_medium: contact.communication_medium }} />;
             })}
           </Box>
           <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2, justifyContent: "end" }}></Box>
@@ -205,10 +191,11 @@ export default function CollaborationPage() {
                 This box showcases both your upcoming and finished meetings.
               </Typography>
             </Box>
-
-            <Button sx={{ fontSize: "1rem", height: "40px" }} onClick={() => setIsRequestMeetingDialogOpen(true)}>
-              Request meeting
-            </Button>
+            {userState?.role?.includes(Role.Enum.Tutee) && (
+              <Button sx={{ fontSize: "1rem", height: "40px" }} onClick={() => setIsRequestMeetingDialogOpen(true)}>
+                Request meeting
+              </Button>
+            )}
           </Box>
           <Box sx={{ display: "flex", width: "100%", gap: 3, height: "90%", maxHeight: "60%", justifyContent: "center", pt: 2 }}>
             <Paper elevation={8} sx={{ width: "40%", height: "100%", p: 2, borderRadius: "8px", overflow: "auto" }}>
@@ -217,21 +204,27 @@ export default function CollaborationPage() {
               </Typography>
               {upcomingMeetings?.map((meeting) => (
                 <Paper elevation={4} sx={{ display: "flex", flexDirection: "column", gap: 2, p: 1, mb: 2 }}>
-                  <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                    {formatTimestamp(meeting.start_timestamp)}
+                  <Typography variant="h3" sx={{ fontWeight: "bold" }}>
+                    {dayjs(meeting.start_date).format("HH:mm") + " to" + dayjs(meeting.end_date).format(" HH:mm")}
+                  </Typography>{" "}
+                  <Typography variant="h3" sx={{ fontWeight: "bold" }}>
+                    {dayjs(meeting.start_date).format("DD/MM/YYYY")}
                   </Typography>
                   <Typography variant="body2">{meeting.meeting_description}</Typography>
                 </Paper>
               ))}
             </Paper>
-            <Paper elevation={8} sx={{ width: "40%", height: "100%", p: 2, borderRadius: "8px" }}>
+            <Paper elevation={8} sx={{ width: "40%", height: "100%", p: 2, borderRadius: "8px", overflow: "auto" }}>
               <Typography variant="h4" sx={{ textAlign: "center", fontWeight: "bold", marginBottom: 1 }}>
                 Finished Meetings
               </Typography>
               {finishedMeetings?.map((meeting) => (
                 <Paper elevation={4} sx={{ display: "flex", flexDirection: "column", gap: 2, p: 1, mb: 2 }}>
-                  <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                    {formatTimestamp(meeting.start_timestamp)}
+                  <Typography variant="h3" sx={{ fontWeight: "bold" }}>
+                    {dayjs(meeting.start_date).format("HH:mm") + " to" + dayjs(meeting.end_date).format(" HH:mm")}
+                  </Typography>
+                  <Typography variant="h3" sx={{ fontWeight: "bold" }}>
+                    {dayjs(meeting.start_date).format("DD/MM/YYYY")}
                   </Typography>
                   <Typography variant="body2">{meeting.meeting_description}</Typography>
                 </Paper>

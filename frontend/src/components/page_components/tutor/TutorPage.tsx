@@ -20,7 +20,7 @@ export default function TutorPage() {
   const navigate = useNavigate();
   const theme = useCurrentTheme();
   const { isMobile } = useBreakpoints();
-  const [view, setView] = useState<"list" | "calender">("list");
+  const [view, setView] = useState<"list" | "calender">("calender");
   const [showCollabDialog, setShowCollabDialog] = useState(false);
 
   const { userState } = useAuth();
@@ -136,7 +136,7 @@ export default function TutorPage() {
               border: "white 1px",
             }}
           >
-            {view === "calender" ? <MiniCalendar meetings={meetings as MeetingType[]} /> : <MeetingsList />}
+            {view === "calender" ? <MiniCalendar meetings={meetings as MeetingType[]} /> : <MeetingsList meetings={meetings as MeetingType[]} />}
           </Box>
         </Box>
         <Box

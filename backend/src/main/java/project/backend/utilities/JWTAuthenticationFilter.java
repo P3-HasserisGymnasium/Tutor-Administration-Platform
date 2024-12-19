@@ -58,8 +58,6 @@ public class JWTAuthenticationFilter implements Filter {
 
         String jwt = null;
         String userID = null;
-        System.out.println("JWTAuthenticationFilter: " + requestPath + " " + requestMethod);
-        System.out.println("jwt: " + jwt + " userID: " + userID);
         Cookie[] cookies = httpRequest.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -76,7 +74,6 @@ public class JWTAuthenticationFilter implements Filter {
                             AccountLoginSuccessBody userState = objectMapper.readValue(rawValue, AccountLoginSuccessBody.class);
                             userID = String.valueOf(userState.id);  // Assuming userState has a field `id`
                          } catch (Exception e) {
-                            System.out.println("Failed to parse user cookie: " + e.getMessage());
                         }
                         break;
 
@@ -86,7 +83,6 @@ public class JWTAuthenticationFilter implements Filter {
                 }
             }
         }
-        System.out.println("jwt_after: " + jwt + " userID_after: " + userID);
 
         if (jwt == null) {
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization cookie missing or invalid");
@@ -95,7 +91,6 @@ public class JWTAuthenticationFilter implements Filter {
         }
 
         if (validateToken(jwt, userID)) {
-            System.out.println("JWTAuthenticationFilter: Token is valid");
 
             AuthenticatedUserBody authenticatedUser = new AuthenticatedUserBody();
             if (userID == null) {
@@ -105,23 +100,27 @@ public class JWTAuthenticationFilter implements Filter {
             Long userIdLong = Long.parseLong(userID);
             authenticatedUser.userId = userIdLong;
             Student student = roleService.getStudentById(userIdLong);
-            if (student != null) {
-                authenticatedUser.studentId = student.getId();
-            }
-            Tutor tutor = student.getTutor();
-            if (tutor != null) {
-                authenticatedUser.tutorId = tutor.getId();
-            }
-            Tutee tutee = student.getTutee();
-            if (tutee != null) {
-                authenticatedUser.tuteeId = tutee.getId();
-            }
-            
+
             Administrator administrator = roleService.getAdministratorByUserId(userIdLong);
             if (administrator != null) {
                 authenticatedUser.administratorId = administrator.getId();
+                request.setAttribute("authenticatedUser", authenticatedUser);
+                chain.doFilter(request, response);
+                return;
             }
 
+            if (student != null) {
+                authenticatedUser.studentId = student.getId();
+                Tutor tutor = student.getTutor();
+                if (tutor != null) {
+                    authenticatedUser.tutorId = tutor.getId();
+                }
+                Tutee tutee = student.getTutee();
+                if (tutee != null) {
+                    authenticatedUser.tuteeId = tutee.getId();
+                }
+            }
+            
             request.setAttribute("authenticatedUser", authenticatedUser);
             chain.doFilter(request, response);  
         } else {

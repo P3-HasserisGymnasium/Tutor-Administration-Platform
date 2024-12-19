@@ -24,5 +24,10 @@ export default defineConfig({
 		globals: true,
 		environment: "jsdom",
 		setupFiles: "./src/tests/test-setup.ts",
+		coverage: {
+			provider: "v8", // or "v8" if using native coverage
+			reportsDirectory: "./coverage", // Directory to store coverage reports
+			reporter: ["text", "lcov", "json"], // Formats: lcov and json create files
+		},
 	},
 });

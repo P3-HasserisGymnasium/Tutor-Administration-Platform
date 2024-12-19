@@ -19,7 +19,7 @@ export default function Loading({ size }: LoadingProps) {
 		>
 			<Navbar />
 			<Box sx={{ height: "88vh", width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-				<CircularProgress size={size} />
+				<CircularProgress data-testid="loading" size={size} />
 			</Box>
 		</Box>
 	);

@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { Box } from "@mui/material";
 import HomePage from "components/page_components/HomePage";
 import TutorPage from "components/page_components/tutor/TutorPage";
-// import TuteePage from "components/page_components/tutee/TuteePage";
 import CreatePostPage from "components/page_components/tutee/CreatePostPage";
 import TutorListPage from "components/page_components/tutee/TutorListPage";
 import TuteeProfilePage from "./components/page_components/tutee/TuteeProfilePage";
@@ -17,10 +16,10 @@ import { Role } from "./types/data_types";
 import NotFound from "./api/authentication/NotFound";
 import Forbidden from "./api/authentication/Forbidden";
 import { useAuth } from "./api/authentication/useAuth";
-//import AdministratorPage from "./components/page_components/dialogs/AdministratorPage";
 import CollaborationPage from "./components/page_components/CollaborationPage";
 import TuteePage from "./components/page_components/tutee/TuteePage";
 import NotificationsList from "./components/content_components/NotificationsListe";
+import AdministratorPage from "./components/page_components/admin/AdministratorPage";
 
 export default function AuthenticatedApp() {
   const { isMobile, hasScrollbar } = useBreakpoints();
@@ -30,7 +29,9 @@ export default function AuthenticatedApp() {
 
   const isTutee = userState.role?.includes(Role.Enum.Tutee);
   const isTutor = userState.role?.includes(Role.Enum.Tutor);
+  const isAdmin = userState.is_administrator;
   const rolePrefix = useRolePrefix();
+
   return (
     <Box
       sx={{
@@ -47,11 +48,18 @@ export default function AuthenticatedApp() {
           <Route
             path="/"
             element={
-              (isTutee && isTutor && <HomePage />) ||
-              (isTutee && !isTutor && <Navigate to="/tutee" />) ||
-              (!isTutee && isTutor && <Navigate to="/tutor" />)
+              (isAdmin && <Navigate to="/admin" />) || (isTutee && isTutor && <HomePage />) || (isTutee && !isTutor && <Navigate to="/tutee" />) || (!isTutee && isTutor && <Navigate to="/tutor" />)
             }
           />
+
+          {/* Admin routes */}
+          {isAdmin ? (
+            <Route path="/admin/*">
+              <Route path="" element={<AdministratorPage />} />
+              <Route path="notifications" element={<NotificationsList />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          ) : null}
 
           {/* Tutee routes */}
           {isTutee ? (
@@ -65,7 +73,7 @@ export default function AuthenticatedApp() {
                 <Route path="request-admin" element={<RequestAdminPage />} />
                 <Route path="tutor-list" element={<TutorListPage />} />
                 {rolePrefix == "/tutee" && <Route path="tutor-application" element={<TutorApplicationPage />} />}
-                <Route path="collaboration/:org_id:" element={<CollaborationPage />} />
+                <Route path="collaboration/:collabId" element={<CollaborationPage />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </>
@@ -81,7 +89,7 @@ export default function AuthenticatedApp() {
                 <Route path="notifications" element={<NotificationsList />} />
                 {rolePrefix == "/tutor" && <Route path="tutor-application" element={<TutorApplicationPage />} />}
                 <Route path="profile" element={<TutorProfilePage />} />
-                <Route path="collaboration/:org_id" element={<CollaborationPage />} />
+                <Route path="collaboration/:collabId" element={<CollaborationPage />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </>

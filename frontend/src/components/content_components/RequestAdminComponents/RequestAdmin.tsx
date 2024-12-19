@@ -2,11 +2,14 @@ import { Box, TextField, Typography, Checkbox, FormControlLabel } from "@mui/mat
 import CustomAutocomplete from "../CustomAutocomplete";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PostCreationType, zodPostCreationSchema } from "~/types/data_types";
+import { PostCreationType, PostState, zodPostCreationSchema } from "~/types/data_types";
 import SetDuration from "../SetDuration";
 import { useState } from "react";
 import { useMediaQuery } from "@mui/material";
 import Button from "@mui/material/Button";
+import { usePostService } from "~/api/services/post-service";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function RequestAdmin() {
   const useFormParameter = {
@@ -16,10 +19,13 @@ export default function RequestAdmin() {
       subject: undefined,
       duration: [0, 12],
       description: "",
+      state: PostState.Enum.INVISIBLE,
+      pairing_request: true,
     },
   };
   const filterMethods = useForm<PostCreationType>(useFormParameter);
-
+  const createPostMutation = usePostService().useCreatePost();
+  const navigate = useNavigate();
   const { control, register, setValue, getValues } = filterMethods;
   useWatch({ control });
 
@@ -36,8 +42,18 @@ export default function RequestAdmin() {
       return 20;
     }
   };
+  console.log("currnetState", getValues("state"));
+  const createPost = (values: PostCreationType) => {
+    console.log("values", values);
 
-  const createPost = () => {};
+    values.state = PostState.Enum.INVISIBLE;
+    createPostMutation.mutate(values, {
+      onSuccess: () => {
+        toast.success("Post created");
+        navigate("/tutee");
+      },
+    });
+  };
 
   return (
     <FormProvider {...filterMethods}>

@@ -20,10 +20,12 @@ import {
 export const zodPostSchema = z.object({
 	id: zodUUID,
 	tutee_id: zodUUID.optional(),
+	tutee_name: z.string().optional(),
 	title: z.string(),
 	description: z.string(),
 	subject: Subject,
 	duration: z.array(z.number()).optional(),
+	pairing_request: z.boolean().optional(),
 	state: z.string(),
 });
 
@@ -39,6 +41,7 @@ export const zodTutorProfileSchema = z.object({
 });
 
 export const zodTuteeProfileSchema = z.object({
+	id: zodUUID,
 	full_name: z.string(),
 	year_group: YearGroup,
 	languages: z.array(Language),
@@ -48,9 +51,9 @@ export const zodTuteeProfileSchema = z.object({
 
 export const zodMeetingSchema = z.object({
 	id: zodUUID,
-	collaboration: zodUUID,
-	start_timestamp: z.string(),
-	end_timestamp: z.string(),
+	collaboration_id: zodUUID,
+	start_date: z.string(),
+	end_date: z.string(),
 	meeting_state: MeetingState,
 	rejection_reason: z.string().optional(),
 	meeting_description: z.string().optional(),
@@ -70,6 +73,7 @@ export const zodCollaborationSchema = z.object({
 	subject: Subject,
 	end_date: z.union([z.date(), z.string()]).optional(),
 	startDate: z.union([z.date(), z.string()]).optional(),
+	requestedPairing: z.boolean(),
 });
 
 export const tutorProfileSchema = z.object({
@@ -214,6 +218,7 @@ export const zodRequestCollaborationByTutorType = z.object({
 	title: z.string(),
 	description: z.string(),
 	subject: Subject,
+	pairing_request: z.boolean(),
 	duration: z.union([z.array(z.number()), z.undefined()]),
 });
 export const zodRequestCollaborationByPostType = z.object({

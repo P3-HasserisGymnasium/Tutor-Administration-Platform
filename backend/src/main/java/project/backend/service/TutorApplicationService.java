@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import project.backend.controller_bodies.tutor_application_controller.TutorApplicationCreateBody;
 import project.backend.controller_bodies.tutor_application_controller.TutorTimeSlotCreateBody;
+import project.backend.model.EntityType;
+import project.backend.model.RoleEnum;
 import project.backend.model.Student;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutor;
@@ -14,8 +16,6 @@ import project.backend.model.TutorApplication;
 import project.backend.model.TutorApplicationState;
 import project.backend.model.TutorTimeSlot;
 import project.backend.repository.TutorApplicationRepository;
-import project.backend.repository.TutorRepository;
-import project.backend.repository.TutorTimeslotRepository;
 
 @Service
 public class TutorApplicationService {
@@ -27,16 +27,20 @@ public class TutorApplicationService {
     private final RoleService roleService;
 
     @Autowired
-    final TutorRepository tutorRepository;
+    private final NotificationService notificationService;
 
     @Autowired
-    final TutorTimeslotRepository tutorTimeslotRepository;
+    private final TutorService tutorService;
 
-    public TutorApplicationService(TutorApplicationRepository tutorApplicationRepository, RoleService roleService, TutorRepository tutorRepository, TutorTimeslotRepository tutorTimeslotRepository) {
+    @Autowired
+    final TutorTimeSlotService tutorTimeslotService;
+
+    public TutorApplicationService(TutorApplicationRepository tutorApplicationRepository, RoleService roleService, TutorService tutorService, TutorTimeSlotService tutorTimeslotService, NotificationService notificationService) {
         this.tutorApplicationRepository = tutorApplicationRepository;
         this.roleService = roleService;
-        this.tutorRepository = tutorRepository;
-        this.tutorTimeslotRepository = tutorTimeslotRepository;
+        this.tutorService = tutorService;
+        this.tutorTimeslotService = tutorTimeslotService;
+        this.notificationService = notificationService;
     }
 
     public TutorApplication getTutorApplicationById(Long id){
@@ -48,11 +52,11 @@ public class TutorApplicationService {
         return tutorApplicationRepository.findAll();
     }
 
-    public TutorApplication createTutorApplication(TutorApplicationCreateBody applicationBody) {
+    public void createTutorApplication(TutorApplicationCreateBody applicationBody, RoleEnum role, long tuteeOrTutorId){
         
         TutorApplication tutorApplication = new TutorApplication();
 
-        Student student = roleService.getStudentById(applicationBody.student_id);
+        Student student = roleService.getStudentById(applicationBody.user_id);
         tutorApplication.setStudent(student);
         
         List<TutorApplication> applications = student.getTutorApplications();
@@ -63,6 +67,16 @@ public class TutorApplicationService {
         tutorApplication.setDescription(applicationBody.tutor_profile_description);
 
         TutorApplication savedTutorApplication = tutorApplicationRepository.save(tutorApplication);
+
+        if (role == RoleEnum.Tutor) {
+            long tutorId = tuteeOrTutorId;
+            notificationService.sendNotification(tutorId, EntityType.TUTOR, 0L, EntityType.ADMIN, savedTutorApplication.getId(), EntityType.TUTORAPPLICATION);
+        } else if (role == RoleEnum.Tutee) {
+            long tuteeId = tuteeOrTutorId;
+            notificationService.sendNotification(tuteeId, EntityType.TUTEE, 0L, EntityType.ADMIN, savedTutorApplication.getId(), EntityType.TUTORAPPLICATION);
+
+        }
+
         
         for (TutorTimeSlotCreateBody timeSlotBody : applicationBody.time_availability) {
             TutorTimeSlot timeSlot = new TutorTimeSlot();
@@ -70,10 +84,8 @@ public class TutorApplicationService {
             timeSlot.setStartTime(timeSlotBody.start_time);
             timeSlot.setEndTime(timeSlotBody.end_time);
             tutorApplication.getFreeTimeSlots().add(timeSlot);
-
-            tutorTimeslotRepository.save(timeSlot);
+            tutorTimeslotService.saveTutorTimeSlot(timeSlot);
         }
-        return savedTutorApplication;
     }
 
     public void deleteTutorApplicationById(Long id) {
@@ -112,7 +124,7 @@ public class TutorApplicationService {
 
         tutorApplicationRepository.save(tutorApplication);
         roleService.saveStudent(student); 
-        tutorRepository.save(tutor);
+        tutorService.saveTutor(tutor);
     }
 
     public void rejectTutorApplication(Long id, String rejectionReason){

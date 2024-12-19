@@ -2,21 +2,28 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
-import { TutorApplicationType } from "~/types/data_types";
+import { Role, TutorApplicationType } from "~/types/data_types";
+import { useRolePrefix } from "~/utilities/helperFunctions";
 
 export const useTutorApplicationService = () => {
 	const useCreateTutorApplication = () => {
+
+		const role = useRolePrefix();
+		const aRole = role === "/tutee" ? Role.Enum.Tutee : Role.Enum.Tutor;
+
+
+
 		return useMutation({
 			mutationKey: ["createTutorApplication"],
 			mutationFn: async (application: TutorApplicationType) => {
-				const { data } = await apiClient.post("/api/tutor-application", application);
+				const { data } = await apiClient.post(`/api/tutor-application/${aRole}`, application);
 				return data;
 			},
 			onError: (e: AxiosError) => {
 				toast.error("" + e?.response?.data);
 			},
 			onSuccess: () => {
-				toast.success("Application created");
+				toast.info("When an administrator accepts your application, you will be able to use the system as a tutor.");
 			},
 		});
 	};
@@ -92,7 +99,8 @@ export const useTutorApplicationService = () => {
 			placeholderData: {
 				subjects: [],
 				time_availability: [],
-				application: "",
+				tutor_profile_description: "",
+				user_id: 0,
 			},
 		});
 	};

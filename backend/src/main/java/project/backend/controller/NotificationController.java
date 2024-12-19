@@ -97,6 +97,28 @@ public class NotificationController {
         return ResponseEntity.status(HttpStatus.OK).body(notificationResponseBodies);
     }
 
+    @GetMapping("/admin")
+    public ResponseEntity<?> getNotificationsForAdmin(HttpServletRequest request) {
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
+
+        if (!authenticatedUser.isAdministrator()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to view notifications for the administrator");
+        }
+
+        List<Notification> notifications = notificationService.getAllNotificationsForAdmin();
+
+        if (notifications == null || notifications.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No notifications found for the administrator");
+        }
+
+        List<NotificationResponseBody> notificationResponseBodies = new ArrayList<>();
+        for (Notification notification : notifications) {
+            notificationResponseBodies.add(createNotificationResponseBody(notification));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(notificationResponseBodies);
+    }
+
     @GetMapping("/sentToTutee/{id}")
     public ResponseEntity<?> getNotificationsSentToTuteeByUserId(@PathVariable Long id, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
@@ -199,7 +221,10 @@ public class NotificationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notification not found");
         }
 
-        if (notification.getReceiverId() != authenticatedUser.getUserId() && !authenticatedUser.isAdministrator()) {
+        if ((notification.getReceiverId() != authenticatedUser.getUserId() && 
+            (authenticatedUser.getTuteeId() == null || notification.getReceiverId() != authenticatedUser.getTuteeId()) && 
+            (authenticatedUser.getTutorId() == null || notification.getReceiverId() != authenticatedUser.getTutorId())) && 
+            !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to change the state of this notification");
         }
 

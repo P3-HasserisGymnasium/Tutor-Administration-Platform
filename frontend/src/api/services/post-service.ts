@@ -4,11 +4,8 @@ import { AxiosError } from "axios";
 import { apiClient } from "../api-client";
 import { PostType } from "~/types/entity_types";
 import { PostCreationType, PostListFilterType } from "~/types/data_types";
-import { useNavigate } from "react-router-dom";
 
 export const usePostService = () => {
-	const navigate = useNavigate();
-
 	const useGetPosts = (filters?: PostListFilterType) => {
 		return useQuery({
 			queryKey: ["getPosts", filters],
@@ -38,6 +35,18 @@ export const usePostService = () => {
 		});
 	};
 
+	const useGetPairingRequests = () => {
+		return useQuery({
+			queryKey: ["getPairingRequests"],
+			queryFn: async () => {
+				const { data } = await apiClient.get<PostType[]>(`/api/post/pairing_requests`);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			placeholderData: [],
+		});
+	};
+
 	const useCreatePost = () => {
 		return useMutation({
 			mutationKey: ["createPost"],
@@ -48,10 +57,7 @@ export const usePostService = () => {
 			onError: (e: AxiosError<{ detail: string }>) => {
 				toast.error(e?.response?.data?.detail);
 			},
-			onSuccess: () => {
-				toast.success("Post created");
-				navigate("/tutee");
-			},
+			onSuccess: () => {},
 		});
 	};
 
@@ -89,11 +95,25 @@ export const usePostService = () => {
 		});
 	};
 
+	const useGetPostById = (id: number | null) => {
+		return useQuery({
+			queryKey: ["getPostById", id],
+			queryFn: async () => {
+				const { data } = await apiClient.get<PostType>(`/api/post/${id}`);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			enabled: !!id,
+		});
+	};
+
 	return {
 		useGetPosts,
 		useGetTuteePosts,
 		useCreatePost,
 		useDeletePost,
+		useGetPairingRequests,
+		useGetPostById,
 		useEditPost,
 	};
 };

@@ -2,12 +2,14 @@ import { Box, TextField, Typography, Checkbox, FormControlLabel } from "@mui/mat
 import CustomAutocomplete from "../CustomAutocomplete";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PostCreationType, zodPostCreationSchema } from "~/types/data_types";
+import { PostCreationType, PostState, zodPostCreationSchema } from "~/types/data_types";
 import SetDuration from "../SetDuration";
 import { useState } from "react";
 import { useMediaQuery } from "@mui/material";
 import Button from "@mui/material/Button";
 import { usePostService } from "~/api/services/post-service";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function PostCreation() {
   const createPostMutation = usePostService().useCreatePost();
@@ -18,9 +20,12 @@ export default function PostCreation() {
       subject: undefined,
       duration: [0, 12],
       description: "",
+      state: PostState.Enum.VISIBLE,
+      pairing_request: false,
     },
   };
   const filterMethods = useForm<PostCreationType>(useFormParameter);
+  const navigate = useNavigate();
 
   const { control, register, setValue, getValues } = filterMethods;
   useWatch({ control });
@@ -39,7 +44,12 @@ export default function PostCreation() {
     }
   };
   const createPost = (values: PostCreationType) => {
-    createPostMutation.mutate(values, {});
+    createPostMutation.mutate(values, {
+      onSuccess: () => {
+        toast.success("Post created");
+        navigate("/tutee");
+      },
+    });
   };
 
   return (
@@ -109,15 +119,7 @@ export default function PostCreation() {
             </Box>
           </Box>
           <Typography variant="h3">Describe your request</Typography>
-          <TextField
-            multiline
-            maxRows={getMaxRows()}
-            variant="outlined"
-            size="small"
-            placeholder="Which topics do you need help with?"
-            {...register("description")}
-            sx={{}}
-          />
+          <TextField multiline maxRows={getMaxRows()} variant="outlined" size="small" placeholder="Which topics do you need help with?" {...register("description")} sx={{}} />
         </Box>
 
         <Box

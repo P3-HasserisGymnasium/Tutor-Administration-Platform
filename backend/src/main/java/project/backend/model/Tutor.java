@@ -18,7 +18,7 @@ import jakarta.persistence.OneToOne;
 
 @Entity
 public class Tutor extends Role {
-    
+
     @Column(name = "profile_description", length = 1000)
     String profileDescription;
 
@@ -36,13 +36,15 @@ public class Tutor extends Role {
     List<TutorTimeSlot> freeTimeSlots = new ArrayList<>();
 
     @OneToMany(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     List<Collaboration> collaborations = new ArrayList<>();
 
     @OneToOne(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     Student student;
 
-    public Tutor() {}
+    public Tutor() {
+    }
 
     public String getProfileDescription() {
         return profileDescription;

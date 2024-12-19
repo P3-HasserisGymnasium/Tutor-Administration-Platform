@@ -1,12 +1,23 @@
-import { afterEach } from "vitest";
+import { afterEach, vi } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import MiniCollab from "~/components/content_components/MiniCollab";
 import { CollaborationState, Subject } from "~/types/data_types";
 import { CollaborationType } from "~/types/entity_types";
 import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from "@mui/material";
+import tutorTheme from "~/themes/tutorTheme";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "~/api/api-client";
+import { AuthProvider } from "~/api/authentication/AuthProvider";
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</BrowserRouter>
+  <ThemeProvider theme={tutorTheme}>
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</BrowserRouter>
+      </QueryClientProvider>
+    </AuthProvider>
+  </ThemeProvider>
 );
 
 const mockCollaboration: CollaborationType = {
@@ -19,7 +30,15 @@ const mockCollaboration: CollaborationType = {
   tuteeId: 2,
   startDate: "2021-10-10",
   end_date: "2021-10-10",
+  requestedPairing: false
 };
+
+beforeEach(() => {
+  vi.doMock("@mui/material/styles", () => ({
+    useTheme: () => tutorTheme,
+    ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
+  }));
+});
 
 describe("MiniCollab", () => {
   afterEach(() => {

@@ -5,49 +5,46 @@ import { useRolePrefix } from "~/utilities/helperFunctions";
 import { NotificationStateType } from "~/types/data_types";
 
 export const useNotificationService = () => {
-
 	const useNotifications = () => {
 		const rolePrefix = useRolePrefix();
-		if (rolePrefix === "/tutee") {
-			return useGetTuteeNotifications;
+		if (rolePrefix === "/admin") {
+			return useGetNotifications;
 		} else if (rolePrefix === "/tutor") {
 			return useGetTutorNotifications;
-		} else if (rolePrefix === "/admin") {
-			return useGetNotifications;
+		} else if (rolePrefix === "/tutee") {
+			return useGetTuteeNotifications;
 		} else {
 			return useGetBothNotifications;
-		};
+		}
 	};
-
-
-
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const useGetNotifications = (_id: number | null) => {
 		return useQuery({
 			queryKey: ["getNotifications"],
 			queryFn: async () => {
-				const { data } = await apiClient.get<NotificationResponseType[]>(`/api/notifications/all`);
-				return data;
+				// const { data } = await apiClient.get<NotificationResponseType[]>(`/api/notifications/all`);
+				console.log("not implemented")
 			},
 			refetchOnWindowFocus: false,
 			refetchInterval: 60000, // Refetch every minute
 			staleTime: 60000, // Data is considered fresh for 60 seconds
-			placeholderData: [],
-		})
+
+		});
 	};
-	const useGetTuteeNotifications = (id: number | null) => useQuery({
-		queryKey: ["getTuteeNotifications", id],
-		queryFn: async () => {
-			const { data } = await apiClient.get<NotificationResponseType[]>(`/api/notifications/sentToTutee/${id}`);
-			return data;
-		},
-		refetchOnWindowFocus: false,
-		refetchInterval: 60000, // Refetch every minute
-		placeholderData: [],
-		staleTime: 60000, // Data is considered fresh for 60 seconds
-		enabled: id !== null,
-	});
+	const useGetTuteeNotifications = (id: number | null) =>
+		useQuery({
+			queryKey: ["getTuteeNotifications", id],
+			queryFn: async () => {
+				const { data } = await apiClient.get<NotificationResponseType[]>(`/api/notifications/sentToTutee/${id}`);
+				return data;
+			},
+			refetchOnWindowFocus: false,
+			refetchInterval: 60000, // Refetch every minute
+			placeholderData: [],
+			staleTime: 60000, // Data is considered fresh for 60 seconds
+			enabled: id !== null,
+		});
 	const useGetTutorNotifications = (id: number | null) => {
 		return useQuery({
 			queryKey: ["getTutorNotifications", id],
@@ -76,17 +73,15 @@ export const useNotificationService = () => {
 			enabled: userId !== null,
 			staleTime: 60000, // Data is considered fresh for 60 seconds
 		});
-	}
+	};
 	const useChangeNotificationState = () => {
 		return useMutation({
 			mutationKey: ["changeNotificationState"],
-			mutationFn: async ({ notificationId, state }: { notificationId: number | null, state: NotificationStateType }) => {
+			mutationFn: async ({ notificationId, state }: { notificationId: number | null; state: NotificationStateType }) => {
 				await apiClient.post<NotificationResponseType>(`/api/notifications/${notificationId}/${state}`);
 			},
-
 		});
-	}
+	};
 
 	return { useNotifications, useGetTuteeNotifications, useGetNotifications, useGetTutorNotifications, useChangeNotificationState };
-}
-
+};
