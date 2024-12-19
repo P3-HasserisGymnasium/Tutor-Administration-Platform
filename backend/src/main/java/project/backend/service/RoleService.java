@@ -288,30 +288,27 @@ public class RoleService {
         response.tutoring_subjects = tutor.getTutoringSubjects();
         response.contact_info = tutor.getStudent().getContactInfo();
 
-        List<TimeSlotCreateBody> timeSlotRepsonses = new LinkedList<>();
+        List<TimeSlotCreateBody> responseList = new LinkedList<>();
         for (TutorTimeSlot timeSlot : tutor.getFreeTimeSlots()) {
             TimeSlotCreateBody timeSlotResponse = new TimeSlotCreateBody();
 
-            WeekDayEnum weekDay = timeSlot.getWeekDay();
-            for (WeekDayEnum day : WeekDayEnum.values()) {
-                for (TimeSlotCreateBody timeSlotCreateBody : timeSlotRepsonses) {
-                    if (timeSlotCreateBody.day == day) {
-                        timeSlotResponse = timeSlotCreateBody;
-                        break;
-                    }
+            for (TimeSlotCreateBody existingTimeSlot : responseList) {
+                if (existingTimeSlot.day == timeSlot.getWeekDay()) {
+                    TimeCreateBody timeCreateBody = new TimeCreateBody();
+                    timeCreateBody.start_time = timeSlot.getStartTime();
+                    timeCreateBody.end_time = timeSlot.getEndTime();
+                    existingTimeSlot.time.add(timeCreateBody);
+                } else {
+                    timeSlotResponse.day = timeSlot.getWeekDay();
+                    TimeCreateBody timeCreateBody = new TimeCreateBody();
+                    timeCreateBody.start_time = timeSlot.getStartTime();
+                    timeCreateBody.end_time = timeSlot.getEndTime();
+                    timeSlotResponse.time.add(timeCreateBody);
+                    responseList.add(timeSlotResponse);
                 }
             }
-
-            timeSlotResponse.day = weekDay;
-
-            TimeCreateBody timeCreateBody = new TimeCreateBody();
-            timeCreateBody.start_time = timeSlot.getStartTime();
-            timeCreateBody.end_time = timeSlot.getEndTime();
-            timeSlotResponse.time.add(timeCreateBody);
-
-            timeSlotRepsonses.add(timeSlotResponse);
         }
-        response.time_availability = timeSlotRepsonses;
+        response.time_availability = responseList;
         response.languages = tutor.getStudent().getLanguages();
 
         return response;

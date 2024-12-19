@@ -67,7 +67,7 @@ export const zodPostListFilterSchema = z.object({
 });
 
 export const zodSubjectBody = z.object({
-	tutorId: zodUUID,
+	tutee_tutorId: zodUUID,
 	subject: Subject,
 });
 

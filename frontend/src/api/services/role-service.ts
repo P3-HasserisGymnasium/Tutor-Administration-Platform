@@ -102,21 +102,7 @@ export const useRoleService = () => {
 		});
 	};
 
-	const useAddSubject = () => {
-		return useMutation({
-			mutationKey: ["addSubject"],
-			mutationFn: async (subjectBody: SubjectBodyType) => {
-				const { data } = await apiClient.post<string>("/api/role/tutor/addSubject", subjectBody);
-				return data;
-			},
-			onError: (e: AxiosError) => {
-				toast.error("" + e?.response?.data);
-			},
-			onSuccess: () => {
-				toast.success("Subject added");
-			},
-		})
-	};
+
 
 	const useEditProfile = () => {
 		return (
@@ -138,20 +124,72 @@ export const useRoleService = () => {
 			}))
 	}
 
-	const useRemoveSubject = () => {
-		return useMutation({
-			mutationKey: ["removeSubject"],
-			mutationFn: async (subjectBody: SubjectBodyType) => {
-				const { data } = await apiClient.post<string>("/api/role/tutor/removeSubject", subjectBody);
-				return data;
-			},
-			onError: (e: AxiosError) => {
-				toast.error("" + e?.response?.data);
-			},
-			onSuccess: () => {
-				toast.success("Subject removed");
-			},
-		})
+
+	const addTutorSubject = useMutation({
+		mutationKey: ["addSubject"],
+		mutationFn: async (subjectBody: SubjectBodyType) => {
+			const { data } = await apiClient.post<string>("/api/role/tutor/addSubject", subjectBody);
+			return data;
+		},
+		onError: (e: AxiosError) => {
+			toast.error("" + e?.response?.data);
+		},
+		onSuccess: () => {
+			toast.success("Subject added");
+		},
+	})
+
+	const addTuteeSubject = useMutation({
+		mutationKey: ["addSubject"],
+		mutationFn: async (subjectBody: SubjectBodyType) => {
+			const { data } = await apiClient.post<string>("/api/role/tutee/addSubject", subjectBody);
+			return data;
+		},
+		onError: (e: AxiosError) => {
+			toast.error("" + e?.response?.data);
+		},
+		onSuccess: () => {
+			toast.success("Subject added");
+		},
+	})
+
+	const removeTutorSubject = useMutation({
+		mutationKey: ["removeSubject"],
+		mutationFn: async (subjectBody: SubjectBodyType) => {
+			const { data } = await apiClient.post<string>("/api/role/tutor/removeSubject", subjectBody);
+			return data;
+		},
+		onError: (e: AxiosError) => {
+			toast.error("" + e?.response?.data);
+		},
+		onSuccess: () => {
+			toast.success("Subject removed");
+		},
+	})
+
+	const removeTuteeSubject = useMutation({
+		mutationKey: ["removeSubject"],
+		mutationFn: async (subjectBody: SubjectBodyType) => {
+			const { data } = await apiClient.post<string>("/api/role/tutee/removeSubject", subjectBody);
+			return data;
+		},
+		onError: (e: AxiosError) => {
+			toast.error("" + e?.response?.data);
+		},
+		onSuccess: () => {
+			toast.success("Subject removed");
+		},
+	})
+
+	const useAddSubject = (role: string) => {
+		if (role == "tutor") return addTutorSubject;
+		return addTuteeSubject;
+	}
+
+
+	const useRemoveSubject = (role: string) => {
+		if (role == "tutor") return removeTutorSubject;
+		return removeTuteeSubject;
 	};
 
 	return {
