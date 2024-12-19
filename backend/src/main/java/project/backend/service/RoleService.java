@@ -37,6 +37,7 @@ public class RoleService {
     @Autowired
     final TutorService tutorService;
 
+    @Autowired
     final TuteeService tuteeService;
 
     @Autowired
