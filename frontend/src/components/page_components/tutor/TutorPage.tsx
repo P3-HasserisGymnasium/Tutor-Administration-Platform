@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { MeetingType } from "~/types/entity_types";
 import { useMeetingService } from "~/api/services/meeting-service";
 import { CollaborationState } from "~/types/data_types";
+import CreateCollaborationDialog from "../dialogs/CreateCollaborationDialog";
 export default function TutorPage() {
   const navigate = useNavigate();
   const theme = useCurrentTheme();
@@ -36,10 +37,11 @@ export default function TutorPage() {
   } = useCollaborationService().useGetCollaborationsWithTutor(userState?.id || null);
   const { data: meetings } = useMeetingService().useGetMeetings();
 
-  const filteredCollaborations = collaborations?.filter((collab) => collab.state == CollaborationState.Enum.ESTABLISHED);
+  const filteredCollaborations = collaborations?.filter((collab) => collab.state === CollaborationState.Enum.ESTABLISHED);
 
   return (
     <ThemeProvider theme={theme}>
+      <CreateCollaborationDialog open={false} setOpen={() => { }} />
       <ViewCollaborationsDialog
         open={showCollabDialog}
         setOpen={setShowCollabDialog}
