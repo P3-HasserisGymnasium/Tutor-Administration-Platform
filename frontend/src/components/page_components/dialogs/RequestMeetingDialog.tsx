@@ -42,7 +42,11 @@ export default function RequestMeetingDialog({ open, setOpen, timeAvailabilities
     const values = getValues();
     values.start_date = startTime.format("YYYY-MM-DDTHH:mm:ss");
     values.end_date = endTime.format("YYYY-MM-DDTHH:mm:ss");
-    requestMeeting.mutate(values);
+    requestMeeting.mutate(values, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
   };
 
   return (
