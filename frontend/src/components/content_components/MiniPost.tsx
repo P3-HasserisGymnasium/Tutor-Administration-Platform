@@ -28,37 +28,39 @@ export default function MiniPost({ postData }: MiniPostProp) {
   };
 
   return (
-    <Box
-      data-testid="minipostcontainer"
-      onClick={handleOpenMiniPost}
-      sx={{
-        "&:hover": {
-          cursor: "pointer",
-          backgroundColor: theme.palette.augmentColor({ color: { main: theme.customColors.postBackGroundColor } }).dark,
-        },
-        backgroundColor: theme.customColors.postBackGroundColor,
-        border: "1px solid rgba(173, 92, 0, 1)",
-        width: "200px",
-        height: "80%",
-        borderRadius: "8px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        padding: 1,
-      }}
-    >
+    <>
       <EditPostDialog open={showEditPostDialog} setOpen={setShowEditPostDialog} post={postData} />
       <AcceptPostDialog open={showAcceptPostDialog} setOpen={setShowAcceptPostDialog} post={postData} />
-      <Typography data-testid="posttitle" variant="h4">
-        {postData.title || "No Title"}
-      </Typography>
+      <Box
+        data-testid="minipostcontainer"
+        onClick={handleOpenMiniPost}
+        sx={{
+          "&:hover": {
+            cursor: "pointer",
+            backgroundColor: theme.palette.augmentColor({ color: { main: theme.customColors.postBackGroundColor } }).dark,
+          },
+          backgroundColor: theme.customColors.postBackGroundColor,
+          border: "1px solid rgba(173, 92, 0, 1)",
+          width: "200px",
+          height: "80%",
+          borderRadius: "8px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          padding: 1,
+        }}
+      >
+        <Typography data-testid="posttitle" variant="h4">
+          {postData.title || "No Title"}
+        </Typography>
 
-      <Box>
-        <SubjectChip Subject={postData.subject} />
+        <Box>
+          <SubjectChip Subject={postData.subject} />
 
-        <Typography data-testid="postduration">{getDuration(postData.duration)}</Typography>
+          <Typography data-testid="postduration">{getDuration(postData.duration)}</Typography>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 }
 
