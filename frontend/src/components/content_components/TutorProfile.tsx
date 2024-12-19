@@ -54,6 +54,12 @@ export default function TutorProfile() {
 		});
 	};
 
+	React.useEffect(() => {
+		if (tutorProfile) {
+			editProfileMethods.reset(tutorProfile);
+		}
+	}, [tutorProfile]);
+
 	return (
 		<FormProvider {...editProfileMethods}>
 			<Box sx={{ display: "flex", flexDirection: "column", padding: "2em" }}>
@@ -82,7 +88,7 @@ export default function TutorProfile() {
 							customType="success"
 							size="large"
 							sx={{ height: "3em" }}
-							onClick={() => editProfileMethods.handleSubmit(editProfile)}
+							onClick={editProfileMethods.handleSubmit(editProfile)}
 						/>
 					)}
 				</Box>

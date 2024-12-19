@@ -280,7 +280,7 @@ public class RoleService {
     }
 
     public TutorProfileResponse getTutorProfile(Long id) {
-        Tutor tutor = getTutorById(id);
+        Tutor tutor = getTutorByUserId(id);
         TutorProfileResponse response = new TutorProfileResponse();
         response.full_name = tutor.getStudent().getFullName();
         response.description = tutor.getProfileDescription();
