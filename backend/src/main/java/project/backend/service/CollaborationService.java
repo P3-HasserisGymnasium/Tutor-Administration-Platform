@@ -13,13 +13,14 @@ import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.collaboration_bodies.CollaborationCreateBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByPostBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByTutorBody;
+import project.backend.controller_bodies.collaboration_bodies.SubmitBody;
 import project.backend.controller_bodies.post_controller.PostBody;
 import project.backend.controller_bodies.role_controller.TuteeProfileResponse;
 import project.backend.controller_bodies.role_controller.TutorProfileResponse;
-import project.backend.controller_bodies.collaboration_bodies.SubmitBody;
+import project.backend.model.Administrator;
 import project.backend.model.Collaboration;
-import project.backend.model.EntityType;
 import project.backend.model.CollaborationState;
+import project.backend.model.EntityType;
 import project.backend.model.Feedback;
 import project.backend.model.Post;
 import project.backend.model.RoleEnum;
@@ -27,7 +28,6 @@ import project.backend.model.Student;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.model.Tutor;
-import project.backend.model.Administrator;
 import project.backend.repository.CollaborationRepository;
 
 
@@ -89,7 +89,7 @@ public class CollaborationService {
         collaboration.setEndTimestamp(body.end_date);
 
         collaboration.setTutor(roleService.getTutorByUserId(body.tutor_id));
-        collaboration.setTutee(roleService.getTuteeById(body.tutee_id));
+        collaboration.setTutee(roleService.getTuteeByTuteeId(body.tutee_id));
 
         collaboration.setState(body.state);
 
@@ -108,7 +108,7 @@ public class CollaborationService {
 
 
         Collaboration collaboration = new Collaboration();
-        collaboration.setTutee(roleService.getTuteeById(body.getTutee_id()));
+        collaboration.setTutee(roleService.getTuteeByTuteeId(body.getTutee_id()));
         collaboration.setTutor(roleService.getTutorById(body.getTutor_id()));
         collaboration.setSubject(body.getSubject());
         collaboration.setState(CollaborationState.WAITING_FOR_BOTH);
@@ -336,7 +336,7 @@ public class CollaborationService {
         }
         Collaboration collaboration = new Collaboration();
         Tutor tutor = roleService.getTutorById(body.tutorId);
-        Tutee tutee = roleService.getTuteeById(tuteeId);
+        Tutee tutee = roleService.getTuteeByTuteeId(tuteeId);
 
         collaboration.setTutee(tutee);
         collaboration.setTutor(tutor);
@@ -382,9 +382,13 @@ public class CollaborationService {
     public Post createPost(PostBody postBody, Long tuteeId){
         return postService.createPost(postBody, tuteeId);
     }
+    
+    public Student getStudentByTuteeId(long id){
+        return roleService.getStudentByTuteeId(id);
+    }
 
-    public Student getStudentByTuteeOrTutorId(long id){
-        return roleService.getStudentByTuteeOrTutorId(id);
+    public Student getStudentByTutorId(long id){
+        return roleService.getStudentByTutorId(id);
     }
 
     public TutorProfileResponse getTutorProfile(long userId){

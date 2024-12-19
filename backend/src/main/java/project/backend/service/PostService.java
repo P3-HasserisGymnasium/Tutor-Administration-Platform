@@ -90,7 +90,7 @@ public class PostService {
     }
 */
     public Post createPost(PostBody postBody, Long tuteeId){
-        Tutee tutee = roleService.getTuteeById(tuteeId);
+        Tutee tutee = roleService.getTuteeByTuteeId(tuteeId);
 
         Post post = new Post();
         post.setTutee(tutee);

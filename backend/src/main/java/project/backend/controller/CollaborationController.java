@@ -193,11 +193,11 @@ public class CollaborationController {
             boolean isTutor = collaboration.getTutor().getId() == authenticatedUser.getTutorId();
             if (isTutor) {
 
-                Student student = collaborationService.getStudentByTuteeOrTutorId(collaboration.getTutee().getId());
+                Student student = collaborationService.getStudentByTutorId(collaboration.getTutee().getId());
                 TuteeProfileResponse response = collaborationService.getTuteeProfile(student.getId());
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
-                Student student = collaborationService.getStudentByTuteeOrTutorId(collaboration.getTutor().getId());
+                Student student = collaborationService.getStudentByTuteeId(collaboration.getTutor().getId());
                 TutorProfileResponse response = collaborationService.getTutorProfile(student.getId());
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }

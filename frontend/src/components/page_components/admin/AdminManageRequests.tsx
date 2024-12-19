@@ -19,7 +19,7 @@ export default function AdminRequests({ awaitingAcceptanceCollabs, isLoading }: 
   return (
     <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
       <Box sx={{ pl: 3, pt: 3, height: "10%", display: "flex", alignItems: "flex-end" }}>
-        <Typography variant="h1">Manage Tutors</Typography>
+        <Typography variant="h1">Manage Requests</Typography>
         <Typography mb={0.5} ml={2} variant="h4">
           Click on the requests to manage them
         </Typography>

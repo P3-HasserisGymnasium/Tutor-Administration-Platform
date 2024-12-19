@@ -1,7 +1,7 @@
 package project.backend.controller;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -108,8 +108,9 @@ public class RoleController {
     @PostMapping("/tutorsFiltered")
     public ResponseEntity<?> getTutorProfilesFiltered(@RequestBody TutorFilterBody body, HttpServletRequest request) {
         try {
+            AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
             ArrayList<TutorProfileResponse> response = roleService.getTutorProfilesFiltered(body.subjects,
-                    body.time_availability, body.year_group, body.languages);
+                    body.time_availability, body.year_group, body.languages, authenticatedUser.getTutorId());
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("error: " + e.getMessage());
