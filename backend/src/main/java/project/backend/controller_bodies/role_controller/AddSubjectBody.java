@@ -4,24 +4,24 @@ import project.backend.model.SubjectEnum;
 
 public class AddSubjectBody {
 
-  public Long tutorId;
+  public Long tutee_tutorId;
   public SubjectEnum subject;
 
 
   public AddSubjectBody() {
   }
 
-  public AddSubjectBody(Long tutorId, SubjectEnum subject) {
-    this.tutorId = tutorId;
+  public AddSubjectBody(Long tutee_tutorId, SubjectEnum subject) {
+    this.tutee_tutorId = tutee_tutorId;
     this.subject = subject;
   }
 
   public Long getTutorId() {
-    return this.tutorId;
+    return this.tutee_tutorId;
   }
 
   public void setTutorId(Long tutorId) {
-    this.tutorId = tutorId;
+    this.tutee_tutorId = tutorId;
   }
 
   public SubjectEnum getSubject() {

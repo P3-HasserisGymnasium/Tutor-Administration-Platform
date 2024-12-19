@@ -14,8 +14,8 @@ type ManageTutorDialogProps = {
 
 const ManageTutorDialog = ({ open, setOpen, tutorProfile }: ManageTutorDialogProps) => {
   const { useAddSubject, useRemoveSubject } = useRoleService();
-  const addSubjectMutation = useAddSubject();
-  const removeSubjectMutation = useRemoveSubject();
+  const addSubjectMutation = useAddSubject("tutor");
+  const removeSubjectMutation = useRemoveSubject("tutor");
   const tutorId = tutorProfile.id;
   const handleClose = () => {
     setOpen(false);
@@ -26,13 +26,13 @@ const ManageTutorDialog = ({ open, setOpen, tutorProfile }: ManageTutorDialogPro
 
   const handleAddSubject = () => {
     if (subject) {
-      addSubjectMutation.mutate({ tutorId: tutorId, subject: subject });
+      addSubjectMutation.mutate({ tutee_tutorId: tutorId, subject: subject });
     }
   };
 
   const handleRemoveSubject = () => {
     if (subject) {
-      removeSubjectMutation.mutate({ tutorId: tutorId, subject: subject });
+      removeSubjectMutation.mutate({ tutee_tutorId: tutorId, subject: subject });
     }
   };
   console.log("subject", subject);
