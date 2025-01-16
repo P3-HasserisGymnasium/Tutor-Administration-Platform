@@ -146,7 +146,13 @@ public class NotificationController {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
         Long userId = authenticatedUser.getUserId();
 
-        if (id != userId || !authenticatedUser.isTutor()) {
+        System.out.println("id: " + id);
+        System.out.println("userId: " + userId);
+        System.out.println("authenticatedUser.isTutor " + authenticatedUser.isTutor());
+        System.out.println("authenticatedUser.getTutorId() " + authenticatedUser.getTutorId());
+        System.out.println("id != userId || !authenticatedUser.isTutor(): " + (id != userId || !authenticatedUser.isTutor()));
+
+        if (!id.equals(userId) || !authenticatedUser.isTutor()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to view notifications for this tutor");
         }
 

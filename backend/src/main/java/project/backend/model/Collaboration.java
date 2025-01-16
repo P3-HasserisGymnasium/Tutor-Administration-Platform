@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -54,7 +55,7 @@ public class Collaboration {
     @Column(name = "admin_accepted")
     Boolean adminState;
     
-    @OneToMany(mappedBy = "collaboration")
+    @OneToMany(mappedBy = "collaboration", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     List<Meeting> meetings = new ArrayList<>();
 
