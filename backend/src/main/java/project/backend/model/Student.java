@@ -1,37 +1,54 @@
 package project.backend.model;
 
-import java.util.LinkedList;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Student extends User {
 
     @Column(name = "registration_date")
-    String registrationDate;
+    Timestamp registrationTimestamp;
 
     @Column(name = "year_group")
+    @Enumerated(EnumType.STRING)
     YearGroupEnum yearGroup;
 
-    @Column(name = "contact_info")
-    StudentContactInfo contactInfo;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    List<StudentCommunicatioInfo> contactInfo = new ArrayList<>();
 
-    @Column(name = "roles")
-    List<Role> roles = new LinkedList<>();
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    List<TutorApplication> tutorApplications = new ArrayList<>();
 
-    @Column(name = "languages")
-    List<LanguageEnum> languages = new LinkedList<>();
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    Tutee tutee;
 
-    public Student() {}
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    Tutor tutor;
 
-    public String getRegistrationDate() {
-        return registrationDate;
+    public Student() {
     }
 
-    public void setRegistrationDate(String registrationDate) {
-        this.registrationDate = registrationDate;
+    public Timestamp getRegistrationTimestamp() {
+        return registrationTimestamp;
+    }
+
+    public void setRegistrationTimestamp(Timestamp registrationTimestamp) {
+        this.registrationTimestamp = registrationTimestamp;
     }
 
     public YearGroupEnum getYearGroup() {
@@ -42,27 +59,35 @@ public class Student extends User {
         this.yearGroup = yearGroup;
     }
 
-    public StudentContactInfo getContactInfo() {
+    public List<StudentCommunicatioInfo> getContactInfo() {
         return contactInfo;
     }
 
-    public void setContactInfo(StudentContactInfo contactInfo) {
+    public void setContactInfo(List<StudentCommunicatioInfo> contactInfo) {
         this.contactInfo = contactInfo;
     }
 
-    public List<Role> getRoles() {
-        return roles;
+    public List<TutorApplication> getTutorApplications() {
+        return tutorApplications;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setTutorApplications(List<TutorApplication> tutorApplications) {
+        this.tutorApplications = tutorApplications;
     }
 
-    public List<LanguageEnum> getLanguages() {
-        return languages;
+    public Tutee getTutee() {
+        return tutee;
     }
 
-    public void setLanguages(List<LanguageEnum> languages) {
-        this.languages = languages;
+    public void setTutee(Tutee tutee) {
+        this.tutee = tutee;
+    }
+
+    public Tutor getTutor() {
+        return tutor;
+    }
+
+    public void setTutor(Tutor tutor) {
+        this.tutor = tutor;
     }
 }

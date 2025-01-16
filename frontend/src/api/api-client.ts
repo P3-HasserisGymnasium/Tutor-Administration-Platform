@@ -9,19 +9,12 @@ const apiClient = axios.create({
 });
 
 // Intercept the response to handle token expiration
-apiClient.interceptors.response.use(
-	function (response) {
-		return response;
-	},
-	function (error) {
-		if (error?.response?.status === 401) {
-			// If the token is expired or invalid, log the user out
-			// Handle logout by removing cookies or redirecting to login page
-			// Example: window.location.href = "/login";
-		}
-		return Promise.reject(error);
-	}
-);
+apiClient.interceptors.response.use(function (response) {
+	response.headers["Access-Control-Allow-Origin"] = "*";
+	response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS";
+
+	return response;
+});
 
 // Create a new query client
 const queryClient = new QueryClient({
@@ -33,10 +26,7 @@ const queryClient = new QueryClient({
 					return false;
 				}
 				// Auth errors or 404 errors should not be retried
-				if (
-					(error as AxiosError).response?.status === 401 ||
-					(error as AxiosError).response?.status === 404
-				) {
+				if ((error as AxiosError).response?.status === 401 || (error as AxiosError).response?.status === 404) {
 					return false;
 				}
 				if (failureCount < 3) {
@@ -50,9 +40,7 @@ const queryClient = new QueryClient({
 		onSuccess: () => {
 			queryClient.invalidateQueries(); // Invalidate all queries on success for refetch
 		},
-		onError: (error) => {
-			console.log("Error occurred: ", error);
-		},
+		onError: () => {},
 	}),
 });
 

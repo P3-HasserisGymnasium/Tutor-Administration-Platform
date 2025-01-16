@@ -2,49 +2,120 @@ package project.backend.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class Notification {
     
-    @ManyToOne
-    Role role;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+    
+    @Column(name = "sender_id")
+    Long senderId;
 
-    @Column(name = "title")
-    String title;
+    @Column(name = "sender_name")
+    String senderName;
 
-    @Column(name = "type")
-    NotificationType type;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "sender_type")
+    EntityType senderType;
 
+    @Column(name = "receiver_id")
+    Long receiverId;
+
+    @Column(name = "receiver_name")
+    String receiverName;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "receiver_type")
+    EntityType receiverType;
+
+    @Column(name = "context_id")
+    Long contextId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "context_type")
+    EntityType contextType;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "state")
     NotificationState state;
 
     public Notification() {}
 
-    public Role getRole() {
-        return role;
+    public Long getId() {
+        return id;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public Long getSenderId() {
+        return senderId;
     }
 
-    public String getTitle() {
-        return title;
+    public void setSenderId(Long id) {
+        this.senderId = id;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public String getSenderName() {
+        return senderName;
     }
 
-    public NotificationType getType() {
-        return type;
+    public void setSenderName(String name) {
+        this.senderName = name;
     }
 
-    public void setType(NotificationType type) {
-        this.type = type;
+    public EntityType getSenderType() {
+        return senderType;
     }
 
+    public void setSenderType(EntityType type) {
+        this.senderType = type;
+    }
+
+    public Long getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(Long id) {
+        this.receiverId = id;
+    }
+
+    public String getReceiverName() {
+        return receiverName;
+    }
+
+    public void setReceiverName(String name) {
+        this.receiverName = name;
+    }
+
+    public EntityType getReceiverType() {
+        return receiverType;
+    }
+
+    public void setReceiverType(EntityType type) {
+        this.receiverType = type;
+    }
+
+    public Long getContextId() {
+        return contextId;
+    }
+
+    public void setContextId(Long id) {
+        this.contextId = id;
+    }
+
+    public EntityType getContextType() {
+        return contextType;
+    }
+
+    public void setContextType(EntityType type) {
+        this.contextType = type;
+    }
+    
     public NotificationState getState() {
         return state;
     }

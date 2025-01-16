@@ -17,7 +17,10 @@
       "utilities/*": [
         "src/utilities/*"
       ],
-    },
+      "typeRoots": [
+        "src/themes"
+      ],
+    },  
   },
   "files": [],
   "references": [

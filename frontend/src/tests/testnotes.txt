@@ -1,0 +1,35 @@
+Integration tests: 
+    components
+          PostsListPage -> PostList -> Postcard****
+          TutorListPage -> TutorList -> Tutorcard****
+          SetSubject -> SubjectChip****
+          TuteePage -> MiniCollabList | MiniPostList | Minicalender****
+          Register sider  **** 
+          api sider 
+          profile page 
+    functions
+          usePostService -> useCreatePost | useGetTuteePosts
+          useCollaborationService -> useGetCollaborationsWithTutee -> useRequestCollaborationViaTutor
+          useAccountService -> useRegisterAccount
+          useMeetingService -> useGetMeetings
+
+Unit tests
+    components
+          SpeedDialMenu
+          MiniCollab
+          MiniPost
+          CommunicationChip
+          InitialsAvatar
+          AcceptInvitationFromTuteeDialog
+          AcceptPostDialog
+          ProfileDialog
+          NotificationsList
+    functions  
+          Authentication****
+          Cookies****
+          useBreakpoints****
+          useCurrentTheme****
+          useRolePrefix****
+          useVariableWidth****
+          generateNotificationMessage
+          

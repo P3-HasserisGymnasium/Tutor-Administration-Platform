@@ -1,16 +1,26 @@
 package project.backend.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class User {
+public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,20 +32,22 @@ public class User {
     private String email;
 
     @Column(name = "password_hash", nullable = false)
+    @JsonIgnore
     private String passwordHash;
 
-    // Constructors, getters, and setters
-    public User() {}
+    @Column(name = "languages")
+    @ElementCollection(targetClass = LanguageEnum.class)
+    @CollectionTable(name = "user_languages", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private List<LanguageEnum> languages = new LinkedList<>();
 
-    public User(String email, String passwordHash) {
-        this.email = email;
-        this.passwordHash = passwordHash;
+    public User() {
     }
 
     public Long getId() {
         return id;
     }
-    
+
     public String getFullName() {
         return fullName;
     }
@@ -58,5 +70,13 @@ public class User {
 
     public void setPasswordHash(String password) {
         this.passwordHash = password;
+    }
+
+    public List<LanguageEnum> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<LanguageEnum> languages) {
+        this.languages = languages;
     }
 }

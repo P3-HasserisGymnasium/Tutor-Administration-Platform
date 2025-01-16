@@ -1,36 +1,65 @@
 package project.backend.model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 
 @Entity
 public class Post {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
     @ManyToOne
+    @JsonBackReference
     Tutee tutee;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "subject")
     SubjectEnum subject;
 
     @Column(name = "title")
     String title;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 1000)
     String description;
 
-    @Column(name = "duration", nullable = true)
-    int duration;
+    @Column(name = "min_Duration", nullable = true)
+    Integer minDuration;
+
+    @Column(name = "max_Duration", nullable = true)
+    Integer maxDuration;
 
     @Column(name = "creation_date")
-    Date creationDate;
+    Timestamp creationTimestamp;
 
+    @Column(name = "is_pairing_request")
+    Boolean pairingRequest;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "state")
     PostState state;
 
-    public Post(){}
+    public Post() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Tutee getTutee() {
         return tutee;
@@ -64,20 +93,12 @@ public class Post {
         this.description = description;
     }
 
-    public int getDuration() {
-        return duration;
+    public Timestamp getCreationTimestamp() {
+        return creationTimestamp;
     }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+    public void setCreationTimestamp(Timestamp creationTimestamp) {
+        this.creationTimestamp = creationTimestamp;
     }
 
     public PostState getState() {
@@ -86,5 +107,32 @@ public class Post {
 
     public void setState(PostState state) {
         this.state = state;
+    }
+
+    public void setDuration(List<Integer> duration) {
+        if (duration == null) {
+            this.minDuration = null;
+            this.maxDuration = null;
+        } else {
+            this.minDuration = duration.get(0);
+            this.maxDuration = duration.get(1);
+        }
+    }
+
+    public void setPairingRequest(Boolean pairingRequest) {
+        this.pairingRequest = pairingRequest;
+    }
+
+    public Boolean getPairingRequest() {
+        return pairingRequest;
+    }
+
+    public List<Integer> getDuration() {
+        if (this.minDuration == null && this.maxDuration == null) {
+            return null;
+        } else {
+            return List.of(this.minDuration, this.maxDuration);
+        } 
+       
     }
 }

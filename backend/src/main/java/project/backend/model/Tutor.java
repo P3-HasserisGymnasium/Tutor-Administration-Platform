@@ -1,28 +1,50 @@
 package project.backend.model;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Tutor extends Role {
-    
-    @Column(name = "profile_description")
+
+    @Column(name = "profile_description", length = 1000)
     String profileDescription;
 
-    @Column(name = "tutoring_subjects")
-    List<SubjectEnum> tutoringSubjects = new LinkedList<>();
+    @ElementCollection
+    @CollectionTable(name = "tutor_subjects", joinColumns = @JoinColumn(name = "role_id"))
+    @Column(name = "tutoring_subject")
+    @Enumerated(EnumType.STRING)
+    List<SubjectEnum> tutoringSubjects = new ArrayList<>();
 
-    @Column(name = "feedbacks")
-    List<Feedback> feedbacks = new LinkedList<>();
+    @OneToMany(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Feedback> feedbacks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tutor")
-    List<TutorTimeSlot> freeTimeSlots = new LinkedList<>();
+    @OneToMany(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
+    List<TutorTimeSlot> freeTimeSlots = new ArrayList<>();
 
-    public Tutor() {}
+    @OneToMany(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
+    List<Collaboration> collaborations = new ArrayList<>();
+
+    @OneToOne(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
+    Student student;
+
+    public Tutor() {
+    }
 
     public String getProfileDescription() {
         return profileDescription;
@@ -53,6 +75,26 @@ public class Tutor extends Role {
     }
 
     public void setFreeTimeSlots(List<TutorTimeSlot> freeTimeSlots) {
-        this.freeTimeSlots = freeTimeSlots;
+        this.freeTimeSlots.clear();
+        if (freeTimeSlots != null) {
+            this.freeTimeSlots.addAll(freeTimeSlots);
+        }
+    }
+
+
+    public List<Collaboration> getCollaborations() {
+        return collaborations;
+    }
+
+    public void setCollaborations(List<Collaboration> collaborations) {
+        this.collaborations = collaborations;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 }

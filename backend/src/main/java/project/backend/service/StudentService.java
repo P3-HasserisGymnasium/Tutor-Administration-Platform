@@ -1,7 +1,9 @@
 package project.backend.service;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import project.backend.model.Student;
@@ -10,6 +12,7 @@ import project.backend.repository.StudentRepository;
 @Service
 public class StudentService {
 
+    @Autowired
     private final StudentRepository studentRepository;
 
     // Constructor-based dependency injection
@@ -18,9 +21,8 @@ public class StudentService {
     }
 
     // Fetch a student by ID
-    public Student getStudentById(Long id) {
-        Optional<Student> student = studentRepository.findById(id);
-        return student.orElse(null);
+    public Optional<Student> getStudentById(Long id) {
+        return studentRepository.findById(id);
     }
 
     // Create or update a student
@@ -31,5 +33,25 @@ public class StudentService {
     // Delete a student by ID
     public void deleteStudent(Long id) {
         studentRepository.deleteById(id);
+    }
+
+    public void deleteStudent(Student student) {
+        studentRepository.delete(student);
+    }
+
+    public List<Student> getTutees(){
+        return studentRepository.getTutees();
+    }
+
+    public List<Student> getTutors(){
+        return studentRepository.getTutors();
+    }
+
+    public Student getStudentByTutorId(Long TutorId){
+        return studentRepository.getStudentByTutorId(TutorId);
+    }
+
+    public Student getStudentByTuteeId(Long TuteeId){
+        return studentRepository.getStudentByTuteeId(TuteeId);
     }
 }

@@ -1,14 +1,22 @@
 package project.backend.model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Feedback {
-    @Column(name = "tutee")
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    @ManyToOne
     Tutee tutee;
 
     @ManyToOne
@@ -24,18 +32,26 @@ public class Feedback {
     String otherRemarks;
 
     @Column(name = "submission_date")
-    Date submissionDate;
+    Timestamp submissionTimestamp;
     
     @Column(name = "subject")
-    SubjectEnum relevantSubject;
+    SubjectEnum subject;
 
     public Feedback() {}
 
-    public Tutee getTutee() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Tutee getTuteeId() {
         return tutee;
     }
 
-    public void setTutee(Tutee tutee) {
+    public void setTuteeId(Tutee tutee) {
         this.tutee = tutee;
     }
 
@@ -71,19 +87,19 @@ public class Feedback {
         this.otherRemarks = otherRemarks;
     }
 
-    public Date getSubmissionDate() {
-        return submissionDate;
+    public Timestamp getSubmissionTimestamp() {
+        return submissionTimestamp;
     }
 
-    public void setSubmissionDate(Date submissionDate) {
-        this.submissionDate = submissionDate;
+    public void setSubmissionDate(Timestamp submissionTimestamp) {
+        this.submissionTimestamp = submissionTimestamp;
     }
 
-    public SubjectEnum getRelevantSubject() {
-        return relevantSubject;
+    public SubjectEnum getSubject() {
+        return subject;
     }
 
-    public void setRelevantSubject(SubjectEnum relevantSubject) {
-        this.relevantSubject = relevantSubject;
+    public void setSubject(SubjectEnum subject) {
+        this.subject = subject;
     }
 }

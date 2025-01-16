@@ -1,10 +1,10 @@
-import LongShortBoxLayout from "components/layout_components/LongShortBoxLayout";
+import TutorProfile from "~/components/content_components/TutorProfile";
+import EvenBoxLayout from "~/components/layout_components/EvenBoxLayout";
 
 export default function TutorProfilePage() {
     return (
-        <LongShortBoxLayout>
-            <div>Preview and edit</div>
-            <div>History</div>
-        </LongShortBoxLayout>
+        <EvenBoxLayout>
+            <TutorProfile/>
+        </EvenBoxLayout>
     );
 };

@@ -1,4 +1,4 @@
-version: "3.8"
+
 
 services:
     frontend:
@@ -19,7 +19,7 @@ services:
         environment:
             - DB_HOST=mysql
             - DB_PORT=3306
-            - DB_NAME=mysql-database
+            - DB_NAME=database
             - DB_USER=user
             - DB_PASSWORD=password
         depends_on:
@@ -37,15 +37,16 @@ services:
             MYSQL_PASSWORD: password
         volumes:
             - mysql_data:/var/lib/mysql
-            - ./database:/docker-entrypoint-initdb.d
         ports:
-            - "3306:3306"
+            - "3308:3306"
         networks:
             - app-network
 
     backup:
         image: alpine:latest # Use a lightweight base image with utilities
         container_name: mysql-backup
+        ports: 
+            - "3309:3306"
         volumes:
             - ./database:/database
             - ./backups:/backup

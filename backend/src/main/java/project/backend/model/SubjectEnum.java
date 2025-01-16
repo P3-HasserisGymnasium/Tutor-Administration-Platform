@@ -1,13 +1,19 @@
 package project.backend.model;
 
 public enum SubjectEnum {
-    MATH, 
-    DANISH, 
-    ENGLISH, 
-    HISTORY, 
-    BIOLOGY,
-    CHEMISTRY,
-    PHYSICS,
-    SPANISH,
-    
+    Music,
+	Math,
+	Ess,
+	English,
+	Danish,
+	German,
+	French,
+	Biology,
+	Chemistry,
+	Pe,
+	Va,
+	Psychology,
+	Econ,
+	Ss,
+	Physics;
 }

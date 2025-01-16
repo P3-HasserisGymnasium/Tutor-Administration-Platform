@@ -1,68 +1,97 @@
-import { Box, Typography } from "@mui/material";
-import SubjectChip from "../SubjectChip";
-import { useForm } from "react-hook-form";
+import { Box, Button, Stack, Typography, Checkbox, FormControlLabel } from "@mui/material";
+import { FormProvider, useForm, Controller, ControllerRenderProps, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Subject, Day, YearGroup } from "src/types/enums";
+import { Language, LanguageType } from "~/types/data_types";
+import SetTimeAvailability from "~/components/content_components/SetTimeAvailability";
+import { zodTutorListFilterSchema, tutorListFilterType } from "../../../types/data_types";
+import CustomAutocomplete from "../CustomAutocomplete";
 
-const tutorListFilterSchema = z.object({
-	subjects: z.array(z.enum(Object.values(Subject) as [string, ...string[]])),
-	time_availability: z.array(
-		z.object({
-			day: z.enum(Object.values(Day) as [string, ...string[]]),
-			time_slots: z.array(
-				z.object({
-					start_time: z.string(),
-					end_time: z.string(),
-				})
-			),
-		})
-	),
-	year_group: z.enum(Object.values(YearGroup) as [string, ...string[]]),
-	languages: z.array(z.string()),
-});
+type TutorListFilterProps = {
+  setFilters: React.Dispatch<React.SetStateAction<tutorListFilterType>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-export default function Filter() {
-	const filterMethods = useForm({
-		resolver: zodResolver(tutorListFilterSchema),
-	});
+export default function TutorListFilter({ setFilters, setLoading }: TutorListFilterProps) {
+  const filterMethods = useForm<tutorListFilterType>({
+    resolver: zodResolver(zodTutorListFilterSchema),
+    defaultValues: {
+      subjects: [],
+      time_availability: [],
+      year_group: [],
+      languages: [Language.Enum.English, Language.Enum.Danish],
+    },
+  });
 
-	const { handleSubmit } = filterMethods;
+  const { control } = filterMethods;
+  useWatch({ control });
+  const filter = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setFilters(filterMethods.getValues());
+      setLoading(false);
+    }, 500);
+  };
 
-	const onSubmit = (data: any) => {
-		console.log(data);
-	};
+  return (
+    <FormProvider {...filterMethods}>
+      <Stack spacing={1} sx={{ padding: "1em", height: "95%" }}>
+        <Typography variant="h2">Filters</Typography>
+        <CustomAutocomplete variant="subject" multiple={true} />
+        <CustomAutocomplete variant="yearGroup" multiple={true} />
+        <SetTimeAvailability />
 
-	return (
-		<Box
-			sx={{
-				backgroundColor: "rgba(251, 193, 135, 0.5)",
-				border: "1px solid rgba(173, 92, 0, 1)",
-				width: "200px",
-				height: "150px",
-				borderRadius: "8px",
-				display: "flex",
-				flexDirection: "column",
-				justifyContent: "space-between",
-				padding: 1,
-			}}
-		>
-			<Typography
-				sx={{
-					fontSize: "15px",
-					fontWeight: "inter",
-					display: "flex",
-					flexDirection: "column",
-					justifyContent: "space-between",
-					alignSelf: "flex-center",
-				}}
-			>
-				Need help with music exam in 2 weeks
-			</Typography>
+        <Typography variant="h4">Language</Typography>
 
-			<Box>
-				<SubjectChip Subject={Subject.MATH} />
-			</Box>
-		</Box>
-	);
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+          }}
+        >
+          <Controller
+            name="languages"
+            control={control}
+            render={({ field }) => (
+              <>
+                <CustomCheckBox field={field} label={Language.Enum.Danish} />
+                <CustomCheckBox field={field} label={Language.Enum.English} />
+              </>
+            )}
+          />
+        </Box>
+
+        <Box sx={{ flexGrow: 1 }}></Box>
+
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button sx={{ width: "100%" }} onClick={filterMethods.handleSubmit(filter)}>
+            Filter
+          </Button>
+        </Box>
+      </Stack>
+    </FormProvider>
+  );
+}
+
+type CustomCheckBoxProps = {
+  field: ControllerRenderProps<tutorListFilterType, "languages">;
+  label: LanguageType;
+};
+
+function CustomCheckBox({ field, label }: CustomCheckBoxProps) {
+  return (
+    <FormControlLabel
+      control={
+        <Checkbox
+          checked={field.value.includes(label)}
+          onChange={(e) => {
+            const updatedLanguages = e.target.checked ? [...field.value, label] : field.value.filter((lang) => lang !== label);
+            field.onChange(updatedLanguages);
+          }}
+        />
+      }
+      label={label}
+      labelPlacement="start"
+    />
+  );
 }

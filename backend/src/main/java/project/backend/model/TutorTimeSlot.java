@@ -1,23 +1,39 @@
 package project.backend.model;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
 public class TutorTimeSlot {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
     @ManyToOne
+    @JsonManagedReference
     Tutor tutor;
 
+    @Column(name = "week_day")
+    WeekDayEnum weekDay;
+
     @Column(name = "start")
-    Date startTime;
+    String startTime;
 
     @Column(name = "end")
-    Date endTime;
+    String endTime;
 
     public TutorTimeSlot() {}
+
+    public Long getId() {
+        return id;
+    }
 
     public Tutor getTutor() {
         return tutor;
@@ -27,19 +43,27 @@ public class TutorTimeSlot {
         this.tutor = tutor;
     }
 
-    public Date getStartTime() {
+    public WeekDayEnum getWeekDay() {
+        return weekDay;
+    }
+
+    public void setWeekDay(WeekDayEnum weekDay) {
+        this.weekDay = weekDay;
+    }
+
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 }

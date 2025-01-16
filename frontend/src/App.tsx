@@ -1,47 +1,39 @@
+import "./index.css";
 import "./App.css";
-import { Routes, Route } from "react-router-dom";
-import { Box } from "@mui/material";
-import Navbar from "components/layout_components/Navbar";
-import HomePage from "components/page_components/HomePage";
-import TutorPage from "components/page_components/tutor/TutorPage";
-import TuteePage from "components/page_components/tutee/TuteePage";
-import CreatePostPage from "components/page_components/tutee/CreatePostPage";
-import TutorListPage from "components/page_components/tutee/TutorListPage";
-import TutorNotificationsPage from "components/page_components/tutor/TutorNotificationsPage";
-import TuteeNotificationsPage from "components/page_components/tutee/TuteeNotificationsPage";
-import TuteeProfilePage from "components/page_components/tutee/TuteeProfilePage";
-import TutorProfilePage from "components/page_components/tutor/TutorProfilePage";
-import RequestAdminPage from "components/page_components/tutee/RequestAdminPage";
-import PostsListPage from "components/page_components/tutor/PostsListPage";
-import CollaborationPage from "components/page_components/CollaborationPage";
+
+import { ThemeProvider } from "@mui/material";
+import { useCurrentTheme } from "./utilities/helperFunctions";
+import { Navigate, Route, Routes } from "react-router-dom";
+import Register from "./components/login_and_register_components/Register";
+import Login from "./components/login_and_register_components/Login";
+
+import { Suspense, lazy } from "react";
+import Loading from "./api/authentication/Loading";
+import unauthenticatedAppTheme from "~/themes/unauthenticatedAppTheme";
+import { useAuth } from "./api/authentication/useAuth";
+
+const AuthenticatedApp = lazy(() => import("./AuthenticatedApp"));
 
 export default function App() {
-	return (
-		<Box sx={{ height: "100vh", width: "100vw" }}>
-			<Navbar />
-			<Box sx={{ height: "90%", width: "100%" }}>
+	const theme = useCurrentTheme(); // must use hook to make sure the theme is updated, stateful
+	const { isAuthenticated } = useAuth();
+
+	if (!isAuthenticated) {
+		return (
+			<ThemeProvider theme={unauthenticatedAppTheme}>
 				<Routes>
-					{/* Root */}
-					<Route path="/" element={<HomePage />} />
-
-					{/* Tutor */}
-					<Route path="/tutor" element={<TutorPage />} />
-					<Route path="/tutor/profile" element={<TutorProfilePage />} />
-					<Route path="/tutor/notifications" element={<TutorNotificationsPage />} />
-					<Route path="/tutor/posts-list" element={<PostsListPage />} />
-
-					{/* Tutee */}
-					<Route path="/tutee" element={<TuteePage />} />
-					<Route path="/tutee/profile" element={<TuteeProfilePage />} />
-					<Route path="/tutee/notifications" element={<TuteeNotificationsPage />} />
-					<Route path="/tutee/create-post" element={<CreatePostPage />} />
-					<Route path="/tutee/request-admin" element={<RequestAdminPage />} />
-					<Route path="/tutee/tutor-list" element={<TutorListPage />} />
-
-					{/* Other */}
-					<Route path="/collaboration" element={<CollaborationPage />} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/register" element={<Register />} />
+					<Route path="*" element={<Navigate to="/login" />} />
 				</Routes>
-			</Box>
-		</Box>
+			</ThemeProvider>
+		);
+	}
+	return (
+		<ThemeProvider theme={theme}>
+			<Suspense fallback={<Loading size={150} />}>
+				<AuthenticatedApp />
+			</Suspense>
+		</ThemeProvider>
 	);
 }

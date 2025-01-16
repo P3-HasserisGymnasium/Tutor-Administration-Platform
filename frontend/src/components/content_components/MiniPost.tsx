@@ -1,49 +1,75 @@
 import { Box, Typography } from "@mui/material";
 import SubjectChip from "./SubjectChip";
-import { Subject } from "~/types/enums";
-import { PostType } from "~/api/api-queries/post-queries";
+import { PostType } from "~/types/entity_types";
+import { useTheme } from "@mui/system";
+import { Theme } from "@mui/material/styles";
+import EditPostDialog from "components/page_components/dialogs/EditPostDialog";
+import { useState } from "react";
+import { useRolePrefix } from "~/utilities/helperFunctions";
+import AcceptPostDialog from "../page_components/dialogs/AcceptPostDialog";
 
 type MiniPostProp = {
-    postData: PostType
+  postData: PostType;
+};
+
+export default function MiniPost({ postData }: MiniPostProp) {
+  const theme = useTheme<Theme>();
+  const [showEditPostDialog, setShowEditPostDialog] = useState(false);
+  const [showAcceptPostDialog, setShowAcceptPostDialog] = useState(false);
+
+  const rolePrefix = useRolePrefix();
+
+  const handleOpenMiniPost = () => {
+    if (rolePrefix !== "/tutor") {
+      setShowEditPostDialog(true);
+    } else {
+      setShowAcceptPostDialog(true);
+    }
+  };
+
+  return (
+    <>
+      <EditPostDialog open={showEditPostDialog} setOpen={setShowEditPostDialog} post={postData} />
+      <AcceptPostDialog open={showAcceptPostDialog} setOpen={setShowAcceptPostDialog} post={postData} />
+      <Box
+        data-testid="minipostcontainer"
+        onClick={handleOpenMiniPost}
+        sx={{
+          "&:hover": {
+            cursor: "pointer",
+            backgroundColor: theme.palette.augmentColor({ color: { main: theme.customColors.postBackGroundColor } }).dark,
+          },
+          backgroundColor: theme.customColors.postBackGroundColor,
+          border: "1px solid rgba(173, 92, 0, 1)",
+          width: "200px",
+          height: "80%",
+          borderRadius: "8px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          padding: 1,
+        }}
+      >
+        <Typography data-testid="posttitle" variant="h4">
+          {postData.title || "No Title"}
+        </Typography>
+
+        <Box>
+          <SubjectChip Subject={postData.subject} />
+
+          <Typography data-testid="postduration">{getDuration(postData.duration)}</Typography>
+        </Box>
+      </Box>
+    </>
+  );
 }
 
-
-export default function MiniPost({postData}:MiniPostProp) {
-    return(
-        <Box
-        sx={{
-            backgroundColor: "rgba(251, 193, 135, 0.5)",
-            border:"1px solid rgba(173, 92, 0, 1)",
-            width: "200px",
-            height: "150px",
-            borderRadius: "8px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            padding: 1,
-        }}>
-            <Typography sx={{
-                    fontSize: "15px",
-                    fontWeight: "inter",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    alignSelf: "flex-center"
-                }}>Need help with music exam in 2 weeks
-            </Typography>
-
-            <Box>
-            <SubjectChip Subject={Subject.MATH} />
-            
-            <Typography
-                sx={{
-                    fontSize: "12px",
-                    color: "#333", // Dark gray for text
-                }}
-            >
-                {postData?.duration ? postData.duration : "No duration"}
-            </Typography>
-            </Box>
-        </Box>
-    );
+function getDuration(duration: number[] | undefined | null) {
+  if (duration === undefined || duration === null) {
+    return "Duration not specified";
+  } else if (duration[0] === duration[1]) {
+    return `Duration: ${duration[0]} months`;
+  } else {
+    return `Duration: ${duration[0]}-${duration[1]} months`;
+  }
 }
