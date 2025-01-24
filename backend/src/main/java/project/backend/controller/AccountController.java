@@ -40,7 +40,7 @@ public class AccountController {
     public ResponseEntity<?> getUser(@PathVariable Long id, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        if (authenticatedUser.getUserId() != id && !authenticatedUser.isAdministrator()) {
+        if (authenticatedUser.getUserId().equals(id) == false && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to view this user");
         }
 
@@ -68,7 +68,7 @@ public class AccountController {
     public ResponseEntity<?> deleteUser(@PathVariable Long id, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        if (authenticatedUser.getUserId() != id && !authenticatedUser.isAdministrator()) {
+        if (authenticatedUser.getUserId().equals(id) == false && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to delete this user");
         }
 
@@ -86,13 +86,13 @@ public class AccountController {
         try {
 
             User user = accountService.getUserIfCorrectPassword(body);
-            Administrator admin =  accountService.getAdminById(user.getId());
-            if (admin != null) {
-                return accountService.handleAdminLogin((Administrator) user);
+
+            if (user instanceof Administrator admin) {
+                return accountService.handleAdminLogin(admin);
             }
 
-            if (user instanceof Student) {
-                return accountService.handleStudentLogin((Student) user);
+            if (user instanceof Student student) {
+                return accountService.handleStudentLogin(student);
             }
 
           

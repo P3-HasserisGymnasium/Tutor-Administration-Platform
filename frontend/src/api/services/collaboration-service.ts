@@ -95,8 +95,12 @@ export const useCollaborationService = () => {
 		return useQuery({
 			queryKey: ["getPartnerInformation", collaborationId],
 			queryFn: async () => {
-				const { data } = await apiClient.get<TutorProfileType>(`/api/collaboration/partner/${collaborationId}`);
-				return data;
+				try {
+					const { data } = await apiClient.get<TutorProfileType>(`/api/collaboration/partner/${collaborationId}`);
+					return data;
+				} catch (e) {
+					console.log(e);
+				}
 			},
 			refetchOnWindowFocus: false,
 			enabled: !!collaborationId,

@@ -16,17 +16,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
-
-import project.backend.model.Tutee;
-import project.backend.model.Tutor;
-import project.backend.model.Collaboration;
-import project.backend.model.Meeting;
-import project.backend.model.MeetingEnum;
-import project.backend.service.MeetingService;
 import project.backend.controller_bodies.AuthUser;
 import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.meeting_controller.MeetingBody;
 import project.backend.controller_bodies.meeting_controller.MeetingResponseBody;
+import project.backend.model.Collaboration;
+import project.backend.model.Meeting;
+import project.backend.model.MeetingEnum;
+import project.backend.model.Tutee;
+import project.backend.model.Tutor;
+import project.backend.service.MeetingService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -49,7 +48,7 @@ public class MeetingController {
         }
 
         Collaboration collaboration = meeting.getCollaboration();
-        if (authenticatedUser.getTutorId() == collaboration.getTutor().getId() || authenticatedUser.getTuteeId() == collaboration.getTutee().getId()) {
+        if (authenticatedUser.getTutorId().equals(collaboration.getTutor().getId()) || authenticatedUser.getTuteeId().equals(collaboration.getTutee().getId())) {
             return ResponseEntity.status(HttpStatus.OK).body(meeting);
         }
 

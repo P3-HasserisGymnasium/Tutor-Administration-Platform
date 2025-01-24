@@ -55,7 +55,7 @@ public class CollaborationController {
         if (collaboration == null) return null;
 
 
-        if (authenticatedUser.getTuteeId() != collaboration.getTutee().getId() && authenticatedUser.getTutorId() != collaboration.getTutor().getId() && !authenticatedUser.isAdministrator()) {
+        if (authenticatedUser.getTuteeId().equals(collaboration.getTutee().getId()) == false && authenticatedUser.getTutorId().equals(collaboration.getTutor().getId()) == false && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authortized to view this collaboration");
         }
 
@@ -190,14 +190,14 @@ public class CollaborationController {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
         try {
             Collaboration collaboration = collaborationService.getCollaborationById(collaborationId);
-            boolean isTutor = collaboration.getTutor().getId() == authenticatedUser.getTutorId();
+            boolean isTutor = collaboration.getTutor().getId().equals(authenticatedUser.getTutorId());
             if (isTutor) {
 
-                Student student = collaborationService.getStudentByTutorId(collaboration.getTutee().getId());
+                Student student = collaborationService.getStudentByTuteeId(collaboration.getTutee().getId());
                 TuteeProfileResponse response = collaborationService.getTuteeProfile(student.getId());
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
-                Student student = collaborationService.getStudentByTuteeId(collaboration.getTutor().getId());
+                Student student = collaborationService.getStudentByTutorId(collaboration.getTutor().getId());
                 TutorProfileResponse response = collaborationService.getTutorProfile(student.getId());
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }

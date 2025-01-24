@@ -27,11 +27,11 @@ export default function AdminRequests({ awaitingAcceptanceCollabs, isLoading }: 
 
       <Box sx={{ width: "100%", display: "flex", height: "80%", flexDirection: "column", alignItems: "center", pt: 2, overflow: "auto" }}>
         {Array.isArray(awaitingAcceptanceCollabs) &&
-          awaitingAcceptanceCollabs.map((collab, i) => {
+          awaitingAcceptanceCollabs.map((collab) => {
             return <AwaitingCollabAcceptanceBox key={collab.id} collab={collab} />;
           })}
         {Array.isArray(pairingRequests) &&
-          pairingRequests.map((request, i) => {
+          pairingRequests.map((request) => {
             return <PairingRequestBox key={request.id} post={request} />;
           })}
         {awaitingAcceptanceCollabs == undefined && pairingRequests == undefined && <Typography>No requests</Typography>}

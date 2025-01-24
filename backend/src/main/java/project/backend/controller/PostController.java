@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.ResponseEntity;
 
 import jakarta.servlet.http.HttpServletRequest;
 import project.backend.controller_bodies.AuthUser;
@@ -92,7 +92,7 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
         }
 
-        if (authenticatedUser.getTutorId() == null && authenticatedUser.getTuteeId() != post.getTutee().getId() && !authenticatedUser.isAdministrator()) {
+        if (authenticatedUser.getTutorId() == null && authenticatedUser.getTuteeId().equals(post.getTutee().getId()) == false && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to view this post");
         }
 
@@ -167,7 +167,7 @@ public class PostController {
     public ResponseEntity<?> deletePost(@PathVariable Long id, HttpServletRequest request) {
         AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
-        if (authenticatedUser.getTuteeId() != postService.getPostById(id).get().getTutee().getId() || !authenticatedUser.isAdministrator()) {
+        if (authenticatedUser.getTuteeId().equals(postService.getPostById(id).get().getTutee().getId()) == false || !authenticatedUser.isAdministrator()) {
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You do not have permission to delete this post");
         }
 
