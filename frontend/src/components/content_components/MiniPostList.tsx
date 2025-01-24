@@ -30,10 +30,8 @@ export default function MiniPostList({ posts, isLoading, isError }: MiniPostList
 
 	if (!posts) return <Typography variant="h6">No posts found.</Typography>;
 
-	console.log("posts", posts);
 
 	posts = posts.filter((post) => post.state === PostState.Enum.VISIBLE);
-	console.log("postsafter", posts);
 	return (
 		<Box
 			sx={{

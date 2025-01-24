@@ -22,6 +22,8 @@ export default function MiniCollabList({ collaborations, isLoading, isError }: M
   }
   if (!collaborations) return <Typography variant="h6">No active collaborations found.</Typography>;
 
+  console.log("collaborations", collaborations);
+
   return (
     <Box
       sx={{

@@ -50,10 +50,13 @@ export default function TuteePage() {
 		return meeting.tutee_user_id === userState.id;
 	});
 
+	console.log("collaborations", collaborations);
+
 	const filteredCollaborations = collaborations?.filter((collab) => {
-		console.log("collab", collab);
 		return collab.state === CollaborationState.Enum.ESTABLISHED;
 	});
+
+	console.log("filteredCollaborations", filteredCollaborations);
 
 	const posts = postlist?.filter((post) => post.state === PostState.Enum.VISIBLE);
 

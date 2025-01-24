@@ -147,10 +147,10 @@ const AcceptCollaborationRequestDialog = ({ open, setOpen, collaboration }: Acce
 							<strong>Year group:</strong> {tutorProfile?.year_group}
 						</Typography>
 						<Typography variant="body1">
-							<strong>Languages:</strong> {tutorProfile?.languages.join(", ")}
+							<strong>Languages:</strong> {tutorProfile?.languages?.join(", ")}
 						</Typography>
 						<Typography variant="body1">
-							<strong>Subjects teaching:</strong> {tutorProfile?.tutoring_subjects.join(", ")}
+							<strong>Subjects teaching:</strong> {tutorProfile?.tutoring_subjects?.join(", ")}
 						</Typography>
 					</Box>
 
@@ -160,7 +160,7 @@ const AcceptCollaborationRequestDialog = ({ open, setOpen, collaboration }: Acce
 							Time Availability:
 						</Typography>
 						<Grid2 container spacing={2}>
-							{tutorProfile?.time_availability.map((availability) => (
+							{tutorProfile?.time_availability?.map((availability) => (
 								<TimeAvailabilityBox timeAvailability={availability} />
 							))}
 						</Grid2>

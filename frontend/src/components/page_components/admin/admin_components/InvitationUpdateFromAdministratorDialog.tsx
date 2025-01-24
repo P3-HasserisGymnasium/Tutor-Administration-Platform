@@ -81,10 +81,10 @@ const InvitationUpdateFromAdministratorDialog = ({ open, setOpen, context_id }: 
                 <strong>Year group:</strong> {tutorProfile?.year_group}
               </Typography>
               <Typography variant="body1">
-                <strong>Languages:</strong> {tutorProfile?.languages.join(", ")}
+                <strong>Languages:</strong> {tutorProfile?.languages?.join(", ")}
               </Typography>
               <Typography variant="body1">
-                <strong>Subjects:</strong> {tutorProfile?.tutoring_subjects.join(", ")}
+                <strong>Subjects:</strong> {tutorProfile?.tutoring_subjects?.join(", ")}
               </Typography>
             </Box>
 
@@ -94,7 +94,7 @@ const InvitationUpdateFromAdministratorDialog = ({ open, setOpen, context_id }: 
                 Time Availability:
               </Typography>
               <Grid2 container spacing={2}>
-                {tutorProfile?.time_availability.map((availability) => (
+                {tutorProfile?.time_availability?.map((availability) => (
                   <TimeAvailabilityBox timeAvailability={availability} />
                 ))}
               </Grid2>

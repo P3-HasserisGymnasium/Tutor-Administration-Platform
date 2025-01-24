@@ -18,6 +18,8 @@ export default function AdministratorPage() {
     year_group: [],
     languages: [],
   };
+
+  console.log("admin page");
   const { data: tutors, isLoading: isTutorsLoading } = useRoleService().useGetTutors(emptyFilter);
   const { data: tutees, isLoading: isTuteesLoading } = useRoleService().useGetTutees();
   const { data: collablist, isLoading: isCollaborationsLoading } = useCollaborationService().useGetCollabortations();

@@ -117,7 +117,7 @@ export default function AcceptInvitationFromTuteeDialog({ open, setOpen, context
 							<strong>Year group:</strong> {tuteeProfile?.year_group}
 						</Typography>
 						<Typography variant="body1">
-							<strong>Languages:</strong> {tuteeProfile?.languages.join(", ")}
+							<strong>Languages:</strong> {tuteeProfile?.languages?.join(", ")}
 						</Typography>
 					</Box>
 				</Box>

@@ -135,10 +135,10 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, context
                   <strong>Year group:</strong> {tutorProfile?.year_group}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Languages spoken:</strong> {tutorProfile?.languages.join(", ")}
+                  <strong>Languages spoken:</strong> {tutorProfile?.languages?.join(", ")}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Subjects teaching in:</strong> {tutorProfile?.tutoring_subjects.join(", ")}
+                  <strong>Subjects teaching in:</strong> {tutorProfile?.tutoring_subjects?.join(", ")}
                 </Typography>
               </Box>
 
@@ -148,7 +148,7 @@ export default function AcceptInvitationFromTutorDialog({ open, setOpen, context
                   Time Availability:
                 </Typography>
                 <Grid2 container spacing={2}>
-                  {tutorProfile?.time_availability.map((availability: any) => (
+                  {tutorProfile?.time_availability?.map((availability: any) => (
                     <TimeAvailabilityBox timeAvailability={availability} />
                   ))}
                 </Grid2>

@@ -24,18 +24,23 @@ export default function NotificationsList() {
   const changeStateMutation = useChangeNotificationState();
   const { data: notifications, isLoading, isError } = useNotifications()(userState.id);
   const handleNotificationClick = (notification: NotificationResponseType) => {
+    console.log("notification click:", notification);
     if (
       (notification.context_type === NotificationContext.Enum.COLLABORATION || notification.context_type === NotificationContext.Enum.POST) &&
       notification.sender_type === NotificationParticipant.Enum.TUTOR
     ) {
+      console.log("contet type is collab or post and sender is tutor");
       setContext_id(notification.context_id);
       setContext_type(notification.context_type);
       setTutor_id(notification.sender_id);
 
+      console.log("mutating state to read");
       changeStateMutation.mutate({ notificationId: notification.notification_id, state: NotificationState.Enum.READ });
+      console.log("state mutated");
       return;
     }
     if (notification.sender_type === NotificationParticipant.Enum.TUTEE) {
+      console.log("sender is tutee");
       setContext_id(notification.context_id);
       setContext_type(notification.context_type);
       setTutee_id(notification.sender_id);
@@ -45,6 +50,7 @@ export default function NotificationsList() {
     }
 
     if (notification.sender_type === NotificationParticipant.Enum.ADMIN) {
+      console.log("sender is admin");
       setContext_id(notification.context_id);
       setContext_type(notification.context_type);
       setTutor_id(0);

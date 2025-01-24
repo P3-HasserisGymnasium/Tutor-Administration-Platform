@@ -35,7 +35,6 @@ const ManageTutorDialog = ({ open, setOpen, tutorProfile }: ManageTutorDialogPro
       removeSubjectMutation.mutate({ tutee_tutorId: tutorId, subject: subject });
     }
   };
-  console.log("subject", subject);
   return (
     <Dialog
       open={open}
