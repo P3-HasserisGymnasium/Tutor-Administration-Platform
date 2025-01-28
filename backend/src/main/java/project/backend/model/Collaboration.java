@@ -17,14 +17,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import project.backend.controller_bodies.AuthenticatedUserBody;
 
 @Entity
 public class Collaboration {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    
+
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "tutee_id")
@@ -54,12 +55,13 @@ public class Collaboration {
 
     @Column(name = "admin_accepted")
     Boolean adminState;
-    
+
     @OneToMany(mappedBy = "collaboration", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     List<Meeting> meetings = new ArrayList<>();
 
-    public Collaboration() {}
+    public Collaboration() {
+    }
 
     public Long getId() {
         return id;
@@ -139,6 +141,13 @@ public class Collaboration {
 
     public void setAdminAccepted(Boolean adminState) {
         this.adminState = adminState;
+    }
+
+    public boolean isPartOfCollaboration(AuthenticatedUserBody user) {
+        boolean isPartOfCollaborationAsTutee = user.isTutee() && tutee.getId().equals(user.getTuteeId());
+        boolean isPartOfCollaborationAsTutor = user.isTutor() && tutor.getId().equals(user.getTutorId());
+        
+        return isPartOfCollaborationAsTutee || isPartOfCollaborationAsTutor;
     }
 }
 

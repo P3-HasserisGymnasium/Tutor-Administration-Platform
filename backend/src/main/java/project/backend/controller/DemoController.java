@@ -1,24 +1,26 @@
 package project.backend.controller;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.servlet.http.HttpServlet;
 import jakarta.transaction.Transactional;
-import project.backend.controller_bodies.AuthUser;
-import project.backend.controller_bodies.AuthenticatedUserBody;
 import project.backend.controller_bodies.account_controller.AccountRegisterBody;
+import project.backend.controller_bodies.account_controller.TimeCreateBody;
 import project.backend.controller_bodies.account_controller.TimeSlotCreateBody;
 import project.backend.controller_bodies.collaboration_bodies.RequestCollaborationByPostBody;
 import project.backend.controller_bodies.post_controller.PostBody;
-import project.backend.controller_bodies.account_controller.TimeCreateBody;
 import project.backend.model.Administrator;
 import project.backend.model.EntityType;
 import project.backend.model.LanguageEnum;
-import project.backend.model.NotificationState;
 import project.backend.model.Post;
 import project.backend.model.PostState;
 import project.backend.model.RoleEnum;
+import project.backend.model.Student;
 import project.backend.model.SubjectEnum;
 import project.backend.model.Tutee;
 import project.backend.model.Tutor;
@@ -29,18 +31,8 @@ import project.backend.repository.AdministratorRepository;
 import project.backend.service.AccountService;
 import project.backend.service.CollaborationService;
 import project.backend.service.PasswordService;
-import project.backend.model.Student;
 import project.backend.service.PostService;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/demo")
@@ -220,4 +212,18 @@ public class DemoController {
 
         return request;
     }
+
+    @PostMapping("/clean")
+    public void CleanDatabase() {
+        System.out.println("@DemoController, Cleaning database");
+
+        List<User> users = accountService.getAllUsers();
+        for (User user : users) {
+            accountService.deleteUser(user);
+        }
+
+        System.out.println("@DemoController, Database cleaned");
+    }
+        
+    
 }

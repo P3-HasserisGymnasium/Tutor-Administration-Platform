@@ -1,5 +1,10 @@
 package project.backend.utilities;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -16,12 +21,6 @@ import project.backend.model.Student;
 import project.backend.model.Tutee;
 import project.backend.model.Tutor;
 import project.backend.service.RoleService;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
 import static project.backend.utilities.JWTUtil.validateToken;
 
 public class JWTAuthenticationFilter implements Filter {
@@ -36,7 +35,8 @@ public class JWTAuthenticationFilter implements Filter {
         // Match specific routes and methods
         return (path.equals("/api/account/login") && "POST".equalsIgnoreCase(method)) ||
                 (path.equals("/api/account/") && "POST".equalsIgnoreCase(method)) ||
-                (path.equals("/api/demo/setup") && "POST".equalsIgnoreCase(method));
+                (path.equals("/api/demo/setup") && "POST".equalsIgnoreCase(method)) ||
+                (path.equals("/api/demo/clean") && "POST".equalsIgnoreCase(method));
     }
 
     @Override

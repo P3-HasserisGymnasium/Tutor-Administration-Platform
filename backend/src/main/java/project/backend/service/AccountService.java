@@ -5,13 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-
-import org.springframework.http.ResponseEntity;
-import static project.backend.utilities.JWTUtil.generateToken;
-
 import project.backend.controller_bodies.account_controller.AccountLoginBody;
 import project.backend.controller_bodies.account_controller.AccountLoginSuccessBody;
 import project.backend.controller_bodies.account_controller.AccountRegisterBody;
@@ -28,6 +25,7 @@ import project.backend.model.Tutor;
 import project.backend.model.TutorTimeSlot;
 import project.backend.model.User;
 import project.backend.repository.AccountRepository;
+import static project.backend.utilities.JWTUtil.generateToken;
 import project.backend.utilities.PasswordUtility;
 
 @Service
@@ -65,7 +63,7 @@ public class AccountService {
     }
 
     public Optional<User> getUserByEmail(String email) {
-        return Optional.of(accountRepository.findByEmail(email));
+        return Optional.ofNullable(accountRepository.findByEmail(email));
     }
 
     public Optional<User> getUserById(Long id) {
@@ -205,6 +203,10 @@ public class AccountService {
         responseBody.is_administrator = true;
 
         return responseBody;
+    }
+
+    public List<User> getAllUsers() {
+        return accountRepository.findAll();
     }
 
 }

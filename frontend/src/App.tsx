@@ -11,7 +11,7 @@ import { Suspense, lazy, useEffect } from "react";
 import Loading from "./api/authentication/Loading";
 import unauthenticatedAppTheme from "~/themes/unauthenticatedAppTheme";
 import { useAuth } from "./api/authentication/useAuth";
-import { useAccountService } from "./api/services/account-service";
+import { useDemoService } from "./api/services/demo-service";
 
 const AuthenticatedApp = lazy(() => import("./AuthenticatedApp"));
 
@@ -19,23 +19,32 @@ export default function App() {
 	const theme = useCurrentTheme(); // must use hook to make sure the theme is updated, stateful
 	const { isAuthenticated } = useAuth();
 
-	const demoSetupMutation = useAccountService().useDemoSetup();
+	const { useDemoSetup, useDemoClean } = useDemoService();
+	const demoSetupMutation = useDemoSetup();
+	const demoCleanMutation = useDemoClean();
 
-	console.log("appp");
+	type BooleanVoidMapping = [(event: KeyboardEvent) => boolean, () => void];
+
+	const keyCommandMapping: BooleanVoidMapping[] = [
+		[
+			(event: KeyboardEvent) => event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "s",
+			demoSetupMutation.mutate
+		],
+		[
+			(event: KeyboardEvent) => event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "c",
+			demoCleanMutation.mutate
+		],
+	];
+
 
 	const handleKeyDown = (event: KeyboardEvent) => {
-		// Check for Ctrl + Shift + S
-		console.log("ctrl: ", event.ctrlKey, "shift: ", event.shiftKey, "key: ", event.key);
-		if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "s") {
-			event.preventDefault(); // Prevent default browser behavior (if any)
-			console.log("Ctrl + Shift + S was pressed!");
-			// Call your custom function here
-			customCommand();
-		}
-	};
 
-	const customCommand = () => {
-		demoSetupMutation.mutate();
+		keyCommandMapping.forEach(([keyCheck, command]) => {
+			if (keyCheck(event)) {
+				event.preventDefault();
+				command();
+			}
+		});
 	};
 
 	useEffect(() => {

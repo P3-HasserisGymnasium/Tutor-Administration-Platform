@@ -48,14 +48,13 @@ public class CollaborationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getCollaboration(@PathVariable Long id, HttpServletRequest request) {
-        AuthenticatedUserBody authenticatedUser =  AuthUser.getAuthenticatedUser(request);
+        AuthenticatedUserBody authenticatedUser = AuthUser.getAuthenticatedUser(request);
 
         Collaboration collaboration = collaborationService.getCollaborationById(id);
 
         if (collaboration == null) return null;
 
-
-        if (authenticatedUser.getTuteeId().equals(collaboration.getTutee().getId()) == false && authenticatedUser.getTutorId().equals(collaboration.getTutor().getId()) == false && !authenticatedUser.isAdministrator()) {
+        if (collaboration.isPartOfCollaboration(authenticatedUser) == false && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authortized to view this collaboration");
         }
 
