@@ -57,9 +57,9 @@ export default function TuteePage() {
 	});
 
 	console.log("filteredCollaborations", filteredCollaborations);
-
+	console.log("posts", postlist);
 	const posts = postlist?.filter((post) => post.state === PostState.Enum.VISIBLE);
-
+	console.log("filteredPosts", posts);
 	return (
 		<ThemeProvider theme={theme}>
 			<CreateCollaborationDialog open={showCreateCollabDialog} setOpen={setshowCreateCollabDialog} />

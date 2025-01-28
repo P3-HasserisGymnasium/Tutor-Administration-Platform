@@ -158,7 +158,8 @@ public class PostController {
         if (!authenticatedUser.isTutee() && !authenticatedUser.isAdministrator()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: You must be logged in to create a post");
         }
-
+        
+        
         postService.createPost(postBody, authenticatedUser.getTuteeId());
         return ResponseEntity.status(HttpStatus.CREATED).body("Post created");
     }

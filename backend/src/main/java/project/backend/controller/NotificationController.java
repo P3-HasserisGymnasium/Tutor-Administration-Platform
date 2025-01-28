@@ -45,7 +45,11 @@ public class NotificationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notification not found");
         }
 
-        if (notification.getReceiverId().equals(authenticatedUser.getUserId()) == false && !authenticatedUser.isAdministrator()) {
+        boolean isReceiver = notification.getReceiverId().equals(authenticatedUser.getUserId()) || 
+            (authenticatedUser.getTuteeId() != null && notification.getReceiverId().equals(authenticatedUser.getTuteeId())) || 
+            (authenticatedUser.getTutorId() != null && notification.getReceiverId().equals(authenticatedUser.getTutorId()));
+
+        if (!isReceiver && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to view this notification");
         }
 
@@ -227,10 +231,18 @@ public class NotificationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notification not found");
         }
 
-        if ((notification.getReceiverId().equals(authenticatedUser.getUserId()) == false && 
-            (authenticatedUser.getTuteeId() == null || notification.getReceiverId().equals(authenticatedUser.getTuteeId())) == false && 
-            (authenticatedUser.getTutorId() == null || notification.getReceiverId().equals(authenticatedUser.getTutorId()))) == false && 
-            !authenticatedUser.isAdministrator()) {
+        System.out.println("notification.getReceiverId(): " + notification.getReceiverId());
+        System.out.println("authenticatedUser.getUserId(): " + authenticatedUser.getUserId());
+        System.out.println("authenticatedUser.getTuteeId(): " + authenticatedUser.getTuteeId());
+        System.out.println("authenticatedUser.getTutorId(): " + authenticatedUser.getTutorId());
+        
+
+        boolean isReceiver = notification.getReceiverId().equals(authenticatedUser.getUserId()) || 
+        (authenticatedUser.getTuteeId() != null && notification.getReceiverId().equals(authenticatedUser.getTuteeId())) || 
+        (authenticatedUser.getTutorId() != null && notification.getReceiverId().equals(authenticatedUser.getTutorId()));
+
+
+        if (!isReceiver && !authenticatedUser.isAdministrator()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to change the state of this notification");
         }
 
