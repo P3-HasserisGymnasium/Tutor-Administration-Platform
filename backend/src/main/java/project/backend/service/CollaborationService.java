@@ -30,7 +30,6 @@ import project.backend.model.Tutee;
 import project.backend.model.Tutor;
 import project.backend.repository.CollaborationRepository;
 
-
 @Service
 public class CollaborationService {
 
@@ -49,9 +48,9 @@ public class CollaborationService {
     @Autowired
     final RoleService roleService;
 
-
-
-    public CollaborationService(CollaborationRepository collaborationRepository, @Lazy RoleService roleService, NotificationService notificationService, AdministratorService administratorService, PostService postService) {
+    public CollaborationService(CollaborationRepository collaborationRepository, @Lazy RoleService roleService,
+            NotificationService notificationService, AdministratorService administratorService,
+            PostService postService) {
         this.collaborationRepository = collaborationRepository;
         this.roleService = roleService;
         this.notificationService = notificationService;
@@ -102,10 +101,8 @@ public class CollaborationService {
         collaborationRepository.deleteById(id);
     }
 
-
     // admin provides collaboration suggestion
     public void submitCollaborationSuggestion(SubmitBody body) {
-
 
         Collaboration collaboration = new Collaboration();
         collaboration.setTutee(roleService.getTuteeByTuteeId(body.getTutee_id()));
@@ -118,7 +115,6 @@ public class CollaborationService {
         Post post = postService.getPostById(body.getPost_id()).get();
         post.setPairingRequest(false);
         postService.savePost(post);
-
 
         notificationService.sendNotification(0L, EntityType.ADMIN, body.getTutee_id(), EntityType.TUTEE,
                 collab.getId(), EntityType.COLLABORATION);
@@ -152,8 +148,7 @@ public class CollaborationService {
                     senderType = EntityType.TUTEE;
                     receiverId = collaboration.getTutor().getId();
                     receiverType = EntityType.TUTOR;
-                }
-                else {
+                } else {
                     collaboration.setState(CollaborationState.WAITING_FOR_ADMIN);
                     senderId = collaboration.getTutee().getId();
                     senderType = EntityType.TUTEE;
@@ -210,26 +205,27 @@ public class CollaborationService {
 
     }
 
-    public void acceptCollaborationByPost(SubjectEnum post_subject, Long tutorId, AuthenticatedUserBody authenticatedUser){
-        
+    public void acceptCollaborationByPost(SubjectEnum post_subject, Long tutorId,
+            AuthenticatedUserBody authenticatedUser) {
 
-        Collaboration collaboration = collaborationRepository.findByTuteeTutorAndSubject(authenticatedUser.getTuteeId(), tutorId, post_subject).get(0);
+        Collaboration collaboration = collaborationRepository
+                .findByTuteeTutorAndSubject(authenticatedUser.getTuteeId(), tutorId, post_subject).get(0);
 
         if (collaboration.getState() != CollaborationState.WAITING_FOR_TUTEE) {
             throw new IllegalArgumentException("Collaboration is not waiting for tutee");
         }
         if (collaboration.getAdminAccepted()) {
             collaboration.setState(CollaborationState.ESTABLISHED);
-            notificationService.sendNotification(authenticatedUser.getTuteeId(), EntityType.TUTEE, tutorId, EntityType.TUTOR, collaboration.getId(), EntityType.COLLABORATION);
+            notificationService.sendNotification(authenticatedUser.getTuteeId(), EntityType.TUTEE, tutorId,
+                    EntityType.TUTOR, collaboration.getId(), EntityType.COLLABORATION);
         } else {
             collaboration.setState(CollaborationState.WAITING_FOR_ADMIN);
-            notificationService.sendNotification(authenticatedUser.getTuteeId(), EntityType.TUTEE, 0L, EntityType.ADMIN, collaboration.getId(), EntityType.COLLABORATION);
+            notificationService.sendNotification(authenticatedUser.getTuteeId(), EntityType.TUTEE, 0L, EntityType.ADMIN,
+                    collaboration.getId(), EntityType.COLLABORATION);
         }
     }
 
-
-
-    public void rejectCollaboration(Long collaborationId, RoleEnum role, AuthenticatedUserBody authenticatedUser){
+    public void rejectCollaboration(Long collaborationId, RoleEnum role, AuthenticatedUserBody authenticatedUser) {
         Collaboration collaboration = getCollaborationById(collaborationId);
 
         Long tuteeId = collaboration.getTutee().getId();
@@ -265,46 +261,52 @@ public class CollaborationService {
             default -> throw new IllegalArgumentException("Invalid role specified.");
         }
     }
-/* 
-    // request specififc tutor or tutor request tutee through a post
-    public void requestCollaboration(Long tuteeId, Long tutorId, RoleEnum collabRequester, SubjectEnum subject) {
-
-        Collaboration collaboration = new Collaboration();
-        collaboration.setSubject(subject);
-        collaboration.setState(CollaborationState.WAITING_FOR_BOTH);
-        Long collaborationId = collaboration.getId();
-
-        switch (collabRequester) {
-            case Tutee -> {
-                Tutee tutee = roleService.getTuteeById(tuteeId);
-                collaboration.setTuteeState(CollaborationState.ESTABLISHED);
-                collaboration.setTutee(tutee);
-                collaboration.setTutorState(CollaborationState.WAITING_FOR_TUTOR);
-
-                notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId, EntityType.TUTOR,
-                        collaborationId, EntityType.COLLABORATION);
-
-            }
-            case Tutor -> {
-                Tutor tutor = roleService.getTutorById(tutorId);
-                collaboration.setTuteeState(CollaborationState.ESTABLISHED);
-                collaboration.setTutor(tutor);
-                collaboration.setTuteeState(CollaborationState.WAITING_FOR_TUTEE);
-
-                notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId, EntityType.TUTEE,
-                        collaborationId, EntityType.COLLABORATION);
-            }
-            case Administrator -> throw new UnsupportedOperationException("Unimplemented case: " + collabRequester);
-            default -> throw new IllegalArgumentException("Unexpected value: " + collabRequester);
-        }
-    } */
+    /*
+     * // request specififc tutor or tutor request tutee through a post
+     * public void requestCollaboration(Long tuteeId, Long tutorId, RoleEnum
+     * collabRequester, SubjectEnum subject) {
+     * 
+     * Collaboration collaboration = new Collaboration();
+     * collaboration.setSubject(subject);
+     * collaboration.setState(CollaborationState.WAITING_FOR_BOTH);
+     * Long collaborationId = collaboration.getId();
+     * 
+     * switch (collabRequester) {
+     * case Tutee -> {
+     * Tutee tutee = roleService.getTuteeById(tuteeId);
+     * collaboration.setTuteeState(CollaborationState.ESTABLISHED);
+     * collaboration.setTutee(tutee);
+     * collaboration.setTutorState(CollaborationState.WAITING_FOR_TUTOR);
+     * 
+     * notificationService.sendNotification(tuteeId, EntityType.TUTEE, tutorId,
+     * EntityType.TUTOR,
+     * collaborationId, EntityType.COLLABORATION);
+     * 
+     * }
+     * case Tutor -> {
+     * Tutor tutor = roleService.getTutorById(tutorId);
+     * collaboration.setTuteeState(CollaborationState.ESTABLISHED);
+     * collaboration.setTutor(tutor);
+     * collaboration.setTuteeState(CollaborationState.WAITING_FOR_TUTEE);
+     * 
+     * notificationService.sendNotification(tutorId, EntityType.TUTOR, tuteeId,
+     * EntityType.TUTEE,
+     * collaborationId, EntityType.COLLABORATION);
+     * }
+     * case Administrator -> throw new
+     * UnsupportedOperationException("Unimplemented case: " + collabRequester);
+     * default -> throw new IllegalArgumentException("Unexpected value: " +
+     * collabRequester);
+     * }
+     * }
+     */
 
     public void requestCollaborationByPost(RequestCollaborationByPostBody postBody) {
 
         Post post = postService.getPostById(postBody.getPost_id())
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
         Tutee tutee = post.getTutee();
-        Tutor tutor = roleService.getTutorByUserId(postBody.getTutor_id());
+        Tutor tutor = roleService.getTutorByUserId(postBody.getTutorUserId());
         ArrayList<Collaboration> existingCollaboration = collaborationRepository
                 .findByTuteeTutorAndSubject(tutee.getId(), tutor.getId(), post.getSubject());
 
@@ -318,7 +320,7 @@ public class CollaborationService {
         collaboration.setTutee(post.getTutee());
         collaboration.setTutor(tutor);
         collaboration.setSubject(post.getSubject());
-        collaboration.setAdminAccepted(false);        
+        collaboration.setAdminAccepted(false);
         collaboration.setState(CollaborationState.WAITING_FOR_TUTEE);
         collaboration.setStartTimestamp(new Timestamp(System.currentTimeMillis()));
         collaborationRepository.save(collaboration);
@@ -374,36 +376,39 @@ public class CollaborationService {
 
         tutor.getFeedbacks().add(feedback);
 
-        Administrator admin = administratorService.findFirstBy().orElseThrow(() -> new IllegalStateException("Administrator not found"));
-    
-        notificationService.sendNotification(tuteeId, EntityType.TUTEE, admin.getId(), EntityType.ADMIN, feedback.getId(), EntityType.FEEDBACK);
+        Administrator admin = administratorService.findFirstBy()
+                .orElseThrow(() -> new IllegalStateException("Administrator not found"));
+
+        notificationService.sendNotification(tuteeId, EntityType.TUTEE, admin.getId(), EntityType.ADMIN,
+                feedback.getId(), EntityType.FEEDBACK);
     }
 
-    public Post createPost(PostBody postBody, Long tuteeId){
+    public Post createPost(PostBody postBody, Long tuteeId) {
         return postService.createPost(postBody, tuteeId);
     }
-    
-    public Student getStudentByTuteeId(long id){
+
+    public Student getStudentByTuteeId(long id) {
         return roleService.getStudentByTuteeId(id);
     }
 
-    public Student getStudentByTutorId(long id){
+    public Student getStudentByTutorId(long id) {
         return roleService.getStudentByTutorId(id);
     }
 
-    public TutorProfileResponse getTutorProfile(long userId){
+    public TutorProfileResponse getTutorProfile(long userId) {
         return roleService.getTutorProfile(userId);
     }
 
-    public TuteeProfileResponse getTuteeProfile(long userId){
+    public TuteeProfileResponse getTuteeProfile(long userId) {
         return roleService.getTuteeProfile(userId);
     }
 
-    public Optional<Post> getPostById(Long id){
+    public Optional<Post> getPostById(Long id) {
         return postService.getPostById(id);
     }
 
-    public void sendNotification(Long senderId, EntityType senderType, Long receiverId, EntityType receiverType, Long contextId, EntityType contextType){
+    public void sendNotification(Long senderId, EntityType senderType, Long receiverId, EntityType receiverType,
+            Long contextId, EntityType contextType) {
         notificationService.sendNotification(senderId, senderType, receiverId, receiverType, contextId, contextType);
     }
 }

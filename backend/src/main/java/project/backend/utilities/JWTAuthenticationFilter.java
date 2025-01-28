@@ -28,14 +28,15 @@ public class JWTAuthenticationFilter implements Filter {
 
     final RoleService roleService;
 
-    public JWTAuthenticationFilter( RoleService roleService) {
+    public JWTAuthenticationFilter(RoleService roleService) {
         this.roleService = roleService;
     }
 
     private boolean isPublicRoute(String path, String method) {
         // Match specific routes and methods
-        return (path.equals("/api/account/login") && "POST".equalsIgnoreCase(method)) || 
-               (path.equals("/api/account/") && "POST".equalsIgnoreCase(method));     
+        return (path.equals("/api/account/login") && "POST".equalsIgnoreCase(method)) ||
+                (path.equals("/api/account/") && "POST".equalsIgnoreCase(method)) ||
+                (path.equals("/api/demo/setup") && "POST".equalsIgnoreCase(method));
     }
 
     @Override
@@ -65,15 +66,16 @@ public class JWTAuthenticationFilter implements Filter {
                     case "Bearer":
                         jwt = cookie.getValue();
                         break;
-                   case "user":
+                    case "user":
                         String rawValue = java.net.URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
-                        
+
                         try {
                             // Use Jackson's ObjectMapper to parse the cookie value
                             ObjectMapper objectMapper = new ObjectMapper();
-                            AccountLoginSuccessBody userState = objectMapper.readValue(rawValue, AccountLoginSuccessBody.class);
-                            userID = String.valueOf(userState.id);  // Assuming userState has a field `id`
-                         } catch (Exception e) {
+                            AccountLoginSuccessBody userState = objectMapper.readValue(rawValue,
+                                    AccountLoginSuccessBody.class);
+                            userID = String.valueOf(userState.id); // Assuming userState has a field `id`
+                        } catch (Exception e) {
                         }
                         break;
 
@@ -120,14 +122,12 @@ public class JWTAuthenticationFilter implements Filter {
                     authenticatedUser.tuteeId = tutee.getId();
                 }
             }
-            
+
             request.setAttribute("authenticatedUser", authenticatedUser);
-            chain.doFilter(request, response);  
+            chain.doFilter(request, response);
         } else {
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
         }
-
-
 
     }
 

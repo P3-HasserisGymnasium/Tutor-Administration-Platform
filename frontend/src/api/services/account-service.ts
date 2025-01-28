@@ -88,10 +88,26 @@ export const useAccountService = () => {
 		});
 	};
 
+	const useDemoSetup = () => {
+		return useMutation({
+			mutationKey: ["setupDemo"],
+			mutationFn: async () => {
+				await apiClient.post("/api/demo/setup");
+			},
+			onError: (e: AxiosError) => {
+				toast.error("Setup failed: " + e?.response?.data);
+			},
+			onSuccess: () => {
+				toast.success("Demo setup complete");
+			},
+		});
+	}
+
 	return {
 		useRegisterAccount,
 		useRemoveAccount,
 		useLogin,
 		useLogout,
+		useDemoSetup,
 	};
 };

@@ -2,7 +2,7 @@ package project.backend.controller_bodies.collaboration_bodies;
 
 public class RequestCollaborationByPostBody {
     private Long post_id;
-    private Long tutor_id;
+    private Long tutorUserId;
 
     public Long getPost_id() {
         return post_id;
@@ -12,12 +12,12 @@ public class RequestCollaborationByPostBody {
         this.post_id = post_id;
     }
 
-    public Long getTutor_id() {
-        return tutor_id;
+    public Long getTutorUserId() {
+        return tutorUserId;
     }
 
-    public void setTutor_id(Long tutor_id) {
-        this.tutor_id = tutor_id;
+    public void setTutorUserId(Long tutorUserId) {
+        this.tutorUserId = tutorUserId;
     }
-    
+
 }
