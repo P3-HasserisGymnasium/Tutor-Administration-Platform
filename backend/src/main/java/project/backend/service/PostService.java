@@ -99,7 +99,7 @@ public class PostService {
         post.setDescription(postBody.description);
         post.setDuration(postBody.duration);
         post.setPairingRequest(postBody.getIsPairingRequest());
-        post.setState(PostState.VISIBLE);    
+        post.setState(postBody.getState());    
 
 
         Optional<Tutee> tuteeOpt = tuteeService.getTuteeById(tuteeId);
