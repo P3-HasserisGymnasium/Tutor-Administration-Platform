@@ -290,22 +290,25 @@ public class RoleService {
 
         List<TimeSlotCreateBody> responseList = new LinkedList<>();
         for (TutorTimeSlot timeSlot : tutor.getFreeTimeSlots()) {
+            boolean found = false;
             TimeSlotCreateBody timeSlotResponse = new TimeSlotCreateBody();
 
             for (TimeSlotCreateBody existingTimeSlot : responseList) {
                 if (existingTimeSlot.day == timeSlot.getWeekDay()) {
+                    found = true;
                     TimeCreateBody timeCreateBody = new TimeCreateBody();
                     timeCreateBody.start_time = timeSlot.getStartTime();
                     timeCreateBody.end_time = timeSlot.getEndTime();
                     existingTimeSlot.time.add(timeCreateBody);
-                } else {
-                    timeSlotResponse.day = timeSlot.getWeekDay();
-                    TimeCreateBody timeCreateBody = new TimeCreateBody();
-                    timeCreateBody.start_time = timeSlot.getStartTime();
-                    timeCreateBody.end_time = timeSlot.getEndTime();
-                    timeSlotResponse.time.add(timeCreateBody);
-                    responseList.add(timeSlotResponse);
                 }
+            }
+            if (found == false) {
+                timeSlotResponse.day = timeSlot.getWeekDay();
+                TimeCreateBody timeCreateBody = new TimeCreateBody();
+                timeCreateBody.start_time = timeSlot.getStartTime();
+                timeCreateBody.end_time = timeSlot.getEndTime();
+                timeSlotResponse.time.add(timeCreateBody);
+                responseList.add(timeSlotResponse);
             }
         }
         response.time_availability = responseList;
